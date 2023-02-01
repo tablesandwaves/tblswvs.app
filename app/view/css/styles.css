@@ -1,0 +1,90 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  position: relative;
+  tab-size: 2;
+  /* margin: 0;
+  float: left;
+  width: 100%; */
+  background-color: black;
+  color: #aaa;
+}
+
+
+h1,
+div.rhythm,
+div.rhythm div {
+  position: relative;
+  float: left;
+}
+
+
+div.nav {
+  position: absolute;
+  top: 0;
+  width: 150px;
+  /* border-right: 1px solid #333; */
+}
+
+
+div.nav ul {
+  margin: 3em 0 0 0;
+  padding-left: 0;
+  list-style: none;
+  font-size: 1.5em;
+}
+
+
+div.nav ul li {
+  padding: .5em 1em;
+  border-bottom: 1px solid #555;
+  text-align: right;
+}
+
+
+div.nav ul li:first-child {
+  border-top: 1px solid #555;
+}
+
+
+div.nav ul li.selected {
+  color: #117733;
+}
+
+
+div.main {
+  position: absolute;
+  top: 0;
+  left: 150px;
+  width: 820px;
+  padding-left: 20px;
+  min-height: 800px;
+  border-left: 1px solid #555;
+  margin-left: -1px;
+}
+
+
+h1 {
+  width: 800px;
+  padding-left: 20px;
+  font-size: 1.5em;
+}
+
+
+div.rhythm {
+  width: 800px;
+  margin: 10px;
+}
+
+
+div.rhythm div {
+
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+  border: 1px solid #555;
+}
+
+
+div.rhythm div.active {
+  background-color: #111;
+}

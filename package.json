@@ -1,0 +1,22 @@
+{
+  "name": "tblswvs-app",
+  "version": "0.1.0",
+  "description": "Control center for tables & waves",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tblswvs",
+    "sequencer"
+  ],
+  "author": "Steve Meyer",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^22.1.0"
+  },
+  "dependencies": {
+    "serialosc": "^1.0.0"
+  }
+}
