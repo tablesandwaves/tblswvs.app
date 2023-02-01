@@ -2,9 +2,6 @@ body {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   position: relative;
   tab-size: 2;
-  /* margin: 0;
-  float: left;
-  width: 100%; */
   background-color: black;
   color: #aaa;
 }
@@ -22,7 +19,6 @@ div.nav {
   position: absolute;
   top: 0;
   width: 150px;
-  /* border-right: 1px solid #333; */
 }
 
 
@@ -55,8 +51,8 @@ div.main {
   position: absolute;
   top: 0;
   left: 150px;
-  width: 820px;
-  padding-left: 20px;
+  width: 810px;
+  padding-left: 10px;
   min-height: 800px;
   border-left: 1px solid #555;
   margin-left: -1px;
@@ -87,4 +83,9 @@ div.rhythm div {
 
 div.rhythm div.active {
   background-color: #111;
+}
+
+
+div.rhythm div.active.on {
+  background-color: #777;
 }
