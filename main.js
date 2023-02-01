@@ -1,5 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const { MonomeGrid } = require("./app/model/monome_grid");
+
+
+const grid = new MonomeGrid("m31931181");
 
 
 const createWindow = () => {
@@ -17,11 +21,19 @@ const createWindow = () => {
 
 
 app.whenReady().then(() => {
+
+  grid.connectToGrid()
+    .then((msg) => console.log(msg))
+    .then(() => grid.displayRhythm());
+
+}).then(() => {
+
   createWindow();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+
 });
 
 
