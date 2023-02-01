@@ -12,6 +12,7 @@ class MonomeGrid {
     new Track("Kick"),
     new Track("Snare")
   ];
+  gui;
 
 
   connectToGrid(id, cb) {
@@ -35,6 +36,7 @@ class MonomeGrid {
 
 
   keyPress(x, y, s) {
+    // Bottom row, first button: play/pause
     if (y == 7 && x == 0 && s == 1) {
       if (this.playing) {
         console.log("stopping");
@@ -47,7 +49,7 @@ class MonomeGrid {
       }
       this.levelSet(x, y, this.playing == undefined ? 0 : 15);
     }
-    // Bottom row: select a track
+    // Bottom row, buttons 2-7: select a track
     else if (y == 7 && x >= 1 && x <= 2 && s == 1) {
       let offsetIndex = x - 1;
       this.activeTrack = this.activeTrack == offsetIndex ? undefined : offsetIndex;
@@ -59,6 +61,7 @@ class MonomeGrid {
       if (this.activeTrack != undefined) {
         this.tracks[this.activeTrack].rhythm[x] = 10 - this.tracks[this.activeTrack].rhythm[x];
         this.displayRhythm();
+        this.gui.webContents.send("track-rhythm-step", x, this.tracks[this.activeTrack].rhythm[x]);
       }
     }
   }
@@ -73,15 +76,16 @@ class MonomeGrid {
 
 
   displayRhythm(row) {
-    // console.log(row);
-    row = row == undefined ? (this.activeTrack == undefined ? util.blank16x16Row : this.tracks[this.activeTrack].rhythm) : row;
+    if (row == undefined) {
+      row = this.activeTrack == undefined ? util.blank16x16Row : this.tracks[this.activeTrack].rhythm;
+    }
     this.levelRow(0, 0, row.slice(0, 8));
     this.levelRow(8, 0, row.slice(8, 16));
   }
 
 
   levelSet(x, y, s) {
-    console.log(`Setting: x: ${x}, y: ${y}, s: ${s}`)
+    // console.log(`Setting: x: ${x}, y: ${y}, s: ${s}`)
     this.device.levelSet(x, y, s);
   }
 
@@ -95,4 +99,3 @@ class MonomeGrid {
 module.exports = {
   MonomeGrid
 }
-

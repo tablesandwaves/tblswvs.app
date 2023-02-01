@@ -7,7 +7,7 @@ const grid = new MonomeGrid("m31931181");
 
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
     webPreferences: {
@@ -15,8 +15,8 @@ const createWindow = () => {
     }
   });
 
-  ipcMain.handle("step", handleStep);
-  win.loadFile("app/view/index.html");
+  grid.gui = mainWindow;
+  mainWindow.loadFile("app/view/index.html");
 };
 
 
@@ -35,8 +35,3 @@ app.whenReady().then(() => {
   });
 
 });
-
-
-const handleStep = async (e, args) => {
-  console.log(`Handling step ${args[0]} with state ${args[1]}`);
-};

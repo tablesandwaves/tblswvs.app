@@ -1,8 +1,9 @@
-const toggleStep = (e) => {
-  e.currentTarget.classList.toggle("on");
-  let x = 1, s = 2;
-  window.sequencer.step(x, s);
-}
+window.stepSequencer.toggleStep((event, step, state) => {
+  if (state == 0)
+    document.getElementById(`step-${step}`).classList.remove("on");
+  else
+    document.getElementById(`step-${step}`).classList.add("on");
+});
 
 
 const ready = () => {

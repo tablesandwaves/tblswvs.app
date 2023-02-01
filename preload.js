@@ -1,10 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 
-contextBridge.exposeInMainWorld("sequencer", {
-  // ping: () => ipcRenderer.invoke("ping")
-  step: (...args) => ipcRenderer.invoke("step", args)
-});
-
-
-// contextBridge.exposeInIsolatedWorld()
+contextBridge.exposeInMainWorld("stepSequencer", {
+  toggleStep: (callback) => ipcRenderer.on("track-rhythm-step", callback),
+})
