@@ -1,9 +1,9 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, } = require("electron");
 const path = require("path");
-const { MonomeGrid } = require("./app/model/monome_grid");
+const { Sequencer } = require("./app/model/sequencer");
 
 
-const grid = new MonomeGrid("m31931181");
+const sequencer = new Sequencer("m31931181");
 
 
 const createWindow = () => {
@@ -15,23 +15,19 @@ const createWindow = () => {
     }
   });
 
-  grid.gui = mainWindow;
+  sequencer.gui = mainWindow;
   mainWindow.loadFile("app/view/index.html");
 };
 
 
 app.whenReady().then(() => {
-
-  grid.connectToGrid()
+  sequencer.connectToGrid()
     .then((msg) => console.log(msg))
-    .then(() => grid.displayRhythm());
-
+    .then(() => sequencer.displayRhythm());
 }).then(() => {
-
   createWindow();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
-
 });

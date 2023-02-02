@@ -3,7 +3,7 @@ const { Track } = require("./track");
 const util = require("../helpers/util");
 
 
-class MonomeGrid {
+class Sequencer {
   device;
   activeTrack = undefined;
   playing = undefined;
@@ -45,7 +45,6 @@ class MonomeGrid {
       } else {
         console.log("starting");
         this.playing = setInterval(this.run, 50, this)
-        console.log(this.playing);
       }
       this.levelSet(x, y, this.playing == undefined ? 0 : 15);
     }
@@ -85,7 +84,6 @@ class MonomeGrid {
 
 
   levelSet(x, y, s) {
-    // console.log(`Setting: x: ${x}, y: ${y}, s: ${s}`)
     this.device.levelSet(x, y, s);
   }
 
@@ -97,5 +95,5 @@ class MonomeGrid {
 
 
 module.exports = {
-  MonomeGrid
+  Sequencer
 }
