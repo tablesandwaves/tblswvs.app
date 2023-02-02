@@ -17,6 +17,7 @@
     "electron": "^22.1.0"
   },
   "dependencies": {
+    "easymidi": "^3.0.1",
     "serialosc": "^1.0.0"
   }
 }
