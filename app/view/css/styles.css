@@ -89,3 +89,8 @@ div.rhythm div.active {
 div.rhythm div.active.on {
   background-color: #777;
 }
+
+
+div.rhythm div.active.current {
+  background-color: #117733;
+}

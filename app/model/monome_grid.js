@@ -46,26 +46,40 @@ class MonomeGrid {
       this.levelSet(x, y, this.playing == undefined ? 0 : 15);
     }
     // Bottom row, buttons 2-7: select a track
-    else if (y == 7 && x >= 1 && x <= 2 && s == 1) {
+    else if (y == 7 && x >= 1 && x <= 6 && s == 1) {
       let offsetIndex = x - 1;
       this.sequencer.activeTrack = this.sequencer.activeTrack == offsetIndex ? undefined : offsetIndex;
       this.sequencer.tracks.forEach((_, i) => this.levelSet(i + 1, y, i == this.sequencer.activeTrack ? 10 : 0));
-      this.displayRhythm();
+      this.setGridRhythmDisplay();
+      this.setGuiRhythmDisplay();
     }
     // Top row: set rhythm
     else if (y == 0 && s == 1) {
       if (this.sequencer.activeTrack != undefined) {
-        this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x] = 10 - this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x];
-        this.displayRhythm();
-        this.sequencer.gui.webContents.send("track-rhythm-step", x, this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x]);
+        this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x] = 1 - this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x];
+        this.setGridRhythmDisplay();
+        this.setGuiRhythmDisplay();
       }
     }
   }
 
 
-  displayRhythm(row) {
+  setGuiRhythmDisplay(row) {
     if (row == undefined) {
-      row = this.sequencer.activeTrack == undefined ? util.blank16x16Row : this.sequencer.tracks[this.sequencer.activeTrack].rhythm;
+      row = this.sequencer.activeTrack == undefined ?
+            util.blank16x16Row :
+            this.sequencer.tracks[this.sequencer.activeTrack].rhythm;
+    }
+    let name = this.sequencer.activeTrack == undefined ? undefined : this.sequencer.tracks[this.sequencer.activeTrack].name;
+    this.sequencer.gui.webContents.send("track-activate", name, row);
+  }
+
+
+  setGridRhythmDisplay(row) {
+    if (row == undefined) {
+      row = this.sequencer.activeTrack == undefined ?
+            util.blank16x16Row :
+            this.sequencer.tracks[this.sequencer.activeTrack].rhythm.map(step => step == 1 ? 10 : 0);
     }
     this.levelRow(0, 0, row.slice(0, 8));
     this.levelRow(8, 0, row.slice(8, 16));
