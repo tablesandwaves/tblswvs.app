@@ -3,7 +3,7 @@ const path = require("path");
 const { Sequencer } = require("./app/model/sequencer");
 
 
-const sequencer = new Sequencer("m31931181");
+const sequencer = new Sequencer();
 
 
 const createWindow = () => {
@@ -21,9 +21,8 @@ const createWindow = () => {
 
 
 app.whenReady().then(() => {
-  sequencer.connectToGrid()
-    .then((msg) => console.log(msg))
-    .then(() => sequencer.displayRhythm());
+  sequencer.connectToGrid("m31931181")
+    .then((msg) => console.log("connect message:", msg));
 }).then(() => {
   createWindow();
 
