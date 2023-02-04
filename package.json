@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "easymidi": "^3.0.1",
-    "serialosc": "^1.0.0"
+    "serialosc": "^1.0.0",
+    "tblswvs": "github:tablesandwaves/tblswvs.js#v0.15.0"
   }
 }
