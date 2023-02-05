@@ -6,7 +6,8 @@
   "scripts": {
     "html": "cp app/view/index.html dist/app/view/",
     "css": "mkdir -p dist/app/view/css && cp app/view/css/styles.css dist/app/view/css",
-    "build": "tsc && npm run html && npm run css",
+    "config": "mkdir -p dist/config && cp config/*.yml dist/config",
+    "build": "tsc && npm run html && npm run css && npm run config",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "start": "npm run build && electron ./dist/main.js",
@@ -20,6 +21,7 @@
   "author": "Steve Meyer",
   "license": "MIT",
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
     "electron": "^22.1.0",
@@ -27,7 +29,9 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "clockalgo": "github:steve-meyer/clockalgo.js#v0.6.1",
     "easymidi": "^3.0.1",
+    "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
     "tblswvs": "github:tablesandwaves/tblswvs.js#v0.15.0"
   }

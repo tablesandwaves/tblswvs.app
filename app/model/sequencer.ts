@@ -1,6 +1,6 @@
 const easymidi = require("easymidi");
 import { BrowserWindow } from "electron";
-import { MonomeGrid } from "./monome_grid";
+import { GridPageType, MonomeGrid } from "./monome_grid";
 import { Track } from "./track";
 import * as utils from "../helpers/utils";
 
@@ -9,7 +9,8 @@ export class Sequencer {
   grid: MonomeGrid;
   midiIn: any;
   midiOut: any;
-  ticks: number;
+  ticks: number = 0;
+  superMeasure: number = 4;
   activeTrack: number | undefined = undefined;
   playing: any = undefined;
   step: number = 0;
@@ -21,14 +22,13 @@ export class Sequencer {
     new Track("Opsix"),
     new Track("Hydra")
   ];
-  gui: Electron.BrowserWindow;
+  gui: BrowserWindow;
 
 
   constructor() {
     this.grid = new MonomeGrid(this);
     this.midiIn = new easymidi.Input("tblswvs in", true);
     this.midiOut = new easymidi.Output("tblswvs out", true);
-    this.ticks = 0;
   }
 
 
@@ -43,46 +43,13 @@ export class Sequencer {
       this.ticks++;
       if (this.ticks % 6 != 0) return;
 
-      let previousStep = this.step == 0 ? 15 : this.step - 1;
-      if (this.tracks[0].rhythm[previousStep] == 1) {
-        this.midiOut.send("noteoff", { note: 60, velocity: 127, channel: 0 });
-      }
-      if (this.tracks[1].rhythm[previousStep] == 1) {
-        this.midiOut.send("noteoff", { note: 60, velocity: 127, channel: 1 });
-      }
-      if (this.tracks[2].rhythm[previousStep] == 1) {
-        this.midiOut.send("noteoff", { note: 60, velocity: 127, channel: 2 });
-      }
+      if (this.grid.activePageType == GridPageType.Rhythm)
+        this.grid.displayRhythmWithTransport(this.step);
 
-      if (this.tracks[0].rhythm[this.step] == 1) {
-        this.midiOut.send("noteon", { note: 60, velocity: 127, channel: 0 });
-      }
-      if (this.tracks[1].rhythm[this.step] == 1) {
-        this.midiOut.send("noteon", { note: 60, velocity: 127, channel: 1 });
-      }
-      if (this.tracks[2].rhythm[this.step] == 1) {
-        this.midiOut.send("noteon", { note: 60, velocity: 127, channel: 2 });
-      }
-
-      let row = this.activeTrack == undefined ?
-      utils.blank16x16Row.slice() :
-      this.tracks[this.activeTrack].rhythm.slice().map(step => step == 1 ? 10 : 0);
-      row[this.step] = 15;
-      this.grid.setGridRhythmDisplay(row);
-      this.grid.setGuiRhythmDisplay(row);
       this.step = this.step == 15 ? 0 : this.step + 1;
     });
 
     this.midiIn.on("start", () => {
-      if (this.tracks[0].rhythm[this.step] == 1) {
-        this.midiOut.send("noteon", { note: 60, velocity: 127, channel: 0 });
-      }
-      if (this.tracks[1].rhythm[this.step] == 1) {
-        this.midiOut.send("noteon", { note: 60, velocity: 127, channel: 1 });
-      }
-      if (this.tracks[2].rhythm[this.step] == 1) {
-        this.midiOut.send("noteon", { note: 60, velocity: 127, channel: 2 });
-      }
     });
 
     this.midiIn.on("position", (data: any) => {
@@ -90,19 +57,8 @@ export class Sequencer {
 
       this.ticks = 0;
       this.step = 0;
-      this.grid.setGridRhythmDisplay();
-      this.grid.setGuiRhythmDisplay();
+      if (this.grid.activePageType == GridPageType.Rhythm)
+        this.grid.displayRhythmWithTransport(this.step);
     });
-  }
-
-
-  run(grid: MonomeGrid) {
-    let row = grid.sequencer.activeTrack == undefined ?
-              utils.blank16x16Row.slice() :
-              grid.sequencer.tracks[grid.sequencer.activeTrack].rhythm.slice().map((step: number) => step == 1 ? 10 : 0);
-    row[grid.sequencer.step] = 15;
-    grid.setGridRhythmDisplay(row);
-    grid.setGuiRhythmDisplay(row);
-    grid.sequencer.step = grid.sequencer.step == 15 ? 0 : grid.sequencer.step + 1;
   }
 }

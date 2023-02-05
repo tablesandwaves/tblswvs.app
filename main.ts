@@ -8,7 +8,7 @@ const sequencer = new Sequencer();
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1000,
+    width: 1580,
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, "preload.js")
@@ -17,6 +17,7 @@ const createWindow = () => {
 
   sequencer.gui = mainWindow;
   mainWindow.loadFile("app/view/index.html");
+  mainWindow.webContents.openDevTools()
 };
 
 

@@ -1,10 +1,10 @@
 export class Track {
   name: string;
-  rhythm: number[];
+  rhythm: number[] = new Array(16).fill(0);
+  weightedRhythm: boolean = false;
 
 
   constructor(name: string) {
     this.name = name;
-    this.rhythm = new Array(16).fill(0);
   }
 }

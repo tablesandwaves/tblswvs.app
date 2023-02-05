@@ -1,12 +1,15 @@
+import * as path from "path";
+import * as fs from "fs";
+import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
 import { Sequencer } from "./sequencer";
-import * as utils from "../helpers/utils";
+import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { GridRhythm } from "./grid_rhythm";
 
 
-type GridKeyPress = {
-  x: number,
-  y: number,
-  s: number
+export enum GridPageType {
+    Rhythm = "Rhythm",
+    Melody = "Melody"
 }
 
 
@@ -14,10 +17,14 @@ export class MonomeGrid {
   sequencer;
   device: any;
   playing: any;
+  activePage: GridPage;
+  activePageType: GridPageType;
+  configDirectory: string;
 
 
   constructor(sequencer: Sequencer) {
     this.sequencer = sequencer;
+    this.configDirectory = path.resolve(__dirname, "../../config");
   }
 
 
@@ -32,7 +39,7 @@ export class MonomeGrid {
         if (device.type != 'grid') return;
 
         this.device = device;
-        this.device.on('initialized', () => this.device.on('key', (press: GridKeyPress) => this.keyPress(press.x, press.y, press.s)));
+        this.device.on('initialized', () => this.device.on('key', (press: GridKeyPress) => this.keyPress(press)));
         this.device.start();
 
         resolve(`Connected to ${this.device.model} ${this.device.id} on ${this.device.deviceHost}:${this.device.devicePort}`);
@@ -41,57 +48,40 @@ export class MonomeGrid {
   }
 
 
-  keyPress(x: number, y: number, s: number) {
-    // Bottom row, first button: play/pause
-    if (y == 7 && x == 0 && s == 1) {
-      if (this.playing) {
-        console.log("stopping");
-        clearInterval(this.playing);
-        this.playing = undefined;
-      } else {
-        console.log("starting");
-        this.playing = setInterval(this.sequencer.run, 250, this);
-      }
-      this.levelSet(x, y, this.playing == undefined ? 0 : 15);
-    }
-    // Bottom row, buttons 2-7: select a track
-    else if (y == 7 && x >= 1 && x <= 6 && s == 1) {
-      let offsetIndex = x - 1;
-      this.sequencer.activeTrack = this.sequencer.activeTrack == offsetIndex ? undefined : offsetIndex;
-      this.sequencer.tracks.forEach((_, i) => this.levelSet(i + 1, y, i == this.sequencer.activeTrack ? 10 : 0));
-      this.setGridRhythmDisplay();
-      this.setGuiRhythmDisplay();
-    }
-    // Top row: set rhythm
-    else if (y == 0 && s == 1) {
-      if (this.sequencer.activeTrack != undefined) {
-        this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x] = 1 - this.sequencer.tracks[this.sequencer.activeTrack].rhythm[x];
-        this.setGridRhythmDisplay();
-        this.setGuiRhythmDisplay();
-      }
-    }
+  displayRhythmWithTransport(highlightIndex: number) {
+    this.activePage.setDisplay(highlightIndex);
   }
 
 
-  setGuiRhythmDisplay(row?: number[]) {
-    if (row == undefined) {
-      row = this.sequencer.activeTrack == undefined ?
-            utils.blank16x16Row :
-            this.sequencer.tracks[this.sequencer.activeTrack].rhythm;
-    }
-    let name = this.sequencer.activeTrack == undefined ? undefined : this.sequencer.tracks[this.sequencer.activeTrack].name;
-    this.sequencer.gui.webContents.send("track-activate", name, row);
-  }
+  keyPress(press: GridKeyPress) {
+    // Bottom row: global controls
+    if (press.y == 7) {
+      // Keys 1-6, select active track
+      if (press.x <= 5 && press.s == 1) {
+        this.sequencer.activeTrack = press.x;
+        this.sequencer.tracks.forEach((_, i) => this.levelSet(i, press.y, i == this.sequencer.activeTrack ? 10 : 0));
 
+        if (this.activePage) {
+          this.activePage.currentTrack = this.sequencer.tracks[this.sequencer.activeTrack];
+          this.activePage.refresh();
+        }
+      }
+      // Load the rhythm grid page
+      else if (press.x == 6 && press.s == 1) {
+        const configFilePath = path.resolve(this.configDirectory, "grid_page_rhythm.yml");
+        const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
+        this.activePage = new GridRhythm(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
+        this.activePageType = GridPageType.Rhythm;
 
-  setGridRhythmDisplay(row?: number[]) {
-    if (row == undefined) {
-      row = this.sequencer.activeTrack == undefined ?
-            utils.blank16x16Row :
-            this.sequencer.tracks[this.sequencer.activeTrack].rhythm.map((step: number) => step == 1 ? 10 : 0);
+        for (let i = 6; i <= 13; i++) {
+          this.levelSet(i, press.y, i == press.x ? 10 : 0);
+        }
+      }
     }
-    this.levelRow(0, 0, row.slice(0, 8));
-    this.levelRow(8, 0, row.slice(8, 16));
+    // Other rows, forward to the key press to the currently active page
+    else {
+      this.activePage.keyPress(press);
+    }
   }
 
 
