@@ -56,30 +56,14 @@ export class MonomeGrid {
   keyPress(press: GridKeyPress) {
     // Bottom row: global controls
     if (press.y == 7) {
-      // Keys 1-6, select active track
       if (press.x <= 5 && press.s == 1) {
-        this.sequencer.activeTrack = press.x;
-        this.sequencer.tracks.forEach((_, i) => this.levelSet(i, press.y, i == this.sequencer.activeTrack ? 10 : 0));
-
-        if (this.activePage) {
-          this.activePage.currentTrack = this.sequencer.tracks[this.sequencer.activeTrack];
-          this.activePage.refresh();
-        }
+        this.#setActiveTrack(press); // Keys 1-6, select active track
+      } else if (press.x == 6 && press.s == 1) {
+        this.#setGridPageToRhythm(press); // Load the rhythm grid page
       }
-      // Load the rhythm grid page
-      else if (press.x == 6 && press.s == 1) {
-        const configFilePath = path.resolve(this.configDirectory, "grid_page_rhythm.yml");
-        const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
-        this.activePage = new GridRhythm(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
-        this.activePageType = GridPageType.Rhythm;
 
-        for (let i = 6; i <= 13; i++) {
-          this.levelSet(i, press.y, i == press.x ? 10 : 0);
-        }
-      }
-    }
     // Other rows, forward to the key press to the currently active page
-    else {
+    } else {
       this.activePage.keyPress(press);
     }
   }
@@ -92,5 +76,28 @@ export class MonomeGrid {
 
   levelRow(xOffset: number, y: number, row: number[]) {
     this.device.levelRow(xOffset, y, row);
+  }
+
+
+  #setActiveTrack(press: GridKeyPress) {
+    this.sequencer.activeTrack = press.x;
+    this.sequencer.tracks.forEach((_, i) => this.levelSet(i, press.y, i == this.sequencer.activeTrack ? 10 : 0));
+
+    if (this.activePage) {
+      this.activePage.currentTrack = this.sequencer.tracks[this.sequencer.activeTrack];
+      this.activePage.refresh();
+    }
+  }
+
+
+  #setGridPageToRhythm(press: GridKeyPress) {
+    const configFilePath = path.resolve(this.configDirectory, "grid_page_rhythm.yml");
+    const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
+    this.activePage = new GridRhythm(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
+    this.activePageType = GridPageType.Rhythm;
+
+    for (let i = 6; i <= 13; i++) {
+      this.levelSet(i, press.y, i == press.x ? 10 : 0);
+    }
   }
 }
