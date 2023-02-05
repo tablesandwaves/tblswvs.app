@@ -1,6 +1,6 @@
-const { app, BrowserWindow, } = require("electron");
-const path = require("path");
-const { Sequencer } = require("./app/model/sequencer");
+import { app, BrowserWindow } from "electron";
+import * as path from "path";
+import { Sequencer } from "./app/model/sequencer";
 
 
 const sequencer = new Sequencer();

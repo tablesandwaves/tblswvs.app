@@ -1,18 +1,19 @@
 const easymidi = require("easymidi");
-const { MonomeGrid } = require("./monome_grid");
-const { Track } = require("./track");
-const util = require("../helpers/util");
+import { BrowserWindow } from "electron";
+import { MonomeGrid } from "./monome_grid";
+import { Track } from "./track";
+import * as utils from "../helpers/utils";
 
 
-class Sequencer {
-  grid;
-  midiIn;
-  midiOut;
-  ticks;
-  activeTrack = undefined;
-  playing = undefined;
-  step = 0;
-  tracks = [
+export class Sequencer {
+  grid: MonomeGrid;
+  midiIn: any;
+  midiOut: any;
+  ticks: number;
+  activeTrack: number | undefined = undefined;
+  playing: any = undefined;
+  step: number = 0;
+  tracks: Track[] = [
     new Track("Kick"),
     new Track("Snare"),
     new Track("HiHat"),
@@ -20,7 +21,7 @@ class Sequencer {
     new Track("Opsix"),
     new Track("Hydra")
   ];
-  gui;
+  gui: Electron.BrowserWindow;
 
 
   constructor() {
@@ -31,7 +32,7 @@ class Sequencer {
   }
 
 
-  async connectToGrid(id) {
+  async connectToGrid(id: string) {
     const msg = await this.grid.connect(id);
     return msg;
   }
@@ -64,7 +65,7 @@ class Sequencer {
       }
 
       let row = this.activeTrack == undefined ?
-      util.blank16x16Row.slice() :
+      utils.blank16x16Row.slice() :
       this.tracks[this.activeTrack].rhythm.slice().map(step => step == 1 ? 10 : 0);
       row[this.step] = 15;
       this.grid.setGridRhythmDisplay(row);
@@ -84,7 +85,7 @@ class Sequencer {
       }
     });
 
-    this.midiIn.on("position", (data) => {
+    this.midiIn.on("position", (data: any) => {
       if (data.value != 0) return;
 
       this.ticks = 0;
@@ -95,18 +96,13 @@ class Sequencer {
   }
 
 
-  run(grid) {
+  run(grid: MonomeGrid) {
     let row = grid.sequencer.activeTrack == undefined ?
-              util.blank16x16Row.slice() :
-              grid.sequencer.tracks[grid.sequencer.activeTrack].rhythm.slice().map(step => step == 1 ? 10 : 0);
+              utils.blank16x16Row.slice() :
+              grid.sequencer.tracks[grid.sequencer.activeTrack].rhythm.slice().map((step: number) => step == 1 ? 10 : 0);
     row[grid.sequencer.step] = 15;
     grid.setGridRhythmDisplay(row);
     grid.setGuiRhythmDisplay(row);
     grid.sequencer.step = grid.sequencer.step == 15 ? 0 : grid.sequencer.step + 1;
   }
-}
-
-
-module.exports = {
-  Sequencer
 }

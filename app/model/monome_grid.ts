@@ -1,29 +1,38 @@
 const serialosc = require("serialosc");
-const util = require("../helpers/util");
+import { Sequencer } from "./sequencer";
+import * as utils from "../helpers/utils";
 
 
-class MonomeGrid {
+type GridKeyPress = {
+  x: number,
+  y: number,
+  s: number
+}
+
+
+export class MonomeGrid {
   sequencer;
-  device;
+  device: any;
+  playing: any;
 
 
-  constructor(sequencer) {
+  constructor(sequencer: Sequencer) {
     this.sequencer = sequencer;
   }
 
 
-  async connect(id, cb) {
+  async connect(id: string) {
     return new Promise((resolve, reject) => {
       let addEvent = id ? id + ':add' : 'device:add';
 
       serialosc.start({ startDevices: false });
 
-      serialosc.on(addEvent, (device) => {
+      serialosc.on(addEvent, (device: any) => {
         if (this.device)           return;
         if (device.type != 'grid') return;
 
         this.device = device;
-        this.device.on('initialized', () => this.device.on('key', (press) => this.keyPress(press.x, press.y, press.s)));
+        this.device.on('initialized', () => this.device.on('key', (press: GridKeyPress) => this.keyPress(press.x, press.y, press.s)));
         this.device.start();
 
         resolve(`Connected to ${this.device.model} ${this.device.id} on ${this.device.deviceHost}:${this.device.devicePort}`);
@@ -32,7 +41,7 @@ class MonomeGrid {
   }
 
 
-  keyPress(x, y, s) {
+  keyPress(x: number, y: number, s: number) {
     // Bottom row, first button: play/pause
     if (y == 7 && x == 0 && s == 1) {
       if (this.playing) {
@@ -64,10 +73,10 @@ class MonomeGrid {
   }
 
 
-  setGuiRhythmDisplay(row) {
+  setGuiRhythmDisplay(row?: number[]) {
     if (row == undefined) {
       row = this.sequencer.activeTrack == undefined ?
-            util.blank16x16Row :
+            utils.blank16x16Row :
             this.sequencer.tracks[this.sequencer.activeTrack].rhythm;
     }
     let name = this.sequencer.activeTrack == undefined ? undefined : this.sequencer.tracks[this.sequencer.activeTrack].name;
@@ -75,28 +84,23 @@ class MonomeGrid {
   }
 
 
-  setGridRhythmDisplay(row) {
+  setGridRhythmDisplay(row?: number[]) {
     if (row == undefined) {
       row = this.sequencer.activeTrack == undefined ?
-            util.blank16x16Row :
-            this.sequencer.tracks[this.sequencer.activeTrack].rhythm.map(step => step == 1 ? 10 : 0);
+            utils.blank16x16Row :
+            this.sequencer.tracks[this.sequencer.activeTrack].rhythm.map((step: number) => step == 1 ? 10 : 0);
     }
     this.levelRow(0, 0, row.slice(0, 8));
     this.levelRow(8, 0, row.slice(8, 16));
   }
 
 
-  levelSet(x, y, s) {
+  levelSet(x: number, y: number, s: number) {
     this.device.levelSet(x, y, s);
   }
 
 
-  levelRow(xOffset, y, row) {
+  levelRow(xOffset: number, y: number, row: number[]) {
     this.device.levelRow(xOffset, y, row);
   }
-}
-
-
-module.exports = {
-  MonomeGrid
 }

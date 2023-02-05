@@ -1,4 +1,4 @@
-window.stepSequencer.activateTrack((event, name, rhythm) => {
+window.stepSequencer.activateTrack((event: any, name: string, rhythm: number[]) => {
   document.querySelectorAll(".nav li").forEach(elem => {
     if (elem.textContent == name)
       elem.classList.add("selected");

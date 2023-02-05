@@ -2,11 +2,17 @@
   "name": "tblswvs-app",
   "version": "0.1.0",
   "description": "Control center for tables & waves",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "electron .",
+    "html": "cp app/view/index.html dist/app/view/",
+    "css": "mkdir -p dist/app/view/css && cp app/view/css/styles.css dist/app/view/css",
+    "build": "tsc && npm run html && npm run css",
+    "watch": "tsc -w",
+    "lint": "eslint -c .eslintrc --ext .ts ./src",
+    "start": "npm run build && electron ./dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": "https://github.com/tablesandwaves/tblswvs.app",
   "keywords": [
     "tblswvs",
     "sequencer"
@@ -14,7 +20,11 @@
   "author": "Steve Meyer",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^22.1.0"
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "electron": "^22.1.0",
+    "eslint": "^8.33.0",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "easymidi": "^3.0.1",
