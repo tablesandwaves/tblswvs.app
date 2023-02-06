@@ -40,6 +40,8 @@ export class GridRhythm extends GridPage {
     gridPage.currentTrack.rhythm[press.x] = 1 - gridPage.currentTrack.rhythm[press.x];
     gridPage.setGridRhythmDisplay();
     gridPage.setGuiRhythmDisplay();
+
+    gridPage.grid.sequencer.refreshAbleton();
   }
 
 
@@ -60,4 +62,7 @@ export class GridRhythm extends GridPage {
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
   }
+
+
+
 }

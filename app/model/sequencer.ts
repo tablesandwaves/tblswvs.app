@@ -2,13 +2,14 @@ const easymidi = require("easymidi");
 import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./monome_grid";
 import { Track } from "./track";
-import * as utils from "../helpers/utils";
+import { AbletonLive } from "./ableton_live";
 
 
 export class Sequencer {
   grid: MonomeGrid;
+  daw: AbletonLive;
   midiIn: any;
-  midiOut: any;
+  // midiOut: any;
   ticks: number = 0;
   superMeasure: number = 4;
   activeTrack: number | undefined = undefined;
@@ -27,14 +28,20 @@ export class Sequencer {
 
   constructor() {
     this.grid = new MonomeGrid(this);
+    this.daw = new AbletonLive();
     this.midiIn = new easymidi.Input("tblswvs in", true);
-    this.midiOut = new easymidi.Output("tblswvs out", true);
+    // this.midiOut = new easymidi.Output("tblswvs out", true);
   }
 
 
   async connectToGrid(id: string) {
     const msg = await this.grid.connect(id);
     return msg;
+  }
+
+
+  refreshAbleton() {
+    this.daw.syncAbletonClip(this.activeTrack, 0, this.tracks[this.activeTrack]);
   }
 
 
