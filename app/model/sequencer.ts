@@ -1,4 +1,5 @@
 const easymidi = require("easymidi");
+import { Key } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./monome_grid";
 import { Track } from "./track";
@@ -24,6 +25,7 @@ export class Sequencer {
     new Track("Hydra")
   ];
   gui: BrowserWindow;
+  key: Key;
 
 
   constructor() {

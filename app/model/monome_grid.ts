@@ -5,6 +5,7 @@ const serialosc = require("serialosc");
 import { Sequencer } from "./sequencer";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { GridRhythm } from "./grid_rhythm";
+import { GridMelody } from "./grid_melody";
 
 
 export enum GridPageType {
@@ -59,7 +60,9 @@ export class MonomeGrid {
       if (press.x <= 5 && press.s == 1) {
         this.#setActiveTrack(press); // Keys 1-6, select active track
       } else if (press.x == 6 && press.s == 1) {
-        this.#setGridPageToRhythm(press); // Load the rhythm grid page
+        this.#setGridPageToRhythm(); // Load the rhythm grid page
+      } else if (press.x == 8 && press.s == 1) {
+        this.#setGridPageToMelody(); // Load the rhythm grid page
       }
 
     // Other rows, forward to the key press to the currently active page
@@ -81,23 +84,39 @@ export class MonomeGrid {
 
   #setActiveTrack(press: GridKeyPress) {
     this.sequencer.activeTrack = press.x;
-    this.sequencer.tracks.forEach((_, i) => this.levelSet(i, press.y, i == this.sequencer.activeTrack ? 10 : 0));
 
     if (this.activePage) {
       this.activePage.currentTrack = this.sequencer.tracks[this.sequencer.activeTrack];
       this.activePage.refresh();
     }
+
+    this.#selectGlobalGridKey(0, 5, press.x);
   }
 
 
-  #setGridPageToRhythm(press: GridKeyPress) {
+  #setGridPageToRhythm() {
     const configFilePath = path.resolve(this.configDirectory, "grid_page_rhythm.yml");
     const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
     this.activePage = new GridRhythm(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
+    this.activePage.refresh();
     this.activePageType = GridPageType.Rhythm;
+    this.#selectGlobalGridKey(6, 12, 6);
+  }
 
-    for (let i = 6; i <= 13; i++) {
-      this.levelSet(i, press.y, i == press.x ? 10 : 0);
+
+  #setGridPageToMelody() {
+    const configFilePath = path.resolve(this.configDirectory, "grid_page_melody.yml");
+    const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
+    this.activePage = new GridMelody(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
+    this.activePage.refresh();
+    this.activePageType = GridPageType.Melody;
+    this.#selectGlobalGridKey(6, 12, 8);
+  }
+
+
+  #selectGlobalGridKey(rangeStart: number, rangeEnd: number, selectedKey: number) {
+    for (let i = rangeStart; i <= rangeEnd; i++) {
+      this.levelSet(i, 7, i == selectedKey ? 10 : 0);
     }
   }
 }

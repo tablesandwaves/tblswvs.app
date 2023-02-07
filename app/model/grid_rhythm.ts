@@ -4,22 +4,10 @@ import { Track } from "./track";
 
 
 export class GridRhythm extends GridPage {
-  currentTrack: Track;
-  grid: MonomeGrid;
-  functionMap: Map<string, Function> = new Map();
-
 
   constructor(config: GridConfig, track: Track, grid: MonomeGrid) {
-    super(grid, track);
-    this.grid = grid;
+    super(config, grid, track);
     this.functionMap.set("updateRhythm", this.updateRhythm);
-
-    config.rows.forEach((row) => {
-      if (this.matrix[row.index] == undefined) this.matrix[row.index] = new Array(16);
-      for (let i = row.xStart; i < row.xLength; i++) {
-        this.matrix[row.index][i] = {mapping: row.mapping};
-      }
-    });
   }
 
 
@@ -62,7 +50,4 @@ export class GridRhythm extends GridPage {
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
   }
-
-
-
 }

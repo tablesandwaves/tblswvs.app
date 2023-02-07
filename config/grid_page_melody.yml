@@ -1,0 +1,119 @@
+rows:
+  -
+    name: Keyboard Octave 1
+    index: 0
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Keyboard Octave 2
+    index: 1
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Keyboard Octave 3
+    index: 2
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Keyboard Octave 4
+    index: 3
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Keyboard Octave 5
+    index: 4
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Keyboard Octave 6
+    index: 5
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Keyboard Octave 7
+    index: 6
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addNote
+  -
+    name: Scale/Tonic Selection (1/3)
+    index: 0
+    xStart: 12
+    xLength: 4
+    type: radio
+    group: scale_tonic
+    mapping: setScale
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+  -
+    name: Scale/Tonic Selection (2/3)
+    index: 1
+    xStart: 12
+    xLength: 4
+    type: radio
+    group: scale_tonic
+    mapping: setScale
+    values:
+      - 4
+      - 5
+      - 6
+      - 7
+  -
+    name: Scale/Tonic Selection (3/3)
+    index: 2
+    xStart: 12
+    xLength: 4
+    type: radio
+    group: scale_tonic
+    mapping: setScale
+    values:
+      - 8
+      - 9
+      - 10
+      - 11
+scales:
+  -
+    name: Major
+    mode: Ionian
+  -
+    name: Minor
+    mode: Aeolian
+  -
+    name: Dorian
+  -
+    name: Phrygian
+  -
+    name: Lydian
+  -
+    name: Mixolydian
+  -
+    name: Locrian
+  -
+    name: MajPentatonic
+  -
+    name: MinPentatonic
+  -
+    name: WholeTone
+  -
+    name: GS
+  -
+    name: Chromatic
+modifiers:
+  - 0
+  - 1

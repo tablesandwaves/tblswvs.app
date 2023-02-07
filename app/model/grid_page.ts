@@ -11,31 +11,50 @@ export type GridKeyPress = {
 
 export type GridConfig = {
   rows: any[],
-  modifiers: any[]
+  modifiers: any[],
+  scales?: any[]
 }
 
 
-export type GridMapping = {
-  mapping: string
+export type GridButton = {
+  mapping: string,
+  type: string,
+  group?: string,
+  value?: any
 }
 
 
-export type ButtonFunction = {
-  name: string
+export type ConfiguredScale = {
+  name: string,
+  mode?: string
 }
 
 
 export class GridPage {
   grid: MonomeGrid;
-  matrix: GridMapping[][];
-  configFunctions: Object;
   currentTrack: Track;
+  scales?: ConfiguredScale[];
+  matrix: GridButton[][] = new Array(8);
+  functionMap: Map<string, Function> = new Map();
 
 
-  constructor(grid: MonomeGrid, track: Track) {
-    this.matrix = new Array(8);
+  constructor(config: GridConfig, grid: MonomeGrid, track: Track) {
     this.grid = grid;
     this.currentTrack = track;
+    this.scales = config.scales;
+
+    config.rows.forEach((row) => {
+      if (this.matrix[row.index] == undefined) { this.matrix[row.index] = new Array(16); }
+
+      for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
+        let entry: GridButton = { mapping: row.mapping, type: row.type };
+        if (row.type == "radio") {
+          entry.value = row.values[i - row.xStart];
+          entry.group = row.group
+        }
+        this.matrix[row.index][i] = entry;
+      }
+    });
   }
 
 
