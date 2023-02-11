@@ -22,7 +22,7 @@ const createWindow = () => {
 
 
 app.whenReady().then(() => {
-  sequencer.connectToGrid("m31931181").then((msg) => console.log(msg));
+  sequencer.connectToGrid().then((msg) => console.log(msg));
 }).then(() => {
   createWindow();
 

@@ -27,7 +27,6 @@ export type GridButton = {
 export class GridPage {
   grid: MonomeGrid;
   currentTrack: Track;
-  // scales?: ConfiguredScale[];
   matrix: GridButton[][] = new Array(8);
   functionMap: Map<string, Function> = new Map();
 

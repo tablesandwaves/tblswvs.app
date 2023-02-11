@@ -1,6 +1,7 @@
 dist/
 node_modules/
-package-lock.json
+config/grid.yml
 tmp/
+package-lock.json
 .DS_Store
 .vscode

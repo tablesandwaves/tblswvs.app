@@ -14,6 +14,11 @@ export enum GridPageType {
 }
 
 
+export type DeviceConfig = {
+  serial: string,
+}
+
+
 export class MonomeGrid {
   sequencer;
   device: any;
@@ -29,9 +34,16 @@ export class MonomeGrid {
   }
 
 
-  async connect(id: string) {
+  async connect() {
+    const config: DeviceConfig = yaml.load(
+      fs.readFileSync(
+        path.resolve(this.configDirectory, "grid.yml"),
+        "utf8"
+      )
+    ) as DeviceConfig;
+
     return new Promise((resolve, reject) => {
-      let addEvent = id ? id + ':add' : 'device:add';
+      let addEvent = config.serial + ":add";
 
       serialosc.start({ startDevices: false });
 

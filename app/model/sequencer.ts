@@ -36,8 +36,8 @@ export class Sequencer {
   }
 
 
-  async connectToGrid(id: string) {
-    const msg = await this.grid.connect(id);
+  async connectToGrid() {
+    const msg = await this.grid.connect();
     return msg;
   }
 
