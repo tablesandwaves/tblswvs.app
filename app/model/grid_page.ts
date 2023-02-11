@@ -24,16 +24,10 @@ export type GridButton = {
 }
 
 
-export type ConfiguredScale = {
-  name: string,
-  mode?: string
-}
-
-
 export class GridPage {
   grid: MonomeGrid;
   currentTrack: Track;
-  scales?: ConfiguredScale[];
+  // scales?: ConfiguredScale[];
   matrix: GridButton[][] = new Array(8);
   functionMap: Map<string, Function> = new Map();
 
@@ -41,7 +35,6 @@ export class GridPage {
   constructor(config: GridConfig, grid: MonomeGrid, track: Track) {
     this.grid = grid;
     this.currentTrack = track;
-    this.scales = config.scales;
 
     config.rows.forEach((row) => {
       if (this.matrix[row.index] == undefined) { this.matrix[row.index] = new Array(16); }

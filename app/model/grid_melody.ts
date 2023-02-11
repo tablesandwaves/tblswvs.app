@@ -1,32 +1,22 @@
 import { Key, Scale } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
-import { ConfiguredScale, GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { Track } from "./track";
 
 
-// Hack
-const scaleMap: Record<string, Scale> = {
-  "Ionian": Scale.Ionian,
-  "Dorian": Scale.Dorian,
-  "Phrygian": Scale.Phrygian,
-  "Lydian": Scale.Lydian,
-  "Mixolydian": Scale.Mixolydian,
-  "Aeolian": Scale.Aeolian,
-  "Locrian": Scale.Locrian,
-  "Major": Scale.Major,
-  "Minor": Scale.Minor,
-  "MajPentatonic": Scale.MajPentatonic,
-  "MinPentatonic": Scale.MinPentatonic,
-  "WholeTone": Scale.WholeTone,
-  "Chromatic": Scale.Chromatic,
-  "GS": Scale.GS
+export type ConfiguredScale = {
+  name: keyof typeof Scale,
+  mode?: string
 }
 
 
 export class GridMelody extends GridPage {
+  scales: ConfiguredScale[];
+
 
   constructor(config: GridConfig, track: Track, grid: MonomeGrid) {
     super(config, grid, track);
+    this.scales = config.scales;
 
     this.functionMap.set("addNote", this.addNote);
     this.functionMap.set("setScale", this.setScale);
@@ -46,7 +36,7 @@ export class GridMelody extends GridPage {
 
   setScale(gridPage: GridMelody, press: GridKeyPress) {
     let scale: ConfiguredScale = gridPage.scales[gridPage.matrix[press.y][press.x].value];
-    gridPage.grid.sequencer.key = new Key(60, scaleMap[scale.name]);
+    gridPage.grid.sequencer.key = new Key(60, Scale[scale.name]);
   }
 
 
