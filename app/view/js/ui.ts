@@ -18,3 +18,8 @@ window.stepSequencer.activateTrack((event: any, name: string, rhythm: number[]) 
       document.getElementById(`step-${i}`).classList.remove("current");
   })
 });
+
+
+window.parameters.updateScale((event: any, name: string) => {
+  document.querySelector("#current-scale").textContent = name;
+});

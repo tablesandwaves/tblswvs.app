@@ -9,7 +9,9 @@ body {
 
 h1,
 div.rhythm,
-div.rhythm div {
+div.rhythm div,
+div.melody,
+div.melody p {
   position: relative;
   float: left;
 }
@@ -66,14 +68,14 @@ h1 {
 }
 
 
-div.rhythm {
+div.rhythm,
+div.melody {
   width: 800px;
   margin: 10px;
 }
 
 
 div.rhythm div {
-
   width: 40px;
   height: 40px;
   margin: 4px;

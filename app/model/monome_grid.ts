@@ -20,7 +20,7 @@ export type DeviceConfig = {
 
 
 export class MonomeGrid {
-  sequencer;
+  sequencer: Sequencer;
   device: any;
   playing: any;
   activePage: GridPage;

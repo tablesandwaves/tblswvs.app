@@ -1,5 +1,5 @@
 const easymidi = require("easymidi");
-import { Key } from "tblswvs";
+import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./monome_grid";
 import { Track } from "./track";
@@ -32,7 +32,7 @@ export class Sequencer {
     this.grid = new MonomeGrid(this);
     this.daw = new AbletonLive();
     this.midiIn = new easymidi.Input("tblswvs in", true);
-    // this.midiOut = new easymidi.Output("tblswvs out", true);
+    this.key = new Key(60, Scale.Minor);
   }
 
 
