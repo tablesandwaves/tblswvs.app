@@ -21,5 +21,10 @@ window.stepSequencer.activateTrack((event: any, name: string, rhythm: number[]) 
 
 
 window.parameters.updateScale((event: any, name: string) => {
-  document.querySelector("#current-scale").textContent = name;
+  document.querySelector("#current-scale span").textContent = name;
+});
+
+
+window.parameters.updateQueuedMelody((event: any, melody: string) => {
+  document.querySelector("#queued-melody span").textContent = melody;
 });

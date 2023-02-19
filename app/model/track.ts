@@ -1,4 +1,5 @@
 import { AbletonNote } from "./ableton_note";
+import { note } from "tblswvs";
 
 
 const missingNotes = (notes: AbletonNote[], otherNotes: AbletonNote[]) => {
@@ -20,7 +21,7 @@ const missingNotes = (notes: AbletonNote[], otherNotes: AbletonNote[]) => {
 export class Track {
   name: string;
   rhythm: number[] = new Array(16).fill(0);
-  notes: number[] = [60];
+  notes: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   abletonNotes: AbletonNote[] = new Array();
   weightedRhythm: boolean = false;
 

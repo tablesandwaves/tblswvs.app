@@ -7,5 +7,6 @@ contextBridge.exposeInMainWorld("stepSequencer", {
 
 
 contextBridge.exposeInMainWorld("parameters", {
-  updateScale: (callback: any) => ipcRenderer.on("set-scale", callback)
+  updateScale: (callback: any) => ipcRenderer.on("set-scale", callback),
+  updateQueuedMelody: (callback: any) => ipcRenderer.on("update-melody", callback)
 });

@@ -29,6 +29,6 @@
     "easymidi": "^3.0.1",
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
-    "tblswvs": "^0.16.0"
+    "tblswvs": "^0.17.0"
   }
 }

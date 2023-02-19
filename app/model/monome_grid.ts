@@ -6,6 +6,7 @@ import { Sequencer } from "./sequencer";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { GridRhythm } from "./grid_rhythm";
 import { GridMelody } from "./grid_melody";
+import { blank16x16Row } from "../helpers/utils";
 
 
 export enum GridPageType {
@@ -99,6 +100,14 @@ export class MonomeGrid {
 
   levelRow(xOffset: number, y: number, row: number[]) {
     this.device.levelRow(xOffset, y, row);
+  }
+
+
+  clearGridDisplay() {
+    for (let y = 0; y < 7; y++) {
+      this.levelRow(0, y, blank16x16Row.slice(0, 8));
+      this.levelRow(8, y, blank16x16Row.slice(8, 16));
+    }
   }
 
 

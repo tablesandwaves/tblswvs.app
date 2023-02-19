@@ -96,3 +96,18 @@ div.rhythm div.active.on {
 div.rhythm div.active.current {
   background-color: #117733;
 }
+
+
+div.melody p {
+  float: left;
+}
+
+
+div.melody p#current-scale {
+  width: 100%;
+}
+
+
+div.melody p#queued-melody {
+  width: 100%;
+}

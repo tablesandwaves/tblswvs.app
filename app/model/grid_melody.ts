@@ -11,8 +11,20 @@ export type ConfiguredScale = {
 }
 
 
+const octaveTransposeMapping: Record<number, number> = {
+  0: 3,
+  1: 2,
+  2: 1,
+  3: 0,
+  4: -1,
+  5: -2,
+  6: -3
+}
+
+
 export class GridMelody extends GridPage {
   scales: ConfiguredScale[];
+  recordingInputMelody: boolean = false;
 
 
   constructor(config: GridConfig, track: Track, grid: MonomeGrid) {
@@ -21,19 +33,40 @@ export class GridMelody extends GridPage {
 
     this.functionMap.set("addNote", this.addNote);
     this.functionMap.set("setScale", this.setScaleOrTonic);
+    this.functionMap.set("toggleMelodyRecording", this.toggleMelodyRecording)
+    this.functionMap.set("removeLastNote", this.removeLastNote)
 
+    this.grid.clearGridDisplay();
     this.setGridScaleOrTonicDisplay();
   }
 
 
-  keyPress(press: GridKeyPress) {
-    if (press.s == 1) {
-      this.functionMap.get(this.matrix[press.y][press.x].mapping)(this, press);
+  toggleMelodyRecording(gridPage: GridMelody, press: GridKeyPress) {
+    gridPage.recordingInputMelody = !gridPage.recordingInputMelody;
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputMelody ? 10 : 0));
+    if (gridPage.recordingInputMelody) {
+      gridPage.grid.sequencer.queuedNotes = new Array();
+      gridPage.setUiQueuedMelody();
     }
   }
 
 
+  // TODO: set a button for appending notes like the Max version, if active/true, add notes to the active track.
   addNote(gridPage: GridMelody, press: GridKeyPress) {
+    if (gridPage.recordingInputMelody) {
+      let octaveTranspose = octaveTransposeMapping[press.y];
+      // Spread operator used to clone the object because otherwise calling array element by ref?
+      gridPage.grid.sequencer.queuedNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
+      gridPage.setUiQueuedMelody();
+    }
+  }
+
+
+  removeLastNote(gridPage: GridMelody, press: GridKeyPress) {
+    if (gridPage.recordingInputMelody) {
+      gridPage.grid.sequencer.queuedNotes.pop();
+      gridPage.setUiQueuedMelody();
+    }
   }
 
 
@@ -58,6 +91,14 @@ export class GridMelody extends GridPage {
     for (let i = 0, y = 0; y < 3; y++)
       for (let x = 0; x < 4; x++, i++)
         this.grid.levelSet(x + 12, y, (i == index ? 10 : 0));
+  }
+
+
+  setUiQueuedMelody() {
+    this.grid.sequencer.gui.webContents.send(
+      "update-melody",
+      this.grid.sequencer.queuedNotes.map(n => `${n.note}${n.octave}`).join(" ")
+    );
   }
 
 

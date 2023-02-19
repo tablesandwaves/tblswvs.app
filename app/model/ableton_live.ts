@@ -26,7 +26,7 @@ export class AbletonLive {
     const trackClip = [{type: 'integer', value: trackNumber}, {type: 'integer', value: clipNumber}];
 
     let abletonNotes = track.rhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
-      if (step == 1) abletonNotes.push(new AbletonNote(track.notes[i % track.notes.length], i * 0.25, 0.25, 64));
+      if (step == 1) abletonNotes.push(new AbletonNote(track.notes[i % track.notes.length].midi, i * 0.25, 0.25, 64));
       return abletonNotes;
     }, []);
 

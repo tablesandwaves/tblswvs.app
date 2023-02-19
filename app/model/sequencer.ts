@@ -4,6 +4,7 @@ import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./monome_grid";
 import { Track } from "./track";
 import { AbletonLive } from "./ableton_live";
+import { note } from "tblswvs";
 
 
 export class Sequencer {
@@ -26,6 +27,7 @@ export class Sequencer {
   ];
   gui: BrowserWindow;
   key: Key;
+  queuedNotes: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
 
 
   constructor() {

@@ -17,13 +17,6 @@ export class GridRhythm extends GridPage {
   }
 
 
-  keyPress(press: GridKeyPress) {
-    if (press.s == 1) {
-      this.functionMap.get(this.matrix[press.y][press.x].mapping)(this, press);
-    }
-  }
-
-
   updateRhythm(gridPage: GridRhythm, press: GridKeyPress) {
     gridPage.currentTrack.rhythm[press.x] = 1 - gridPage.currentTrack.rhythm[press.x];
     gridPage.setGridRhythmDisplay();

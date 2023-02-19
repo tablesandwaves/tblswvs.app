@@ -35,9 +35,10 @@ export class GridPage {
     this.grid = grid;
     this.currentTrack = track;
 
-    config.rows.forEach((row) => {
-      if (this.matrix[row.index] == undefined) { this.matrix[row.index] = new Array(16); }
+    for (let i = 0; i < this.matrix.length; i++)
+      this.matrix[i] = new Array(16);
 
+    config.rows.forEach((row) => {
       for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
         let entry: GridButton = { mapping: row.mapping, type: row.type };
         if (row.type == "radio") {
@@ -54,9 +55,10 @@ export class GridPage {
   refresh() {}
 
 
-  // Should be overridden by any subclasses extending GridPage
+  // May be overridden by any subclasses extending GridPage
   keyPress(press: GridKeyPress) {
-    console.log(`Grid key press: ${press.x} ${press.y} ${press.s}`);
+    if (press.s == 1 && this.matrix[press.y][press.x] != undefined)
+      this.functionMap.get(this.matrix[press.y][press.x].mapping)(this, press);
   }
 
 

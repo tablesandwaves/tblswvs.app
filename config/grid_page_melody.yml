@@ -87,6 +87,18 @@ rows:
       - 9
       - 10
       - 11
+  -
+    name: Toggle Input Melody Recording
+    index: 3
+    xStart: 12
+    xLength: 1
+    mapping: toggleMelodyRecording
+  -
+    name: Remove Last Input Melody Note
+    index: 3
+    xStart: 13
+    xLength: 1
+    mapping: removeLastNote
 scales:
   -
     name: Major
