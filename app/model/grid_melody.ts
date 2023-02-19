@@ -1,4 +1,4 @@
-import { Key, Scale } from "tblswvs";
+import { Key, Scale, Melody, MelodyType } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { Track } from "./track";
@@ -31,13 +31,48 @@ export class GridMelody extends GridPage {
     super(config, grid, track);
     this.scales = config.scales;
 
-    this.functionMap.set("addNote", this.addNote);
     this.functionMap.set("setScale", this.setScaleOrTonic);
-    this.functionMap.set("toggleMelodyRecording", this.toggleMelodyRecording)
-    this.functionMap.set("removeLastNote", this.removeLastNote)
+    this.functionMap.set("toggleMelodyRecording", this.toggleMelodyRecording);
+    this.functionMap.set("addNote", this.addNote);
+    this.functionMap.set("removeLastNote", this.removeLastNote);
+    this.functionMap.set("generateMelody", this.generateMelody);
 
     this.grid.clearGridDisplay();
     this.setGridScaleOrTonicDisplay();
+    this.setUiTrackMelody();
+  }
+
+
+  generateMelody(gridPage: GridMelody, press: GridKeyPress) {
+    switch (gridPage.matrix[press.y][press.x].value) {
+      case "simple":
+        gridPage.grid.sequencer.getActiveTrack().notes = gridPage.grid.sequencer.queuedNotes;
+        break;
+      case "self_replicate":
+        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).steps);
+        break;
+      case "counted":
+        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().counted().steps);
+        break;
+      case "zig_zag":
+        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().zigZag().steps);
+        break;
+    }
+    gridPage.grid.sequencer.refreshAbleton();
+    gridPage.grid.sequencer.getActiveTrack().algorithm = gridPage.matrix[press.y][press.x].value;
+    gridPage.setUiTrackMelody();
+  }
+
+
+  setCurrentTrackNotes(outputMelody: (string | number)[]) {
+    this.grid.sequencer.getActiveTrack().notes = outputMelody.map(scaleDegree => {
+      return scaleDegree == 0 ? undefined : this.grid.sequencer.key.degree(Number(scaleDegree));
+    });
+  }
+
+
+  getCurrentScaleDegreeMelody(): Melody {
+    return new Melody(this.grid.sequencer.queuedNotes.map(n => n.scaleDegree), 0, MelodyType.Degrees);
   }
 
 
@@ -51,7 +86,6 @@ export class GridMelody extends GridPage {
   }
 
 
-  // TODO: set a button for appending notes like the Max version, if active/true, add notes to the active track.
   addNote(gridPage: GridMelody, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
       let octaveTranspose = octaveTransposeMapping[press.y];
@@ -99,6 +133,16 @@ export class GridMelody extends GridPage {
       "update-melody",
       this.grid.sequencer.queuedNotes.map(n => `${n.note}${n.octave}`).join(" ")
     );
+  }
+
+
+  setUiTrackMelody() {
+    if (this.grid.sequencer.getActiveTrack().algorithm != undefined) {
+      this.grid.sequencer.gui.webContents.send(
+        "update-track-melody",
+        this.grid.sequencer.getActiveTrack().algorithm + " " + this.grid.sequencer.queuedNotes.map(n => `${n.note}${n.octave}`).join(" ")
+      );
+    }
   }
 
 

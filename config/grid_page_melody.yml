@@ -99,6 +99,25 @@ rows:
     xStart: 13
     xLength: 1
     mapping: removeLastNote
+  -
+    name: Toggle Melody Algorithm Mode
+    index: 3
+    xStart: 15
+    xLength: 1
+    mapping: removeLastNote
+  -
+    name: Melody Algorithms (1/3)
+    index: 4
+    xStart: 12
+    xLength: 4
+    type: radio
+    group: melody_algorithms
+    mapping: generateMelody
+    values:
+      - simple
+      - self_replicate
+      - counted
+      - zig_zag
 scales:
   -
     name: Major

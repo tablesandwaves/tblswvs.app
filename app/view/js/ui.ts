@@ -28,3 +28,8 @@ window.parameters.updateScale((event: any, name: string) => {
 window.parameters.updateQueuedMelody((event: any, melody: string) => {
   document.querySelector("#queued-melody span").textContent = melody;
 });
+
+
+window.parameters.updateTrackMelody((event: any, melody: string) => {
+  document.querySelector("#track-melody").textContent = melody;
+});

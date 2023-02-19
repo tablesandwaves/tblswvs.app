@@ -44,6 +44,11 @@ export class Sequencer {
   }
 
 
+  getActiveTrack(): Track {
+    return this.tracks[this.activeTrack];
+  }
+
+
   refreshAbleton() {
     this.daw.syncAbletonClip(this.activeTrack, 0, this.tracks[this.activeTrack]);
   }

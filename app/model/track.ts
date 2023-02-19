@@ -22,6 +22,8 @@ export class Track {
   name: string;
   rhythm: number[] = new Array(16).fill(0);
   notes: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  algorithm: string = "simple";
   abletonNotes: AbletonNote[] = new Array();
   weightedRhythm: boolean = false;
 
