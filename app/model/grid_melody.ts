@@ -2,6 +2,7 @@ import { Key, Scale } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { Track } from "./track";
+import { notes } from "../helpers/utils";
 
 
 export type ConfiguredScale = {
@@ -19,9 +20,9 @@ export class GridMelody extends GridPage {
     this.scales = config.scales;
 
     this.functionMap.set("addNote", this.addNote);
-    this.functionMap.set("setScale", this.setScale);
+    this.functionMap.set("setScale", this.setScaleOrTonic);
 
-    this.setGridScaleDisplay();
+    this.setGridScaleOrTonicDisplay();
   }
 
 
@@ -36,21 +37,32 @@ export class GridMelody extends GridPage {
   }
 
 
-  setScale(gridPage: GridMelody, press: GridKeyPress) {
-    let scale: ConfiguredScale = gridPage.scales[gridPage.matrix[press.y][press.x].value];
-    gridPage.grid.sequencer.key = new Key(60, Scale[scale.name]);
-
-    gridPage.setGridScaleDisplay()
-    gridPage.grid.sequencer.gui.webContents.send("set-scale", scale.name);
+  setScaleOrTonic(gridPage: GridMelody, press: GridKeyPress) {
+    let tonic: number, scale: ConfiguredScale;
+    if (gridPage.grid.shiftKey) {
+      tonic = gridPage.matrix[press.y][press.x].value + 60;
+      scale = {name: gridPage.grid.sequencer.key.scaleName} as ConfiguredScale;
+    } else {
+      tonic = gridPage.grid.sequencer.key.midiTonic;
+      scale = gridPage.scales[gridPage.matrix[press.y][press.x].value];
+    }
+    gridPage.grid.sequencer.key = new Key(tonic, Scale[scale.name]);
+    gridPage.setGridScaleOrTonicDisplay()
+    gridPage.grid.sequencer.gui.webContents.send("set-scale", `${notes[tonic % 12]} ${scale.name}`);
   }
 
 
-  setGridScaleDisplay() {
-    const scaleIndex = this.getCurrentScaleIndex();
+  setGridScaleOrTonicDisplay() {
+    const index = this.grid.shiftKey ? this.getCurrentTonicIndex() : this.getCurrentScaleIndex();
 
     for (let i = 0, y = 0; y < 3; y++)
       for (let x = 0; x < 4; x++, i++)
-        this.grid.levelSet(x + 12, y, (i == scaleIndex ? 10 : 0));
+        this.grid.levelSet(x + 12, y, (i == index ? 10 : 0));
+  }
+
+
+  getCurrentTonicIndex(): number {
+    return this.grid.sequencer.key.midiTonic % 12;
   }
 
 
@@ -67,5 +79,10 @@ export class GridMelody extends GridPage {
 
   // Should be overridden by any subclasses extending GridPage
   setDisplay(...args: any[]) {}
+
+
+  shiftDisplay() {
+    this.setGridScaleOrTonicDisplay();
+  }
 
 }

@@ -25,12 +25,12 @@ export class MonomeGrid {
   playing: any;
   activePage: GridPage;
   activePageType: GridPageType;
-  configDirectory: string;
+  configDirectory: string = path.resolve(__dirname, "../../config");;
+  shiftKey: boolean = false;
 
 
   constructor(sequencer: Sequencer) {
     this.sequencer = sequencer;
-    this.configDirectory = path.resolve(__dirname, "../../config");
   }
 
 
@@ -75,6 +75,14 @@ export class MonomeGrid {
         this.#setGridPageToRhythm(); // Load the rhythm grid page
       } else if (press.x == 8 && press.s == 1) {
         this.#setGridPageToMelody(); // Load the rhythm grid page
+      } else if (press.x == 13 && press.s == 1) {
+        this.shiftKey = true;
+        this.levelSet(press.x, press.y, 10);
+        this.activePage.shiftDisplay();
+      } else if (press.x == 13 && press.s == 0) {
+        this.shiftKey = false;
+        this.levelSet(press.x, press.y, 0);
+        this.activePage.shiftDisplay();
       }
 
     // Other rows, forward to the key press to the currently active page

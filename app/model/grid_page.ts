@@ -62,4 +62,8 @@ export class GridPage {
 
   // Should be overridden by any subclasses extending GridPage
   setDisplay(...args: any[]) {}
+
+
+  // Should be overridden by any subclasses extending GridPage
+  shiftDisplay() {}
 }
