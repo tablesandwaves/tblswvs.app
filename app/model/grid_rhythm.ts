@@ -34,7 +34,7 @@ export class GridRhythm extends GridPage {
 
   setGuiRhythmDisplay(highlightIndex?: number) {
     const row = this.currentTrack.rhythm.map((step: number, i) => i == highlightIndex ? 15 : step == 1 ? 10 : 0);
-    this.grid.sequencer.gui.webContents.send("track-activate", this.currentTrack.name, row);
+    this.grid.sequencer.gui.webContents.send("transport", row);
   }
 
 

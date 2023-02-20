@@ -44,6 +44,9 @@ export class GridMelody extends GridPage {
 
 
   generateMelody(gridPage: GridMelody, press: GridKeyPress) {
+    gridPage.grid.sequencer.getActiveTrack().algorithm = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.sequencer.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedNotes;
+
     switch (gridPage.matrix[press.y][press.x].value) {
       case "simple":
         gridPage.grid.sequencer.getActiveTrack().notes = gridPage.grid.sequencer.queuedNotes;
@@ -58,8 +61,8 @@ export class GridMelody extends GridPage {
         gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().zigZag().steps);
         break;
     }
+
     gridPage.grid.sequencer.refreshAbleton();
-    gridPage.grid.sequencer.getActiveTrack().algorithm = gridPage.matrix[press.y][press.x].value;
     gridPage.setUiTrackMelody();
   }
 

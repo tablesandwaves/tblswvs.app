@@ -120,6 +120,7 @@ export class MonomeGrid {
     }
 
     this.#selectGlobalGridKey(0, 5, press.x);
+    this.sequencer.gui.webContents.send("track-activate", this.sequencer.getActiveTrack());
   }
 
 
