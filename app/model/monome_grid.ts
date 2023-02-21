@@ -4,6 +4,7 @@ import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
 import { Sequencer } from "./sequencer";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { GridGlobal } from "./grid_global";
 import { GridRhythm } from "./grid_rhythm";
 import { GridMelody } from "./grid_melody";
 import { blank16x16Row } from "../helpers/utils";
@@ -76,6 +77,8 @@ export class MonomeGrid {
         this.#setGridPageToRhythm(); // Load the rhythm grid page
       } else if (press.x == 8 && press.s == 1) {
         this.#setGridPageToMelody(); // Load the rhythm grid page
+      } else if (press.x == 12) {
+        this.#setGridPageToGlobal(); // Load the global paramaeters grid page
       } else if (press.x == 13 && press.s == 1) {
         this.shiftKey = true;
         this.levelSet(press.x, press.y, 10);
@@ -114,10 +117,7 @@ export class MonomeGrid {
   #setActiveTrack(press: GridKeyPress) {
     this.sequencer.activeTrack = press.x;
 
-    if (this.activePage) {
-      this.activePage.currentTrack = this.sequencer.tracks[this.sequencer.activeTrack];
-      this.activePage.refresh();
-    }
+    if (this.activePage) this.activePage.refresh();
 
     this.#selectGlobalGridKey(0, 5, press.x);
     this.sequencer.gui.webContents.send("track-activate", this.sequencer.getActiveTrack());
@@ -127,7 +127,7 @@ export class MonomeGrid {
   #setGridPageToRhythm() {
     const configFilePath = path.resolve(this.configDirectory, "grid_page_rhythm.yml");
     const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
-    this.activePage = new GridRhythm(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
+    this.activePage = new GridRhythm(config as GridConfig, this);
     this.activePage.refresh();
     this.activePageType = GridPageType.Rhythm;
     this.#selectGlobalGridKey(6, 12, 6);
@@ -137,10 +137,18 @@ export class MonomeGrid {
   #setGridPageToMelody() {
     const configFilePath = path.resolve(this.configDirectory, "grid_page_melody.yml");
     const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
-    this.activePage = new GridMelody(config as GridConfig, this.sequencer.tracks[this.sequencer.activeTrack], this);
+    this.activePage = new GridMelody(config as GridConfig, this);
     this.activePage.refresh();
     this.activePageType = GridPageType.Melody;
     this.#selectGlobalGridKey(6, 12, 8);
+  }
+
+
+  #setGridPageToGlobal() {
+    const config = this.#loadConfig("grid_page_global.yml");
+    this.activePage = new GridGlobal(config as GridConfig, this);
+    this.activePage.refresh();
+    this.#selectGlobalGridKey(6, 12, 12);
   }
 
 
@@ -148,5 +156,10 @@ export class MonomeGrid {
     for (let i = rangeStart; i <= rangeEnd; i++) {
       this.levelSet(i, 7, i == selectedKey ? 10 : 0);
     }
+  }
+
+
+  #loadConfig(filename: string): any {
+    return yaml.load(fs.readFileSync( path.resolve(this.configDirectory, filename), "utf8" ));
   }
 }

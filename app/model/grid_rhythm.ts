@@ -5,20 +5,21 @@ import { Track } from "./track";
 
 export class GridRhythm extends GridPage {
 
-  constructor(config: GridConfig, track: Track, grid: MonomeGrid) {
-    super(config, grid, track);
+  constructor(config: GridConfig, grid: MonomeGrid) {
+    super(config, grid);
     this.functionMap.set("updateRhythm", this.updateRhythm);
   }
 
 
   refresh() {
+    this.grid.clearGridDisplay();
     this.setGridRhythmDisplay();
     this.setGuiRhythmDisplay();
   }
 
 
   updateRhythm(gridPage: GridRhythm, press: GridKeyPress) {
-    gridPage.currentTrack.rhythm[press.x] = 1 - gridPage.currentTrack.rhythm[press.x];
+    gridPage.grid.sequencer.getActiveTrack().rhythm[press.x] = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x];
     gridPage.setGridRhythmDisplay();
     gridPage.setGuiRhythmDisplay();
 
@@ -33,13 +34,13 @@ export class GridRhythm extends GridPage {
 
 
   setGuiRhythmDisplay(highlightIndex?: number) {
-    const row = this.currentTrack.rhythm.map((step: number, i) => i == highlightIndex ? 15 : step == 1 ? 10 : 0);
+    const row = this.grid.sequencer.getActiveTrack().rhythm.map((step: number, i) => i == highlightIndex ? 15 : step == 1 ? 10 : 0);
     this.grid.sequencer.gui.webContents.send("transport", row);
   }
 
 
   setGridRhythmDisplay(highlightIndex?: number) {
-    const row = this.currentTrack.rhythm.map((step: number, i) => i == highlightIndex ? 15 : step == 1 ? 10 : 0);
+    const row = this.grid.sequencer.getActiveTrack().rhythm.map((step: number, i) => i == highlightIndex ? 15 : step == 1 ? 10 : 0);
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
   }

@@ -26,14 +26,12 @@ export type GridButton = {
 
 export class GridPage {
   grid: MonomeGrid;
-  currentTrack: Track;
   matrix: GridButton[][] = new Array(8);
   functionMap: Map<string, Function> = new Map();
 
 
-  constructor(config: GridConfig, grid: MonomeGrid, track: Track) {
+  constructor(config: GridConfig, grid: MonomeGrid) {
     this.grid = grid;
-    this.currentTrack = track;
 
     for (let i = 0; i < this.matrix.length; i++)
       this.matrix[i] = new Array(16);
@@ -52,7 +50,7 @@ export class GridPage {
 
 
   // Should be overridden by any subclasses extending GridPage
-  refresh() {}
+  refresh(): void {}
 
 
   // May be overridden by any subclasses extending GridPage

@@ -27,8 +27,8 @@ export class GridMelody extends GridPage {
   recordingInputMelody: boolean = false;
 
 
-  constructor(config: GridConfig, track: Track, grid: MonomeGrid) {
-    super(config, grid, track);
+  constructor(config: GridConfig, grid: MonomeGrid) {
+    super(config, grid);
     this.scales = config.scales;
 
     this.functionMap.set("setScale", this.setScaleOrTonic);
@@ -61,9 +61,6 @@ export class GridMelody extends GridPage {
         gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().zigZag().steps);
         break;
     }
-
-    gridPage.grid.sequencer.refreshAbleton();
-    gridPage.setUiTrackMelody();
   }
 
 
@@ -162,7 +159,10 @@ export class GridMelody extends GridPage {
   }
 
 
-  refresh() {}
+  refresh() {
+    this.grid.sequencer.refreshAbleton();
+    this.setUiTrackMelody();
+  }
 
 
   // Should be overridden by any subclasses extending GridPage

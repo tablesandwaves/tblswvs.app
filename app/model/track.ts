@@ -26,6 +26,7 @@ export class Track {
   algorithm: string = "simple";
   abletonNotes: AbletonNote[] = new Array();
   weightedRhythm: boolean = false;
+  clipLength: number = 4;
 
 
   constructor(name: string) {
