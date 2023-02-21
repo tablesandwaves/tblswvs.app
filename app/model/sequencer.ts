@@ -14,8 +14,7 @@ export class Sequencer {
   // midiOut: any;
   ticks: number = 0;
   superMeasure: number = 4;
-  activeTrack: number | undefined = undefined;
-  playing: any = undefined;
+  activeTrack: number = 0;
   step: number = 0;
   tracks: Track[] = [
     new Track("Kick"),
