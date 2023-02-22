@@ -1,7 +1,6 @@
 import { Key, Scale, Melody, MelodyType } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { Track } from "./track";
 import { notes } from "../helpers/utils";
 
 
@@ -110,7 +109,7 @@ export class GridMelody extends GridPage {
       tonic = gridPage.matrix[press.y][press.x].value + 60;
       scale = {name: gridPage.grid.sequencer.key.scaleName} as ConfiguredScale;
     } else {
-      tonic = gridPage.grid.sequencer.key.midiTonic;
+      tonic = gridPage.grid.sequencer.key.midiTonic + 60;
       scale = gridPage.scales[gridPage.matrix[press.y][press.x].value];
     }
     gridPage.grid.sequencer.key = new Key(tonic, Scale[scale.name]);
