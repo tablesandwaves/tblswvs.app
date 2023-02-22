@@ -10,24 +10,18 @@ window.parameters.activateTrack((event: any, track: any) => {
   });
 
   setRhythmDisplay(track.rhythm);
-  setTrackMelody(track.algorithm + " " + track.inputMelody.map((n: any) => `${n.note}${n.octave}`).join(" "))
+  const melody = track.algorithm + " " + track.inputMelody.map((n: any) => `${n.note}${n.octave}`).join(" ");
+  updateText("#track-melody", melody);
 });
 
 
-window.parameters.updateScale((event: any, name: string) => {
-  document.querySelector("#current-scale span").textContent = name;
-});
+window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
+window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#queued-melody span", melody));
+window.parameters.updateTrackMelody((event: any, melody: string) => updateText("#track-melody", melody));
+window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure))
 
 
-window.parameters.updateQueuedMelody((event: any, melody: string) => {
-  document.querySelector("#queued-melody span").textContent = melody;
-});
-
-
-window.parameters.updateTrackMelody((event: any, melody: string) => setTrackMelody(melody));
-
-
-const setTrackMelody = (melody: string) => document.querySelector("#track-melody").textContent = melody;
+const updateText = (selector: string, text: string) => document.querySelector(selector).textContent = text;
 
 
 const setRhythmDisplay = (rhythm: number[]) => {

@@ -10,6 +10,9 @@ body {
 h1,
 div.rhythm,
 div.rhythm div,
+div#global-params,
+div#measure,
+div#current-scale,
 div.melody,
 div.melody p {
   position: relative;
@@ -68,10 +71,29 @@ h1 {
 }
 
 
+div#global-params p {
+  margin: .5em auto;
+}
+
+
+div#global-params,
 div.rhythm,
 div.melody {
   width: 800px;
   margin: 10px;
+}
+
+
+div#measure,
+div#current-scale {
+  width: 380px;
+  margin: 10px;
+}
+
+
+div#measure {
+  float: right;
+  text-align: right;
 }
 
 
@@ -103,11 +125,22 @@ div.melody p {
 }
 
 
-div.melody p#current-scale {
+div#global-params div#current-scale p {
   width: 100%;
 }
 
 
 div.melody p#queued-melody {
   width: 100%;
+}
+
+
+div#global-params .parameter {
+  display: inline-block;
+  width: 25px;
+  margin: auto 5px;
+  padding: 1px 3px;
+  border-radius: 3px;
+  background-color: #222;
+  color: #fff;
 }

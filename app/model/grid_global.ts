@@ -13,12 +13,14 @@ export class GridGlobal extends GridPage {
   updateSuperMeasure(gridPage: GridGlobal, press: GridKeyPress) {
     gridPage.grid.sequencer.superMeasure = press.x + 1;
     gridPage.#setGridSuperMeasureDisplay();
+    gridPage.#setGuiSuperMeasureDisplay();
   }
 
 
   refresh(): void {
     this.grid.clearGridDisplay();
     this.#setGridSuperMeasureDisplay();
+    this.#setGuiSuperMeasureDisplay();
   }
 
 
@@ -26,5 +28,10 @@ export class GridGlobal extends GridPage {
     const superMeasure    = this.grid.sequencer.superMeasure;
     const superMeasureRow = [...new Array(superMeasure).fill(10), ...new Array(8 - superMeasure).fill(0)];
     this.grid.levelRow(0, 0, superMeasureRow);
+  }
+
+
+  #setGuiSuperMeasureDisplay() {
+    this.grid.sequencer.gui.webContents.send("update-super-measure", this.grid.sequencer.superMeasure);
   }
 }
