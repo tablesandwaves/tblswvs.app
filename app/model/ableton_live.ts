@@ -22,20 +22,24 @@ export class AbletonLive {
   }
 
 
-  syncAbletonClip(trackNumber: number, clipNumber: number, track: Track) {
+  syncAbletonClip(trackNumber: number, clipNumber: number, track: Track, superMeasure: number) {
     const trackClip = [{type: 'integer', value: trackNumber}, {type: 'integer', value: clipNumber}];
 
-    let noteIndex = 0, nextNote;
-    let abletonNotes = track.rhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
-      if (step == 1) {
-        nextNote = track.notes[noteIndex % track.notes.length];
-        // An undefined note in the notes array corresponds to a rest in the melody.
-        if (nextNote != undefined)
-          abletonNotes.push(new AbletonNote(nextNote.midi, i * 0.25, 0.25, 64));
-        noteIndex += 1;
-      }
-      return abletonNotes;
-    }, []);
+    let noteIndex = 0, nextNote, nextMeasureOffset;
+    let abletonNotes: AbletonNote[] = new Array();
+    for (let measure = 0; measure < superMeasure; measure++) {
+      abletonNotes.push(...track.rhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
+        if (step == 1) {
+          nextNote = track.notes[noteIndex % track.notes.length];
+          // nextMeasureOffset = measure
+          // An undefined note in the notes array corresponds to a rest in the melody.
+          if (nextNote != undefined)
+            abletonNotes.push(new AbletonNote(nextNote.midi, ((measure * 4) + (i * 0.25)), 0.25, 64));
+          noteIndex += 1;
+        }
+        return abletonNotes;
+      }, []));
+    }
 
     const noteDiff = track.diffAbletonNotes(abletonNotes);
 

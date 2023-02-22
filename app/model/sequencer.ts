@@ -49,7 +49,7 @@ export class Sequencer {
 
 
   refreshAbleton() {
-    this.daw.syncAbletonClip(this.activeTrack, 0, this.tracks[this.activeTrack]);
+    this.daw.syncAbletonClip(this.activeTrack, 0, this.tracks[this.activeTrack], this.superMeasure);
   }
 
 
