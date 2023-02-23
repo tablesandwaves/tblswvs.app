@@ -1,4 +1,5 @@
 window.stepSequencer.transport((event: any, rhythm: number[]) => setRhythmDisplay(rhythm));
+window.stepSequencer.transportBeat((event: any, beat: string) => updateText("#current-beat", beat));
 
 
 window.parameters.activateTrack((event: any, track: any) => {
@@ -11,17 +12,25 @@ window.parameters.activateTrack((event: any, track: any) => {
 
   setRhythmDisplay(track.rhythm);
   const melody = track.algorithm + " " + track.inputMelody.map((n: any) => `${n.note}${n.octave}`).join(" ");
-  updateText("#track-melody", melody);
+  updateText("#track-melody p", melody);
 });
 
 
 window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
 window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#queued-melody span", melody));
-window.parameters.updateTrackMelody((event: any, melody: string) => updateText("#track-melody", melody));
-window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure))
+window.parameters.updateTrackMelody((event: any, melody: string) => updateText("#track-melody p", melody));
+window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
+window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 
 
 const updateText = (selector: string, text: string) => document.querySelector(selector).textContent = text;
+
+const toggleIndicator = (selector: string, state: boolean) => {
+  if (state)
+    document.querySelector(selector).classList.add("on");
+  else
+    document.querySelector(selector).classList.remove("on");
+}
 
 
 const setRhythmDisplay = (rhythm: number[]) => {

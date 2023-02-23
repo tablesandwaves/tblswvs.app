@@ -100,6 +100,12 @@ rows:
     xLength: 1
     mapping: removeLastNote
   -
+    name: Toggle Create Clip Mode
+    index: 3
+    xStart: 14
+    xLength: 1
+    mapping: toggleNewClipCreation
+  -
     name: Toggle Melody Algorithm Mode
     index: 3
     xStart: 15

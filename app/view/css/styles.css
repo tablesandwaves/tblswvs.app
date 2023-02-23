@@ -10,6 +10,8 @@ body {
 h1,
 div.rhythm,
 div.rhythm div,
+div#track,
+div#create-clip,
 div#global-params,
 div#measure,
 div#current-scale,
@@ -76,6 +78,7 @@ div#global-params p {
 }
 
 
+div#track,
 div#global-params,
 div.rhythm,
 div.melody {
@@ -84,14 +87,30 @@ div.melody {
 }
 
 
-div#measure,
-div#current-scale {
-  width: 380px;
+div#track p,
+div#global-params p,
+div.rhythm p,
+div.melody p {
+  margin: 1px auto;
+}
+
+
+div#create-clip,
+div#measure {
+  width: 300px;
   margin: 10px;
 }
 
 
-div#measure {
+div#track-melody,
+div#current-scale {
+  width: 460px;
+  margin: 10px;
+}
+
+
+div#measure,
+div#create-clip {
   float: right;
   text-align: right;
 }
@@ -143,4 +162,23 @@ div#global-params .parameter {
   border-radius: 3px;
   background-color: #222;
   color: #fff;
+}
+
+
+div#track div#create-clip {
+
+}
+
+div#track div#create-clip span {
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  margin: 0 4px;
+  border: 1px solid #555;
+  background-color: #111;
+}
+
+div#track div#create-clip span.on {
+  background-color: #117733;
 }

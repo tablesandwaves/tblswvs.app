@@ -26,12 +26,12 @@ export class Sequencer {
   ];
   gui: BrowserWindow;
   key: Key;
-  queuedNotes: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  queuedNotes: note[] = new Array();
 
 
   constructor() {
     this.grid = new MonomeGrid(this);
-    this.daw = new AbletonLive();
+    this.daw = new AbletonLive(this);
     this.midiIn = new easymidi.Input("tblswvs in", true);
     this.key = new Key(60, Scale.Minor);
   }
@@ -48,8 +48,8 @@ export class Sequencer {
   }
 
 
-  refreshAbleton() {
-    this.daw.syncAbletonClip(this.activeTrack, 0, this.tracks[this.activeTrack], this.superMeasure);
+  refreshAbleton(newClip: boolean) {
+    this.daw.syncAbletonClip(newClip);
   }
 
 

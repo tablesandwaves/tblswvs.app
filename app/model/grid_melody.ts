@@ -24,6 +24,7 @@ const octaveTransposeMapping: Record<number, number> = {
 export class GridMelody extends GridPage {
   scales: ConfiguredScale[];
   recordingInputMelody: boolean = false;
+  createNewClip: boolean = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -35,6 +36,7 @@ export class GridMelody extends GridPage {
     this.functionMap.set("addNote", this.addNote);
     this.functionMap.set("removeLastNote", this.removeLastNote);
     this.functionMap.set("generateMelody", this.generateMelody);
+    this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
 
     this.grid.clearGridDisplay();
     this.setGridScaleOrTonicDisplay();
@@ -48,7 +50,7 @@ export class GridMelody extends GridPage {
 
     switch (gridPage.matrix[press.y][press.x].value) {
       case "simple":
-        gridPage.grid.sequencer.getActiveTrack().notes = gridPage.grid.sequencer.queuedNotes;
+        gridPage.grid.sequencer.getActiveTrack().outputMelody = gridPage.grid.sequencer.queuedNotes;
         break;
       case "self_replicate":
         gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).steps);
@@ -61,12 +63,12 @@ export class GridMelody extends GridPage {
         break;
     }
 
-    gridPage.refresh();
+    gridPage.refresh(gridPage.createNewClip);
   }
 
 
   setCurrentTrackNotes(outputMelody: (string | number)[]) {
-    this.grid.sequencer.getActiveTrack().notes = outputMelody.map(scaleDegree => {
+    this.grid.sequencer.getActiveTrack().outputMelody = outputMelody.map(scaleDegree => {
       return scaleDegree == 0 ? undefined : this.grid.sequencer.key.degree(Number(scaleDegree));
     });
   }
@@ -84,6 +86,13 @@ export class GridMelody extends GridPage {
       gridPage.grid.sequencer.queuedNotes = new Array();
       gridPage.setUiQueuedMelody();
     }
+  }
+
+
+  toggleNewClipCreation(gridPage: GridMelody, press: GridKeyPress) {
+    gridPage.createNewClip = !gridPage.createNewClip;
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.createNewClip ? 10 : 0));
+    gridPage.grid.sequencer.gui.webContents.send("toggle-create-clip", gridPage.createNewClip);
   }
 
 
@@ -141,7 +150,7 @@ export class GridMelody extends GridPage {
     if (this.grid.sequencer.getActiveTrack().algorithm != undefined) {
       this.grid.sequencer.gui.webContents.send(
         "update-track-melody",
-        this.grid.sequencer.getActiveTrack().algorithm + " " + this.grid.sequencer.queuedNotes.map(n => `${n.note}${n.octave}`).join(" ")
+        this.grid.sequencer.getActiveTrack().algorithm + " " + this.grid.sequencer.getActiveTrack().inputMelody.map(n => `${n.note}${n.octave}`).join(" ")
       );
     }
   }
@@ -160,8 +169,8 @@ export class GridMelody extends GridPage {
   }
 
 
-  refresh() {
-    this.grid.sequencer.refreshAbleton();
+  refresh(newClip?: boolean) {
+    this.grid.sequencer.refreshAbleton(newClip);
     this.setUiTrackMelody();
   }
 
@@ -173,5 +182,4 @@ export class GridMelody extends GridPage {
   shiftDisplay() {
     this.setGridScaleOrTonicDisplay();
   }
-
 }

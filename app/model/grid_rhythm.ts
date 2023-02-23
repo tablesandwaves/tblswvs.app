@@ -23,7 +23,7 @@ export class GridRhythm extends GridPage {
     gridPage.setGridRhythmDisplay();
     gridPage.setGuiRhythmDisplay();
 
-    gridPage.grid.sequencer.refreshAbleton();
+    gridPage.grid.sequencer.refreshAbleton(false);
   }
 
 
