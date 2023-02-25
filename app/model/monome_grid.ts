@@ -27,7 +27,7 @@ export class MonomeGrid {
   playing: any;
   activePage: GridPage;
   activePageType: GridPageType;
-  configDirectory: string = path.resolve(__dirname, "../../config");;
+  configDirectory: string = path.resolve(__dirname, "../../config");
   shiftKey: boolean = false;
 
 
