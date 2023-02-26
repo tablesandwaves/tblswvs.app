@@ -1,3 +1,19 @@
+const missingNotes = (notes: AbletonNote[], otherNotes: AbletonNote[]) => {
+  return notes.reduce((notesMissing: AbletonNote[], note: AbletonNote) => {
+    let found = false;
+    for (let i = 0; i < otherNotes.length; i++) {
+      if (otherNotes[i].equals(note)) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) notesMissing.push(note);
+
+    return notesMissing;
+  }, []);
+}
+
+
 export class AbletonNote {
   midiNote: number;
   clipPosition: number;
@@ -41,5 +57,13 @@ export class AbletonNote {
            this.duration == other.duration &&
            this.velocity == other.velocity &&
            this.inactive == other.inactive;
+  }
+
+
+  static diffAbletonNotes(currentNotes: AbletonNote[], otherAbletonNotes: AbletonNote[]) {
+    return {
+      addedNotes:   missingNotes(otherAbletonNotes, currentNotes),
+      removedNotes: missingNotes(currentNotes, otherAbletonNotes)
+    }
   }
 }

@@ -3,7 +3,8 @@ import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./monome_grid";
 import { Track } from "./track";
-import { AbletonLive } from "./ableton_live";
+import { AbletonLive } from "./ableton/live";
+import { AbletonNote } from "./ableton/note";
 import { note } from "tblswvs";
 
 
@@ -31,7 +32,7 @@ export class Sequencer {
 
   constructor() {
     this.grid = new MonomeGrid(this);
-    this.daw = new AbletonLive(this);
+    this.daw = new AbletonLive();
     this.midiIn = new easymidi.Input("tblswvs in", true);
     this.key = new Key(60, Scale.Minor);
   }
@@ -49,7 +50,32 @@ export class Sequencer {
 
 
   refreshAbleton(newClip: boolean) {
-    this.daw.syncAbletonClip(newClip);
+    this.daw.setNotes(
+      this.activeTrack,
+      this.tracks[this.activeTrack].currentClip,
+      this.#abletonNotesForCurrentTrack()
+    );
+  }
+
+
+  #abletonNotesForCurrentTrack(): AbletonNote[] {
+    let abletonNotes: AbletonNote[] = new Array();
+
+    let noteIndex = 0, nextNote;
+    for (let measure = 0; measure < this.superMeasure; measure++) {
+      abletonNotes.push(...this.tracks[this.activeTrack].rhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
+        if (step == 1) {
+          nextNote = this.tracks[this.activeTrack].outputMelody[noteIndex % this.tracks[this.activeTrack].outputMelody.length];
+          // An undefined note in the notes array corresponds to a rest in the melody.
+          if (nextNote != undefined)
+            abletonNotes.push(new AbletonNote(nextNote.midi, ((measure * 4) + (i * 0.25)), 0.25, 64));
+          noteIndex += 1;
+        }
+        return abletonNotes;
+      }, []));
+    }
+
+    return abletonNotes;
   }
 
 
