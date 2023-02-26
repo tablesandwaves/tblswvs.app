@@ -19,9 +19,12 @@ export class AbletonLive {
     new AbletonTrack(),
     new AbletonTrack()
   ];
+  sequencer: Sequencer;
 
 
-  constructor() {
+  constructor(sequencer: Sequencer) {
+    this.sequencer = sequencer;
+
     // To Live
     this.emitter = new OscEmitter();
     this.emitter.add("localhost", 11000);
@@ -30,6 +33,7 @@ export class AbletonLive {
     this.receiver = new OscReceiver();
     this.receiver.bind(11001, "localhost");
     this.receiver.on("/live/clip/get/notes", (...response: any[]) => this.#syncNotes(this, ...response));
+    this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncSuperMeasure(beatNumber));
   }
 
 
@@ -64,6 +68,23 @@ export class AbletonLive {
 
     daw.tracks[trackIndex].clips[clipIndex].notes = daw.tracks[trackIndex].clips[clipIndex].queuedNotes;
     daw.tracks[trackIndex].clips[clipIndex].queuedNotes = [];
+  }
+
+
+  #syncSuperMeasure(beat: number) {
+    console.log(beat)
+    if (beat % 4 == 0) {
+      const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
+      if (measure == this.sequencer.superMeasure) {
+        let trackClip;
+        this.sequencer.tracks.forEach((track, i) => {
+          trackClip = [{type: 'integer', value: i}, {type: 'integer', value: track.currentClip}];
+          this.emitter.emit("/live/clip/fire", ...trackClip);
+        });
+      }
+
+      this.sequencer.grid.sequencer.gui.webContents.send("transport-beat", measure);
+    }
   }
 
 

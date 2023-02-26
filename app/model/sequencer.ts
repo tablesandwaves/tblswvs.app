@@ -32,7 +32,7 @@ export class Sequencer {
 
   constructor() {
     this.grid = new MonomeGrid(this);
-    this.daw = new AbletonLive();
+    this.daw = new AbletonLive(this);
     this.midiIn = new easymidi.Input("tblswvs in", true);
     this.key = new Key(60, Scale.Minor);
   }
