@@ -72,7 +72,6 @@ export class AbletonLive {
 
 
   #syncSuperMeasure(beat: number) {
-    console.log(beat)
     if (beat % 4 == 0) {
       const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
       if (measure == this.sequencer.superMeasure) {
