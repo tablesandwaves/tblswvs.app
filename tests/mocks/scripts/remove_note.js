@@ -3,10 +3,9 @@ const shared   = require("./shared");
 console.log("Setting clip notes to an empty array");
 
 const notes = [],
-      trackIndex = 0,
-      clipIndex = 0;
+      trackIndex = 0;
 
-let result = shared.updateTrackNotes(trackIndex, clipIndex, notes);
+let result = shared.updateTrackNotes(trackIndex, notes);
 
 result.then(async (daw) => {
   await shared.serializeDaw("removed-note.json", daw);

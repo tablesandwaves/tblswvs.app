@@ -21,8 +21,8 @@ const deleteClip = async (trackIndex, clipIndex) => new Promise(async (resolve) 
   setTimeout(() => resolve(daw), 1000);
 });
 
-const updateTrackNotes = async (trackIndex, clipIndex, notes) => new Promise(async (resolve) => {
-  daw.setNotes(trackIndex, clipIndex, notes);
+const updateTrackNotes = async (trackIndex, notes) => new Promise(async (resolve) => {
+  daw.setNotes(trackIndex, notes);
   setTimeout(() => resolve(daw), 1000);
 });
 

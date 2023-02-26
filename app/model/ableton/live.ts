@@ -7,6 +7,10 @@ import { AbletonClip } from "./clip";
 import { Sequencer } from "../sequencer";
 
 
+// Used so the tests, which may not have access to this.sequencer, have a value
+const DEFAULT_SUPER_MEASURE_LENGTH = 16;
+
+
 export class AbletonLive {
   emitter: any;
   receiver: any;
@@ -19,7 +23,7 @@ export class AbletonLive {
     this.sequencer = sequencer;
 
     // When testing the Ableton classes, the sequencer is undefined, so use a default value.
-    const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : 16;
+    const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : DEFAULT_SUPER_MEASURE_LENGTH;
     this.tracks = [
       new AbletonTrack(superMeasureLength),
       new AbletonTrack(superMeasureLength),
@@ -47,7 +51,8 @@ export class AbletonLive {
       this.tracks[trackIndex].currentClip = (this.tracks[trackIndex].currentClip + 1) % 8;
       timeout = 100;
       this.#generateNewClip(trackIndex);
-      this.tracks[trackIndex].clips[this.tracks[trackIndex].currentClip] = new AbletonClip(this.sequencer.superMeasure);
+      const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : DEFAULT_SUPER_MEASURE_LENGTH;
+      this.tracks[trackIndex].clips[this.tracks[trackIndex].currentClip] = new AbletonClip(superMeasureLength);
     }
 
     setTimeout(() => this.#syncNotes(trackIndex, this.tracks[trackIndex].currentClip, notes), timeout);
@@ -82,7 +87,8 @@ export class AbletonLive {
       this.deleteClip(trackIndex, this.tracks[trackIndex].currentClip);
     }
 
-    setTimeout(() => this.createClip(trackIndex, this.tracks[trackIndex].currentClip, this.sequencer.superMeasure * 4), timeout);
+    const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : DEFAULT_SUPER_MEASURE_LENGTH;
+    setTimeout(() => this.createClip(trackIndex, this.tracks[trackIndex].currentClip, superMeasureLength * 4), timeout);
   }
 
 

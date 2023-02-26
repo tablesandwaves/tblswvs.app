@@ -17,8 +17,8 @@ describe("AbletonLive", () => {
       expect(dawPostAdd.tracks[0].clips[0].notes[0].midiNote).to.eq(60);
     });
 
-    it("does not keep the new notes queued in the clip", () => {
-      expect(dawPostAdd.tracks[0].clips[0].queuedNotes.length).to.eq(0);
+    it("produces the correct number of notes", () => {
+      expect(dawPostAdd.tracks[0].clips[0].notes.length).to.eq(1);
     });
   });
 
@@ -30,8 +30,8 @@ describe("AbletonLive", () => {
       expect(dawPostRemove.tracks[0].clips[0].notes.length).to.eq(0);
     });
 
-    it("has no queued notes", () => {
-      expect(dawPostRemove.tracks[0].clips[0].queuedNotes.length).to.eq(0);
+    it("produces the correct number of notes", () => {
+      expect(dawPostRemove.tracks[0].clips[0].notes.length).to.eq(0);
     });
   });
 
@@ -49,17 +49,17 @@ describe("AbletonLive", () => {
   });
 
 
-  // describe("deleting a clip", () => {
-  //   const dawPostDelete = mockObject("deleted-clip.json");
+  describe("deleting a clip", () => {
+    const dawPostDelete = mockObject("deleted-clip.json");
 
-  //   it("does not alter the size of the clip array", () => {
-  //     expect(dawPostDelete.tracks[0].clips.length).to.eq(2);
-  //   });
+    it("does not alter the size of the clip array", () => {
+      expect(dawPostDelete.tracks[0].clips.length).to.eq(2);
+    });
 
-  //   it("the track's clip array does not remove the item but sets it to undefined", () => {
-  //     expect(dawPostDelete.tracks[0].clips[1]).to.eq(undefined);
-  //   });
-  // });
+    it("the track's clip array does not remove the item but sets it to undefined", () => {
+      expect(dawPostDelete.tracks[0].clips[1]).to.eq(null);
+    });
+  });
 });
 
 
