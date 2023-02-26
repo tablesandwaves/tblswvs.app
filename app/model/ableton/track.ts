@@ -2,14 +2,12 @@ import { AbletonClip } from "./clip";
 
 
 export class AbletonTrack {
-  clips: AbletonClip[] = [
-    new AbletonClip(),
-    new AbletonClip(),
-    new AbletonClip(),
-    new AbletonClip(),
-    new AbletonClip(),
-    new AbletonClip(),
-    new AbletonClip(),
-    new AbletonClip()
-  ]
+  clips: AbletonClip[];
+  currentClip: number = 0;
+
+  constructor(superMeasureLength: number) {
+    this.clips = [
+      new AbletonClip(superMeasureLength)
+    ]
+  }
 }

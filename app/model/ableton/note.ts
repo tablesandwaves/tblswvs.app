@@ -60,10 +60,10 @@ export class AbletonNote {
   }
 
 
-  static diffAbletonNotes(currentNotes: AbletonNote[], otherAbletonNotes: AbletonNote[]) {
+  static diffAbletonNotes(currentNotes: AbletonNote[], otherNotes: AbletonNote[]) {
     return {
-      addedNotes:   missingNotes(otherAbletonNotes, currentNotes),
-      removedNotes: missingNotes(currentNotes, otherAbletonNotes)
+      addedNotes:   missingNotes(otherNotes, currentNotes),
+      removedNotes: missingNotes(currentNotes, otherNotes)
     }
   }
 }

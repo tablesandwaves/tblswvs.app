@@ -11,8 +11,6 @@ export class Track {
   outputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   algorithm: string = "simple";
   weightedRhythm: boolean = false;
-  clipLength: number = 4;
-  currentClip: number = 0;
 
 
   constructor(name: string) {

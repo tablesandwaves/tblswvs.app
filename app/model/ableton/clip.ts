@@ -2,6 +2,11 @@ import { AbletonNote } from "./note";
 
 
 export class AbletonClip {
-  queuedNotes: AbletonNote[] = new Array();
   notes: AbletonNote[] = new Array();
+  length: number;
+
+
+  constructor(length: number) {
+    this.length = length;
+  }
 }

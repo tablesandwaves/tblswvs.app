@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc && npm run html && npm run css && npm run config",
-    "generate_mocks": "node tests/mocks/scripts/add_note.js && node tests/mocks/scripts/remove_note.js",
+    "generate_mocks": "bash tests/mocks/scripts/generate_mocks.sh",
     "test": "npm run build && npm run generate_mocks && env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
     "html": "cp app/view/index.html dist/app/view/",
     "css": "mkdir -p dist/app/view/css && cp app/view/css/styles.css dist/app/view/css",

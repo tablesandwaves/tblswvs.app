@@ -52,8 +52,8 @@ export class Sequencer {
   refreshAbleton(newClip: boolean) {
     this.daw.setNotes(
       this.activeTrack,
-      this.tracks[this.activeTrack].currentClip,
-      this.#abletonNotesForCurrentTrack()
+      this.#abletonNotesForCurrentTrack(),
+      newClip
     );
   }
 
