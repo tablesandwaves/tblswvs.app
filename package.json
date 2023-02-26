@@ -4,11 +4,12 @@
   "description": "Control center for tables & waves",
   "main": "dist/main.js",
   "scripts": {
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
+    "build": "tsc && npm run html && npm run css && npm run config",
+    "generate_mocks": "node tests/mocks/scripts/add_note.js && node tests/mocks/scripts/remove_note.js",
+    "test": "npm run build && npm run generate_mocks && env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
     "html": "cp app/view/index.html dist/app/view/",
     "css": "mkdir -p dist/app/view/css && cp app/view/css/styles.css dist/app/view/css",
     "config": "mkdir -p dist/config && cp config/*.yml dist/config",
-    "build": "tsc && npm run html && npm run css && npm run config",
     "watch": "tsc -w",
     "start": "npm run build && electron ./dist/main.js"
   },
