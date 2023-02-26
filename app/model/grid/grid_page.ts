@@ -1,4 +1,3 @@
-import { Track } from "./track";
 import { MonomeGrid } from "./monome_grid";
 
 

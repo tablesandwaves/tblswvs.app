@@ -1,7 +1,7 @@
 const easymidi = require("easymidi");
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
-import { GridPageType, MonomeGrid } from "./monome_grid";
+import { GridPageType, MonomeGrid } from "./grid/monome_grid";
 import { Track } from "./track";
 import { AbletonLive } from "./ableton/live";
 import { AbletonNote } from "./ableton/note";

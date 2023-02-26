@@ -2,12 +2,12 @@ import * as path from "path";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
-import { Sequencer } from "./sequencer";
+import { Sequencer } from "../sequencer";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { GridGlobal } from "./grid_global";
-import { GridRhythm } from "./grid_rhythm";
-import { GridMelody } from "./grid_melody";
-import { blank16x16Row } from "../helpers/utils";
+import { GridGlobal } from "./global_page";
+import { GridRhythm } from "./rhythm_page";
+import { GridMelody } from "./melody_page";
+import { blank16x16Row } from "../../helpers/utils";
 
 
 export enum GridPageType {
@@ -27,7 +27,7 @@ export class MonomeGrid {
   playing: any;
   activePage: GridPage;
   activePageType: GridPageType;
-  configDirectory: string = path.resolve(__dirname, "../../config");
+  configDirectory: string = path.resolve(__dirname, "../../../config");
   shiftKey: boolean = false;
 
 

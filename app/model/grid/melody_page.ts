@@ -1,7 +1,7 @@
 import { Key, Scale, Melody, MelodyType } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { notes } from "../helpers/utils";
+import { notes } from "../../helpers/utils";
 
 
 export type ConfiguredScale = {

@@ -1,6 +1,5 @@
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { Track } from "./track";
 
 
 export class GridRhythm extends GridPage {
