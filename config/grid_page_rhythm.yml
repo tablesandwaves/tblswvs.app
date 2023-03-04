@@ -9,6 +9,7 @@ rows:
     - On
     - Off
     mapping: updateRhythm
+    shiftMapping: updateBeatLength
     modifiers:
     -
       name: Step Count

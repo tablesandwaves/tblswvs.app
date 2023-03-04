@@ -1,4 +1,3 @@
-// import { AbletonNote } from "./ableton_note";
 import { note } from "tblswvs";
 
 
@@ -12,6 +11,7 @@ export class Track {
   algorithm: string = "simple";
   weightedRhythm: boolean = false;
   noteLength: string = "16n";
+  beatLength: number = 16;
 
 
   constructor(name: string) {

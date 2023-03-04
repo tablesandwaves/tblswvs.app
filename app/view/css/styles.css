@@ -131,12 +131,18 @@ div.rhythm div {
   width: 40px;
   height: 40px;
   margin: 4px;
-  border: 1px solid #555;
+}
+
+
+div.rhythm div {
+  background-color: #111;
+  border: 1px solid #333;
 }
 
 
 div.rhythm div.active {
-  background-color: #111;
+  background-color: #333;
+  border: 1px solid #555;
 }
 
 

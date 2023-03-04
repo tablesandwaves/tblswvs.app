@@ -64,7 +64,7 @@ export class MonomeGrid {
 
 
   displayRhythmWithTransport(highlightIndex: number) {
-    this.activePage.setDisplay(highlightIndex);
+    this.activePage.displayRhythmWithTransport(highlightIndex);
   }
 
 
@@ -80,19 +80,20 @@ export class MonomeGrid {
       } else if (press.x == 12) {
         this.#setGridPageToGlobal(); // Load the global paramaeters grid page
       } else if (press.x == 13 && press.s == 1) {
-        this.shiftKey = true;
-        this.levelSet(press.x, press.y, 10);
-        this.activePage.shiftDisplay();
-      } else if (press.x == 13 && press.s == 0) {
-        this.shiftKey = false;
-        this.levelSet(press.x, press.y, 0);
-        this.activePage.shiftDisplay();
+        this.setShiftState(press);
       }
 
     // Other rows, forward to the key press to the currently active page
     } else {
       this.activePage.keyPress(press);
     }
+  }
+
+
+  setShiftState(press: GridKeyPress) {
+    this.shiftKey = !this.shiftKey;
+    this.device.levelSet(press.x, press.y, (this.shiftKey ? 10 : 0));
+    this.activePage.toggleShiftState();
   }
 
 

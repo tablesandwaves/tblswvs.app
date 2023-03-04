@@ -67,6 +67,11 @@ export class GridMelody extends GridPage {
   }
 
 
+  toggleShiftState() {
+    this.setGridScaleOrTonicDisplay();
+  }
+
+
   setCurrentTrackNotes(outputMelody: (string | number)[]) {
     this.grid.sequencer.getActiveTrack().outputMelody = outputMelody.map(scaleDegree => {
       return scaleDegree == 0 ? undefined : this.grid.sequencer.key.degree(Number(scaleDegree));
@@ -173,10 +178,6 @@ export class GridMelody extends GridPage {
     this.grid.sequencer.refreshAbleton(newClip);
     this.setUiTrackMelody();
   }
-
-
-  // Should be overridden by any subclasses extending GridPage
-  setDisplay(...args: any[]) {}
 
 
   shiftDisplay() {

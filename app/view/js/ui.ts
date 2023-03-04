@@ -37,6 +37,11 @@ const toggleIndicator = (selector: string, state: boolean) => {
 
 const setRhythmDisplay = (rhythm: number[]) => {
   rhythm.forEach((step: number, i: number) => {
+    if (step == null)
+      document.getElementById(`step-${i}`).classList.remove("active");
+    else
+      document.getElementById(`step-${i}`).classList.add("active");
+
     if (step == 0)
       document.getElementById(`step-${i}`).classList.remove("on");
     else

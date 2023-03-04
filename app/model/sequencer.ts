@@ -30,10 +30,12 @@ export class Sequencer {
   queuedNotes: note[] = new Array();
 
 
-  constructor() {
-    this.grid = new MonomeGrid(this);
-    this.daw = new AbletonLive(this);
-    this.midiIn = new easymidi.Input("tblswvs in", true);
+  constructor(testing: boolean = false) {
+    if (!testing) {
+      this.grid = new MonomeGrid(this);
+      this.daw = new AbletonLive(this);
+      this.midiIn = new easymidi.Input("tblswvs in", true);
+    }
     this.key = new Key(60, Scale.Minor);
   }
 
@@ -52,33 +54,38 @@ export class Sequencer {
   refreshAbleton(newClip: boolean) {
     this.daw.setNotes(
       this.activeTrack,
-      this.#abletonNotesForCurrentTrack(),
+      this.abletonNotesForCurrentTrack(),
       newClip
     );
   }
 
 
-  #abletonNotesForCurrentTrack(): AbletonNote[] {
-    let abletonNotes: AbletonNote[] = new Array();
+  abletonNotesForCurrentTrack(): AbletonNote[] {
+    let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNote;
 
-    let noteIndex = 0, nextNote;
-    for (let measure = 0; measure < this.superMeasure; measure++) {
-      abletonNotes.push(...this.tracks[this.activeTrack].rhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
-        if (step == 1) {
-          nextNote = this.tracks[this.activeTrack].outputMelody[noteIndex % this.tracks[this.activeTrack].outputMelody.length];
-          // An undefined note in the notes array corresponds to a rest in the melody.
-          if (nextNote != undefined)
-            abletonNotes.push(new AbletonNote(
-              nextNote.midi,
-              ((measure * 4) + (i * 0.25)),
-              noteLengthMap[this.tracks[this.activeTrack].noteLength].size,
-              64
-            ));
-          noteIndex += 1;
+    const beatLength = this.getActiveTrack().beatLength;
+    const size = Math.ceil((this.superMeasure * 16 / beatLength));
+    const expandedRhythm = new Array(size)
+            .fill(this.getActiveTrack().rhythm.slice(0, beatLength))
+            .flat()
+            .slice(0, this.superMeasure * 16);
+
+    abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
+      if (step == 1) {
+        nextNote = this.tracks[this.activeTrack].outputMelody[noteIndex % this.getActiveTrack().outputMelody.length];
+        // An undefined note in the notes array corresponds to a rest in the melody.
+        if (nextNote != undefined) {
+          abletonNotes.push(new AbletonNote(
+            nextNote.midi,
+            (i * 0.25),
+            noteLengthMap[this.getActiveTrack().noteLength].size,
+            64
+          ));
         }
-        return abletonNotes;
-      }, []));
-    }
+        noteIndex += 1;
+      }
+      return abletonNotes;
+    }, []));
 
     return abletonNotes;
   }
@@ -90,9 +97,9 @@ export class Sequencer {
       if (this.ticks % 6 != 0) return;
 
       if (this.grid.activePageType == GridPageType.Rhythm)
-        this.grid.displayRhythmWithTransport(this.step);
+        this.grid.displayRhythmWithTransport(this.step % this.getActiveTrack().beatLength);
 
-      this.step = this.step == 15 ? 0 : this.step + 1;
+      this.step = this.step == this.superMeasure * 16 - 1 ? 0 : this.step + 1;
     });
 
     this.midiIn.on("start", () => {
