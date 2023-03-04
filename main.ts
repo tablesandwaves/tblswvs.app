@@ -17,7 +17,11 @@ const createWindow = () => {
 
   sequencer.gui = mainWindow;
   mainWindow.loadFile("app/view/index.html");
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
+
+  mainWindow.on("closed", () => {
+    sequencer.grid.clearGridDisplay(8);
+  });
 };
 
 

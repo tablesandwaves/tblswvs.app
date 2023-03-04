@@ -106,8 +106,8 @@ export class MonomeGrid {
   }
 
 
-  clearGridDisplay() {
-    for (let y = 0; y < 7; y++) {
+  clearGridDisplay(rowCount: number = 7) {
+    for (let y = 0; y < rowCount; y++) {
       this.levelRow(0, y, blank16x16Row.slice(0, 8));
       this.levelRow(8, y, blank16x16Row.slice(8, 16));
     }
