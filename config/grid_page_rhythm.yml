@@ -13,6 +13,22 @@ rows:
     -
       name: Step Count
       function: Update Steps
+  -
+    name: Note Length
+    index: 6
+    xStart: 0
+    xLength: 8
+    type: radio
+    mapping: updateNoteLength
+    values:
+      - 16n
+      - 8n
+      - 8nd
+      - 4n
+      - 4nd
+      - 2n
+      - 2nd
+      - 1n
 modifiers:
   row: 6
   start: 8

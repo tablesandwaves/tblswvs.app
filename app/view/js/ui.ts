@@ -13,12 +13,14 @@ window.parameters.activateTrack((event: any, track: any) => {
   setRhythmDisplay(track.rhythm);
   const melody = track.algorithm + " " + track.inputMelody.map((n: any) => `${n.note}${n.octave}`).join(" ");
   updateText("#track-melody p", melody);
+  updateText("#note-length p span", track.noteLength);
 });
 
 
 window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
 window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#queued-melody span", melody));
 window.parameters.updateTrackMelody((event: any, melody: string) => updateText("#track-melody p", melody));
+window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length p span", noteLength));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 

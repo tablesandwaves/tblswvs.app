@@ -4,7 +4,7 @@ import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./grid/monome_grid";
 import { Track } from "./track";
 import { AbletonLive } from "./ableton/live";
-import { AbletonNote } from "./ableton/note";
+import { AbletonNote, noteLengthMap } from "./ableton/note";
 import { note } from "tblswvs";
 
 
@@ -68,7 +68,12 @@ export class Sequencer {
           nextNote = this.tracks[this.activeTrack].outputMelody[noteIndex % this.tracks[this.activeTrack].outputMelody.length];
           // An undefined note in the notes array corresponds to a rest in the melody.
           if (nextNote != undefined)
-            abletonNotes.push(new AbletonNote(nextNote.midi, ((measure * 4) + (i * 0.25)), 0.25, 64));
+            abletonNotes.push(new AbletonNote(
+              nextNote.midi,
+              ((measure * 4) + (i * 0.25)),
+              noteLengthMap[this.tracks[this.activeTrack].noteLength].size,
+              64
+            ));
           noteIndex += 1;
         }
         return abletonNotes;
