@@ -3,7 +3,6 @@ const OscReceiver = require("osc-receiver");
 
 import { AbletonNote } from "./note";
 import { AbletonTrack } from "./track";
-import { AbletonClip } from "./clip";
 import { Sequencer } from "../sequencer";
 
 
@@ -35,12 +34,15 @@ export class AbletonLive {
 
     // To Live
     this.emitter = new OscEmitter();
-    this.emitter.add("localhost", 11000);
+    this.emitter.add("localhost", 33333);
 
     // From Live
     this.receiver = new OscReceiver();
-    this.receiver.bind(11001, "localhost");
+    this.receiver.bind(33334, "localhost");
     this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncSuperMeasure(beatNumber));
+
+    // For debugging:
+    // this.receiver.on("message", this.#processLiveMessages);
   }
 
 
@@ -49,86 +51,27 @@ export class AbletonLive {
 
     if (newClip) {
       this.tracks[trackIndex].currentClip = (this.tracks[trackIndex].currentClip + 1) % 8;
-      timeout = 100;
-      this.#generateNewClip(trackIndex);
-      const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : DEFAULT_SUPER_MEASURE_LENGTH;
-      this.tracks[trackIndex].clips[this.tracks[trackIndex].currentClip] = new AbletonClip(superMeasureLength);
+      this.emitter.emit(
+        `/tracks/${trackIndex}/clips/${this.tracks[trackIndex].currentClip}/create`,
+        this.sequencer.superMeasure * 4
+      );
     }
 
-    setTimeout(() => this.#syncNotes(trackIndex, this.tracks[trackIndex].currentClip, notes), timeout);
-  }
-
-
-  createClip(trackIndex: number, clipIndex: number, length: number) {
-    this.tracks[trackIndex].clips[clipIndex] = new AbletonClip(length);
-    this.emitter.emit(
-      "/live/clip_slot/create_clip",
-      ...this.#clipPath(trackIndex, clipIndex),
-      {type: 'integer', value: length}
-    );
-  }
-
-
-  deleteClip(trackIndex: number, clipIndex: number) {
-    this.tracks[trackIndex].clips[clipIndex] = null;
-    this.emitter.emit(
-      "/live/clip_slot/delete_clip",
-      ...this.#clipPath(trackIndex, clipIndex)
-    );
-  }
-
-
-  async #generateNewClip(trackIndex: number) {
-    let timeout = 0;
-
-    // Check the truthiness of the requested clip. If it exists (not null or undefined), must be removed before adding a new one.
-    if (this.tracks[trackIndex].clips[this.tracks[trackIndex].currentClip]) {
-      timeout = 100;
-      this.deleteClip(trackIndex, this.tracks[trackIndex].currentClip);
-    }
-
-    const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : DEFAULT_SUPER_MEASURE_LENGTH;
-    setTimeout(() => this.createClip(trackIndex, this.tracks[trackIndex].currentClip, superMeasureLength * 4), timeout);
-  }
-
-
-  #clipPath(trackIndex: number, clipIndex: number) {
-    return [{type: 'integer', value: trackIndex}, {type: 'integer', value: clipIndex}];
-  }
-
-
-  #syncNotes(trackIndex: number, clipIndex: number, newNotes: AbletonNote[]) {
-    let clipPath = this.#clipPath(trackIndex, clipIndex);
-
-    const noteDiff = AbletonNote.diffAbletonNotes(
-      this.tracks[trackIndex].clips[clipIndex].notes,
-      newNotes
-    );
-
-    // AbletonOSC does not seem to allow removing multiple notes as it does for adding muliple notes?
-    if (noteDiff.removedNotes.length > 0) {
-      noteDiff.removedNotes.forEach(n => {
-        this.emitter.emit("/live/clip/remove/notes", ...clipPath, ...n.toOscRemovedNote());
-      });
-    }
-
-    if (noteDiff.addedNotes.length > 0)
-      this.emitter.emit("/live/clip/add/notes", ...clipPath, ...noteDiff.addedNotes.flatMap(n => n.toOscAddedNote()));
-
-    this.tracks[trackIndex].clips[clipIndex].notes = newNotes;
+    // setTimeout(() => this.#syncNotes(trackIndex, this.tracks[trackIndex].currentClip, notes), timeout);
+    setTimeout(() => {
+      this.emitter.emit(
+        `/tracks/${trackIndex}/clips/${this.tracks[trackIndex].currentClip}/notes`,
+        ...notes.flatMap(note => note.toOscAddedNote())
+      );
+    }, timeout);
   }
 
 
   #syncSuperMeasure(beat: number) {
     if (beat % 4 == 0) {
       const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
-      if (measure == this.sequencer.superMeasure) {
-        let trackClip;
-        this.tracks.forEach((track, i) => {
-          trackClip = [{type: 'integer', value: i}, {type: 'integer', value: track.currentClip}];
-          this.emitter.emit("/live/clip/fire", ...trackClip);
-        });
-      }
+      if (measure == this.sequencer.superMeasure)
+        this.tracks.forEach((track, i) => this.emitter.emit(`/tracks/${i}/clips/${track.currentClip}/fire`));
 
       this.sequencer.grid.sequencer.gui.webContents.send("transport-beat", measure);
     }
