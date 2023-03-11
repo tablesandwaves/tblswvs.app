@@ -44,6 +44,8 @@ export class GridPage {
         if (row.type == "radio") {
           entry.value = row.values[i - row.xStart];
           entry.group = row.group
+        } else if (row.type == "vertical meter") {
+          entry.value = row.value;
         }
         this.matrix[row.index][i] = entry;
       }

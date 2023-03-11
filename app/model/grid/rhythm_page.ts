@@ -20,6 +20,7 @@ export class GridRhythm extends GridPage {
   refresh() {
     this.grid.clearGridDisplay();
     this.setGridRhythmDisplay();
+    // TODO: is this needed?
     this.setGuiRhythmDisplay();
   }
 
@@ -39,6 +40,7 @@ export class GridRhythm extends GridPage {
 
   updateRhythm(gridPage: GridRhythm, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state;
+    gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.getActiveTrack().defaultProbability;
     gridPage.setGridRhythmDisplay();
     gridPage.setGuiRhythmDisplay();
 

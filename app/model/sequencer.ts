@@ -79,7 +79,8 @@ export class Sequencer {
             nextNote.midi,
             (i * 0.25),
             noteLengthMap[this.getActiveTrack().noteLength].size,
-            64
+            64,
+            rhythmStep.probability
           ));
         }
         noteIndex += 1;
