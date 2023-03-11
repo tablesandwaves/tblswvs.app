@@ -8,16 +8,25 @@ import { GridGlobal } from "./global_page";
 import { GridRhythm } from "./rhythm_page";
 import { GridMelody } from "./melody_page";
 import { blank16x16Row } from "../../helpers/utils";
-
-
-export enum GridPageType {
-    Rhythm = "Rhythm",
-    Melody = "Melody"
-}
+import { ProbabilitiesPage } from "./probabilities_page";
 
 
 export type DeviceConfig = {
   serial: string,
+}
+
+
+const globalKeyPageTypeMap: Record<number, string> = {
+  6:  "Rhythm",
+  8:  "Melody",
+  12: "Global"
+}
+
+
+const pageTypeMap: Record<string, string[]> = {
+  "Rhythm": ["Rhythm", "Probabilities"],
+  "Melody": ["Melody"],
+  "Global": ["Global"]
 }
 
 
@@ -26,9 +35,9 @@ export class MonomeGrid {
   device: any;
   playing: any;
   activePage: GridPage;
-  activePageType: GridPageType;
   configDirectory: string = path.resolve(__dirname, "../../../config");
   shiftKey: boolean = false;
+  pageIndex: number = 0;
 
 
   constructor(sequencer: Sequencer) {
@@ -71,21 +80,38 @@ export class MonomeGrid {
   keyPress(press: GridKeyPress) {
     // Bottom row: global controls
     if (press.y == 7) {
+
       if (press.x <= 5 && press.s == 1) {
-        this.#setActiveTrack(press); // Keys 1-6, select active track
-      } else if (press.x == 6 && press.s == 1) {
-        this.#setGridPageToRhythm(); // Load the rhythm grid page
-      } else if (press.x == 8 && press.s == 1) {
-        this.#setGridPageToMelody(); // Load the rhythm grid page
-      } else if (press.x == 12) {
-        this.#setGridPageToGlobal(); // Load the global paramaeters grid page
+        this.#setActiveTrack(press);
+      } else if (press.s == 1 && press.x >= 6 && press.x <= 12) {
+        this.#setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {
         this.setShiftState(press);
+      } else if (press.x == 14 && press.s == 1) {
+        this.decrementPage();
+      } else if (press.x == 15 && press.s == 1) {
+        this.incrementPage();
       }
 
     // Other rows, forward to the key press to the currently active page
     } else {
       this.activePage.keyPress(press);
+    }
+  }
+
+
+  decrementPage() {
+    if (this.pageIndex > 0) {
+      this.pageIndex--;
+      this.#setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
+    }
+  }
+
+
+  incrementPage() {
+    if (this.pageIndex < pageTypeMap[this.activePage.type].length - 1) {
+      this.pageIndex++;
+      this.#setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
     }
   }
 
@@ -125,31 +151,38 @@ export class MonomeGrid {
   }
 
 
-  #setGridPageToRhythm() {
-    const configFilePath = path.resolve(this.configDirectory, "grid_page_rhythm.yml");
-    const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
-    this.activePage = new GridRhythm(config as GridConfig, this);
-    this.activePage.refresh();
-    this.activePageType = GridPageType.Rhythm;
-    this.#selectGlobalGridKey(6, 12, 6);
-  }
+  #setActiveGridPage(pageType: string) {
+    let updated = false, globalKeyIndex;
+    switch(pageType) {
+      case "Rhythm":
+        this.pageIndex = 0;
+        this.activePage = new GridRhythm(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 6;
+        break;
+      case "Probabilities":
+        this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 6;
+        break;
+      case "Melody":
+        this.pageIndex = 0;
+        this.activePage = new GridMelody(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 8;
+        break;
+      case "Global":
+        this.pageIndex = 0;
+        this.activePage = new GridGlobal(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 12;
+        break;
+    }
 
-
-  #setGridPageToMelody() {
-    const configFilePath = path.resolve(this.configDirectory, "grid_page_melody.yml");
-    const config = yaml.load(fs.readFileSync(configFilePath, "utf8"));
-    this.activePage = new GridMelody(config as GridConfig, this);
-    this.activePage.refresh();
-    this.activePageType = GridPageType.Melody;
-    this.#selectGlobalGridKey(6, 12, 8);
-  }
-
-
-  #setGridPageToGlobal() {
-    const config = this.#loadConfig("grid_page_global.yml");
-    this.activePage = new GridGlobal(config as GridConfig, this);
-    this.activePage.refresh();
-    this.#selectGlobalGridKey(6, 12, 12);
+    if (updated) {
+      this.activePage.refresh();
+      this.#selectGlobalGridKey(6, 12, globalKeyIndex);
+    }
   }
 
 

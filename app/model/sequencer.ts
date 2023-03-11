@@ -1,7 +1,7 @@
 const easymidi = require("easymidi");
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
-import { GridPageType, MonomeGrid } from "./grid/monome_grid";
+import { MonomeGrid } from "./grid/monome_grid";
 import { Track, RhythmStep } from "./track";
 import { AbletonLive } from "./ableton/live";
 import { AbletonNote, noteLengthMap } from "./ableton/note";
@@ -96,9 +96,7 @@ export class Sequencer {
       this.ticks++;
       if (this.ticks % 6 != 0) return;
 
-      if (this.grid.activePageType == GridPageType.Rhythm)
-        this.grid.displayRhythmWithTransport(this.step % this.getActiveTrack().beatLength);
-
+      this.grid.displayRhythmWithTransport(this.step % this.getActiveTrack().beatLength);
       this.step = this.step == this.superMeasure * 16 - 1 ? 0 : this.step + 1;
     });
 
@@ -109,9 +107,8 @@ export class Sequencer {
       if (data.value != 0) return;
 
       this.ticks = 0;
-      this.step = 0;
-      if (this.grid.activePageType == GridPageType.Rhythm)
-        this.grid.displayRhythmWithTransport(this.step);
+      this.step  = 0;
+      this.grid.displayRhythmWithTransport(this.step);
     });
   }
 }

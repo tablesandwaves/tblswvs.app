@@ -1,4 +1,5 @@
 import { MonomeGrid } from "./monome_grid";
+import { RhythmStep } from "../track";
 
 
 export type GridKeyPress = {
@@ -25,6 +26,7 @@ export type GridButton = {
 
 
 export class GridPage {
+  type = "Generic";
   grid: MonomeGrid;
   matrix: GridButton[][] = new Array(8);
   functionMap: Map<string, Function> = new Map();
@@ -66,8 +68,26 @@ export class GridPage {
   }
 
 
-  // Ignore this call unless on the GridRhythm page where this is overridden.
-  displayRhythmWithTransport(...args: any[]) {}
+  // Overridden on the GridRhythm page where the grid's transport row also needs to be updated.
+  displayRhythmWithTransport(highlightIndex: number) {
+    this.setGuiRhythmDisplay(highlightIndex);
+  }
+
+
+  setGuiRhythmDisplay(highlightIndex?: number) {
+    const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
+    const row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
+      if (i >= beatLength)
+        return null;
+      else if (i == highlightIndex)
+        return 15;
+      else if (rhythmStep.state == 1)
+        return 10;
+      else
+        return 0;
+    });
+    this.grid.sequencer.gui.webContents.send("transport", row);
+  }
 
 
   // Should be overridden by any subclasses extending GridPage

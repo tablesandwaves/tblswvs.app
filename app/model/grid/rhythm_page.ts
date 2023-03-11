@@ -6,6 +6,8 @@ import { RhythmStep } from "../track";
 
 
 export class GridRhythm extends GridPage {
+  type = "Rhythm";
+
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
@@ -52,24 +54,8 @@ export class GridRhythm extends GridPage {
 
 
   displayRhythmWithTransport(highlightIndex: number) {
-    this.setGuiRhythmDisplay(highlightIndex);
     this.setGridRhythmDisplay(highlightIndex);
-  }
-
-
-  setGuiRhythmDisplay(highlightIndex?: number) {
-    const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
-    const row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
-      if (i >= beatLength)
-        return null;
-      else if (i == highlightIndex)
-        return 15;
-      else if (rhythmStep.state == 1)
-        return 10;
-      else
-        return 0;
-    });
-    this.grid.sequencer.gui.webContents.send("transport", row);
+    this.setGuiRhythmDisplay(highlightIndex);
   }
 
 

@@ -3,6 +3,9 @@ import { MonomeGrid } from "./monome_grid";
 
 
 export class GridGlobal extends GridPage {
+  type = "Global";
+
+
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 

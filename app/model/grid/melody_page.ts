@@ -22,6 +22,7 @@ const octaveTransposeMapping: Record<number, number> = {
 
 
 export class GridMelody extends GridPage {
+  type = "Melody";
   scales: ConfiguredScale[];
   recordingInputMelody: boolean = false;
   createNewClip: boolean = false;
