@@ -2,6 +2,7 @@ import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { noteLengthMap } from "../ableton/note";
 import { blank8x8Row } from "../../helpers/utils";
+import { RhythmStep } from "../track";
 
 
 export class GridRhythm extends GridPage {
@@ -35,7 +36,7 @@ export class GridRhythm extends GridPage {
 
 
   updateRhythm(gridPage: GridRhythm, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().rhythm[press.x] = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x];
+    gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state;
     gridPage.setGridRhythmDisplay();
     gridPage.setGuiRhythmDisplay();
 
@@ -58,12 +59,12 @@ export class GridRhythm extends GridPage {
 
   setGuiRhythmDisplay(highlightIndex?: number) {
     const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
-    const row = this.grid.sequencer.getActiveTrack().rhythm.map((step: number, i) => {
+    const row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
       if (i >= beatLength)
         return null;
       else if (i == highlightIndex)
         return 15;
-      else if (step == 1)
+      else if (rhythmStep.state == 1)
         return 10;
       else
         return 0;
@@ -78,7 +79,7 @@ export class GridRhythm extends GridPage {
       const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
       row = [...new Array(beatLength).fill(5), ...new Array(16 - beatLength).fill(0)];
     } else {
-      row = this.grid.sequencer.getActiveTrack().rhythm.map((step: number, i) => step == 1 ? 10 : 0);
+      row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => rhythmStep.state == 1 ? 10 : 0);
     }
     if (highlightIndex != undefined) row[highlightIndex] = 15;
 

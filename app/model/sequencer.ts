@@ -2,7 +2,7 @@ const easymidi = require("easymidi");
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { GridPageType, MonomeGrid } from "./grid/monome_grid";
-import { Track } from "./track";
+import { Track, RhythmStep } from "./track";
 import { AbletonLive } from "./ableton/live";
 import { AbletonNote, noteLengthMap } from "./ableton/note";
 import { note } from "tblswvs";
@@ -70,8 +70,8 @@ export class Sequencer {
             .flat()
             .slice(0, this.superMeasure * 16);
 
-    abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], step: number, i) => {
-      if (step == 1) {
+    abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
+      if (rhythmStep.state == 1) {
         nextNote = this.tracks[this.activeTrack].outputMelody[noteIndex % this.getActiveTrack().outputMelody.length];
         // An undefined note in the notes array corresponds to a rest in the melody.
         if (nextNote != undefined) {

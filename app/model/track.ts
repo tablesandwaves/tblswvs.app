@@ -1,9 +1,16 @@
 import { note } from "tblswvs";
 
 
+export type RhythmStep = {
+  state: number;
+  probability: number;
+}
+
+
 export class Track {
   name: string;
-  rhythm: number[] = new Array(16).fill(0);
+  rhythm: RhythmStep[] = new Array(16);
+  defaultProbability: number = 1;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
   inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   // Notes resulting from the input melody being processed by a melody algorithm.
@@ -16,5 +23,7 @@ export class Track {
 
   constructor(name: string) {
     this.name = name;
+    for (let i = 0; i < this.rhythm.length; i++)
+      this.rhythm[i] = {state: 0, probability: this.defaultProbability};
   }
 }
