@@ -41,7 +41,7 @@ export class AbletonLive {
     this.receiver.bind(33334, "localhost");
     this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncSuperMeasure(beatNumber));
 
-    // For debugging:
+    // For debugging: all messages are logged.
     // this.receiver.on("message", this.#processLiveMessages);
   }
 
@@ -57,7 +57,6 @@ export class AbletonLive {
       );
     }
 
-    // setTimeout(() => this.#syncNotes(trackIndex, this.tracks[trackIndex].currentClip, notes), timeout);
     setTimeout(() => {
       this.emitter.emit(
         `/tracks/${trackIndex}/clips/${this.tracks[trackIndex].currentClip}/notes`,
