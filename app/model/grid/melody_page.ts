@@ -64,11 +64,13 @@ export class GridMelody extends GridPage {
         break;
     }
 
-    gridPage.refresh(gridPage.createNewClip);
+    gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
+    gridPage.setUiTrackMelody();
   }
 
 
-  toggleShiftState() {
+  refresh() {
+    this.grid.clearGridDisplay();
     this.setGridScaleOrTonicDisplay();
   }
 
@@ -172,16 +174,5 @@ export class GridMelody extends GridPage {
       if (s.name == this.grid.sequencer.key.scaleName) idx = i;
       return idx;
     }, -1);
-  }
-
-
-  refresh(newClip?: boolean) {
-    this.grid.sequencer.refreshAbleton(newClip);
-    this.setUiTrackMelody();
-  }
-
-
-  shiftDisplay() {
-    this.setGridScaleOrTonicDisplay();
   }
 }

@@ -23,7 +23,6 @@ export class GridGlobal extends GridPage {
   refresh(): void {
     this.grid.clearGridDisplay();
     this.#setGridSuperMeasureDisplay();
-    this.#setGuiSuperMeasureDisplay();
   }
 
 

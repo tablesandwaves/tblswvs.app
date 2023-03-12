@@ -86,10 +86,8 @@ export class GridPage {
   }
 
 
-  // Should be overridden by any subclasses extending GridPage
-  shiftDisplay() {}
-
-
-  // Should be overridden by any subclasses extending GridPage
-  toggleShiftState() {}
+  // Call the sub-class's refresh function to update the grid's button matrix.
+  toggleShiftState() {
+    this.refresh();
+  }
 }

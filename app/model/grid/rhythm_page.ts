@@ -23,11 +23,6 @@ export class GridRhythm extends GridPage {
   }
 
 
-  toggleShiftState() {
-    this.setGridRhythmDisplay();
-  }
-
-
   updateBeatLength(gridPage: GridRhythm, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().beatLength = press.x + 1;
     gridPage.grid.sequencer.refreshAbleton(false);
