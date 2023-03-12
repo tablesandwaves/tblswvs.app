@@ -20,8 +20,6 @@ export class GridRhythm extends GridPage {
   refresh() {
     this.grid.clearGridDisplay();
     this.setGridRhythmDisplay();
-    // TODO: is this needed?
-    this.setGuiRhythmDisplay();
   }
 
 
@@ -34,7 +32,7 @@ export class GridRhythm extends GridPage {
     gridPage.grid.sequencer.getActiveTrack().beatLength = press.x + 1;
     gridPage.grid.sequencer.refreshAbleton(false);
     gridPage.setGridRhythmDisplay();
-    gridPage.setGuiRhythmDisplay();
+    gridPage.updateGuiRhythmDisplay();
   }
 
 
@@ -42,7 +40,7 @@ export class GridRhythm extends GridPage {
     gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state;
     gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.getActiveTrack().defaultProbability;
     gridPage.setGridRhythmDisplay();
-    gridPage.setGuiRhythmDisplay();
+    gridPage.updateGuiRhythmDisplay();
 
     gridPage.grid.sequencer.refreshAbleton(false);
   }
@@ -57,7 +55,7 @@ export class GridRhythm extends GridPage {
 
   displayRhythmWithTransport(highlightIndex: number) {
     this.setGridRhythmDisplay(highlightIndex);
-    this.setGuiRhythmDisplay(highlightIndex);
+    this.updateGuiRhythmTransport(highlightIndex);
   }
 
 

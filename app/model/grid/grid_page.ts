@@ -72,23 +72,17 @@ export class GridPage {
 
   // Overridden on the GridRhythm page where the grid's transport row also needs to be updated.
   displayRhythmWithTransport(highlightIndex: number) {
-    this.setGuiRhythmDisplay(highlightIndex);
+    this.updateGuiRhythmTransport(highlightIndex);
   }
 
 
-  setGuiRhythmDisplay(highlightIndex?: number) {
-    const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
-    const row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
-      if (i >= beatLength)
-        return null;
-      else if (i == highlightIndex)
-        return 15;
-      else if (rhythmStep.state == 1)
-        return 10;
-      else
-        return 0;
-    });
-    this.grid.sequencer.gui.webContents.send("transport", row);
+  updateGuiRhythmDisplay() {
+    this.grid.sequencer.gui.webContents.send("update-track-rhythm", this.grid.sequencer.getActiveTrack());
+  }
+
+
+  updateGuiRhythmTransport(highlightIndex: number) {
+    this.grid.sequencer.gui.webContents.send("transport", highlightIndex);
   }
 
 

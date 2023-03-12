@@ -127,33 +127,61 @@ div#create-clip {
 }
 
 
+/*
+  The div inside of rhythm represents a sequencer step. States
+
+  * active: step is >= the track's 16n beat length
+    * When inactive: grayed out and transport does not loop thru the step
+    * When active: highlighted, transport loops thru step
+  * current: step corresponds to the transport's active 16n step
+    * When current: transport hits step, lights up green
+*/
 div.rhythm div {
   width: 40px;
   height: 40px;
   margin: 4px;
-}
-
-
-div.rhythm div {
-  background-color: #111;
-  border: 1px solid #333;
+  background-color: #111;  /* dark gray: background color for inactive step */
+  border: 1px solid #333;  /* medium gray: border color for active step */
 }
 
 
 div.rhythm div.active {
-  background-color: #333;
-  border: 1px solid #555;
+  background-color: #333;  /* medium gray: background color for active step */
+  border: 1px solid #555;  /* medium-light gray: border color for active step */
 }
 
 
-div.rhythm div.active.on {
-  background-color: #777;
+div.rhythm div.current {
+  background-color: #117733; /* green: highlight background color for current transport step */
 }
 
 
-div.rhythm div.active.current {
-  background-color: #117733;
+div.rhythm div span {
+  display: inline-block;
+  width: 40px;
+  position: absolute;
+  opacity: 0.4;
 }
+
+
+div.rhythm div span {
+  background-color: #ddd;  /* transparent white: on gate step probability */
+  bottom: 0;
+}
+
+
+/*
+  Due to default, *recommended* content security policies for Electron, cannot set attributes for
+  inline styles via JS, so setting up classes for the heights corresponding to step probabilities.
+*/
+div.rhythm div span.prob100 { height: 40px; }
+div.rhythm div span.prob087 { height: 35px; }
+div.rhythm div span.prob075 { height: 30px; }
+div.rhythm div span.prob062 { height: 25px; }
+div.rhythm div span.prob050 { height: 20px; }
+div.rhythm div span.prob037 { height: 15px; }
+div.rhythm div span.prob025 { height: 10px; }
+div.rhythm div span.prob000 { height: 0px; }
 
 
 div.melody p {
@@ -181,10 +209,6 @@ div#global-params .parameter {
   color: #fff;
 }
 
-
-div#track div#create-clip {
-
-}
 
 div#track div#create-clip span {
   display: inline-block;

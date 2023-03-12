@@ -20,6 +20,7 @@ export class ProbabilitiesPage extends GridPage {
       gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].probability = gridPage.matrix[press.y][press.x].value;
       gridPage.grid.sequencer.refreshAbleton(false);
       gridPage.setGridProbabilitiesDisplay();
+      gridPage.updateGuiRhythmDisplay();
     }
   }
 

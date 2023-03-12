@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("parameters", {
   updateSuperMeasure: (callback: any) => ipcRenderer.on("update-super-measure", callback),
   updateQueuedMelody: (callback: any) => ipcRenderer.on("update-melody", callback),
   updateTrackMelody: (callback: any) => ipcRenderer.on("update-track-melody", callback),
+  updateTrackRhythm: (callback: any) => ipcRenderer.on("update-track-rhythm", callback),
   updateNoteLength: (callback: any) => ipcRenderer.on("update-note-length", callback),
   toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback)
 });
