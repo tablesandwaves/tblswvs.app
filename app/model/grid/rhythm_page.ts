@@ -67,7 +67,9 @@ export class GridRhythm extends GridPage {
       const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
       row = [...new Array(beatLength).fill(5), ...new Array(16 - beatLength).fill(0)];
     } else {
-      row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => rhythmStep.state == 1 ? 10 : 0);
+      row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
+        return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 15) : 0;
+      });
     }
     if (highlightIndex != undefined) row[highlightIndex] = 15;
 
