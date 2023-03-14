@@ -9,6 +9,7 @@ import { GridRhythm } from "./rhythm_page";
 import { GridMelody } from "./melody_page";
 import { blank16x16Row } from "../../helpers/utils";
 import { ProbabilitiesPage } from "./probabilities_page";
+import { ChordPage } from "./chord_page";
 
 
 export type DeviceConfig = {
@@ -159,6 +160,12 @@ export class MonomeGrid {
         this.activePage = new GridRhythm(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 6;
+        break;
+      case "Chords":
+        this.pageIndex = 0;
+        this.activePage = new ChordPage(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 7;
         break;
       case "Probabilities":
         this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);

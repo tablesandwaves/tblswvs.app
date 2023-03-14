@@ -1,0 +1,71 @@
+rows:
+  -
+    name: Keyboard Octave 6
+    index: 0
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Keyboard Octave 5
+    index: 1
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Keyboard Octave 4
+    index: 2
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Keyboard Octave 3
+    index: 3
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Keyboard Octave 2
+    index: 4
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Keyboard Octave 1
+    index: 5
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Keyboard Octave 0
+    index: 6
+    xStart: 0
+    xLength: 12
+    type: momentary
+    mapping: addChordNote
+  -
+    name: Toggle Chord Recording
+    index: 3
+    xStart: 12
+    xLength: 1
+    type: toggle
+    mapping: toggleMelodyRecording
+  -
+    name: Remove Last Chord
+    index: 3
+    xStart: 13
+    xLength: 1
+    type: momentary
+    mapping: removeLastNote
+  -
+    name: Toggle Create Clip Mode
+    index: 3
+    xStart: 14
+    xLength: 1
+    type: toggle
+    mapping: toggleNewClipCreation
