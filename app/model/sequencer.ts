@@ -27,7 +27,7 @@ export class Sequencer {
   ];
   gui: BrowserWindow;
   key: Key;
-  queuedNotes: note[] = new Array();
+  queuedMelody: note[] = new Array();
 
 
   constructor(testing: boolean = false) {
@@ -61,7 +61,7 @@ export class Sequencer {
 
 
   abletonNotesForCurrentTrack(): AbletonNote[] {
-    let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNote;
+    let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
 
     const beatLength = this.getActiveTrack().beatLength;
     const size = Math.ceil((this.superMeasure * 16 / beatLength));
@@ -72,16 +72,20 @@ export class Sequencer {
 
     abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
       if (rhythmStep.state == 1) {
-        nextNote = this.tracks[this.activeTrack].outputMelody[noteIndex % this.getActiveTrack().outputMelody.length];
+        nextNotes = this.tracks[this.activeTrack].outputNotes[noteIndex % this.getActiveTrack().outputNotes.length];
         // An undefined note in the notes array corresponds to a rest in the melody.
-        if (nextNote != undefined) {
-          abletonNotes.push(new AbletonNote(
-            nextNote.midi,
-            (i * 0.25),
-            noteLengthMap[this.getActiveTrack().noteLength].size,
-            64,
-            rhythmStep.probability
-          ));
+        if (nextNotes != undefined) {
+          // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
+          // represented as a 1-dimensional array because they contain explicit timing offsets.
+          nextNotes.forEach(nextNote => {
+            abletonNotes.push(new AbletonNote(
+              nextNote.midi,
+              (i * 0.25),
+              noteLengthMap[this.getActiveTrack().noteLength].size,
+              64,
+              rhythmStep.probability
+            ));
+          });
         }
         noteIndex += 1;
       }

@@ -47,11 +47,11 @@ export class MelodyPage extends GridPage {
 
   generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.sequencer.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedNotes;
+    gridPage.grid.sequencer.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody.map(n => n);
 
     switch (gridPage.matrix[press.y][press.x].value) {
       case "simple":
-        gridPage.grid.sequencer.getActiveTrack().outputMelody = gridPage.grid.sequencer.queuedNotes;
+        gridPage.grid.sequencer.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedMelody.map(n => [n]);
         break;
       case "self_replicate":
         gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).steps);
@@ -76,14 +76,14 @@ export class MelodyPage extends GridPage {
 
 
   setCurrentTrackNotes(outputMelody: (string | number)[]) {
-    this.grid.sequencer.getActiveTrack().outputMelody = outputMelody.map(scaleDegree => {
-      return scaleDegree == 0 ? undefined : this.grid.sequencer.key.degree(Number(scaleDegree));
+    this.grid.sequencer.getActiveTrack().outputNotes = outputMelody.map(scaleDegree => {
+      return scaleDegree == 0 ? [undefined] : [this.grid.sequencer.key.degree(Number(scaleDegree))];
     });
   }
 
 
   getCurrentScaleDegreeMelody(): Melody {
-    return new Melody(this.grid.sequencer.queuedNotes.map(n => n.scaleDegree), 0, MelodyType.Degrees);
+    return new Melody(this.grid.sequencer.queuedMelody.map(n => n.scaleDegree), 0, MelodyType.Degrees);
   }
 
 
@@ -91,7 +91,7 @@ export class MelodyPage extends GridPage {
     gridPage.recordingInputMelody = !gridPage.recordingInputMelody;
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputMelody ? 10 : 0));
     if (gridPage.recordingInputMelody) {
-      gridPage.grid.sequencer.queuedNotes = new Array();
+      gridPage.grid.sequencer.queuedMelody = new Array();
       gridPage.setUiQueuedMelody();
     }
   }
@@ -108,7 +108,7 @@ export class MelodyPage extends GridPage {
     if (gridPage.recordingInputMelody) {
       let octaveTranspose = octaveTransposeMapping[press.y];
       // Spread operator used to clone the object because otherwise calling array element by ref?
-      gridPage.grid.sequencer.queuedNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
+      gridPage.grid.sequencer.queuedMelody.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
       gridPage.setUiQueuedMelody();
     }
   }
@@ -116,7 +116,7 @@ export class MelodyPage extends GridPage {
 
   removeLastNote(gridPage: MelodyPage, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
-      gridPage.grid.sequencer.queuedNotes.pop();
+      gridPage.grid.sequencer.queuedMelody.pop();
       gridPage.setUiQueuedMelody();
     }
   }
@@ -149,18 +149,17 @@ export class MelodyPage extends GridPage {
   setUiQueuedMelody() {
     this.grid.sequencer.gui.webContents.send(
       "update-melody",
-      this.grid.sequencer.queuedNotes.map(n => `${n.note}${n.octave}`).join(" ")
+      this.grid.sequencer.queuedMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
     );
   }
 
 
   setUiTrackMelody() {
-    if (this.grid.sequencer.getActiveTrack().algorithm != undefined) {
-      this.grid.sequencer.gui.webContents.send(
-        "update-track-melody",
-        this.grid.sequencer.getActiveTrack().algorithm + " " + this.grid.sequencer.getActiveTrack().inputMelody.map(n => `${n.note}${n.octave}`).join(" ")
-      );
-    }
+    this.grid.sequencer.gui.webContents.send(
+      "update-track-melody",
+      this.grid.sequencer.getActiveTrack().algorithm + " " +
+      this.grid.sequencer.getActiveTrack().inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
+    );
   }
 
 

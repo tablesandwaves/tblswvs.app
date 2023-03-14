@@ -4,7 +4,7 @@ import { note } from "tblswvs";
 export type RhythmStep = {
   state: number;
   probability: number;
-}
+};
 
 
 export class Track {
@@ -12,9 +12,12 @@ export class Track {
   rhythm: RhythmStep[] = new Array(16);
   defaultProbability: number = 1;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
-  inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  inputMelody: note[]   = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  // Chords keyed in on the grid.
+  inputChords: note[][] = [];
   // Notes resulting from the input melody being processed by a melody algorithm.
-  outputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  // Using a 2-dimensional array to accommodate polyphony.
+  outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   algorithm: string = "simple";
   weightedRhythm: boolean = false;
   noteLength: string = "16n";
