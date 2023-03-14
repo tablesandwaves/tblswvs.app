@@ -2,7 +2,7 @@ import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
 import { MonomeGrid } from "./monome_grid";
 
 
-export class GridGlobal extends GridPage {
+export class GlobalPage extends GridPage {
   type = "Global";
 
 
@@ -13,7 +13,7 @@ export class GridGlobal extends GridPage {
   }
 
 
-  updateSuperMeasure(gridPage: GridGlobal, press: GridKeyPress) {
+  updateSuperMeasure(gridPage: GlobalPage, press: GridKeyPress) {
     gridPage.grid.sequencer.superMeasure = press.x + 1;
     gridPage.#setGridSuperMeasureDisplay();
     gridPage.#setGuiSuperMeasureDisplay();

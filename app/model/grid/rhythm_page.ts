@@ -5,7 +5,7 @@ import { blank8x8Row } from "../../helpers/utils";
 import { RhythmStep } from "../track";
 
 
-export class GridRhythm extends GridPage {
+export class RhythmPage extends GridPage {
   type = "Rhythm";
 
 
@@ -23,7 +23,7 @@ export class GridRhythm extends GridPage {
   }
 
 
-  updateBeatLength(gridPage: GridRhythm, press: GridKeyPress) {
+  updateBeatLength(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().beatLength = press.x + 1;
     gridPage.grid.sequencer.refreshAbleton(false);
     gridPage.setGridRhythmDisplay();
@@ -31,7 +31,7 @@ export class GridRhythm extends GridPage {
   }
 
 
-  updateRhythm(gridPage: GridRhythm, press: GridKeyPress) {
+  updateRhythm(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state;
     gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.getActiveTrack().defaultProbability;
     gridPage.setGridRhythmDisplay();
@@ -41,7 +41,7 @@ export class GridRhythm extends GridPage {
   }
 
 
-  updateNoteLength(gridPage: GridRhythm, press: GridKeyPress) {
+  updateNoteLength(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.levelRow(0, 6, gridPage.#noteLengthRow());
     gridPage.grid.sequencer.gui.webContents.send("update-note-length", gridPage.grid.sequencer.getActiveTrack().noteLength);

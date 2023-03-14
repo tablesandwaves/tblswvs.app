@@ -21,7 +21,7 @@ const octaveTransposeMapping: Record<number, number> = {
 }
 
 
-export class GridMelody extends GridPage {
+export class MelodyPage extends GridPage {
   type = "Melody";
   scales: ConfiguredScale[];
   recordingInputMelody: boolean = false;
@@ -45,7 +45,7 @@ export class GridMelody extends GridPage {
   }
 
 
-  generateMelody(gridPage: GridMelody, press: GridKeyPress) {
+  generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
     gridPage.grid.sequencer.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedNotes;
 
@@ -87,7 +87,7 @@ export class GridMelody extends GridPage {
   }
 
 
-  toggleMelodyRecording(gridPage: GridMelody, press: GridKeyPress) {
+  toggleMelodyRecording(gridPage: MelodyPage, press: GridKeyPress) {
     gridPage.recordingInputMelody = !gridPage.recordingInputMelody;
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputMelody ? 10 : 0));
     if (gridPage.recordingInputMelody) {
@@ -97,14 +97,14 @@ export class GridMelody extends GridPage {
   }
 
 
-  toggleNewClipCreation(gridPage: GridMelody, press: GridKeyPress) {
+  toggleNewClipCreation(gridPage: MelodyPage, press: GridKeyPress) {
     gridPage.createNewClip = !gridPage.createNewClip;
     gridPage.grid.levelSet(press.x, press.y, (gridPage.createNewClip ? 10 : 0));
     gridPage.grid.sequencer.gui.webContents.send("toggle-create-clip", gridPage.createNewClip);
   }
 
 
-  addNote(gridPage: GridMelody, press: GridKeyPress) {
+  addNote(gridPage: MelodyPage, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
       let octaveTranspose = octaveTransposeMapping[press.y];
       // Spread operator used to clone the object because otherwise calling array element by ref?
@@ -114,7 +114,7 @@ export class GridMelody extends GridPage {
   }
 
 
-  removeLastNote(gridPage: GridMelody, press: GridKeyPress) {
+  removeLastNote(gridPage: MelodyPage, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
       gridPage.grid.sequencer.queuedNotes.pop();
       gridPage.setUiQueuedMelody();
@@ -122,7 +122,7 @@ export class GridMelody extends GridPage {
   }
 
 
-  setScaleOrTonic(gridPage: GridMelody, press: GridKeyPress) {
+  setScaleOrTonic(gridPage: MelodyPage, press: GridKeyPress) {
     let tonic: number, scale: ConfiguredScale;
     if (gridPage.grid.shiftKey) {
       tonic = gridPage.matrix[press.y][press.x].value + 60;

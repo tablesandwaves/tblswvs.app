@@ -4,9 +4,9 @@ import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
 import { Sequencer } from "../sequencer";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { GridGlobal } from "./global_page";
-import { GridRhythm } from "./rhythm_page";
-import { GridMelody } from "./melody_page";
+import { GlobalPage } from "./global_page";
+import { RhythmPage } from "./rhythm_page";
+import { MelodyPage } from "./melody_page";
 import { blank16x16Row } from "../../helpers/utils";
 import { ProbabilitiesPage } from "./probabilities_page";
 import { ChordPage } from "./chord_page";
@@ -157,7 +157,7 @@ export class MonomeGrid {
     switch(pageType) {
       case "Rhythm":
         this.pageIndex = 0;
-        this.activePage = new GridRhythm(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new RhythmPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 6;
         break;
@@ -174,13 +174,13 @@ export class MonomeGrid {
         break;
       case "Melody":
         this.pageIndex = 0;
-        this.activePage = new GridMelody(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new MelodyPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
       case "Global":
         this.pageIndex = 0;
-        this.activePage = new GridGlobal(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new GlobalPage(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 12;
         break;
