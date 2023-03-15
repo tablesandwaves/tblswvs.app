@@ -13,9 +13,7 @@ export class Track {
   defaultProbability: number = 1;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
   inputMelody: note[]   = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
-  // Chords keyed in on the grid.
-  inputChords: note[][] = [];
-  // Notes resulting from the input melody being processed by a melody algorithm.
+  // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
   // Using a 2-dimensional array to accommodate polyphony.
   outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   algorithm: string = "simple";

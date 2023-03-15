@@ -14,7 +14,6 @@ export class MelodyPage extends GridPage {
   type = "Melody";
   scales: ConfiguredScale[];
   recordingInputMelody: boolean = false;
-  createNewClip: boolean = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -86,13 +85,6 @@ export class MelodyPage extends GridPage {
   }
 
 
-  toggleNewClipCreation(gridPage: MelodyPage, press: GridKeyPress) {
-    gridPage.createNewClip = !gridPage.createNewClip;
-    gridPage.grid.levelSet(press.x, press.y, (gridPage.createNewClip ? 10 : 0));
-    gridPage.grid.sequencer.gui.webContents.send("toggle-create-clip", gridPage.createNewClip);
-  }
-
-
   addNote(gridPage: MelodyPage, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
       let octaveTranspose = octaveTransposeMapping[press.y];
@@ -145,7 +137,7 @@ export class MelodyPage extends GridPage {
 
   setUiTrackMelody() {
     this.grid.sequencer.gui.webContents.send(
-      "update-track-melody",
+      "update-track-notes",
       this.grid.sequencer.getActiveTrack().algorithm + " " +
       this.grid.sequencer.getActiveTrack().inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
     );

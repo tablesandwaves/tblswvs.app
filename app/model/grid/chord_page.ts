@@ -53,13 +53,10 @@ export class ChordPage extends GridPage {
   }
 
 
-  toggleNewClipCreation() {
-
-  }
-
-
-  setTrackChordProgression() {
-
+  setTrackChordProgression(gridPage: ChordPage) {
+    gridPage.grid.sequencer.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedChordProgression;
+    gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
+    gridPage.setUiTrackChordProgression();
   }
 
 
@@ -89,6 +86,14 @@ export class ChordPage extends GridPage {
 
 
   setUiTrackChordProgression() {
-
+    this.grid.sequencer.gui.webContents.send(
+      "update-track-notes",
+      this.grid.sequencer.queuedChordProgression.flatMap(chordNotes => {
+        let chord = chordNotes.map(n => n.note + n.octave).join("-");
+        let namedChord = detect(chordNotes.map(n => n.note))[0];
+        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
+        return chord;
+      }).join("; ")
+    );
   }
 }
