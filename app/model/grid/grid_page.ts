@@ -25,11 +25,25 @@ export type GridButton = {
 }
 
 
+// Used by chord page and melody page.
+export const octaveTransposeMapping: Record<number, number> = {
+  0: 3,
+  1: 2,
+  2: 1,
+  3: 0,
+  4: -1,
+  5: -2,
+  6: -3
+}
+
+
 export class GridPage {
   type = "Generic";
   grid: MonomeGrid;
   matrix: GridButton[][] = new Array(8);
   functionMap: Map<string, Function> = new Map();
+  // Overridden on ChordPage where events happen when released.
+  keyReleaseFunctionality: boolean = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -59,7 +73,7 @@ export class GridPage {
 
   // May be overridden by any subclasses extending GridPage
   keyPress(press: GridKeyPress) {
-    if (press.s == 0 || this.matrix[press.y][press.x] == undefined)
+    if ((press.s == 0 && !this.keyReleaseFunctionality) || this.matrix[press.y][press.x] == undefined)
       return;
 
     if (this.grid.shiftKey && this.matrix[press.y][press.x].shiftMapping != undefined) {

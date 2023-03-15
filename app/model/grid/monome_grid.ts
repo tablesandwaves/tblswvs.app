@@ -19,6 +19,7 @@ export type DeviceConfig = {
 
 const globalKeyPageTypeMap: Record<number, string> = {
   6:  "Rhythm",
+  7:  "Chords",
   8:  "Melody",
   12: "Global"
 }

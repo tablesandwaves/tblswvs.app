@@ -54,14 +54,14 @@ rows:
     xStart: 12
     xLength: 1
     type: toggle
-    mapping: toggleMelodyRecording
+    mapping: toggleChordRecording
   -
     name: Remove Last Chord
     index: 3
     xStart: 13
     xLength: 1
     type: momentary
-    mapping: removeLastNote
+    mapping: removeLastChord
   -
     name: Toggle Create Clip Mode
     index: 3

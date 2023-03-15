@@ -1,23 +1,12 @@
 import { Key, Scale, Melody, MelodyType } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
-import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
 import { notes } from "../../helpers/utils";
 
 
 export type ConfiguredScale = {
   name: keyof typeof Scale,
   mode?: string
-}
-
-
-const octaveTransposeMapping: Record<number, number> = {
-  0: 3,
-  1: 2,
-  2: 1,
-  3: 0,
-  4: -1,
-  5: -2,
-  6: -3
 }
 
 

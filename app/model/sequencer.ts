@@ -28,6 +28,7 @@ export class Sequencer {
   gui: BrowserWindow;
   key: Key;
   queuedMelody: note[] = new Array();
+  queuedChordProgression: note[][] = new Array();
 
 
   constructor(testing: boolean = false) {

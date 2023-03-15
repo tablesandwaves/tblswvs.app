@@ -1,15 +1,21 @@
-import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { note } from "tblswvs";
+import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
 import { MonomeGrid } from "./monome_grid";
-
+import { detect } from "@tonaljs/chord-detect";
 
 export class ChordPage extends GridPage {
   type = "Chord";
+  recordingInputChord: boolean = false;
+  keyPressCount: number = 0;
+  chordNotes: note[] = new Array();
+  keyReleaseFunctionality: boolean = true;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
     this.functionMap.set("addChordNote", this.addChordNote);
+    this.functionMap.set("toggleChordRecording", this.toggleChordRecording);
 
     this.grid.clearGridDisplay();
     this.setUiTrackChordProgression();
@@ -17,11 +23,48 @@ export class ChordPage extends GridPage {
 
 
   addChordNote(gridPage: ChordPage, press: GridKeyPress) {
+    if (gridPage.recordingInputChord) {
+      if (press.s == 0) {
+        gridPage.keyPressCount--;
 
+        let octaveTranspose = octaveTransposeMapping[press.y];
+        gridPage.chordNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
+
+        if (gridPage.keyPressCount == 0) {
+          let chordNotes = gridPage.chordNotes.sort((a,b) => a.midi - b.midi);
+
+          let chord  = chordNotes.map(n => n.note + n.octave).join("-");
+          let namedChord = detect(chordNotes.map(n => n.note))[0];
+          chord += namedChord == undefined ? "" : " (" + namedChord + ")";
+
+          gridPage.grid.sequencer.queuedChordProgression.push(chordNotes);
+          gridPage.chordNotes = new Array();
+        }
+      } else {
+        gridPage.keyPressCount++;
+      }
+    }
   }
 
 
   setUiTrackChordProgression() {
 
+  }
+
+
+  toggleChordRecording(gridPage: ChordPage, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.recordingInputChord = !gridPage.recordingInputChord;
+      gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputChord ? 10 : 0));
+      if (gridPage.recordingInputChord) {
+        gridPage.grid.sequencer.queuedChordProgression = new Array();
+        gridPage.setUiQueuedChordProgression();
+      }
+    }
+  }
+
+
+  setUiQueuedChordProgression() {
+    console.log("TODO: setUiQueuedChordProgression()");
   }
 }
