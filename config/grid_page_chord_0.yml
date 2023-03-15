@@ -3,69 +3,76 @@ rows:
     name: Keyboard Octave 6
     index: 0
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Keyboard Octave 5
     index: 1
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Keyboard Octave 4
     index: 2
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Keyboard Octave 3
     index: 3
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Keyboard Octave 2
     index: 4
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Keyboard Octave 1
     index: 5
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Keyboard Octave 0
     index: 6
     xStart: 0
-    xLength: 12
+    xLength: 15
     type: momentary
     mapping: addChordNote
   -
     name: Toggle Chord Recording
-    index: 3
-    xStart: 12
+    index: 0
+    xStart: 15
     xLength: 1
     type: toggle
     mapping: toggleChordRecording
   -
     name: Remove Last Chord
-    index: 3
-    xStart: 13
+    index: 1
+    xStart: 15
     xLength: 1
     type: momentary
     mapping: removeLastChord
   -
     name: Toggle Create Clip Mode
-    index: 3
-    xStart: 14
+    index: 2
+    xStart: 15
     xLength: 1
     type: toggle
     mapping: toggleNewClipCreation
+  -
+    name: Add Progression to Track
+    index: 3
+    xStart: 15
+    xLength: 1
+    type: momentary
+    mapping: setTrackChordProgression

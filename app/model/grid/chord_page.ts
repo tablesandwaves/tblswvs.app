@@ -14,8 +14,11 @@ export class ChordPage extends GridPage {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
-    this.functionMap.set("addChordNote", this.addChordNote);
-    this.functionMap.set("toggleChordRecording", this.toggleChordRecording);
+    this.functionMap.set("addChordNote",             this.addChordNote);
+    this.functionMap.set("removeLastChord",          this.removeLastChord);
+    this.functionMap.set("toggleNewClipCreation",    this.toggleNewClipCreation);
+    this.functionMap.set("setTrackChordProgression", this.setTrackChordProgression);
+    this.functionMap.set("toggleChordRecording",     this.toggleChordRecording);
 
     this.grid.clearGridDisplay();
     this.setUiTrackChordProgression();
@@ -39,6 +42,24 @@ export class ChordPage extends GridPage {
         gridPage.keyPressCount++;
       }
     }
+  }
+
+
+  removeLastChord(gridPage: ChordPage, press: GridKeyPress) {
+    if (gridPage.recordingInputChord && press.s == 1) {
+      gridPage.grid.sequencer.queuedChordProgression.pop();
+      gridPage.setUiQueuedChordProgression();
+    }
+  }
+
+
+  toggleNewClipCreation() {
+
+  }
+
+
+  setTrackChordProgression() {
+
   }
 
 
