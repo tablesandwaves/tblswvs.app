@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld("parameters", {
   updateScale: (callback: any) => ipcRenderer.on("set-scale", callback),
   updateSuperMeasure: (callback: any) => ipcRenderer.on("update-super-measure", callback),
   updateQueuedMelody: (callback: any) => ipcRenderer.on("update-melody", callback),
+  updateQueuedProgression: (callback: any) => ipcRenderer.on("update-progression", callback),
   updateTrackMelody: (callback: any) => ipcRenderer.on("update-track-melody", callback),
   updateTrackRhythm: (callback: any) => ipcRenderer.on("update-track-rhythm", callback),
   updateNoteLength: (callback: any) => ipcRenderer.on("update-note-length", callback),

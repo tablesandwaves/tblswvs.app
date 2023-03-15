@@ -18,7 +18,9 @@ div#global-params,
 div#measure,
 div#current-scale,
 div.melody,
-div.melody p {
+div.melody p,
+div.chord-progression,
+div.chord-progression p {
   position: relative;
   float: left;
 }
@@ -80,7 +82,8 @@ h1 {
 div#track,
 div#note-length,
 div.rhythm,
-div.melody {
+div.melody,
+div.chord-progression {
   width: 800px;
   margin: 10px;
 }
@@ -194,7 +197,8 @@ div#global-params div#current-scale p {
 }
 
 
-div.melody p#queued-melody {
+div.melody p#queued-melody,
+div.chord-progression p#queued-progression {
   width: 100%;
 }
 

@@ -31,24 +31,14 @@ export class ChordPage extends GridPage {
         gridPage.chordNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
 
         if (gridPage.keyPressCount == 0) {
-          let chordNotes = gridPage.chordNotes.sort((a,b) => a.midi - b.midi);
-
-          let chord  = chordNotes.map(n => n.note + n.octave).join("-");
-          let namedChord = detect(chordNotes.map(n => n.note))[0];
-          chord += namedChord == undefined ? "" : " (" + namedChord + ")";
-
-          gridPage.grid.sequencer.queuedChordProgression.push(chordNotes);
+          gridPage.grid.sequencer.queuedChordProgression.push(gridPage.chordNotes.sort((a,b) => a.midi - b.midi));
           gridPage.chordNotes = new Array();
+          gridPage.setUiQueuedChordProgression();
         }
       } else {
         gridPage.keyPressCount++;
       }
     }
-  }
-
-
-  setUiTrackChordProgression() {
-
   }
 
 
@@ -65,6 +55,19 @@ export class ChordPage extends GridPage {
 
 
   setUiQueuedChordProgression() {
-    console.log("TODO: setUiQueuedChordProgression()");
+    this.grid.sequencer.gui.webContents.send(
+      "update-progression",
+      this.grid.sequencer.queuedChordProgression.flatMap(chordNotes => {
+        let chord = chordNotes.map(n => n.note + n.octave).join("-");
+        let namedChord = detect(chordNotes.map(n => n.note))[0];
+        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
+        return chord;
+      }).join("; ")
+    );
+  }
+
+
+  setUiTrackChordProgression() {
+
   }
 }
