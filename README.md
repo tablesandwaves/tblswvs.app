@@ -4,9 +4,9 @@ An experimental controller for electronic music.
 
 ## About
 
-**Status: Alpha.** Code is under active development and may exhibit breaking changes from one commit to the next. Features are actively being added, which may change the software functionality.
-
 This project is an [Electron](https://www.electronjs.org/) app to provide a bridge between a [monome grid](https://monome.org/docs/grid/) and Ableton Live.
+
+**Status: Alpha.** Code is under active development and may exhibit breaking changes from one commit to the next. Features are actively being added, which may change the software functionality.
 
 This project is being shared as a reference example, but is an idiosyncratic, personal project.
 
@@ -75,3 +75,7 @@ The bottom row (number 8, index 7) is a global row.
 * Button 14 (index 13): Shift Key
 * Button 15 (index 14): Page Left
 * Button 16 (index 15): Page Right
+
+## Inspiration
+
+This project is inspired by [William Fields'](https://williamfields.com/) work on his FieldsOS project.
