@@ -29,6 +29,17 @@ export class Sequencer {
   key: Key;
   queuedMelody: note[] = new Array();
   queuedChordProgression: note[][] = new Array();
+  mutatingTracks: number[] = [0, 0, 0, 0, 0, 0];
+  mutations = [
+    {name: "trps-2",  function: "transposeDown2",  active: 0},
+    {name: "rev",     function: "reverseMelody",   active: 0},
+    {name: "rot-3",   function: "rotateLeftThree", active: 0},
+    {name: "sort",    function: "sortMelody",      active: 0},
+    {name: "-sort",   function: "revSortMelody",   active: 0},
+    {name: "inv",     function: "invert",          active: 0},
+    {name: "inv-rev", function: "invertReverse",   active: 0},
+    {name: "bitflip", function: "bitFlip",         active: 0},
+  ];
 
 
   constructor(testing: boolean = false) {

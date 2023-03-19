@@ -1,0 +1,52 @@
+rows:
+  -
+    name: Participating Voices
+    index: 0
+    xStart: 0
+    xLength: 6
+    type: toggle
+    mapping: toggleImprovisingVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+  -
+    name: Mutation Algorithms
+    index: 0
+    xStart: 6
+    xLength: 8
+    type: toggle
+    mapping: toggleMutationAlgorithm
+    values:
+      - trps-2
+      - rev
+      - rot-3
+      - sort
+      - -sort
+      - inv
+      - inv-rev
+      - bitflip
+  -
+    name: Toggle Mutation Setup
+    index: 0
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: toggleMutationSetup
+  -
+    name: Queue Mutation Start
+    index: 1
+    xStart: 15
+    xLength: 1
+    type: momentary
+    mapping: queueMutationStart
+  -
+    name: Queue Mutation Stop
+    index: 2
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: queueMutationStop

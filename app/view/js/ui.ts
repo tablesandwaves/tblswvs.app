@@ -28,6 +28,10 @@ window.parameters.updateTrackRhythm((event: any, track: any) => setRhythmDisplay
 window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length p span", noteLength));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
+window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
+  updateText("#mutating-tracks span", trackNames);
+  updateText("#mutations span", mutations);
+});
 
 
 const updateText = (selector: string, text: string) => document.querySelector(selector).textContent = text;

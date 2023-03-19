@@ -16,5 +16,6 @@ contextBridge.exposeInMainWorld("parameters", {
   updateTrackNotes: (callback: any) => ipcRenderer.on("update-track-notes", callback),
   updateTrackRhythm: (callback: any) => ipcRenderer.on("update-track-rhythm", callback),
   updateNoteLength: (callback: any) => ipcRenderer.on("update-note-length", callback),
-  toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback)
+  toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback),
+  updateMutations: (callback: any) => ipcRenderer.on("update-mutations", callback)
 });

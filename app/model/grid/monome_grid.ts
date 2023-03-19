@@ -10,6 +10,7 @@ import { MelodyPage } from "./melody_page";
 import { blank16x16Row } from "../../helpers/utils";
 import { ProbabilitiesPage } from "./probabilities_page";
 import { ChordPage } from "./chord_page";
+import { MelodyEvolutionPage } from "./melody_evolution_page";
 
 
 export type DeviceConfig = {
@@ -27,7 +28,8 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 const pageTypeMap: Record<string, string[]> = {
   "Rhythm": ["Rhythm", "Probabilities"],
-  "Melody": ["Melody"],
+  "Chords": ["Chords"],
+  "Melody": ["Melody", "Mutation"],
   "Global": ["Global"]
 }
 
@@ -162,20 +164,27 @@ export class MonomeGrid {
         updated = true;
         globalKeyIndex = 6;
         break;
+      case "Probabilities":
+        // Do not reset page index to 0, this is page 2/index 1 of the Rhythm page group.
+        this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 6;
+        break;
       case "Chords":
         this.pageIndex = 0;
         this.activePage = new ChordPage(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;
-      case "Probabilities":
-        this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 6;
-        break;
       case "Melody":
         this.pageIndex = 0;
         this.activePage = new MelodyPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 8;
+        break;
+      case "Mutation":
+        // Do not reset page index to 0, this is page 2/index 1 of the Melody page group.
+        this.activePage = new MelodyEvolutionPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
