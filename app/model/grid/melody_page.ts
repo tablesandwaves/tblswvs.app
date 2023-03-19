@@ -1,4 +1,4 @@
-import { Key, Scale, Melody, MelodyType } from "tblswvs";
+import { Key, Scale, Melody, note } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
 import { notes } from "../../helpers/utils";
@@ -42,13 +42,13 @@ export class MelodyPage extends GridPage {
         gridPage.grid.sequencer.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedMelody.map(n => [n]);
         break;
       case "self_replicate":
-        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).steps);
+        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).notes);
         break;
       case "counted":
-        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().counted().steps);
+        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().counted().notes);
         break;
       case "zig_zag":
-        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().zigZag().steps);
+        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().zigZag().notes);
         break;
     }
 
@@ -63,15 +63,15 @@ export class MelodyPage extends GridPage {
   }
 
 
-  setCurrentTrackNotes(outputMelody: (string | number)[]) {
-    this.grid.sequencer.getActiveTrack().outputNotes = outputMelody.map(scaleDegree => {
-      return scaleDegree == 0 ? [undefined] : [this.grid.sequencer.key.degree(Number(scaleDegree))];
+  setCurrentTrackNotes(outputMelody: note[]) {
+    this.grid.sequencer.getActiveTrack().outputNotes = outputMelody.map(note => {
+      return note.note == "rest" ? [undefined] : [note];
     });
   }
 
 
   getCurrentScaleDegreeMelody(): Melody {
-    return new Melody(this.grid.sequencer.queuedMelody.map(n => n.scaleDegree), 0, MelodyType.Degrees);
+    return new Melody(this.grid.sequencer.queuedMelody, this.grid.sequencer.key);
   }
 
 
