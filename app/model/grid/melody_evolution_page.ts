@@ -39,12 +39,17 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   queueMutationStart(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-
+    gridPage.grid.sequencer.leadImproviser = gridPage.grid.sequencer.activeTrack;
+    gridPage.grid.sequencer.mutating = true;
+    gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].mutating = true;
+    gridPage.grid.sequencer.currentMutation = gridPage.grid.sequencer.getActiveTrack().outputNotes.flat();
+    gridPage.grid.sequencer.evolve();
   }
 
 
   queueMutationStop(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-
+    gridPage.grid.sequencer.mutating = false;
+    gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].mutating = false;
   }
 
 

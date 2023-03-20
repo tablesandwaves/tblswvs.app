@@ -1,5 +1,5 @@
 const easymidi = require("easymidi");
-import { Key, Scale } from "tblswvs";
+import { Key, Melody, Mutation, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./grid/monome_grid";
 import { Track, RhythmStep } from "./track";
@@ -29,13 +29,18 @@ export class Sequencer {
   key: Key;
   queuedMelody: note[] = new Array();
   queuedChordProgression: note[][] = new Array();
+
+  // Melodic Evolution
+  leadImproviser: number = 0;
+  mutating: boolean = false;
+  currentMutation: note[] = new Array();
   mutatingTracks: number[] = [0, 0, 0, 0, 0, 0];
   mutations = [
     {name: "trps-2",  function: "transposeDown2",  active: 0},
-    {name: "rev",     function: "reverseMelody",   active: 0},
+    {name: "rev",     function: "reverse",   active: 0},
     {name: "rot-3",   function: "rotateLeftThree", active: 0},
-    {name: "sort",    function: "sortMelody",      active: 0},
-    {name: "-sort",   function: "revSortMelody",   active: 0},
+    {name: "sort",    function: "sort",      active: 0},
+    {name: "-sort",   function: "reverseSort",   active: 0},
     {name: "inv",     function: "invert",          active: 0},
     {name: "inv-rev", function: "invertReverse",   active: 0},
     {name: "bitflip", function: "bitFlip",         active: 0},
@@ -72,7 +77,32 @@ export class Sequencer {
   }
 
 
-  abletonNotesForCurrentTrack(): AbletonNote[] {
+  evolve() {
+    let   mutatedMelody   = new Array();
+    const activeMutations = this.mutations.filter(m => m.active == 1).map(m => m.function);
+    const gatesPerMeasure = this.tracks[this.activeTrack].rhythm.reduce((a, b) => a + b.state, 0);
+
+    for (let i = 0; i < this.superMeasure; i++) {
+      const melody = new Array();
+      for (let j = 0; j < gatesPerMeasure; j++)
+        melody.push(this.currentMutation[(i * gatesPerMeasure + j) % this.currentMutation.length]);
+
+      let mutatingMelody = new Melody(melody, this.key);
+      let mutation       = Mutation.random(mutatingMelody, activeMutations);
+      mutatedMelody = mutatedMelody.concat(mutation.notes)
+    }
+
+    this.currentMutation = mutatedMelody;
+    this.daw.setNotes(
+      this.activeTrack,
+      this.abletonNotesForCurrentTrack(true),
+      false,
+      AbletonLive.EVOLUTION_SCENE_INDEX
+    );
+  }
+
+
+  abletonNotesForCurrentTrack(mutation = false): AbletonNote[] {
     let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
 
     const beatLength = this.getActiveTrack().beatLength;
@@ -82,9 +112,11 @@ export class Sequencer {
             .flat()
             .slice(0, this.superMeasure * 16);
 
+    const sourceNotes = mutation ? this.currentMutation.map(n => [n]) : this.tracks[this.activeTrack].outputNotes;
+
     abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
       if (rhythmStep.state == 1) {
-        nextNotes = this.tracks[this.activeTrack].outputNotes[noteIndex % this.getActiveTrack().outputNotes.length];
+        nextNotes = sourceNotes[noteIndex % sourceNotes.length];
         // An undefined note in the notes array corresponds to a rest in the melody.
         if (nextNotes != undefined) {
           // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are

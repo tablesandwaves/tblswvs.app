@@ -11,6 +11,8 @@ const DEFAULT_SUPER_MEASURE_LENGTH = 16;
 
 
 export class AbletonLive {
+  static EVOLUTION_SCENE_INDEX = 4;
+
   emitter: any;
   receiver: any;
   fetchedNotes: AbletonNote[] = new Array();
@@ -46,7 +48,7 @@ export class AbletonLive {
   }
 
 
-  setNotes(trackIndex: number, notes: AbletonNote[], newClip: boolean) {
+  setNotes(trackIndex: number, notes: AbletonNote[], newClip: boolean, clipIndex?: number) {
     let timeout = 0;
 
     if (newClip) {
@@ -57,9 +59,10 @@ export class AbletonLive {
       );
     }
 
+    clipIndex = clipIndex == undefined ? this.tracks[trackIndex].currentClip : clipIndex;
     setTimeout(() => {
       this.emitter.emit(
-        `/tracks/${trackIndex}/clips/${this.tracks[trackIndex].currentClip}/notes`,
+        `/tracks/${trackIndex}/clips/${clipIndex}/notes`,
         ...notes.flatMap(note => note.toOscAddedNote())
       );
     }, timeout);
@@ -69,8 +72,12 @@ export class AbletonLive {
   #syncSuperMeasure(beat: number) {
     if (beat % 4 == 0) {
       const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
-      if (measure == this.sequencer.superMeasure)
-        this.tracks.forEach((track, i) => this.emitter.emit(`/tracks/${i}/clips/${track.currentClip}/fire`));
+      if (measure == this.sequencer.superMeasure) {
+        this.tracks.forEach((track, i) => {
+          let currentClip = track.mutating ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
+          this.emitter.emit(`/tracks/${i}/clips/${currentClip}/fire`)
+        });
+      }
 
       this.sequencer.grid.sequencer.gui.webContents.send("transport-beat", measure);
     }
