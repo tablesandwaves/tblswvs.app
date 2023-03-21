@@ -16,6 +16,7 @@ export class Track {
   // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
   // Using a 2-dimensional array to accommodate polyphony.
   outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
+  currentMutation: note[] = new Array();
   algorithm: string = "simple";
   weightedRhythm: boolean = false;
   noteLength: string = "16n";

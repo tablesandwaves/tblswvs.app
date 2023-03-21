@@ -42,8 +42,8 @@ export class MelodyEvolutionPage extends GridPage {
     gridPage.grid.sequencer.leadImproviser = gridPage.grid.sequencer.activeTrack;
     gridPage.grid.sequencer.mutating = true;
     gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].mutating = true;
-    gridPage.grid.sequencer.currentMutation = gridPage.grid.sequencer.getActiveTrack().outputNotes.flat();
-    gridPage.grid.sequencer.evolve();
+    gridPage.grid.sequencer.getActiveTrack().currentMutation = gridPage.grid.sequencer.getActiveTrack().outputNotes.flat();
+    gridPage.grid.sequencer.evolve(gridPage.grid.sequencer.activeTrack);
   }
 
 

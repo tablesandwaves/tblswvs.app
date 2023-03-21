@@ -43,7 +43,7 @@ export class AbletonLive {
 
 
   setNotes(trackIndex: number, notes: AbletonNote[], newClip: boolean, clipIndex?: number) {
-    let timeout = 0;
+    // let timeout = 0;
 
     if (newClip) {
       this.tracks[trackIndex].currentClip = (this.tracks[trackIndex].currentClip + 1) % 8;
@@ -54,12 +54,23 @@ export class AbletonLive {
     }
 
     clipIndex = clipIndex == undefined ? this.tracks[trackIndex].currentClip : clipIndex;
-    setTimeout(() => {
+    try {
       this.emitter.emit(
         `/tracks/${trackIndex}/clips/${clipIndex}/notes`,
         ...notes.flatMap(note => note.toOscAddedNote())
       );
-    }, timeout);
+    } catch (e) {
+      console.error(e.name, e.message, "while sending notes to Live:");
+      console.log("input notes:", notes);
+      console.error("OSC mapped notes", ...notes.flatMap(note => note.toOscAddedNote()));
+    }
+
+    // setTimeout(() => {
+    //   this.emitter.emit(
+    //     `/tracks/${trackIndex}/clips/${clipIndex}/notes`,
+    //     ...notes.flatMap(note => note.toOscAddedNote())
+    //   );
+    // }, timeout);
   }
 
 
@@ -67,9 +78,11 @@ export class AbletonLive {
     if (beat % 4 == 0) {
       const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
       if (measure == this.sequencer.superMeasure) {
-        this.tracks.forEach((track, i) => {
+        this.tracks.forEach((track, trackIndex) => {
           let currentClip = track.mutating ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
-          this.emitter.emit(`/tracks/${i}/clips/${currentClip}/fire`)
+          this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
+
+          if (track.mutating) this.sequencer.evolve(trackIndex);
         });
       }
 

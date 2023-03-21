@@ -33,7 +33,6 @@ export class Sequencer {
   // Melodic Evolution
   leadImproviser: number = 0;
   mutating: boolean = false;
-  currentMutation: note[] = new Array();
   mutatingTracks: number[] = [0, 0, 0, 0, 0, 0];
   mutations = [
     {name: "trps-2",  function: "transposeDown2",  active: 0},
@@ -77,42 +76,46 @@ export class Sequencer {
   }
 
 
-  evolve() {
+  evolve(trackIndex: number) {
     let   mutatedMelody   = new Array();
     const activeMutations = this.mutations.filter(m => m.active == 1).map(m => m.function);
-    const gatesPerMeasure = this.tracks[this.activeTrack].rhythm.reduce((a, b) => a + b.state, 0);
+    const gatesPerMeasure = this.tracks[trackIndex].rhythm.reduce((a, b) => a + b.state, 0);
 
     for (let i = 0; i < this.superMeasure; i++) {
       const melody = new Array();
-      for (let j = 0; j < gatesPerMeasure; j++)
-        melody.push(this.currentMutation[(i * gatesPerMeasure + j) % this.currentMutation.length]);
+      for (let j = 0; j < gatesPerMeasure; j++) {
+        melody.push(
+          this.tracks[trackIndex].currentMutation[
+            (i * gatesPerMeasure + j) % this.tracks[trackIndex].currentMutation.length
+          ]
+        );
+      }
 
-      let mutatingMelody = new Melody(melody, this.key);
-      let mutation       = Mutation.random(mutatingMelody, activeMutations);
-      mutatedMelody = mutatedMelody.concat(mutation.notes)
+      mutatedMelody = mutatedMelody.concat(Mutation.random(new Melody(melody, this.key), activeMutations).notes);
     }
 
-    this.currentMutation = mutatedMelody;
+    this.tracks[trackIndex].currentMutation = mutatedMelody;
     this.daw.setNotes(
-      this.activeTrack,
-      this.abletonNotesForCurrentTrack(true),
+      trackIndex,
+      this.abletonNotesForCurrentTrack(trackIndex),
       false,
       AbletonLive.EVOLUTION_SCENE_INDEX
     );
   }
 
 
-  abletonNotesForCurrentTrack(mutation = false): AbletonNote[] {
+  abletonNotesForCurrentTrack(mutationTrackIndex?: number): AbletonNote[] {
     let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
 
-    const beatLength = this.getActiveTrack().beatLength;
-    const size = Math.ceil((this.superMeasure * 16 / beatLength));
+    const track          = this.tracks[mutationTrackIndex ? mutationTrackIndex : this.activeTrack];
+    const beatLength     = track.beatLength;
+    const size           = Math.ceil((this.superMeasure * 16 / beatLength));
     const expandedRhythm = new Array(size)
-            .fill(this.getActiveTrack().rhythm.slice(0, beatLength))
+            .fill(track.rhythm.slice(0, beatLength))
             .flat()
             .slice(0, this.superMeasure * 16);
 
-    const sourceNotes = mutation ? this.currentMutation.map(n => [n]) : this.tracks[this.activeTrack].outputNotes;
+    const sourceNotes = mutationTrackIndex ? track.currentMutation.map(n => [n]) : track.outputNotes;
 
     abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
       if (rhythmStep.state == 1) {
@@ -125,7 +128,7 @@ export class Sequencer {
             abletonNotes.push(new AbletonNote(
               nextNote.midi,
               (i * 0.25),
-              noteLengthMap[this.getActiveTrack().noteLength].size,
+              noteLengthMap[track.noteLength].size,
               64,
               rhythmStep.probability
             ));
