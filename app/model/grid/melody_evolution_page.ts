@@ -4,7 +4,6 @@ import { MonomeGrid } from "./monome_grid";
 
 export class MelodyEvolutionPage extends GridPage {
   type = "Melody";
-  editingMutationParameters: boolean = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -12,7 +11,6 @@ export class MelodyEvolutionPage extends GridPage {
 
     this.functionMap.set("toggleMutationAlgorithm", this.toggleMutationAlgorithm);
     this.functionMap.set("toggleImprovisingVoice", this.toggleImprovisingVoice);
-    this.functionMap.set("toggleMutationSetup", this.toggleMutationSetup);
     this.functionMap.set("queueMutationStart", this.queueMutationStart);
     this.functionMap.set("queueMutationStop", this.queueMutationStop);
 
@@ -27,58 +25,59 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  toggleMutationSetup(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    gridPage.editingMutationParameters = !gridPage.editingMutationParameters;
-    gridPage.grid.levelSet(press.x, press.y, (gridPage.editingMutationParameters ? 10 : 0));
-    if (gridPage.editingMutationParameters) {
-      gridPage.grid.sequencer.mutatingTracks = [0, 0, 0, 0, 0, 0];
-      gridPage.grid.sequencer.mutations.forEach(m => m.active = 0);
-      gridPage.refresh();
-    }
-  }
-
-
   queueMutationStart(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    // Set lead improvisor for trading melodies.
     gridPage.grid.sequencer.leadImproviser = gridPage.grid.sequencer.activeTrack;
+
+    // Both the individual tracks AND the sequencer must set mutating=true to avoid an evolutionary cycles
+    // starting before mutation melodies are in place since mutation cycles happen at the start of each
+    // super measure.
+    gridPage.grid.sequencer.daw.tracks.forEach((track, trackIndex) => {
+      if (track.mutating) {
+        gridPage.grid.sequencer.tracks[trackIndex].currentMutation = gridPage.grid.sequencer.tracks[trackIndex].outputNotes.flat();
+        gridPage.grid.sequencer.evolve(trackIndex);
+      }
+    });
     gridPage.grid.sequencer.mutating = true;
-    gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].mutating = true;
-    gridPage.grid.sequencer.getActiveTrack().currentMutation = gridPage.grid.sequencer.getActiveTrack().outputNotes.flat();
-    gridPage.grid.sequencer.evolve(gridPage.grid.sequencer.activeTrack);
   }
 
 
+  /**
+   * Stops all mutations.
+   *
+   * @param gridPage the MelodyEvolutionPage itself, required since `this` object is unavailable from function map
+   * @param press the press object represented the grid key press button and state
+   */
   queueMutationStop(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    gridPage.grid.sequencer.daw.tracks.forEach(t => t.mutating = false);
     gridPage.grid.sequencer.mutating = false;
-    gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].mutating = false;
+    gridPage.refresh();
   }
 
 
+  /**
+   * Enables or disables mutation/evolution for the voice represented by the grid key press.
+   *
+   * @param gridPage the MelodyEvolutionPage itself, required since `this` object is unavailable from function map
+   * @param press the press object represented the grid key press button and state
+   */
   toggleImprovisingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    if (gridPage.editingMutationParameters) {
-      gridPage.grid.sequencer.mutatingTracks[press.x] = 1 - gridPage.grid.sequencer.mutatingTracks[press.x];
-      gridPage.grid.levelSet(
-        press.x, press.y,
-        (gridPage.grid.sequencer.mutatingTracks[press.x] == 1 ? 10 : 0)
-      );
-      gridPage.refresh();
-    }
+    gridPage.grid.sequencer.daw.tracks[press.x].mutating = !gridPage.grid.sequencer.daw.tracks[press.x].mutating;
+    gridPage.refresh();
   }
 
 
   toggleMutationAlgorithm(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    if (gridPage.editingMutationParameters) {
-      const offset = 6;
-      gridPage.grid.sequencer.mutations[press.x - offset].active = 1 - gridPage.grid.sequencer.mutations[press.x - offset].active;
-
-      gridPage.refresh();
-    }
+    const offset = 6;
+    gridPage.grid.sequencer.mutations[press.x - offset].active = 1 - gridPage.grid.sequencer.mutations[press.x - offset].active;
+    gridPage.refresh();
   }
 
 
   setGridMutationDisplay() {
     // Light up the particpating tracks
-    for (let i = 0; i < this.grid.sequencer.mutatingTracks.length; i++)
-      this.grid.levelSet(i, 0, this.grid.sequencer.mutatingTracks[i] == 1 ? 10 : 0);
+    for (let i = 0; i < this.grid.sequencer.daw.tracks.length; i++)
+      this.grid.levelSet(i, 0, this.grid.sequencer.daw.tracks[i].mutating ? 10 : 0);
 
     // Ligth up the active mutations
     const offset = 6;
@@ -90,8 +89,8 @@ export class MelodyEvolutionPage extends GridPage {
   setUiMutations() {
     this.grid.sequencer.gui.webContents.send(
       "update-mutations",
-      this.grid.sequencer.mutatingTracks.reduce((activeTracks, track, tIdx) => {
-        if (track == 1) activeTracks.push(this.grid.sequencer.tracks[tIdx].name);
+      this.grid.sequencer.daw.tracks.reduce((activeTracks, track, tIdx) => {
+        if (track.mutating) activeTracks.push(this.grid.sequencer.tracks[tIdx].name);
         return activeTracks;
       }, []).join(" "),
       this.grid.sequencer.mutations.filter(m => m.active == 1).map(m => m.name).join(" ")

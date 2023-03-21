@@ -30,22 +30,15 @@ rows:
       - inv-rev
       - bitflip
   -
-    name: Toggle Mutation Setup
-    index: 0
-    xStart: 15
-    xLength: 1
-    type: toggle
-    mapping: toggleMutationSetup
-  -
     name: Queue Mutation Start
-    index: 1
+    index: 0
     xStart: 15
     xLength: 1
     type: momentary
     mapping: queueMutationStart
   -
     name: Queue Mutation Stop
-    index: 2
+    index: 1
     xStart: 15
     xLength: 1
     type: toggle

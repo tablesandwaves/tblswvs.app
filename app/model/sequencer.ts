@@ -33,7 +33,6 @@ export class Sequencer {
   // Melodic Evolution
   leadImproviser: number = 0;
   mutating: boolean = false;
-  mutatingTracks: number[] = [0, 0, 0, 0, 0, 0];
   mutations = [
     {name: "trps-2",  function: "transposeDown2",  active: 0},
     {name: "rev",     function: "reverse",   active: 0},

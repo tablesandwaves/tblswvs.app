@@ -61,8 +61,10 @@ export class AbletonLive {
       );
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
-      console.log("input notes:", notes);
+      console.error("input notes:", notes);
       console.error("OSC mapped notes", ...notes.flatMap(note => note.toOscAddedNote()));
+      console.error("trackIndex", trackIndex, "mutating", this.sequencer.daw.tracks[trackIndex].mutating);
+      console.error("Current track mutation", this.sequencer.tracks[trackIndex].currentMutation);
     }
 
     // setTimeout(() => {
@@ -79,10 +81,15 @@ export class AbletonLive {
       const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
       if (measure == this.sequencer.superMeasure) {
         this.tracks.forEach((track, trackIndex) => {
-          let currentClip = track.mutating ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
+          // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
+          let currentClip = (this.sequencer.mutating && track.mutating) ?
+                            AbletonLive.EVOLUTION_SCENE_INDEX :
+                            track.currentClip;
           this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
 
-          if (track.mutating) this.sequencer.evolve(trackIndex);
+          if (this.sequencer.mutating && track.mutating) {
+            this.sequencer.evolve(trackIndex);
+          }
         });
       }
 
