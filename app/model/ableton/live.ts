@@ -6,10 +6,6 @@ import { AbletonTrack } from "./track";
 import { Sequencer } from "../sequencer";
 
 
-// Used so the tests, which may not have access to this.sequencer, have a value
-const DEFAULT_SUPER_MEASURE_LENGTH = 16;
-
-
 export class AbletonLive {
   static EVOLUTION_SCENE_INDEX = 4;
 
@@ -23,15 +19,13 @@ export class AbletonLive {
   constructor(sequencer: Sequencer) {
     this.sequencer = sequencer;
 
-    // When testing the Ableton classes, the sequencer is undefined, so use a default value.
-    const superMeasureLength: number = this.sequencer ? this.sequencer.superMeasure : DEFAULT_SUPER_MEASURE_LENGTH;
     this.tracks = [
-      new AbletonTrack(superMeasureLength),
-      new AbletonTrack(superMeasureLength),
-      new AbletonTrack(superMeasureLength),
-      new AbletonTrack(superMeasureLength),
-      new AbletonTrack(superMeasureLength),
-      new AbletonTrack(superMeasureLength)
+      new AbletonTrack(sequencer.superMeasure),
+      new AbletonTrack(sequencer.superMeasure),
+      new AbletonTrack(sequencer.superMeasure),
+      new AbletonTrack(sequencer.superMeasure),
+      new AbletonTrack(sequencer.superMeasure),
+      new AbletonTrack(sequencer.superMeasure)
     ];
 
     // To Live
