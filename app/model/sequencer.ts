@@ -31,7 +31,6 @@ export class Sequencer {
   queuedChordProgression: note[][] = new Array();
 
   // Melodic Evolution
-  leadImproviser: number = 0;
   mutating: boolean = false;
   mutations = [
     {name: "trps-2",  function: "transposeDown2",  active: 0},
@@ -44,6 +43,8 @@ export class Sequencer {
     {name: "bitflip", function: "bitFlip",         active: 0},
   ];
   soloists: number[] = new Array();
+  soloistIndex = -1;
+  currentSoloistMelody: note[] = new Array();
 
 
   constructor(testing: boolean = false) {

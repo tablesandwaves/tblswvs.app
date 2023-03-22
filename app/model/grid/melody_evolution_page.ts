@@ -27,9 +27,6 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   queueMutationStart(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    // Set lead improvisor for trading melodies.
-    gridPage.grid.sequencer.leadImproviser = gridPage.grid.sequencer.activeTrack;
-
     // Both the individual tracks AND the sequencer must set mutating=true to avoid an evolutionary cycles
     // starting before mutation melodies are in place since mutation cycles happen at the start of each
     // super measure.
@@ -102,6 +99,8 @@ export class MelodyEvolutionPage extends GridPage {
       // There are no current soloists, add the active track as the current soloist and reset all other tracks
       gridPage.grid.sequencer.daw.tracks.forEach((t, i) => t.mutating = (i == gridPage.grid.sequencer.activeTrack));
       gridPage.grid.sequencer.soloists.push(gridPage.grid.sequencer.activeTrack);
+      gridPage.grid.sequencer.currentSoloistMelody = gridPage.grid.sequencer.tracks[gridPage.grid.sequencer.activeTrack].outputNotes.flat();
+      gridPage.grid.sequencer.soloistIndex = -1;
     }
     gridPage.refresh();
   }
