@@ -43,6 +43,7 @@ export class Sequencer {
     {name: "inv-rev", function: "invertReverse",   active: 0},
     {name: "bitflip", function: "bitFlip",         active: 0},
   ];
+  soloists: number[] = new Array();
 
 
   constructor(testing: boolean = false) {

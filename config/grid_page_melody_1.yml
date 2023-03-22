@@ -41,5 +41,12 @@ rows:
     index: 1
     xStart: 15
     xLength: 1
-    type: toggle
+    type: momentary
     mapping: queueMutationStop
+  -
+    name: Enable Voice Trading
+    index: 2
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: toggleVoiceTrading
