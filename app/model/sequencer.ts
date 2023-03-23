@@ -77,25 +77,29 @@ export class Sequencer {
   }
 
 
-  evolve(trackIndex: number) {
+  evolve(trackIndex: number, tradingVoices?: boolean) {
     let   mutatedMelody   = new Array();
     const activeMutations = this.mutations.filter(m => m.active == 1).map(m => m.function);
     const gatesPerMeasure = this.tracks[trackIndex].rhythm.reduce((a, b) => a + b.state, 0);
+
+    let mutationSource = tradingVoices ? this.currentSoloistMelody : this.tracks[trackIndex].currentMutation;
 
     for (let i = 0; i < this.superMeasure; i++) {
       const melody = new Array();
       for (let j = 0; j < gatesPerMeasure; j++) {
         melody.push(
-          this.tracks[trackIndex].currentMutation[
-            (i * gatesPerMeasure + j) % this.tracks[trackIndex].currentMutation.length
-          ]
+          mutationSource[(i * gatesPerMeasure + j) % mutationSource.length]
         );
       }
 
       mutatedMelody = mutatedMelody.concat(Mutation.random(new Melody(melody, this.key), activeMutations).notes);
     }
 
+    // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
+    // (via abletonNotesForCurrentTrack()) and the sequencer so it is mutated for the next soloist
+    // when trading voices.
     this.tracks[trackIndex].currentMutation = mutatedMelody;
+    this.currentSoloistMelody = mutatedMelody;
     this.daw.setNotes(
       trackIndex,
       this.abletonNotesForCurrentTrack(trackIndex),
