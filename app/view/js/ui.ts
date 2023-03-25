@@ -15,7 +15,7 @@ window.parameters.activateTrack((event: any, track: any) => {
 
   setRhythmDisplay(track);
   const melody = track.algorithm + " " + track.inputMelody.map((n: any) => `${n.note}${n.octave}`).join(" ");
-  updateText("#track-melody p", melody);
+  updateText("#track-notes p", melody);
   updateText("#note-length p span", track.noteLength);
 });
 
@@ -34,7 +34,9 @@ window.parameters.updateMutations((event: any, trackNames: string, mutations: st
 });
 
 
-const updateText = (selector: string, text: string) => document.querySelector(selector).textContent = text;
+const updateText = (selector: string, text: string) => {
+  document.querySelector(selector).textContent = text
+}
 
 const toggleIndicator = (selector: string, state: boolean) => {
   if (state)
