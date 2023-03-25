@@ -3,6 +3,7 @@ outlets = 2;
 var notesPattern = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
 var clipFirePattern = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
 var newClipPattern = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
+var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
 
 
 function osc_message() {
@@ -26,6 +27,13 @@ function osc_message() {
     outlet(0, newClipMatch[0], "Created");
     outlet(1, newClipMatch[0], "Created");
   }
+
+  var stopClipMatch = a[0].match(stopAllClipsPattern);
+  if (stopClipMatch) {
+    stopTrackClips(stopClipMatch[1]);
+    outlet(0, stopClipMatch[0], "Stopped");
+    outlet(1, stopClipMatch[0], "Stopped");
+  }
 }
 
 
@@ -38,6 +46,11 @@ function createClip(trackIndex, clipIndex, length) {
 
 function fireClipSlot(trackIndex, clipIndex) {
   new LiveAPI("live_set tracks " + trackIndex + " clip_slots " + clipIndex).call("fire");
+}
+
+
+function stopTrackClips(trackIndex) {
+  new LiveAPI("live_set tracks " + trackIndex).call("stop_all_clips");
 }
 
 
