@@ -1,8 +1,15 @@
 let previousStep = 15;
 let pageDocumentation: any = {};
+let activeDocumentationPage: any = {};
+let gridMatrix: any[];
 
 
-window.documentation.pageDocumentation((event: any, page: any) => pageDocumentation[page.name] = page);
+window.documentation.pageDocumentation((event: any, page: any) => {
+  pageDocumentation[page.name] = page;
+  if (page.name == "Rhythm") {
+    loadPageDocumentation(document.querySelector("#documentation #page-list li"));
+  }
+});
 
 
 window.stepSequencer.transport((event: any, currentStep: number) => updateTransport(currentStep));
@@ -89,16 +96,71 @@ const toggleDocumentation = () => {
 }
 
 
-const displayDocumentation = (page: string) => {
-  console.log(pageDocumentation[page]);
+const loadPageDocumentation = (page: Element) => {
+  activeDocumentationPage = pageDocumentation[page.textContent];
+  document.querySelectorAll("#page-list li").forEach(p => {
+    if (p.textContent == page.textContent)
+      p.classList.add("active");
+    else
+      p.classList.remove("active");
+  });
+  clearGridButtons();
+  document.querySelector("#button-details").textContent = "";
+
+  gridMatrix = new Array();
+  for (let row = 0; row < 8; row++) {
+    gridMatrix[row] = new Array();
+  }
+
+  pageDocumentation[page.textContent].rows.forEach((row: any) => {
+    for (let x = row.xStart; x < row.xLength - row.xStart; x++) {
+      let entry: any = { rowName: row.name, mapping: row.mapping, shiftMapping: row.shiftMapping, type: row.type };
+      if (row.type == "radio") {
+        entry.value = row.values[x - row.xStart];
+        entry.group = row.group
+      } else if (row.type == "vertical meter") {
+        entry.value = row.value;
+      }
+      gridMatrix[row.index][x] = entry;
+    }
+  });
+}
+
+
+const setupGridMatrix = () => {
+  const grid = document.querySelector("#grid");
+  for (let y = 0; y < 8; y++) {
+    const row = document.createElement("div");
+    row.classList.add("row");
+    row.setAttribute("id", `grid-row-${y}`);
+    grid.appendChild(row);
+    for (let x = 0; x < 16; x++) {
+      const button = document.createElement("div");
+      button.classList.add("button");
+      button.setAttribute("id", `grid-button-${x}-${y}`);
+      button.addEventListener("click", () => displayFunction(x, y));
+      row.appendChild(button);
+    }
+  }
+}
+
+
+const displayFunction = (x: number, y: number) => {
+  clearGridButtons();
+  document.querySelector(`#grid-button-${x}-${y}`).classList.add("on");
+  document.querySelector("#button-details").textContent = JSON.stringify(gridMatrix[y][x]);
+}
+
+
+const clearGridButtons = () => {
+  document.querySelectorAll("#grid .button").forEach(button => button.classList.remove("on"))
 }
 
 
 const ready = () => {
+  setupGridMatrix();
   document.getElementById("docs").addEventListener("click", toggleDocumentation);
-  document.querySelectorAll("#page-list li").forEach(page => {
-    page.addEventListener("click", () => displayDocumentation(page.textContent));
-  });
+  document.querySelectorAll("#page-list li").forEach(page => page.addEventListener("click", () => loadPageDocumentation(page)));
 }
 
 

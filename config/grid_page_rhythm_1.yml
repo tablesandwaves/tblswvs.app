@@ -18,7 +18,6 @@ rows:
     value: 0.875
     mapping: updateProbability
     shiftMapping: updateTrackProbability
-
   -
     name: 75% Probability
     index: 2

@@ -5,5 +5,6 @@ declare global {
     stepSequencer: any;
     parameters: any;
     documentation: any;
+    d3: any;
   }
 }

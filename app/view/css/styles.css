@@ -7,7 +7,7 @@ body {
 }
 
 
-div.wrapper {
+div.wrapper, ul.wrapper {
   position: relative;
   float: left;
 }
@@ -211,4 +211,64 @@ div#track div#create-clip span {
 
 div#track div#create-clip span.on {
   background-color: #117733;
+}
+
+
+div#documentation ul#page-list {
+  padding: 0;
+}
+
+
+div#documentation ul#page-list li {
+  list-style: none;
+  position: relative;
+  float: left;
+  padding: 5px 20px;
+}
+
+
+div#documentation ul#page-list li.active {
+  color: #f62;
+}
+
+
+div#documentation div#grid {
+  width: 782px;
+  margin: 1em auto;
+  padding: 24px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+div#documentation div#grid div.row {
+  position: relative;
+  float: left;
+  margin-bottom: 18px;
+}
+
+
+div#documentation div#grid div.row:last-child {
+  margin-bottom: 0;
+}
+
+
+div#documentation div#grid div.row div.button {
+  position: relative;
+  float: left;
+  width: 30px;
+  height: 30px;
+  margin-right: 18px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+div#documentation div#grid div.row div.button.on {
+  background-color: #f62;
+}
+
+
+div#documentation div#grid div.row div.button:last-child {
+  margin-right: 0;
 }

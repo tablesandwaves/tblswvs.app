@@ -34,7 +34,6 @@
   "dependencies": {
     "@tonaljs/chord-detect": "^4.8.0",
     "clockalgo": "github:steve-meyer/clockalgo.js#v0.6.1",
-    "d3": "^7.8.3",
     "easymidi": "^3.0.1",
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
