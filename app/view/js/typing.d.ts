@@ -4,5 +4,6 @@ declare global {
   interface Window {
     stepSequencer: any;
     parameters: any;
+    documentation: any;
   }
 }

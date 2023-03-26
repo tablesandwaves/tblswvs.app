@@ -1,5 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
+import * as fs from "fs";
+import * as yaml from "js-yaml";
 import { Sequencer } from "./app/model/sequencer";
 
 
@@ -36,6 +38,18 @@ app.whenReady().then(() => {
       sequencer.grid.keyPress({x: 0, y: 7, s: 1});
       sequencer.grid.keyPress({x: 6, y: 7, s: 1});
     }, 500);
+
+    setTimeout(() => {
+      const configDirectory = "./config";
+      fs.readdir(configDirectory, (err, files) => {
+        files.forEach(filename => {
+          if (filename.startsWith("grid_page_")) {
+            const configuration = yaml.load(fs.readFileSync( path.resolve(configDirectory, filename), "utf8" ));
+            sequencer.gui.webContents.send("documentation-page", configuration);
+          }
+        });
+      });
+    }, 1000);
   });
 }).then(() => {
   createWindow();

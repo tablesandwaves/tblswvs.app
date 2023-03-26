@@ -1,4 +1,8 @@
 let previousStep = 15;
+let pageDocumentation: any = {};
+
+
+window.documentation.pageDocumentation((event: any, page: any) => pageDocumentation[page.name] = page);
 
 
 window.stepSequencer.transport((event: any, currentStep: number) => updateTransport(currentStep));
@@ -69,3 +73,33 @@ const updateTransport = (currentStep: number) => {
   document.getElementById(`step-${currentStep}`).classList.add("current");
   previousStep = currentStep;
 }
+
+
+const toggleDocumentation = () => {
+  const showingDocs = document.getElementById("documentation").style.display == "block";
+  if (showingDocs) {
+    document.getElementById("main").style.display = "block";
+    document.getElementById("documentation").style.display = "none";
+    document.getElementById("docs").classList.remove("active");
+  } else {
+    document.getElementById("main").style.display = "none";
+    document.getElementById("documentation").style.display = "block";
+    document.getElementById("docs").classList.add("active");
+  }
+}
+
+
+const displayDocumentation = (page: string) => {
+  console.log(pageDocumentation[page]);
+}
+
+
+const ready = () => {
+  document.getElementById("docs").addEventListener("click", toggleDocumentation);
+  document.querySelectorAll("#page-list li").forEach(page => {
+    page.addEventListener("click", () => displayDocumentation(page.textContent));
+  });
+}
+
+
+document.addEventListener("DOMContentLoaded", ready);

@@ -19,3 +19,8 @@ contextBridge.exposeInMainWorld("parameters", {
   toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback),
   updateMutations: (callback: any) => ipcRenderer.on("update-mutations", callback)
 });
+
+
+contextBridge.exposeInMainWorld("documentation", {
+  pageDocumentation: (callback: any) => ipcRenderer.on("documentation-page", callback)
+});

@@ -7,11 +7,6 @@ body {
 }
 
 
-h1, p {
-  width: 100%;
-}
-
-
 div.wrapper {
   position: relative;
   float: left;
@@ -50,7 +45,17 @@ div.nav ul li.selected {
 }
 
 
-div.main {
+div.nav ul li#docs {
+  color: #fff;
+}
+
+
+div.nav ul li#docs.active {
+  color: #f62;
+}
+
+
+div#main, div#documentation {
   position: absolute;
   top: 0;
   left: 150px;
@@ -61,6 +66,11 @@ div.main {
   margin-left: -1px;
 
   display: block;
+}
+
+
+div#documentation {
+  display: none;
 }
 
 
