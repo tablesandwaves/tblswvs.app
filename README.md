@@ -6,7 +6,7 @@ An experimental controller for electronic music.
 
 This project is an [Electron](https://www.electronjs.org/) app to provide a bridge between a [monome grid](https://monome.org/docs/grid/) and Ableton Live.
 
-**Status: Alpha.** Code is under active development and may exhibit breaking changes from one commit to the next. Features are actively being added, which may change the software functionality.
+**Status: Alpha.** Code is under active development and may exhibit breaking changes from one commit to the next. Features are actively being added, which may change the software functionality and cause yet undetected bugs.
 
 This project is being shared as a reference example, but is an idiosyncratic, personal project.
 
@@ -93,8 +93,9 @@ Grid buttons are mapped to chords depending on the Scale and Tonic settings from
 #### Melody
 
 * Configure the current Scale and Tonic settings
-* Add in put melodies
+* Add input melodies
 * Apply melodic algorithms to the active track
+* On melody page 2, run melodic mutation algorithms for tracks
 
 #### Global Settings
 
