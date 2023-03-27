@@ -2,6 +2,10 @@ let previousStep = 15;
 let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
 let gridMatrix: any[];
+const documentationParameters = [
+  ["Row", "rowName"], ["Mapping", "mapping"], ["Shift Mapping", "shiftMapping"],
+  ["Type", "type"], ["Group", "group"], ["Value", "value"]
+];
 
 
 window.documentation.pageDocumentation((event: any, page: any) => {
@@ -113,13 +117,18 @@ const loadPageDocumentation = (page: Element) => {
   }
 
   pageDocumentation[page.textContent].rows.forEach((row: any) => {
-    for (let x = row.xStart; x < row.xLength - row.xStart; x++) {
-      let entry: any = { rowName: row.name, mapping: row.mapping, shiftMapping: row.shiftMapping, type: row.type };
-      if (row.type == "radio") {
+    for (let x = row.xStart; x < row.xLength + row.xStart; x++) {
+      let entry: any = {
+        rowName: row.name,
+        mapping: row.mapping,
+        shiftMapping: row.shiftMapping,
+        type: row.type,
+        group: row.group,
+        value: row.value
+      };
+
+      if (row.values) {
         entry.value = row.values[x - row.xStart];
-        entry.group = row.group
-      } else if (row.type == "vertical meter") {
-        entry.value = row.value;
       }
       gridMatrix[row.index][x] = entry;
     }
@@ -148,7 +157,29 @@ const setupGridMatrix = () => {
 const displayFunction = (x: number, y: number) => {
   clearGridButtons();
   document.querySelector(`#grid-button-${x}-${y}`).classList.add("on");
-  document.querySelector("#button-details").textContent = JSON.stringify(gridMatrix[y][x]);
+
+  const buttonDetails = document.querySelector("#button-details");
+  let documented = false;
+  buttonDetails.textContent = "";
+  documentationParameters.forEach(entries => {
+    const p = getDocumentingElement(gridMatrix[y][x], entries[0], entries[1]);
+    if (p) {
+      documented = true;
+      buttonDetails.append(p);
+    }
+  });
+
+  if (!documented) buttonDetails.textContent = "Undefined";
+}
+
+
+const getDocumentingElement = (buttonEntry: any, label: string, field: string) => {
+  if (buttonEntry == undefined || buttonEntry[field] == undefined)
+    return undefined;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = `${label}: ${buttonEntry[field]}`;
+  return paragraph;
 }
 
 
