@@ -1,7 +1,7 @@
 let previousStep = 15;
 let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
-let gridMatrix: any[];
+let gridMatrix: any[] = new Array(8);
 const documentationParameters = [
   ["Description", "description"], ["Type", "type"]
 ];
@@ -11,6 +11,10 @@ window.documentation.pageDocumentation((event: any, page: any) => {
   pageDocumentation[page.name] = page;
   if (page.name == "Rhythm") {
     loadPageDocumentation(document.querySelector("#documentation #page-list li"));
+  }
+  if (page.name == "Main Navigation") {
+    gridMatrix[7] = new Array();
+    loadButtonRows("Main Navigation");
   }
 });
 
@@ -100,23 +104,28 @@ const toggleDocumentation = () => {
 
 
 const loadPageDocumentation = (page: Element) => {
-  activeDocumentationPage = pageDocumentation[page.textContent];
   document.querySelectorAll("#page-list li").forEach(p => {
     if (p.textContent == page.textContent)
       p.classList.add("active");
     else
       p.classList.remove("active");
   });
+
   clearGridButtons();
   resetRelatedButtons();
+  clearOnButton();
   document.querySelector("#button-details").textContent = "";
 
-  gridMatrix = new Array();
-  for (let row = 0; row < 8; row++) {
+  for (let row = 0; row < 7; row++) {
     gridMatrix[row] = new Array();
   }
 
-  pageDocumentation[page.textContent].rows.forEach((row: any) => {
+  loadButtonRows(page.textContent);
+}
+
+
+const loadButtonRows = (documentationSection: string) => {
+  pageDocumentation[documentationSection].rows.forEach((row: any) => {
     for (let x = row.xStart; x < row.xLength + row.xStart; x++) {
       let entry: any = {
         rowName: row.name,
@@ -165,9 +174,9 @@ const setupGridMatrix = () => {
 
 
 const displayFunction = (x: number, y: number) => {
+
   // Clear the previous button if any, then set this button to "on"
-  const activeButton = document.querySelector("#grid .on");
-  if (activeButton) activeButton.classList.remove("on");
+  clearOnButton();
   document.querySelector(`#grid-button-${x}-${y}`).classList.add("on");
   resetRelatedButtons();
 
@@ -206,10 +215,17 @@ const addButtonDetail = (buttonDetails: Element, textContent: string) => {
 }
 
 
+const clearOnButton = () => {
+  const activeButton = document.querySelector("#grid .on");
+  if (activeButton) activeButton.classList.remove("on");
+}
+
+
 const clearGridButtons = () => {
-  document.querySelectorAll(`.button`).forEach(elem => {
-    elem.className = "button";
-  });
+  // Clear only the related groups for rows 1-7, the main navigation row 8 (index 7) is stable.
+  for (let y = 0; y < 7; y++) {
+    document.querySelectorAll(`grid-row-${y} .button`).forEach(elem => elem.className = "button");
+  }
 }
 
 

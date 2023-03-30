@@ -1,0 +1,52 @@
+name: Main Navigation
+rows:
+  -
+    name: Track Selection
+    description: Set the currently active track for editing
+    group: track-select
+    type: radio
+    index: 7
+    xStart: 0
+    xLength: 6
+    values:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Opsix
+      - Hydra
+  -
+    name: Activate Grid Page
+    description: Sets the grid to the current settings for the selected page
+    group: grid-page
+    type: radio
+    index: 7
+    xStart: 6
+    xLength: 7
+    values:
+      - Rhythm / Probabilities
+      - Chords
+      - Melody / Mutation
+      - Undefined
+      - Undefined
+      - Undefined
+      - Global
+  -
+    name: Shift Key
+    description: Toggle the shift key; when on some button presses have alternate functionality
+    group: shift-key
+    type: toggle
+    index: 7
+    xStart: 13
+    xLength: 1
+  -
+    name: Grid Paging
+    description: Page left and right to access grid sub-pages
+    group: left-right-nav
+    type: momentary
+    index: 7
+    xStart: 14
+    xLength: 2
+    values:
+      - Left
+      - Right
