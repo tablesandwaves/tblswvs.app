@@ -7,7 +7,7 @@ rows:
     sub_group: octave-6
     index: 0
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
   -
@@ -17,7 +17,7 @@ rows:
     sub_group: octave-5
     index: 1
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
   -
@@ -27,7 +27,7 @@ rows:
     sub_group: octave-4
     index: 2
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
   -
@@ -37,7 +37,7 @@ rows:
     sub_group: octave-3
     index: 3
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
   -
@@ -47,7 +47,7 @@ rows:
     sub_group: octave-2
     index: 4
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
   -
@@ -57,7 +57,7 @@ rows:
     sub_group: octave-1
     index: 5
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
   -
@@ -67,58 +67,16 @@ rows:
     sub_group: octave-0
     index: 6
     xStart: 0
-    xLength: 12
+    xLength: 14
     type: momentary
     mapping: addNote
-  -
-    name: Scale/Tonic Selection (1/3)
-    description: Set the global scale or tonic; tonic is set when the shift key is on
-    group: scale-tonic
-    index: 0
-    xStart: 12
-    xLength: 4
-    type: radio
-    mapping: setScale
-    values:
-      - 0
-      - 1
-      - 2
-      - 3
-  -
-    name: Scale/Tonic Selection (2/3)
-    description: Set the global scale or tonic; tonic is set when the shift key is on
-    group: scale-tonic
-    index: 1
-    xStart: 12
-    xLength: 4
-    type: radio
-    mapping: setScale
-    values:
-      - 4
-      - 5
-      - 6
-      - 7
-  -
-    name: Scale/Tonic Selection (3/3)
-    description: Set the global scale or tonic; tonic is set when the shift key is on
-    group: scale-tonic
-    index: 2
-    xStart: 12
-    xLength: 4
-    type: radio
-    mapping: setScale
-    values:
-      - 8
-      - 9
-      - 10
-      - 11
   -
     name: Toggle Input Melody Recording
     description: Turn melody recording on/off; when turning on, the queued melody progression clears
     group: melody-recording-controls
     type: toggle
-    index: 3
-    xStart: 12
+    index: 0
+    xStart: 15
     xLength: 1
     mapping: toggleMelodyRecording
   -
@@ -126,8 +84,8 @@ rows:
     description: Remove the last note from the currently queued melody
     group: melody-recording-controls
     type: momentary
-    index: 3
-    xStart: 13
+    index: 1
+    xStart: 15
     xLength: 1
     mapping: removeLastNote
   -
@@ -135,51 +93,47 @@ rows:
     description: When on, will add the melody to the next clip
     group: melody-recording-controls
     type: toggle
-    index: 3
-    xStart: 14
+    index: 2
+    xStart: 15
     xLength: 1
     mapping: toggleNewClipCreation
   -
-    name: Melody Algorithms
-    description: Generates algorithmic melody for currently selected track
+    name: Generate Melody
+    description: Generates melody for currently selected track equal to the global queued input melody
     group: melody-algorithms
     type: momentary
-    index: 4
-    xStart: 12
-    xLength: 4
+    index: 0
+    xStart: 14
+    xLength: 1
     mapping: generateMelody
-    values:
-      - simple
-      - self_replicate
-      - counted
-      - zig_zag
-scales:
+    value: simple
   -
-    name: Major
-    mode: Ionian
+    name: Generate Melody
+    description: Generates melody for currently selected track equal to the global queued input melody
+    group: melody-algorithms
+    type: momentary
+    index: 1
+    xStart: 14
+    xLength: 1
+    mapping: generateMelody
+    value: self_replicate
   -
-    name: Minor
-    mode: Aeolian
+    name: Generate Melody
+    description: Generates melody for currently selected track equal to the global queued input melody
+    group: melody-algorithms
+    type: momentary
+    index: 2
+    xStart: 14
+    xLength: 1
+    mapping: generateMelody
+    value: counted
   -
-    name: Dorian
-  -
-    name: Phrygian
-  -
-    name: Lydian
-  -
-    name: Mixolydian
-  -
-    name: Locrian
-  -
-    name: MajPentatonic
-  -
-    name: MinPentatonic
-  -
-    name: WholeTone
-  -
-    name: GS
-  -
-    name: Chromatic
-modifiers:
-  - 0
-  - 1
+    name: Generate Melody
+    description: Generates melody for currently selected track equal to the global queued input melody
+    group: melody-algorithms
+    type: momentary
+    index: 3
+    xStart: 14
+    xLength: 1
+    mapping: generateMelody
+    value: zig_zag

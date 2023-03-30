@@ -18,3 +18,75 @@ rows:
       - 6
       - 7
       - 8
+  -
+    name: Scale/Tonic
+    description: Set the global scale or tonic; tonic is set when the shift key is on
+    group: scale-tonic
+    index: 0
+    xStart: 12
+    xLength: 4
+    type: radio
+    mapping: setScaleOrTonic
+    values:
+      - Major
+      - Minor
+      - Dorian
+      - Phrygian
+    shiftValues:
+      - 0
+      - 1
+      - 2
+      - 3
+    shiftDisplayValues:
+      - C
+      - C#
+      - D
+      - D#
+  -
+    name: Scale/Tonic
+    description: Set the global scale or tonic; tonic is set when the shift key is on
+    group: scale-tonic
+    index: 1
+    xStart: 12
+    xLength: 4
+    type: radio
+    mapping: setScaleOrTonic
+    values:
+      - Lydian
+      - Mixolydian
+      - Locrian
+      - MajPentatonic
+    shiftValues:
+      - 4
+      - 5
+      - 6
+      - 7
+    shiftDisplayValues:
+      - E
+      - F
+      - F#
+      - G
+  -
+    name: Scale/Tonic
+    description: Set the global scale or tonic; tonic is set when the shift key is on
+    group: scale-tonic
+    index: 2
+    xStart: 12
+    xLength: 4
+    type: radio
+    mapping: setScaleOrTonic
+    values:
+      - MinPentatonic
+      - WholeTone
+      - GS
+      - Chromatic
+    shiftValues:
+      - 8
+      - 9
+      - 10
+      - 11
+    shiftDisplayValues:
+      - G#
+      - A
+      - A#
+      - B

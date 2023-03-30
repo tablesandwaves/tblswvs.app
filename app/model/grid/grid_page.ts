@@ -22,7 +22,8 @@ export type GridButton = {
   shiftMapping?: string,
   type: string,
   group?: string,
-  value?: any
+  value?: any,
+  shiftValue?: any
 }
 
 
@@ -57,12 +58,11 @@ export class GridPage {
     config.rows.forEach((row) => {
       for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
         let entry: GridButton = { mapping: row.mapping, shiftMapping: row.shiftMapping, type: row.type };
-        if (row.type == "radio") {
-          entry.value = row.values[i - row.xStart];
-          entry.group = row.group
-        } else if (row.type == "vertical meter") {
-          entry.value = row.value;
-        }
+        if (row.values) entry.value = row.values[i - row.xStart];
+        if (row.value) entry.value = row.value;
+        if (row.shiftValues) entry.shiftValue = row.shiftValues[i - row.xStart];
+        if (row.shiftValue) entry.shiftValue = row.shiftValue;
+
         this.matrix[row.index][i] = entry;
       }
     });

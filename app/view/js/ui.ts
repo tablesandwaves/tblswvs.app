@@ -135,11 +135,23 @@ const loadButtonRows = (documentationSection: string) => {
         type: row.type,
         group: row.group,
         sub_group: row.sub_group,
-        value: row.value
+        value: row.value,
+        displayValue: row.displayValue,
+        shiftValue: row.shiftValue,
+        shiftDisplayValue: row.shiftDisplayValue
       };
 
       if (row.values) {
         entry.value = row.values[x - row.xStart];
+      }
+      if (row.displayValues) {
+        entry.value = row.displayValues[x - row.xStart];
+      }
+      if (row.shiftValues) {
+        entry.shiftValue = row.shiftValues[x - row.xStart];
+      }
+      if (row.shiftDisplayValues) {
+        entry.shiftValue = row.shiftDisplayValues[x - row.xStart];
       }
 
       gridMatrix[row.index][x] = entry;
@@ -185,12 +197,11 @@ const displayFunction = (x: number, y: number) => {
   if (gridMatrix[y][x]) {
     buttonDetails.textContent = "";
 
-    addButtonDetail(
-      buttonDetails,
-      gridMatrix[y][x].value ?
-      `${gridMatrix[y][x].rowName}: ${gridMatrix[y][x].value}` :
-      gridMatrix[y][x].rowName
-    );
+    let name   = gridMatrix[y][x].rowName;
+    let value  = gridMatrix[y][x].value      ? gridMatrix[y][x].value              : "";
+        value += gridMatrix[y][x].shiftValue ? ` / ${gridMatrix[y][x].shiftValue}` : "";
+
+    addButtonDetail(buttonDetails, value != "" ? `${name}: ${value}` : name);
     addButtonDetail(buttonDetails, gridMatrix[y][x].description);
     addButtonDetail(buttonDetails, `Type: ${gridMatrix[y][x].type}`);
 

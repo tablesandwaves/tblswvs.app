@@ -1,26 +1,16 @@
-import { Key, Scale, Melody, note } from "tblswvs";
+import { Melody, note } from "tblswvs";
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
-import { notes } from "../../helpers/utils";
-
-
-export type ConfiguredScale = {
-  name: keyof typeof Scale,
-  mode?: string
-}
 
 
 export class MelodyPage extends GridPage {
   type = "Melody";
-  scales: ConfiguredScale[];
   recordingInputMelody: boolean = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
-    this.scales = config.scales;
 
-    this.functionMap.set("setScale", this.setScaleOrTonic);
     this.functionMap.set("toggleMelodyRecording", this.toggleMelodyRecording);
     this.functionMap.set("addNote", this.addNote);
     this.functionMap.set("removeLastNote", this.removeLastNote);
@@ -28,7 +18,6 @@ export class MelodyPage extends GridPage {
     this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
 
     this.grid.clearGridDisplay();
-    this.setGridScaleOrTonicDisplay();
     this.setUiTrackMelody();
   }
 
@@ -59,7 +48,6 @@ export class MelodyPage extends GridPage {
 
   refresh() {
     this.grid.clearGridDisplay();
-    this.setGridScaleOrTonicDisplay();
   }
 
 
@@ -103,30 +91,6 @@ export class MelodyPage extends GridPage {
   }
 
 
-  setScaleOrTonic(gridPage: MelodyPage, press: GridKeyPress) {
-    let tonic: number, scale: ConfiguredScale;
-    if (gridPage.grid.shiftKey) {
-      tonic = gridPage.matrix[press.y][press.x].value + 60;
-      scale = {name: gridPage.grid.sequencer.key.scaleName} as ConfiguredScale;
-    } else {
-      tonic = gridPage.grid.sequencer.key.midiTonic + 60;
-      scale = gridPage.scales[gridPage.matrix[press.y][press.x].value];
-    }
-    gridPage.grid.sequencer.key = new Key(tonic, Scale[scale.name]);
-    gridPage.setGridScaleOrTonicDisplay()
-    gridPage.grid.sequencer.gui.webContents.send("set-scale", `${notes[tonic % 12]} ${scale.name}`);
-  }
-
-
-  setGridScaleOrTonicDisplay() {
-    const index = this.grid.shiftKey ? this.getCurrentTonicIndex() : this.getCurrentScaleIndex();
-
-    for (let i = 0, y = 0; y < 3; y++)
-      for (let x = 0; x < 4; x++, i++)
-        this.grid.levelSet(x + 12, y, (i == index ? 10 : 0));
-  }
-
-
   setUiQueuedMelody() {
     this.grid.sequencer.gui.webContents.send(
       "update-melody",
@@ -141,18 +105,5 @@ export class MelodyPage extends GridPage {
       this.grid.sequencer.getActiveTrack().algorithm + " " +
       this.grid.sequencer.getActiveTrack().inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
     );
-  }
-
-
-  getCurrentTonicIndex(): number {
-    return this.grid.sequencer.key.midiTonic % 12;
-  }
-
-
-  getCurrentScaleIndex(): number {
-    return this.scales.reduce((idx, s, i) => {
-      if (s.name == this.grid.sequencer.key.scaleName) idx = i;
-      return idx;
-    }, -1);
   }
 }
