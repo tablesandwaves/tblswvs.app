@@ -1,26 +1,24 @@
 name: Rhythm
 rows:
   -
-    name: Rhythm Pattern
+    name: Rhythm Pattern / Step Length
+    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    group: rhythm-pattern
+    type: toggle / meter
     index: 0
     xStart: 0
     xLength: 16
-    type: toggle
-    values:
-    - On
-    - Off
     mapping: updateRhythm
     shiftMapping: updateBeatLength
     modifiers:
-    -
-      name: Step Count
-      function: Update Steps
   -
     name: Note Length
+    description: Set the length of sequencer notes
+    group: note-length
+    type: radio
     index: 6
     xStart: 0
     xLength: 8
-    type: radio
     mapping: updateNoteLength
     values:
       - 16n

@@ -2,10 +2,12 @@ name: Mutation
 rows:
   -
     name: Participating Voices
+    description: Select the voices participating in mutation
+    group: mutation-voices
+    type: toggle
     index: 0
     xStart: 0
     xLength: 6
-    type: toggle
     mapping: toggleImprovisingVoice
     values:
       - 0
@@ -16,10 +18,12 @@ rows:
       - 5
   -
     name: Mutation Algorithms
+    description: Select the mutation algorithms used in mutation
+    group: mutation-algorithms
+    type: toggle
     index: 0
     xStart: 6
     xLength: 8
-    type: toggle
     mapping: toggleMutationAlgorithm
     values:
       - trps-2
@@ -32,22 +36,28 @@ rows:
       - bitflip
   -
     name: Queue Mutation Start
+    description: Press to start mutation on the start of the next super measure
+    group: mutation-controls
+    type: momentary
     index: 0
     xStart: 15
     xLength: 1
-    type: momentary
     mapping: queueMutationStart
   -
     name: Queue Mutation Stop
+    description: Press to stop mutation on the start of the next super measure
+    group: mutation-controls
+    type: momentary
     index: 1
     xStart: 15
     xLength: 1
-    type: momentary
     mapping: queueMutationStop
   -
     name: Enable Voice Trading
+    description: When on, mutating voices will take turns for the length of each super measure
+    group: mutation-controls
+    type: toggle
     index: 2
     xStart: 15
     xLength: 1
-    type: toggle
     mapping: toggleVoiceTrading
