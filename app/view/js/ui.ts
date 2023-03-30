@@ -3,8 +3,7 @@ let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
 let gridMatrix: any[];
 const documentationParameters = [
-  ["Row", "rowName"], ["Mapping", "mapping"], ["Shift Mapping", "shiftMapping"],
-  ["Type", "type"], ["Group", "group"], ["Value", "value"]
+  ["Description", "description"], ["Type", "type"]
 ];
 
 
@@ -109,6 +108,7 @@ const loadPageDocumentation = (page: Element) => {
       p.classList.remove("active");
   });
   clearGridButtons();
+  resetRelatedButtons();
   document.querySelector("#button-details").textContent = "";
 
   gridMatrix = new Array();
@@ -120,17 +120,27 @@ const loadPageDocumentation = (page: Element) => {
     for (let x = row.xStart; x < row.xLength + row.xStart; x++) {
       let entry: any = {
         rowName: row.name,
+        description: row.description,
         mapping: row.mapping,
         shiftMapping: row.shiftMapping,
         type: row.type,
         group: row.group,
+        sub_group: row.sub_group,
         value: row.value
       };
 
       if (row.values) {
         entry.value = row.values[x - row.xStart];
       }
+
       gridMatrix[row.index][x] = entry;
+
+      if (row.group) {
+        document.getElementById(`grid-button-${x}-${row.index}`).classList.add(row.group);
+      }
+      if (row.sub_group) {
+        document.getElementById(`grid-button-${x}-${row.index}`).classList.add(row.sub_group);
+      }
     }
   });
 }
@@ -155,36 +165,59 @@ const setupGridMatrix = () => {
 
 
 const displayFunction = (x: number, y: number) => {
-  clearGridButtons();
+  // Clear the previous button if any, then set this button to "on"
+  const activeButton = document.querySelector("#grid .on");
+  if (activeButton) activeButton.classList.remove("on");
   document.querySelector(`#grid-button-${x}-${y}`).classList.add("on");
+  resetRelatedButtons();
 
   const buttonDetails = document.querySelector("#button-details");
-  let documented = false;
-  buttonDetails.textContent = "";
-  documentationParameters.forEach(entries => {
-    const p = getDocumentingElement(gridMatrix[y][x], entries[0], entries[1]);
-    if (p) {
-      documented = true;
-      buttonDetails.append(p);
-    }
-  });
 
-  if (!documented) buttonDetails.textContent = "Undefined";
+  if (gridMatrix[y][x]) {
+    buttonDetails.textContent = "";
+
+    addButtonDetail(
+      buttonDetails,
+      gridMatrix[y][x].value ?
+      `${gridMatrix[y][x].rowName}: ${gridMatrix[y][x].value}` :
+      gridMatrix[y][x].rowName
+    );
+    addButtonDetail(buttonDetails, gridMatrix[y][x].description);
+    addButtonDetail(buttonDetails, `Type: ${gridMatrix[y][x].type}`);
+
+    if (gridMatrix[y][x].group) {
+      document.querySelectorAll(`.${gridMatrix[y][x].group}`).forEach(elem => elem.classList.add("related-group"));
+    }
+    if (gridMatrix[y][x].sub_group) {
+      document.querySelectorAll(`.${gridMatrix[y][x].sub_group}`).forEach(elem => elem.classList.add("related-sub-group"));
+    }
+  } else {
+    buttonDetails.textContent = "Undefined";
+  }
 }
 
 
-const getDocumentingElement = (buttonEntry: any, label: string, field: string) => {
-  if (buttonEntry == undefined || buttonEntry[field] == undefined)
-    return undefined;
-
-  const paragraph = document.createElement("p");
-  paragraph.textContent = `${label}: ${buttonEntry[field]}`;
-  return paragraph;
+const addButtonDetail = (buttonDetails: Element, textContent: string) => {
+  if (textContent && textContent != "") {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = textContent;
+    buttonDetails.append(paragraph);
+  }
 }
 
 
 const clearGridButtons = () => {
-  document.querySelectorAll("#grid .button").forEach(button => button.classList.remove("on"))
+  document.querySelectorAll(`.button`).forEach(elem => {
+    elem.className = "button";
+  });
+}
+
+
+const resetRelatedButtons = () => {
+  document.querySelectorAll(`.button`).forEach(elem => {
+    elem.classList.remove("related-group");
+    elem.classList.remove("related-sub-group");
+  });
 }
 
 

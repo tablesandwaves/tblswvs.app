@@ -2,6 +2,8 @@ name: Global
 rows:
   -
     name: Super Measure Length
+    description: Set the super measure length between 1 and 8 measures
+    group: super-measure
     index: 0
     xStart: 0
     xLength: 8

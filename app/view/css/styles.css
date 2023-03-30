@@ -266,6 +266,16 @@ div#documentation div#grid div.row div.button {
 }
 
 
+div#documentation div#grid div.row div.button.related-group {
+  background-color: #333;
+}
+
+
+div#documentation div#grid div.row div.button.related-sub-group {
+  background-color: #777;
+}
+
+
 div#documentation div#grid div.row div.button.on {
   background-color: #f62;
 }
