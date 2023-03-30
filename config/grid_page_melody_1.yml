@@ -16,6 +16,13 @@ rows:
       - 3
       - 4
       - 5
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Opsix
+      - Hydra
   -
     name: Mutation Algorithms
     description: Select the mutation algorithms used in mutation

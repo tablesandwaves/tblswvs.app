@@ -12,8 +12,6 @@ export type GridKeyPress = {
 export type GridConfig = {
   name: string,
   rows: any[],
-  modifiers: any[],
-  scales?: any[]
 }
 
 

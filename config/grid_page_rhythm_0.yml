@@ -10,7 +10,6 @@ rows:
     xLength: 16
     mapping: updateRhythm
     shiftMapping: updateBeatLength
-    modifiers:
   -
     name: Note Length
     description: Set the length of sequencer notes
@@ -29,45 +28,3 @@ rows:
       - 2n
       - 2nd
       - 1n
-modifiers:
-  row: 6
-  start: 8
-  length: 8
-  keys:
-  -
-    function: Rhythm Type
-    type: toggle
-    values:
-    - Manual
-    - Euclidean
-  -
-    function: Modifier 1
-    type: toggle
-    values:
-    - Random
-    - Recursive
-  -
-    function: Modifier 2
-    type: toggle
-    values:
-    - Random
-    - Recursive
-  -
-    function: undefined
-  -
-    function: undefined
-  -
-    function: Step Count
-    type: momentary
-    values:
-    - On
-    - Off
-  -
-    function: Weighted
-    type: toggle
-    values:
-    - On
-    - Off
-  -
-    function: Generate
-    type: momentary
