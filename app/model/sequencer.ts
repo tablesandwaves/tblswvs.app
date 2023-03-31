@@ -125,11 +125,11 @@ export class Sequencer {
     abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
       if (rhythmStep.state == 1) {
         nextNotes = sourceNotes[noteIndex % sourceNotes.length];
-        // An undefined note in the notes array corresponds to a rest in the melody.
-        if (nextNotes != undefined) {
-          // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
-          // represented as a 1-dimensional array because they contain explicit timing offsets.
-          nextNotes.forEach(nextNote => {
+        // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
+        // represented as a 1-dimensional array because they contain explicit timing offsets.
+        nextNotes.forEach(nextNote => {
+          // An undefined note in the notes array corresponds to a rest in the melody.
+          if (nextNote != undefined) {
             abletonNotes.push(new AbletonNote(
               nextNote.midi,
               (i * 0.25),
@@ -137,8 +137,8 @@ export class Sequencer {
               64,
               rhythmStep.probability
             ));
-          });
-        }
+          }
+        });
         noteIndex += 1;
       }
       return abletonNotes;
