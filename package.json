@@ -1,7 +1,7 @@
 {
   "name": "tblswvs-app",
-  "version": "0.2.0",
-  "description": "Control center for tables & waves",
+  "version": "0.3.0",
+  "description": "An experimental controller for electronic music.",
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc && npm run html && npm run css && npm run config && npm run electron_preload_bug",
