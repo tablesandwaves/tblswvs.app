@@ -1,4 +1,5 @@
 name: Main Navigation
+description: The global navigation row on the bottom row of the grid. Select the active track and grid pages and sub-pages.
 rows:
   -
     name: Track Selection

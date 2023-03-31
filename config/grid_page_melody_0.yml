@@ -1,4 +1,5 @@
 name: Melody
+description: Add melodies to the active track. Select input notes from the current scale and process the input sequence through a melody algorithm.
 rows:
   -
     name: Keyboard Octave 6

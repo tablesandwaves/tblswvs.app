@@ -289,3 +289,8 @@ div#documentation div#grid div.row div.button:last-child {
 div#documentation div#button-details {
   font-family: 'Courier New', Courier, monospace;
 }
+
+
+div#documentation div#page-overview {
+  min-height: 50px;
+}

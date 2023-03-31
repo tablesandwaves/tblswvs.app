@@ -110,6 +110,7 @@ const loadPageDocumentation = (page: Element) => {
     else
       p.classList.remove("active");
   });
+  document.getElementById("page-overview").textContent = pageDocumentation[page.textContent].description;
 
   clearGridButtons();
   resetRelatedButtons();

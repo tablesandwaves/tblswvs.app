@@ -1,4 +1,5 @@
 name: Rhythm
+description: Manage the sequencer rhythm steps for the active track. Turn steps on and manage sequence step lengths.
 rows:
   -
     name: Rhythm Pattern / Step Length

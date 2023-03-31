@@ -1,4 +1,5 @@
 name: Global
+description: Manage global properties like the super measure length, scale and tonic.
 rows:
   -
     name: Super Measure Length

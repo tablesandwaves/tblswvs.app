@@ -1,4 +1,5 @@
 name: Probabilities
+description: Probabilities are accessed on Rhythm page 2. Set per step probabilities for each rhythmic gate.
 rows:
   -
     name: 100% Probability

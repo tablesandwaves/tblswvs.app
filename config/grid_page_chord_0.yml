@@ -1,4 +1,5 @@
 name: Chords
+description: Add chord progressions to the active track.
 rows:
   -
     name: Keyboard Octave 6
