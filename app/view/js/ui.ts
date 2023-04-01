@@ -43,7 +43,7 @@ window.parameters.updateMutations((event: any, trackNames: string, mutations: st
 });
 
 
-window.parameters.updateMelodyVector((event: any, vector: number[], activeLength: number) => {
+window.parameters.updateMelodyVector((event: any, vector: number[], activeLength: number, active: boolean) => {
   document.querySelectorAll(".vector-step").forEach((vectorStep, i) => {
     if (i < activeLength)
       vectorStep.classList.add("active");
@@ -53,6 +53,8 @@ window.parameters.updateMelodyVector((event: any, vector: number[], activeLength
     vectorStep.querySelector("span:first-child").className = `shift${vector[i]}`;
     vectorStep.querySelector("span:last-child").textContent = `${vector[i]}`;
   });
+
+  document.querySelector("#melodic-vector p span").className = active ? "on" : "";
 });
 
 

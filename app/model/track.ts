@@ -23,6 +23,7 @@ export class Track {
   currentMutation: note[] = new Array();
   vectorShifts: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   vectorShiftsLength: number = 8;
+  vectorShiftsActive: boolean = false;
   algorithm: string = "simple";
   weightedRhythm: boolean = false;
   noteLength: string = "16n";
@@ -48,7 +49,7 @@ export class Track {
 
 
   updateGuiVectorDisplay() {
-    this.sequencer.gui.webContents.send("update-melody-vector", this.vectorShifts, this.vectorShiftsLength);
+    this.sequencer.gui.webContents.send("update-melody-vector", this.vectorShifts, this.vectorShiftsLength, this.vectorShiftsActive);
   }
 
 

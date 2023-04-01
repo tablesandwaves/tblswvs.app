@@ -16,6 +16,7 @@ export class MelodyPage extends GridPage {
     this.functionMap.set("removeLastNote", this.removeLastNote);
     this.functionMap.set("generateMelody", this.generateMelody);
     this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
+    this.functionMap.set("toggleVectorShifts", this.toggleVectorShifts);
 
     this.grid.clearGridDisplay();
   }
@@ -43,6 +44,14 @@ export class MelodyPage extends GridPage {
 
     gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
     gridPage.grid.sequencer.getActiveTrack().updateGuiTrackNotes();
+  }
+
+
+  toggleVectorShifts(gridPage: MelodyPage, press: GridKeyPress) {
+    const activeTrack = gridPage.grid.sequencer.getActiveTrack();
+    activeTrack.vectorShiftsActive = !activeTrack.vectorShiftsActive;
+    gridPage.grid.levelSet(press.x, press.y, (activeTrack.vectorShiftsActive ? 10 : 0));
+    activeTrack.updateGuiVectorDisplay();
   }
 
 
