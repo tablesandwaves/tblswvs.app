@@ -11,7 +11,6 @@ matrices:
     columnStart: 0
     columnEnd: 11
     mapping: setStepShift
-    shiftMapping: setStepShift
     columnValues:
       - 7
       - 6
@@ -28,3 +27,30 @@ matrices:
       - -5
       - -6
       - -7
+  -
+    name: Shift Sequence Length
+    description: Sets the number of steps in the shift sequence between 1 and 12
+    group: shift-sequence
+    type: multi-row meter
+    rowStart: 0
+    rowEnd: 2
+    columnStart: 12
+    columnEnd: 15
+    mapping: setShiftSequenceLength
+    rowValues:
+      -
+        - 1
+        - 2
+        - 3
+        - 4
+      -
+        - 5
+        - 6
+        - 7
+        - 8
+      -
+        - 9
+        - 10
+        - 11
+        - 12
+

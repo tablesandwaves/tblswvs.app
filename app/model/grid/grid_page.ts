@@ -73,8 +73,10 @@ export class GridPage {
         for (let y = matrix.rowStart; y <= matrix.rowEnd; y++) {
           for (let x = matrix.columnStart; x <= matrix.columnEnd; x++) {
             let entry: GridButton = { mapping: matrix.mapping, shiftMapping: matrix.shiftMapping, type: matrix.type };
-            entry.value = matrix.columnValues[y - matrix.rowStart];
-            entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
+
+            if (matrix.columnValues)      entry.value      = matrix.columnValues[y - matrix.rowStart];
+            if (matrix.shiftColumnValues) entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
+            if (matrix.rowValues)         entry.value      = matrix.rowValues[y - matrix.rowStart][x - matrix.columnStart];
 
             this.matrix[y][x] = entry;
           }

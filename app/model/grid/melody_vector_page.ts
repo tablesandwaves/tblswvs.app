@@ -12,6 +12,13 @@ export class MelodyVectorPage extends GridPage {
     super(config, grid);
 
     this.functionMap.set("setStepShift", this.setStepShift);
+    this.functionMap.set("setShiftSequenceLength", this.setShiftSequenceLength);
+  }
+
+
+  refresh() {
+    this.setGridShiftsDisplay();
+    this.setGridShiftLengthDisplay();
   }
 
 
@@ -26,12 +33,20 @@ export class MelodyVectorPage extends GridPage {
                                        gridPage.matrix[press.y][press.x].value;
     }
 
-    gridPage.refresh();
+    gridPage.setGridShiftsDisplay();
   }
 
 
-  refresh() {
-    this.setGridShiftsDisplay();
+  setShiftSequenceLength(gridPage: MelodyVectorPage, press: GridKeyPress) {
+    gridPage.length = gridPage.matrix[press.y][press.x].value;
+    gridPage.setGridShiftLengthDisplay();
+  }
+
+
+  setGridShiftLengthDisplay() {
+    for (let y = 0; y < 3; y++)
+      for (let x = 12; x < 16; x++)
+        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.length ? 10 : 0);
   }
 
 
