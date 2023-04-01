@@ -12,6 +12,7 @@ export type GridKeyPress = {
 export type GridConfig = {
   name: string,
   rows: any[],
+  matrices?: any[]
 }
 
 
@@ -53,17 +54,33 @@ export class GridPage {
     for (let i = 0; i < this.matrix.length; i++)
       this.matrix[i] = new Array(16);
 
-    config.rows.forEach((row) => {
-      for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
-        let entry: GridButton = { mapping: row.mapping, shiftMapping: row.shiftMapping, type: row.type };
-        if (row.values) entry.value = row.values[i - row.xStart];
-        if (row.value) entry.value = row.value;
-        if (row.shiftValues) entry.shiftValue = row.shiftValues[i - row.xStart];
-        if (row.shiftValue) entry.shiftValue = row.shiftValue;
+    if (config.rows) {
+      config.rows.forEach((row) => {
+        for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
+          let entry: GridButton = { mapping: row.mapping, shiftMapping: row.shiftMapping, type: row.type };
+          if (row.values) entry.value = row.values[i - row.xStart];
+          if (row.value) entry.value = row.value;
+          if (row.shiftValues) entry.shiftValue = row.shiftValues[i - row.xStart];
+          if (row.shiftValue) entry.shiftValue = row.shiftValue;
 
-        this.matrix[row.index][i] = entry;
-      }
-    });
+          this.matrix[row.index][i] = entry;
+        }
+      });
+    }
+
+    if (config.matrices) {
+      config.matrices.forEach((matrix) => {
+        for (let y = matrix.rowStart; y <= matrix.rowEnd; y++) {
+          for (let x = matrix.columnStart; x <= matrix.columnEnd; x++) {
+            let entry: GridButton = { mapping: matrix.mapping, shiftMapping: matrix.shiftMapping, type: matrix.type };
+            entry.value = matrix.columnValues[y - matrix.rowStart];
+            entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
+
+            this.matrix[y][x] = entry;
+          }
+        }
+      });
+    }
   }
 
 

@@ -1,0 +1,30 @@
+name: Melodic Vectors
+description: Melodic vectors are accessed on Melody page 3. Apply shifts to a sequence of notes.
+matrices:
+  -
+    name: Shift Step
+    description: Sets the melodic vector shift for a step
+    group: shift-steps
+    type: bipolar vertical meter
+    rowStart: 0
+    rowEnd: 6
+    columnStart: 0
+    columnEnd: 11
+    mapping: setStepShift
+    shiftMapping: setStepShift
+    columnValues:
+      - 7
+      - 6
+      - 5
+      - 4
+      - 3
+      - 2
+      - 1
+    shiftColumnValues:
+      - -1
+      - -2
+      - -3
+      - -4
+      - -5
+      - -6
+      - -7

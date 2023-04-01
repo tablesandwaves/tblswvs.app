@@ -11,6 +11,7 @@ import { blank16x16Row } from "../../helpers/utils";
 import { ProbabilitiesPage } from "./probabilities_page";
 import { ChordPage } from "./chord_page";
 import { MelodyEvolutionPage } from "./melody_evolution_page";
+import { MelodyVectorPage } from "./melody_vector_page";
 
 
 export type DeviceConfig = {
@@ -29,7 +30,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 const pageTypeMap: Record<string, string[]> = {
   "Rhythm": ["Rhythm", "Probabilities"],
   "Chords": ["Chords"],
-  "Melody": ["Melody", "Mutation"],
+  "Melody": ["Melody", "Mutation", "MelodyVector"],
   "Global": ["Global"]
 }
 
@@ -185,6 +186,12 @@ export class MonomeGrid {
       case "Mutation":
         // Do not reset page index to 0, this is page 2/index 1 of the Melody page group.
         this.activePage = new MelodyEvolutionPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 8;
+        break;
+      case "MelodyVector":
+        // Do not reset page index to 0, this is page 3/index 2 of the Melody page group.
+        this.activePage = new MelodyVectorPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
