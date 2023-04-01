@@ -18,7 +18,7 @@ export class MelodyPage extends GridPage {
     this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
     this.functionMap.set("toggleVectorShifts", this.toggleVectorShifts);
 
-    this.grid.clearGridDisplay();
+    this.refresh();
   }
 
 
@@ -57,6 +57,8 @@ export class MelodyPage extends GridPage {
 
   refresh() {
     this.grid.clearGridDisplay();
+    const activeTrack = this.grid.sequencer.getActiveTrack();
+    this.grid.levelSet(15, 3, (activeTrack.vectorShiftsActive ? 10 : 0));
   }
 
 

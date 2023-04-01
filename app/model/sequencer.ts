@@ -27,10 +27,10 @@ export class Sequencer {
   mutating: boolean = false;
   mutations = [
     {name: "trps-2",  function: "transposeDown2",  active: 0},
-    {name: "rev",     function: "reverse",   active: 0},
+    {name: "rev",     function: "reverse",         active: 0},
     {name: "rot-3",   function: "rotateLeftThree", active: 0},
-    {name: "sort",    function: "sort",      active: 0},
-    {name: "-sort",   function: "reverseSort",   active: 0},
+    {name: "sort",    function: "sort",            active: 0},
+    {name: "-sort",   function: "reverseSort",     active: 0},
     {name: "inv",     function: "invert",          active: 0},
     {name: "inv-rev", function: "invertReverse",   active: 0},
     {name: "bitflip", function: "bitFlip",         active: 0},
@@ -132,12 +132,12 @@ export class Sequencer {
         nextNotes.forEach(nextNote => {
           // An undefined note in the notes array corresponds to a rest in the melody.
           if (nextNote != undefined) {
+            nextNote = this.#shiftNote(track, noteIndex, nextNote);
+
             abletonNotes.push(new AbletonNote(
-              nextNote.midi,
-              (i * 0.25),
+              nextNote.midi, (i * 0.25),
               noteLengthMap[track.noteLength].size,
-              64,
-              rhythmStep.probability
+              64, rhythmStep.probability
             ));
           }
         });
@@ -147,6 +147,21 @@ export class Sequencer {
     }, []));
 
     return abletonNotes;
+  }
+
+
+  #shiftNote(track: Track, noteIndex: number, nextNote: note) {
+    if (!track.vectorShiftsActive) return nextNote;
+
+    let shift = track.vectorShifts[noteIndex % track.vectorShiftsLength];
+    if (shift == 0) return nextNote;
+
+    let octaveShift   = nextNote.octave - 3;
+    let shiftedDegree = nextNote.scaleDegree + shift;
+    if (shiftedDegree == 0) {
+      shiftedDegree = shift > 0 ? shiftedDegree + 1 : shiftedDegree - 1;
+    }
+    return this.key.degree(shiftedDegree, octaveShift);
   }
 
 
