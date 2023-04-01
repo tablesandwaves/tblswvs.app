@@ -14,7 +14,7 @@ window.documentation.pageDocumentation((event: any, page: any) => {
   }
   if (page.name == "Main Navigation") {
     gridMatrix[7] = new Array();
-    loadButtonRows("Main Navigation");
+    loadButtonRows(pageDocumentation[page.name].rows);
   }
 });
 
@@ -121,18 +121,49 @@ const loadPageDocumentation = (page: Element) => {
     gridMatrix[row] = new Array();
   }
 
-  loadButtonRows(page.textContent);
+  loadButtonRows(pageDocumentation[page.textContent].rows);
+  loadButtonMatrices(pageDocumentation[page.textContent].matrices);
 }
 
 
-const loadButtonRows = (documentationSection: string) => {
-  pageDocumentation[documentationSection].rows.forEach((row: any) => {
+const loadButtonMatrices = (matrices: any[]) => {
+  if (matrices == undefined) return;
+
+  matrices.forEach((matrix: any) => {
+    for (let y = matrix.rowStart; y <= matrix.rowEnd; y++) {
+      for (let x = matrix.columnStart; x <= matrix.columnEnd; x++) {
+        let entry: any = {
+          name: matrix.name,
+          description: matrix.description,
+          type: matrix.type,
+          group: matrix.group,
+          value: matrix.value,
+          shiftValue: matrix.shiftValue,
+          displayValue: matrix.displayValue
+        };
+
+        if (matrix.columnValues)      entry.value      = matrix.columnValues[y - matrix.rowStart];
+        if (matrix.shiftColumnValues) entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
+        if (matrix.rowValues)         entry.value      = matrix.rowValues[y - matrix.rowStart][x - matrix.columnStart];
+
+        gridMatrix[y][x] = entry;
+
+        if (matrix.group)     document.getElementById(`grid-button-${x}-${y}`).classList.add(matrix.group);
+        if (matrix.sub_group) document.getElementById(`grid-button-${x}-${y}`).classList.add(matrix.sub_group);
+      }
+    }
+  });
+}
+
+
+const loadButtonRows = (rows: any[]) => {
+  if (rows == undefined) return;
+
+  rows.forEach((row: any) => {
     for (let x = row.xStart; x < row.xLength + row.xStart; x++) {
       let entry: any = {
-        rowName: row.name,
+        name: row.name,
         description: row.description,
-        mapping: row.mapping,
-        shiftMapping: row.shiftMapping,
         type: row.type,
         group: row.group,
         sub_group: row.sub_group,
@@ -142,27 +173,15 @@ const loadButtonRows = (documentationSection: string) => {
         shiftDisplayValue: row.shiftDisplayValue
       };
 
-      if (row.values) {
-        entry.value = row.values[x - row.xStart];
-      }
-      if (row.displayValues) {
-        entry.value = row.displayValues[x - row.xStart];
-      }
-      if (row.shiftValues) {
-        entry.shiftValue = row.shiftValues[x - row.xStart];
-      }
-      if (row.shiftDisplayValues) {
-        entry.shiftValue = row.shiftDisplayValues[x - row.xStart];
-      }
+      if (row.values)             entry.value = row.values[x - row.xStart];
+      if (row.displayValues)      entry.value = row.displayValues[x - row.xStart];
+      if (row.shiftValues)        entry.shiftValue = row.shiftValues[x - row.xStart];
+      if (row.shiftDisplayValues) entry.shiftValue = row.shiftDisplayValues[x - row.xStart];
 
       gridMatrix[row.index][x] = entry;
 
-      if (row.group) {
-        document.getElementById(`grid-button-${x}-${row.index}`).classList.add(row.group);
-      }
-      if (row.sub_group) {
-        document.getElementById(`grid-button-${x}-${row.index}`).classList.add(row.sub_group);
-      }
+      if (row.group)     document.getElementById(`grid-button-${x}-${row.index}`).classList.add(row.group);
+      if (row.sub_group) document.getElementById(`grid-button-${x}-${row.index}`).classList.add(row.sub_group);
     }
   });
 }
@@ -198,7 +217,7 @@ const displayFunction = (x: number, y: number) => {
   if (gridMatrix[y][x]) {
     buttonDetails.textContent = "";
 
-    let name   = gridMatrix[y][x].rowName;
+    let name   = gridMatrix[y][x].name;
     let value  = gridMatrix[y][x].value      ? gridMatrix[y][x].value              : "";
         value += gridMatrix[y][x].shiftValue ? ` / ${gridMatrix[y][x].shiftValue}` : "";
 
