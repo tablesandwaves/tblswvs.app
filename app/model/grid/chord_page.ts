@@ -21,7 +21,6 @@ export class ChordPage extends GridPage {
     this.functionMap.set("toggleChordRecording",     this.toggleChordRecording);
 
     this.grid.clearGridDisplay();
-    this.setUiTrackChordProgression();
   }
 
 
@@ -55,9 +54,10 @@ export class ChordPage extends GridPage {
 
   setTrackChordProgression(gridPage: ChordPage, press: GridKeyPress) {
     if (press.s == 1) {
+      gridPage.grid.sequencer.getActiveTrack().notesAreMelody = false;
       gridPage.grid.sequencer.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedChordProgression;
       gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
-      gridPage.setUiTrackChordProgression();
+      gridPage.grid.sequencer.getActiveTrack().updateGuiTrackNotes();
     }
   }
 
@@ -77,19 +77,6 @@ export class ChordPage extends GridPage {
   setUiQueuedChordProgression() {
     this.grid.sequencer.gui.webContents.send(
       "update-progression",
-      this.grid.sequencer.queuedChordProgression.flatMap(chordNotes => {
-        let chord = chordNotes.map(n => n.note + n.octave).join("-");
-        let namedChord = detect(chordNotes.map(n => n.note))[0];
-        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
-        return chord;
-      }).join("; ")
-    );
-  }
-
-
-  setUiTrackChordProgression() {
-    this.grid.sequencer.gui.webContents.send(
-      "update-track-notes",
       this.grid.sequencer.queuedChordProgression.flatMap(chordNotes => {
         let chord = chordNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(chordNotes.map(n => n.note))[0];

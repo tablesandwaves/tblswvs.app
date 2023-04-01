@@ -18,11 +18,11 @@ export class MelodyPage extends GridPage {
     this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
 
     this.grid.clearGridDisplay();
-    this.setUiTrackMelody();
   }
 
 
   generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
+    gridPage.grid.sequencer.getActiveTrack().notesAreMelody = true;
     gridPage.grid.sequencer.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody.map(n => n);
 
@@ -42,7 +42,7 @@ export class MelodyPage extends GridPage {
     }
 
     gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
-    gridPage.setUiTrackMelody();
+    gridPage.grid.sequencer.getActiveTrack().updateGuiTrackNotes();
   }
 
 
@@ -95,15 +95,6 @@ export class MelodyPage extends GridPage {
     this.grid.sequencer.gui.webContents.send(
       "update-melody",
       this.grid.sequencer.queuedMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
-    );
-  }
-
-
-  setUiTrackMelody() {
-    this.grid.sequencer.gui.webContents.send(
-      "update-track-notes",
-      this.grid.sequencer.getActiveTrack().algorithm + " " +
-      this.grid.sequencer.getActiveTrack().inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
     );
   }
 }

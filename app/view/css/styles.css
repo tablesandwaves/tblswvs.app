@@ -166,10 +166,6 @@ div#sequencer-steps div span {
   width: 40px;
   position: absolute;
   opacity: 0.4;
-}
-
-
-div#sequencer-steps div span {
   background-color: #ddd;  /* transparent white: on gate step probability */
   bottom: 0;
 }
@@ -200,7 +196,8 @@ div#global-params .parameter {
 }
 
 
-div#track div#create-clip span {
+div#track div#create-clip span,
+div#melodic-vector p span {
   display: inline-block;
   vertical-align: middle;
   width: 20px;
@@ -210,7 +207,8 @@ div#track div#create-clip span {
   background-color: #111;
 }
 
-div#track div#create-clip span.on {
+div#track div#create-clip span.on,
+div#melodic-vector p span.on {
   background-color: #117733;
 }
 
@@ -294,3 +292,63 @@ div#documentation div#button-details {
 div#documentation div#page-overview {
   min-height: 50px;
 }
+
+
+div#melodic-vector {
+  height: 200px;
+  width: 800px;
+}
+
+
+div#melodic-vector div {
+  width: 40px;
+  height: 142px;
+  margin: 4px;
+  background-color: #111;  /* dark gray: background color for inactive step */
+  border: 1px solid #222;  /* medium gray: border color for active step */
+}
+
+
+div#melodic-vector .vector-step span:first-child {
+  display: inline-block;
+  position: absolute;
+  z-index: 50;
+  width: 40px;
+  background-color: #333;  /* transparent white: on gate step probability */
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #555;
+}
+
+
+div#melodic-vector .vector-step span:last-child {
+  position: absolute;
+  z-index: 60;
+  top: 50px;
+  width: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  color: #117733;
+}
+
+
+div#melodic-vector div.active {
+  border: 1px solid #444;
+}
+
+
+div#melodic-vector .vector-step span.shift0  { height: 0;    bottom: 70px; }
+div#melodic-vector .vector-step span.shift1  { height: 10px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift2  { height: 20px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift3  { height: 30px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift4  { height: 40px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift5  { height: 50px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift6  { height: 60px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift7  { height: 70px; bottom: 70px; }
+div#melodic-vector .vector-step span.shift-1 { height: 10px; top: 70px; }
+div#melodic-vector .vector-step span.shift-2 { height: 20px; top: 70px; }
+div#melodic-vector .vector-step span.shift-3 { height: 30px; top: 70px; }
+div#melodic-vector .vector-step span.shift-4 { height: 40px; top: 70px; }
+div#melodic-vector .vector-step span.shift-5 { height: 50px; top: 70px; }
+div#melodic-vector .vector-step span.shift-6 { height: 60px; top: 70px; }
+div#melodic-vector .vector-step span.shift-7 { height: 70px; top: 70px; }

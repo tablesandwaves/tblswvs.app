@@ -17,14 +17,7 @@ export class Sequencer {
   superMeasure: number = 4;
   activeTrack: number = 0;
   step: number = 0;
-  tracks: Track[] = [
-    new Track("Kick"),
-    new Track("Snare"),
-    new Track("HiHat"),
-    new Track("Perc"),
-    new Track("Opsix"),
-    new Track("Hydra")
-  ];
+  tracks: Track[];
   gui: BrowserWindow;
   key: Key;
   queuedMelody: note[] = new Array();
@@ -49,11 +42,20 @@ export class Sequencer {
 
   constructor(testing: boolean = false) {
     if (!testing) {
-      this.grid = new MonomeGrid(this);
-      this.daw = new AbletonLive(this);
+      this.grid   = new MonomeGrid(this);
+      this.daw    = new AbletonLive(this);
       this.midiIn = new easymidi.Input("tblswvs in", true);
     }
     this.key = new Key(60, Scale.Minor);
+
+    this.tracks = [
+      new Track("Kick",  this),
+      new Track("Snare", this),
+      new Track("HiHat", this),
+      new Track("Perc",  this),
+      new Track("Opsix", this),
+      new Track("Hydra", this)
+    ];
   }
 
 
