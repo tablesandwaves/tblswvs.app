@@ -148,10 +148,12 @@ const loadButtonMatrices = (matrices: any[]) => {
           displayValue: matrix.displayValue
         };
 
-        if (matrix.columnValues)        entry.value      = matrix.columnValues[y - matrix.rowStart];
-        if (matrix.shiftColumnValues)   entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
-        if (matrix.columnDisplayValues) entry.value      = matrix.columnDisplayValues[y - matrix.rowStart];
-        if (matrix.rowValues)           entry.value      = matrix.rowValues[y - matrix.rowStart][x - matrix.columnStart];
+        if (matrix.columnValues)          entry.value      = matrix.columnValues[y - matrix.rowStart];
+        if (matrix.shiftColumnValues)     entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
+        if (matrix.columnDisplayValues)   entry.value      = matrix.columnDisplayValues[y - matrix.rowStart];
+        if (matrix.rowValues)             entry.value      = matrix.rowValues[y - matrix.rowStart][x - matrix.columnStart];
+        if (matrix.rowShiftValues)        entry.shiftValue = matrix.rowShiftValues[y - matrix.rowStart][x - matrix.columnStart];
+        if (matrix.rowShiftDisplayValues) entry.shiftValue = matrix.rowShiftDisplayValues[y - matrix.rowStart][x - matrix.columnStart];
 
         gridMatrix[y][x] = entry;
 

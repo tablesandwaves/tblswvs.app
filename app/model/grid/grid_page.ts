@@ -77,6 +77,7 @@ export class GridPage {
             if (matrix.columnValues)      entry.value      = matrix.columnValues[y - matrix.rowStart];
             if (matrix.shiftColumnValues) entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];
             if (matrix.rowValues)         entry.value      = matrix.rowValues[y - matrix.rowStart][x - matrix.columnStart];
+            if (matrix.rowShiftValues)    entry.shiftValue = matrix.rowShiftValues[y - matrix.rowStart][x - matrix.columnStart];
 
             this.matrix[y][x] = entry;
           }
