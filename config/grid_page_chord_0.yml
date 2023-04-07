@@ -1,76 +1,25 @@
 name: Chords
 description: Add chord progressions to the active track.
+matrices:
+  -
+    name: Keyboard Octave
+    description: Button represents a chord note; first button in the row is the current scale's tonic for the row's octave
+    group: chord-notes
+    type: momentary
+    rowStart: 0
+    rowEnd: 6
+    columnStart: 0
+    columnEnd: 14
+    mapping: addChordNote
+    columnValues:
+      - 6
+      - 5
+      - 4
+      - 3
+      - 2
+      - 1
+      - 0
 rows:
-  -
-    name: Keyboard Octave 6
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 6
-    group: chord-notes
-    sub_group: octave-6
-    index: 0
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
-  -
-    name: Keyboard Octave 5
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 5
-    group: chord-notes
-    sub_group: octave-5
-    index: 1
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
-  -
-    name: Keyboard Octave 4
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 4
-    group: chord-notes
-    sub_group: octave-4
-    index: 2
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
-  -
-    name: Keyboard Octave 3
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 3
-    group: chord-notes
-    sub_group: octave-3
-    index: 3
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
-  -
-    name: Keyboard Octave 2
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 2
-    group: chord-notes
-    sub_group: octave-2
-    index: 4
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
-  -
-    name: Keyboard Octave 1
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 1
-    group: chord-notes
-    sub_group: octave-1
-    index: 5
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
-  -
-    name: Keyboard Octave 0
-    description: Button represents a chord note; first button in the row is the current scale's tonic starting at MIDI octave 0
-    group: chord-notes
-    sub_group: octave-0
-    index: 6
-    xStart: 0
-    xLength: 15
-    type: momentary
-    mapping: addChordNote
   -
     name: Toggle Chord Recording
     description: Turn chord recording on/off; when turning on, the queued chord progression clears
