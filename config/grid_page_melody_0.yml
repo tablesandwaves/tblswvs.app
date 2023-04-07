@@ -19,6 +19,21 @@ matrices:
       - 2
       - 1
       - 0
+  -
+    name: Generate Melody
+    description: Generates melody for currently selected track equal to the global queued input melody
+    group: melody-algorithms
+    type: momentary
+    rowStart: 0
+    rowEnd: 3
+    columnStart: 14
+    columnEnd: 14
+    mapping: generateMelody
+    columnValues:
+      - simple
+      - self_replicate
+      - counted
+      - zig_zag
 rows:
   -
     name: Toggle Input Melody Recording
@@ -56,43 +71,3 @@ rows:
     xStart: 15
     xLength: 1
     mapping: toggleVectorShifts
-  -
-    name: Generate Melody
-    description: Generates melody for currently selected track equal to the global queued input melody
-    group: melody-algorithms
-    type: momentary
-    index: 0
-    xStart: 14
-    xLength: 1
-    mapping: generateMelody
-    value: simple
-  -
-    name: Generate Melody
-    description: Generates melody for currently selected track equal to the global queued input melody
-    group: melody-algorithms
-    type: momentary
-    index: 1
-    xStart: 14
-    xLength: 1
-    mapping: generateMelody
-    value: self_replicate
-  -
-    name: Generate Melody
-    description: Generates melody for currently selected track equal to the global queued input melody
-    group: melody-algorithms
-    type: momentary
-    index: 2
-    xStart: 14
-    xLength: 1
-    mapping: generateMelody
-    value: counted
-  -
-    name: Generate Melody
-    description: Generates melody for currently selected track equal to the global queued input melody
-    group: melody-algorithms
-    type: momentary
-    index: 3
-    xStart: 14
-    xLength: 1
-    mapping: generateMelody
-    value: zig_zag
