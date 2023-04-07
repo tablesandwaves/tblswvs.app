@@ -1,80 +1,30 @@
 name: Probabilities
 description: Probabilities are accessed on Rhythm page 2. Set per step probabilities for each rhythmic gate.
-rows:
+matrices:
   -
-    name: 100% Probability
-    description: Set the probability for the x-position rhythm step to 100%
-    group: prob-100
+    name: Step Probability
+    description: Set the probability for the x-position rhythm step
+    group: probability
     type: vertical meter
-    index: 0
-    xStart: 0
-    xLength: 16
-    value: 1
+    rowStart: 0
+    rowEnd: 6
+    columnStart: 0
+    columnEnd: 15
     mapping: updateProbability
     shiftMapping: updateTrackProbability
-  -
-    name: 87.5% Probability
-    description: Set the probability for the x-position rhythm step to 87.5%
-    group: prob-875
-    type: vertical meter
-    index: 1
-    xStart: 0
-    xLength: 16
-    value: 0.875
-    mapping: updateProbability
-    shiftMapping: updateTrackProbability
-  -
-    name: 75% Probability
-    description: Set the probability for the x-position rhythm step to 75%
-    group: prob-75
-    type: vertical meter
-    index: 2
-    xStart: 0
-    xLength: 16
-    value: 0.75
-    mapping: updateProbability
-    shiftMapping: updateTrackProbability
-  -
-    name: 62.5% Probability
-    description: Set the probability for the x-position rhythm step to 62.5%
-    group: prob-625
-    type: vertical meter
-    index: 3
-    xStart: 0
-    xLength: 16
-    value: 0.625
-    mapping: updateProbability
-    shiftMapping: updateTrackProbability
-  -
-    name: 50% Probability
-    description: Set the probability for the x-position rhythm step to 50%
-    group: prob-50
-    type: vertical meter
-    index: 4
-    xStart: 0
-    xLength: 16
-    value: 0.5
-    mapping: updateProbability
-    shiftMapping: updateTrackProbability
-  -
-    name: 37.5% Probability
-    description: Set the probability for the x-position rhythm step to 37.5%
-    group: prob-375
-    type: vertical meter
-    index: 5
-    xStart: 0
-    xLength: 16
-    value: 0.375
-    mapping: updateProbability
-    shiftMapping: updateTrackProbability
-  -
-    name: 25% Probability
-    description: Set the probability for the x-position rhythm step to 25%
-    group: prob-25
-    type: vertical meter
-    index: 6
-    xStart: 0
-    xLength: 16
-    value: 0.25
-    mapping: updateProbability
-    shiftMapping: updateTrackProbability
+    columnValues:
+      - 1
+      - 0.875
+      - 0.75
+      - 0.625
+      - 0.5
+      - 0.375
+      - 0.25
+    columnDisplayValues:
+      - 100%
+      - 87.5%
+      - 75%
+      - 62.5%
+      - 50%
+      - 37.5%
+      - 25%
