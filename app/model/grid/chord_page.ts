@@ -4,7 +4,7 @@ import { MonomeGrid } from "./monome_grid";
 import { detect } from "@tonaljs/chord-detect";
 
 export class ChordPage extends GridPage {
-  type = "Chord";
+  type = "Chords";
   recordingInputChord: boolean = false;
   keyPressCount: number = 0;
   chordNotes: note[] = new Array();
