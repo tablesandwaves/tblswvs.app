@@ -143,8 +143,8 @@ export class AbletonLive {
     }
 
     // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
-    // (via abletonNotesForCurrentTrack()) and the sequencer so it is mutated for the next soloist
-    // when trading voices.
+    // (via abletonNotesForCurrentTrack()) and the currentSoloistMelody so it is mutated for the next
+    // soloist when trading voices.
     this.tracks[trackIndex].currentMutation = mutatedMelody;
     this.currentSoloistMelody = mutatedMelody;
     this.setNotes(

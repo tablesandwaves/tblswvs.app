@@ -10,7 +10,6 @@ export type RhythmStep = {
 };
 
 
-
 export class AbletonTrack {
   name: string;
   rhythm: RhythmStep[] = new Array(16);
