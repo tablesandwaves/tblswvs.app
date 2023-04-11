@@ -53,7 +53,7 @@ export class AbletonLive {
     // From Live
     this.receiver = new OscReceiver();
     this.receiver.bind(33334, "localhost");
-    this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncSuperMeasure(beatNumber));
+    this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncWithLiveBeat(beatNumber));
 
     // For debugging: all messages are logged.
     // this.receiver.on("message", this.#processLiveMessages);
@@ -190,43 +190,58 @@ export class AbletonLive {
   }
 
 
-  #syncSuperMeasure(beat: number) {
-    if (beat % 4 == 0) {
-      const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
-      if (measure == this.sequencer.superMeasure) {
-        this.tracks.forEach((track, trackIndex) => {
-          // If the current track is in the soloists group, skip this step as it will sync via soloing rules below.
-          if (!this.soloists.includes(trackIndex)) {
-            // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
-            let currentClip = (this.mutating && track.mutating) ?
-                              AbletonLive.EVOLUTION_SCENE_INDEX :
-                              track.currentClip;
-            this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
+  #syncWithLiveBeat(beat: number) {
+    // Only sync during measure boundaries
+    if (beat % 4 != 0) return;
 
-            // If the sequencer is in mutation and the current track, but not while trading solos,
-            // evolve the curent track.
-            if (this.mutating && track.mutating) {
-              this.evolve(trackIndex);
-            }
-          }
-        });
+    // Sync the UI measure transport
+    const measure = ((beat / 4) % this.sequencer.superMeasure) + 1;
+    this.sequencer.grid.sequencer.gui.webContents.send("transport-beat", measure);
 
-        // If the sequencer is mutating and there are soloists, setup the next soloists melody.
-        if (this.mutating && this.soloists.length > 0) {
-          this.soloistIndex++;
-          const soloingTrackIndex = this.soloists[this.soloistIndex % this.soloists.length];
-          this.evolve(soloingTrackIndex, true);
-          this.soloists.forEach(trackIndex => {
-            if (trackIndex == soloingTrackIndex) {
-              this.emitter.emit(`/tracks/${trackIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
-            } else {
-              this.emitter.emit(`/tracks/${trackIndex}/clips/stop`);
-            }
-          })
-        }
+    // If not on the last measure of a super measure, finished.
+    if (measure != this.sequencer.superMeasure) return;
+
+    // Fire clips for all tracks not participating in voice trading to resync to super measure
+    this.#syncTracksToSuperMeasure();
+
+    // For any tracks that are participating in voice trading evolution, evolve the melody and fire clips
+    if (this.mutating && this.soloists.length > 0) {
+      this.#queueNextSoloist();
+    }
+  }
+
+
+  #syncTracksToSuperMeasure() {
+    this.tracks.forEach((track, trackIndex) => {
+      // If the current track is in the soloists group, skip this step as it will sync via #queueNextSoloist()
+      if (this.soloists.includes(trackIndex)) return;
+
+      // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
+      let currentClip = (this.mutating && track.mutating) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
+      this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
+
+      // If the sequencer is in mutation and the current track, but not while trading solos,
+      // evolve the curent track.
+      if (this.mutating && track.mutating) {
+        this.evolve(trackIndex);
       }
+    });
+  }
 
-      this.sequencer.grid.sequencer.gui.webContents.send("transport-beat", measure);
+
+  #queueNextSoloist() {
+    // If the sequencer is mutating and there are soloists, setup the next soloists melody.
+    if (this.mutating && this.soloists.length > 0) {
+      this.soloistIndex++;
+      const soloingTrackIndex = this.soloists[this.soloistIndex % this.soloists.length];
+      this.evolve(soloingTrackIndex, true);
+      this.soloists.forEach(trackIndex => {
+        if (trackIndex == soloingTrackIndex) {
+          this.emitter.emit(`/tracks/${trackIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
+        } else {
+          this.emitter.emit(`/tracks/${trackIndex}/clips/stop`);
+        }
+      });
     }
   }
 
