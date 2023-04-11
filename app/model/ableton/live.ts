@@ -1,6 +1,6 @@
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
-import { note } from "tblswvs";
+import { Melody, Mutation, note } from "tblswvs";
 
 import { AbletonNote, noteLengthMap } from "./note";
 import { AbletonTrack, RhythmStep } from "./track";
@@ -16,6 +16,22 @@ export class AbletonLive {
   tracks: AbletonTrack[];
   sequencer: Sequencer;
   activeTrack: number = 0;
+
+  // Melodic Evolution
+  mutating: boolean = false;
+  mutations = [
+    {name: "trps-2",  function: "transposeDown2",  active: 0},
+    {name: "rev",     function: "reverse",         active: 0},
+    {name: "rot-3",   function: "rotateLeftThree", active: 0},
+    {name: "sort",    function: "sort",            active: 0},
+    {name: "-sort",   function: "reverseSort",     active: 0},
+    {name: "inv",     function: "invert",          active: 0},
+    {name: "inv-rev", function: "invertReverse",   active: 0},
+    {name: "bitflip", function: "bitFlip",         active: 0},
+  ];
+  soloists: number[] = new Array();
+  soloistIndex = -1;
+  currentSoloistMelody: note[] = new Array();
 
 
   constructor(sequencer: Sequencer) {
@@ -103,6 +119,38 @@ export class AbletonLive {
   }
 
 
+  evolve(trackIndex: number, tradingVoices?: boolean) {
+    let   mutatedMelody   = new Array();
+    const activeMutations = this.mutations.filter(m => m.active == 1).map(m => m.function);
+    const gatesPerMeasure = this.tracks[trackIndex].rhythm.reduce((a, b) => a + b.state, 0);
+
+    let mutationSource = tradingVoices ? this.currentSoloistMelody : this.tracks[trackIndex].currentMutation;
+
+    for (let i = 0; i < this.sequencer.superMeasure; i++) {
+      const melody = new Array();
+      for (let j = 0; j < gatesPerMeasure; j++) {
+        melody.push(
+          mutationSource[(i * gatesPerMeasure + j) % mutationSource.length]
+        );
+      }
+
+      mutatedMelody = mutatedMelody.concat(Mutation.random(new Melody(melody, this.sequencer.key), activeMutations).notes);
+    }
+
+    // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
+    // (via abletonNotesForCurrentTrack()) and the sequencer so it is mutated for the next soloist
+    // when trading voices.
+    this.tracks[trackIndex].currentMutation = mutatedMelody;
+    this.currentSoloistMelody = mutatedMelody;
+    this.setNotes(
+      trackIndex,
+      this.abletonNotesForCurrentTrack(trackIndex),
+      false,
+      AbletonLive.EVOLUTION_SCENE_INDEX
+    );
+  }
+
+
   setNotes(trackIndex: number, notes: AbletonNote[], newClip: boolean, clipIndex?: number) {
     // let timeout = 0;
 
@@ -143,27 +191,27 @@ export class AbletonLive {
       if (measure == this.sequencer.superMeasure) {
         this.tracks.forEach((track, trackIndex) => {
           // If the current track is in the soloists group, skip this step as it will sync via soloing rules below.
-          if (!this.sequencer.soloists.includes(trackIndex)) {
+          if (!this.soloists.includes(trackIndex)) {
             // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
-            let currentClip = (this.sequencer.mutating && track.mutating) ?
+            let currentClip = (this.mutating && track.mutating) ?
                               AbletonLive.EVOLUTION_SCENE_INDEX :
                               track.currentClip;
             this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
 
             // If the sequencer is in mutation and the current track, but not while trading solos,
             // evolve the curent track.
-            if (this.sequencer.mutating && track.mutating) {
-              this.sequencer.evolve(trackIndex);
+            if (this.mutating && track.mutating) {
+              this.evolve(trackIndex);
             }
           }
         });
 
         // If the sequencer is mutating and there are soloists, setup the next soloists melody.
-        if (this.sequencer.mutating && this.sequencer.soloists.length > 0) {
-          this.sequencer.soloistIndex++;
-          const soloingTrackIndex = this.sequencer.soloists[this.sequencer.soloistIndex % this.sequencer.soloists.length];
-          this.sequencer.evolve(soloingTrackIndex, true);
-          this.sequencer.soloists.forEach(trackIndex => {
+        if (this.mutating && this.soloists.length > 0) {
+          this.soloistIndex++;
+          const soloingTrackIndex = this.soloists[this.soloistIndex % this.soloists.length];
+          this.evolve(soloingTrackIndex, true);
+          this.soloists.forEach(trackIndex => {
             if (trackIndex == soloingTrackIndex) {
               this.emitter.emit(`/tracks/${trackIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
             } else {
