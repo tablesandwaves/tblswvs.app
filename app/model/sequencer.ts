@@ -36,15 +36,6 @@ export class Sequencer {
   }
 
 
-  refreshAbleton(newClip: boolean) {
-    this.daw.setNotes(
-      this.daw.activeTrack,
-      this.daw.abletonNotesForCurrentTrack(),
-      newClip
-    );
-  }
-
-
   async follow() {
     this.midiIn.on("clock", () => {
       this.ticks++;

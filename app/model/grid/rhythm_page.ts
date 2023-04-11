@@ -25,7 +25,7 @@ export class RhythmPage extends GridPage {
 
   updateBeatLength(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().beatLength = press.x + 1;
-    gridPage.grid.sequencer.refreshAbleton(false);
+    gridPage.grid.sequencer.daw.refresh(false);
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
   }
@@ -37,7 +37,7 @@ export class RhythmPage extends GridPage {
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
 
-    gridPage.grid.sequencer.refreshAbleton(false);
+    gridPage.grid.sequencer.daw.refresh(false);
   }
 
 

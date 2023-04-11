@@ -18,7 +18,7 @@ export class ProbabilitiesPage extends GridPage {
     // Only edit probabilities for steps that are active
     if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.matrix[press.y][press.x].value;
-      gridPage.grid.sequencer.refreshAbleton(false);
+      gridPage.grid.sequencer.daw.refresh(false);
       gridPage.setGridProbabilitiesDisplay();
       gridPage.updateGuiRhythmDisplay();
     }

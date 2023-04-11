@@ -60,6 +60,11 @@ export class AbletonLive {
   }
 
 
+  refresh(newClip: boolean) {
+    this.setNotes(this.activeTrack, this.abletonNotesForCurrentTrack(), newClip);
+  }
+
+
   getActiveTrack(): AbletonTrack {
     return this.tracks[this.activeTrack];
   }
