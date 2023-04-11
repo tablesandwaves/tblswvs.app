@@ -1,8 +1,9 @@
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
+import { note } from "tblswvs";
 
-import { AbletonNote } from "./note";
-import { AbletonTrack } from "./track";
+import { AbletonNote, noteLengthMap } from "./note";
+import { AbletonTrack, RhythmStep } from "./track";
 import { Sequencer } from "../sequencer";
 
 
@@ -39,6 +40,60 @@ export class AbletonLive {
 
     // For debugging: all messages are logged.
     // this.receiver.on("message", this.#processLiveMessages);
+  }
+
+
+  abletonNotesForCurrentTrack(mutationTrackIndex?: number): AbletonNote[] {
+    let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
+
+    const track          = this.tracks[mutationTrackIndex ? mutationTrackIndex : this.sequencer.activeTrack];
+    const beatLength     = track.beatLength;
+    const size           = Math.ceil((this.sequencer.superMeasure * 16 / beatLength));
+    const expandedRhythm = new Array(size)
+            .fill(track.rhythm.slice(0, beatLength))
+            .flat()
+            .slice(0, this.sequencer.superMeasure * 16);
+
+    const sourceNotes = mutationTrackIndex ? track.currentMutation.map(n => [n]) : track.outputNotes;
+
+    abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
+      if (rhythmStep.state == 1) {
+        nextNotes = sourceNotes[noteIndex % sourceNotes.length];
+        // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
+        // represented as a 1-dimensional array because they contain explicit timing offsets.
+        nextNotes.forEach(nextNote => {
+          // An undefined note in the notes array corresponds to a rest in the melody.
+          if (nextNote != undefined) {
+            nextNote = this.#shiftNote(track, noteIndex, nextNote);
+
+            abletonNotes.push(new AbletonNote(
+              nextNote.midi, (i * 0.25),
+              noteLengthMap[track.noteLength].size,
+              64, rhythmStep.probability
+            ));
+          }
+        });
+        noteIndex += 1;
+      }
+      return abletonNotes;
+    }, []));
+
+    return abletonNotes;
+  }
+
+
+  #shiftNote(track: AbletonTrack, noteIndex: number, nextNote: note) {
+    if (!track.vectorShiftsActive) return nextNote;
+
+    let shift = track.vectorShifts[noteIndex % track.vectorShiftsLength];
+    if (shift == 0) return nextNote;
+
+    let octaveShift   = nextNote.octave - 3;
+    let shiftedDegree = nextNote.scaleDegree + shift;
+    if (shiftedDegree == 0) {
+      shiftedDegree = shift > 0 ? shiftedDegree + 1 : shiftedDegree - 1;
+    }
+    return this.sequencer.key.degree(shiftedDegree, octaveShift);
   }
 
 
