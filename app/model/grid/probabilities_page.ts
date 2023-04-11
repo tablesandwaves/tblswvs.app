@@ -16,8 +16,8 @@ export class ProbabilitiesPage extends GridPage {
 
   updateProbability(gridPage: ProbabilitiesPage, press: GridKeyPress) {
     // Only edit probabilities for steps that are active
-    if (gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state == 1) {
-      gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].probability = gridPage.matrix[press.y][press.x].value;
+    if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.matrix[press.y][press.x].value;
       gridPage.grid.sequencer.refreshAbleton(false);
       gridPage.setGridProbabilitiesDisplay();
       gridPage.updateGuiRhythmDisplay();
@@ -26,7 +26,7 @@ export class ProbabilitiesPage extends GridPage {
 
 
   updateTrackProbability(gridPage: ProbabilitiesPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
     gridPage.setGridProbabilitiesDisplay();
   }
 
@@ -40,12 +40,12 @@ export class ProbabilitiesPage extends GridPage {
   setGridProbabilitiesDisplay(highlightIndex?: number) {
     if (this.grid.shiftKey) {
       for (let y = 0; y < 7; y++) {
-        this.grid.levelSet(0, y, this.matrix[y][0].value <= this.grid.sequencer.getActiveTrack().defaultProbability ? 10 : 0);
+        this.grid.levelSet(0, y, this.matrix[y][0].value <= this.grid.sequencer.daw.getActiveTrack().defaultProbability ? 10 : 0);
       }
     } else {
       let row;
       for (let y = 0; y < 7; y++) {
-        row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x) => {
+        row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x) => {
           return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.probability) ? 10 : 0;
         });
         this.grid.levelRow(0, y, row.slice(0, 8));

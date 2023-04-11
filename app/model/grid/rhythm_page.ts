@@ -24,7 +24,7 @@ export class RhythmPage extends GridPage {
 
 
   updateBeatLength(gridPage: RhythmPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().beatLength = press.x + 1;
+    gridPage.grid.sequencer.daw.getActiveTrack().beatLength = press.x + 1;
     gridPage.grid.sequencer.refreshAbleton(false);
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
@@ -32,8 +32,8 @@ export class RhythmPage extends GridPage {
 
 
   updateRhythm(gridPage: RhythmPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].state;
-    gridPage.grid.sequencer.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.getActiveTrack().defaultProbability;
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state;
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
 
@@ -42,9 +42,9 @@ export class RhythmPage extends GridPage {
 
 
   updateNoteLength(gridPage: RhythmPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.levelRow(0, 6, gridPage.#noteLengthRow());
-    gridPage.grid.sequencer.gui.webContents.send("update-note-length", gridPage.grid.sequencer.getActiveTrack().noteLength);
+    gridPage.grid.sequencer.gui.webContents.send("update-note-length", gridPage.grid.sequencer.daw.getActiveTrack().noteLength);
   }
 
 
@@ -57,10 +57,10 @@ export class RhythmPage extends GridPage {
   setGridRhythmDisplay(highlightIndex?: number) {
     let row;
     if (this.grid.shiftKey) {
-      const beatLength = this.grid.sequencer.getActiveTrack().beatLength;
+      const beatLength = this.grid.sequencer.daw.getActiveTrack().beatLength;
       row = [...new Array(beatLength).fill(5), ...new Array(16 - beatLength).fill(0)];
     } else {
-      row = this.grid.sequencer.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
+      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
         return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 15) : 0;
       });
     }
@@ -74,7 +74,7 @@ export class RhythmPage extends GridPage {
 
   #noteLengthRow(): number[] {
     let row = blank8x8Row.slice();
-    row[noteLengthMap[this.grid.sequencer.getActiveTrack().noteLength].index] = 10;
+    row[noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index] = 10;
     return row;
   }
 }

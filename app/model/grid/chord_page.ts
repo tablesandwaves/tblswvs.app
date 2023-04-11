@@ -54,10 +54,10 @@ export class ChordPage extends GridPage {
 
   setTrackChordProgression(gridPage: ChordPage, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.grid.sequencer.getActiveTrack().notesAreMelody = false;
-      gridPage.grid.sequencer.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedChordProgression;
+      gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = false;
+      gridPage.grid.sequencer.daw.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedChordProgression;
       gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
-      gridPage.grid.sequencer.getActiveTrack().updateGuiTrackNotes();
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
     }
   }
 

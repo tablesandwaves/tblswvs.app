@@ -15,6 +15,7 @@ export class AbletonLive {
   fetchedNotes: AbletonNote[] = new Array();
   tracks: AbletonTrack[];
   sequencer: Sequencer;
+  activeTrack: number = 0;
 
 
   constructor(sequencer: Sequencer) {
@@ -43,10 +44,15 @@ export class AbletonLive {
   }
 
 
+  getActiveTrack(): AbletonTrack {
+    return this.tracks[this.activeTrack];
+  }
+
+
   abletonNotesForCurrentTrack(mutationTrackIndex?: number): AbletonNote[] {
     let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
 
-    const track          = this.tracks[mutationTrackIndex ? mutationTrackIndex : this.sequencer.activeTrack];
+    const track          = this.tracks[mutationTrackIndex ? mutationTrackIndex : this.activeTrack];
     const beatLength     = track.beatLength;
     const size           = Math.ceil((this.sequencer.superMeasure * 16 / beatLength));
     const expandedRhythm = new Array(size)

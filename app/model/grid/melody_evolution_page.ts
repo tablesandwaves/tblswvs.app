@@ -97,9 +97,9 @@ export class MelodyEvolutionPage extends GridPage {
       gridPage.grid.sequencer.daw.tracks.forEach(t => t.mutating = false);
     } else {
       // There are no current soloists, add the active track as the current soloist and reset all other tracks
-      gridPage.grid.sequencer.daw.tracks.forEach((t, i) => t.mutating = (i == gridPage.grid.sequencer.activeTrack));
-      gridPage.grid.sequencer.soloists.push(gridPage.grid.sequencer.activeTrack);
-      gridPage.grid.sequencer.currentSoloistMelody = gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].outputNotes.flat();
+      gridPage.grid.sequencer.daw.tracks.forEach((t, i) => t.mutating = (i == gridPage.grid.sequencer.daw.activeTrack));
+      gridPage.grid.sequencer.soloists.push(gridPage.grid.sequencer.daw.activeTrack);
+      gridPage.grid.sequencer.currentSoloistMelody = gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.daw.activeTrack].outputNotes.flat();
       gridPage.grid.sequencer.soloistIndex = -1;
     }
     gridPage.refresh();

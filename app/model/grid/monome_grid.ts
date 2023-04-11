@@ -147,13 +147,13 @@ export class MonomeGrid {
 
 
   #setActiveTrack(press: GridKeyPress) {
-    this.sequencer.activeTrack = press.x;
+    this.sequencer.daw.activeTrack = press.x;
 
     if (this.activePage) this.activePage.refresh();
 
     this.#selectGlobalGridKey(0, 5, press.x);
-    // this.sequencer.gui.webContents.send("track-activate", this.sequencer.getActiveTrack());
-    this.sequencer.getActiveTrack().updateGui();
+    // this.sequencer.gui.webContents.send("track-activate", this.sequencer.daw.getActiveTrack());
+    this.sequencer.daw.getActiveTrack().updateGui();
   }
 
 

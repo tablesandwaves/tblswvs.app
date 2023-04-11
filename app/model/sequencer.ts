@@ -3,7 +3,6 @@ import { Key, Melody, Mutation, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./grid/monome_grid";
 import { AbletonLive } from "./ableton/live";
-import { AbletonTrack } from "./ableton/track";
 import { note } from "tblswvs";
 
 
@@ -14,7 +13,6 @@ export class Sequencer {
   // midiOut: any;
   ticks: number = 0;
   superMeasure: number = 4;
-  activeTrack: number = 0;
   step: number = 0;
   gui: BrowserWindow;
   key: Key;
@@ -54,14 +52,9 @@ export class Sequencer {
   }
 
 
-  getActiveTrack(): AbletonTrack {
-    return this.daw.tracks[this.activeTrack];
-  }
-
-
   refreshAbleton(newClip: boolean) {
     this.daw.setNotes(
-      this.activeTrack,
+      this.daw.activeTrack,
       this.daw.abletonNotesForCurrentTrack(),
       newClip
     );
@@ -105,7 +98,7 @@ export class Sequencer {
       this.ticks++;
       if (this.ticks % 6 != 0) return;
 
-      this.grid.displayRhythmWithTransport(this.step % this.getActiveTrack().beatLength);
+      this.grid.displayRhythmWithTransport(this.step % this.daw.getActiveTrack().beatLength);
       this.step = this.step == this.superMeasure * 16 - 1 ? 0 : this.step + 1;
     });
 

@@ -21,38 +21,38 @@ export class MelodyVectorPage extends GridPage {
 
 
   setStepShift(gridPage: MelodyVectorPage, press: GridKeyPress) {
-    if (gridPage.grid.shiftKey && press.y == 0 && gridPage.grid.sequencer.getActiveTrack().vectorShifts[press.x] == -1) {
-      gridPage.grid.sequencer.getActiveTrack().vectorShifts[press.x] = 0;
-    } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.grid.sequencer.getActiveTrack().vectorShifts[press.x] == 1) {
-      gridPage.grid.sequencer.getActiveTrack().vectorShifts[press.x] = 0;
+    if (gridPage.grid.shiftKey && press.y == 0 && gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] == -1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] = 0;
+    } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] = 0;
     } else {
-      gridPage.grid.sequencer.getActiveTrack().vectorShifts[press.x] =
+      gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] =
           gridPage.grid.shiftKey ?
           gridPage.matrix[press.y][press.x].shiftValue :
           gridPage.matrix[press.y][press.x].value;
     }
 
     gridPage.setGridShiftsDisplay();
-    gridPage.grid.sequencer.getActiveTrack().updateGuiVectorDisplay();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiVectorDisplay();
   }
 
 
   setShiftSequenceLength(gridPage: MelodyVectorPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().vectorShiftsLength = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.sequencer.daw.getActiveTrack().vectorShiftsLength = gridPage.matrix[press.y][press.x].value;
     gridPage.setGridShiftLengthDisplay();
-    gridPage.grid.sequencer.getActiveTrack().updateGuiVectorDisplay();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiVectorDisplay();
   }
 
 
   setGridShiftLengthDisplay() {
     for (let y = 0; y < 3; y++)
       for (let x = 12; x < 16; x++)
-        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.grid.sequencer.getActiveTrack().vectorShiftsLength ? 10 : 0);
+        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.grid.sequencer.daw.getActiveTrack().vectorShiftsLength ? 10 : 0);
   }
 
 
   setGridShiftsDisplay() {
-    this.grid.sequencer.getActiveTrack().vectorShifts.forEach((shift, x) => {
+    this.grid.sequencer.daw.getActiveTrack().vectorShifts.forEach((shift, x) => {
       if (shift == 0) {
         for (let y = 0; y < 7; y++)
           this.grid.levelSet(x, y, 0);

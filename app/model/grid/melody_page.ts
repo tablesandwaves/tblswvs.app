@@ -23,13 +23,13 @@ export class MelodyPage extends GridPage {
 
 
   generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.getActiveTrack().notesAreMelody = true;
-    gridPage.grid.sequencer.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.sequencer.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody.map(n => n);
+    gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = true;
+    gridPage.grid.sequencer.daw.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody.map(n => n);
 
     switch (gridPage.matrix[press.y][press.x].value) {
       case "simple":
-        gridPage.grid.sequencer.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedMelody.map(n => [n]);
+        gridPage.grid.sequencer.daw.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedMelody.map(n => [n]);
         break;
       case "self_replicate":
         gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).notes);
@@ -43,12 +43,12 @@ export class MelodyPage extends GridPage {
     }
 
     gridPage.grid.sequencer.refreshAbleton(gridPage.createNewClip);
-    gridPage.grid.sequencer.getActiveTrack().updateGuiTrackNotes();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
   }
 
 
   toggleVectorShifts(gridPage: MelodyPage, press: GridKeyPress) {
-    const activeTrack = gridPage.grid.sequencer.getActiveTrack();
+    const activeTrack = gridPage.grid.sequencer.daw.getActiveTrack();
     activeTrack.vectorShiftsActive = !activeTrack.vectorShiftsActive;
     gridPage.grid.levelSet(press.x, press.y, (activeTrack.vectorShiftsActive ? 10 : 0));
     activeTrack.updateGuiVectorDisplay();
@@ -57,13 +57,13 @@ export class MelodyPage extends GridPage {
 
   refresh() {
     this.grid.clearGridDisplay();
-    const activeTrack = this.grid.sequencer.getActiveTrack();
+    const activeTrack = this.grid.sequencer.daw.getActiveTrack();
     this.grid.levelSet(15, 3, (activeTrack.vectorShiftsActive ? 10 : 0));
   }
 
 
   setCurrentTrackNotes(outputMelody: note[]) {
-    this.grid.sequencer.getActiveTrack().outputNotes = outputMelody.map(note => {
+    this.grid.sequencer.daw.getActiveTrack().outputNotes = outputMelody.map(note => {
       return note.note == "rest" ? [undefined] : [note];
     });
   }
