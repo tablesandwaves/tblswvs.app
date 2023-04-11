@@ -2,7 +2,7 @@ import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { noteLengthMap } from "../ableton/note";
 import { blank8x8Row } from "../../helpers/utils";
-import { RhythmStep } from "../track";
+import { RhythmStep } from "../ableton/track";
 
 
 export class RhythmPage extends GridPage {

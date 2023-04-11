@@ -20,12 +20,12 @@ export class AbletonLive {
     this.sequencer = sequencer;
 
     this.tracks = [
-      new AbletonTrack(sequencer.superMeasure),
-      new AbletonTrack(sequencer.superMeasure),
-      new AbletonTrack(sequencer.superMeasure),
-      new AbletonTrack(sequencer.superMeasure),
-      new AbletonTrack(sequencer.superMeasure),
-      new AbletonTrack(sequencer.superMeasure)
+      new AbletonTrack("Kick",  sequencer),
+      new AbletonTrack("Snare", sequencer),
+      new AbletonTrack("HiHat", sequencer),
+      new AbletonTrack("Perc",  sequencer),
+      new AbletonTrack("Opsix", sequencer),
+      new AbletonTrack("Hydra", sequencer)
     ];
 
     // To Live
@@ -64,7 +64,7 @@ export class AbletonLive {
       console.error("input notes:", notes);
       console.error("OSC mapped notes", ...notes.flatMap(note => note.toOscAddedNote()));
       console.error("trackIndex", trackIndex, "mutating", this.sequencer.daw.tracks[trackIndex].mutating);
-      console.error("Current track mutation", this.sequencer.tracks[trackIndex].currentMutation);
+      console.error("Current track mutation", this.tracks[trackIndex].currentMutation);
     }
 
     // setTimeout(() => {

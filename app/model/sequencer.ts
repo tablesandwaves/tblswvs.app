@@ -2,8 +2,8 @@ const easymidi = require("easymidi");
 import { Key, Melody, Mutation, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./grid/monome_grid";
-import { Track, RhythmStep } from "./track";
 import { AbletonLive } from "./ableton/live";
+import { AbletonTrack, RhythmStep } from "./ableton/track";
 import { AbletonNote, noteLengthMap } from "./ableton/note";
 import { note } from "tblswvs";
 
@@ -17,7 +17,6 @@ export class Sequencer {
   superMeasure: number = 4;
   activeTrack: number = 0;
   step: number = 0;
-  tracks: Track[];
   gui: BrowserWindow;
   key: Key;
   queuedMelody: note[] = new Array();
@@ -47,15 +46,6 @@ export class Sequencer {
       this.midiIn = new easymidi.Input("tblswvs in", true);
     }
     this.key = new Key(60, Scale.Minor);
-
-    this.tracks = [
-      new Track("Kick",  this),
-      new Track("Snare", this),
-      new Track("HiHat", this),
-      new Track("Perc",  this),
-      new Track("Opsix", this),
-      new Track("Hydra", this)
-    ];
   }
 
 
@@ -65,8 +55,8 @@ export class Sequencer {
   }
 
 
-  getActiveTrack(): Track {
-    return this.tracks[this.activeTrack];
+  getActiveTrack(): AbletonTrack {
+    return this.daw.tracks[this.activeTrack];
   }
 
 
@@ -82,9 +72,9 @@ export class Sequencer {
   evolve(trackIndex: number, tradingVoices?: boolean) {
     let   mutatedMelody   = new Array();
     const activeMutations = this.mutations.filter(m => m.active == 1).map(m => m.function);
-    const gatesPerMeasure = this.tracks[trackIndex].rhythm.reduce((a, b) => a + b.state, 0);
+    const gatesPerMeasure = this.daw.tracks[trackIndex].rhythm.reduce((a, b) => a + b.state, 0);
 
-    let mutationSource = tradingVoices ? this.currentSoloistMelody : this.tracks[trackIndex].currentMutation;
+    let mutationSource = tradingVoices ? this.currentSoloistMelody : this.daw.tracks[trackIndex].currentMutation;
 
     for (let i = 0; i < this.superMeasure; i++) {
       const melody = new Array();
@@ -100,7 +90,7 @@ export class Sequencer {
     // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
     // (via abletonNotesForCurrentTrack()) and the sequencer so it is mutated for the next soloist
     // when trading voices.
-    this.tracks[trackIndex].currentMutation = mutatedMelody;
+    this.daw.tracks[trackIndex].currentMutation = mutatedMelody;
     this.currentSoloistMelody = mutatedMelody;
     this.daw.setNotes(
       trackIndex,
@@ -114,7 +104,7 @@ export class Sequencer {
   abletonNotesForCurrentTrack(mutationTrackIndex?: number): AbletonNote[] {
     let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
 
-    const track          = this.tracks[mutationTrackIndex ? mutationTrackIndex : this.activeTrack];
+    const track          = this.daw.tracks[mutationTrackIndex ? mutationTrackIndex : this.activeTrack];
     const beatLength     = track.beatLength;
     const size           = Math.ceil((this.superMeasure * 16 / beatLength));
     const expandedRhythm = new Array(size)
@@ -150,7 +140,7 @@ export class Sequencer {
   }
 
 
-  #shiftNote(track: Track, noteIndex: number, nextNote: note) {
+  #shiftNote(track: AbletonTrack, noteIndex: number, nextNote: note) {
     if (!track.vectorShiftsActive) return nextNote;
 
     let shift = track.vectorShifts[noteIndex % track.vectorShiftsLength];

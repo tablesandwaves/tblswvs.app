@@ -1,6 +1,6 @@
 import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
 import { MonomeGrid } from "./monome_grid";
-import { RhythmStep } from "../track";
+import { RhythmStep } from "../ableton/track";
 
 
 export class ProbabilitiesPage extends GridPage {

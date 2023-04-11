@@ -1,5 +1,4 @@
 import { MonomeGrid } from "./monome_grid";
-import { RhythmStep } from "../track";
 
 
 export type GridKeyPress = {

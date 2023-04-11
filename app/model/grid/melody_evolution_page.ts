@@ -32,7 +32,7 @@ export class MelodyEvolutionPage extends GridPage {
     // super measure.
     gridPage.grid.sequencer.daw.tracks.forEach((track, trackIndex) => {
       if (track.mutating) {
-        gridPage.grid.sequencer.tracks[trackIndex].currentMutation = gridPage.grid.sequencer.tracks[trackIndex].outputNotes.flat();
+        gridPage.grid.sequencer.daw.tracks[trackIndex].currentMutation = gridPage.grid.sequencer.daw.tracks[trackIndex].outputNotes.flat();
         gridPage.grid.sequencer.evolve(trackIndex);
       }
     });
@@ -99,7 +99,7 @@ export class MelodyEvolutionPage extends GridPage {
       // There are no current soloists, add the active track as the current soloist and reset all other tracks
       gridPage.grid.sequencer.daw.tracks.forEach((t, i) => t.mutating = (i == gridPage.grid.sequencer.activeTrack));
       gridPage.grid.sequencer.soloists.push(gridPage.grid.sequencer.activeTrack);
-      gridPage.grid.sequencer.currentSoloistMelody = gridPage.grid.sequencer.tracks[gridPage.grid.sequencer.activeTrack].outputNotes.flat();
+      gridPage.grid.sequencer.currentSoloistMelody = gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.activeTrack].outputNotes.flat();
       gridPage.grid.sequencer.soloistIndex = -1;
     }
     gridPage.refresh();
@@ -125,7 +125,7 @@ export class MelodyEvolutionPage extends GridPage {
     this.grid.sequencer.gui.webContents.send(
       "update-mutations",
       this.grid.sequencer.daw.tracks.reduce((activeTracks, track, tIdx) => {
-        if (track.mutating) activeTracks.push(this.grid.sequencer.tracks[tIdx].name);
+        if (track.mutating) activeTracks.push(this.grid.sequencer.daw.tracks[tIdx].name);
         return activeTracks;
       }, []).join(" "),
       this.grid.sequencer.mutations.filter(m => m.active == 1).map(m => m.name).join(" ")
