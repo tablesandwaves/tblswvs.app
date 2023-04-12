@@ -2,16 +2,18 @@ import * as path from "path";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
+
 import { Sequencer } from "../sequencer";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { GlobalPage } from "./global_page";
 import { RhythmPage } from "./rhythm_page";
-import { MelodyPage } from "./melody_page";
-import { blank16x16Row } from "../../helpers/utils";
 import { ProbabilitiesPage } from "./probabilities_page";
+import { FillsPage } from "./fills_page";
 import { ChordPage } from "./chord_page";
+import { MelodyPage } from "./melody_page";
 import { MelodyEvolutionPage } from "./melody_evolution_page";
 import { MelodyVectorPage } from "./melody_vector_page";
+import { blank16x16Row } from "../../helpers/utils";
 
 
 export type DeviceConfig = {
@@ -28,7 +30,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 
 const pageTypeMap: Record<string, string[]> = {
-  "Rhythm": ["Rhythm", "Probabilities"],
+  "Rhythm": ["Rhythm", "Probabilities", "Fills"],
   "Chords": ["Chords"],
   "Melody": ["Melody", "Mutation", "MelodyVector"],
   "Global": ["Global"]
@@ -152,7 +154,6 @@ export class MonomeGrid {
     if (this.activePage) this.activePage.refresh();
 
     this.#selectGlobalGridKey(0, 5, press.x);
-    // this.sequencer.gui.webContents.send("track-activate", this.sequencer.daw.getActiveTrack());
     this.sequencer.daw.getActiveTrack().updateGui();
   }
 
@@ -169,6 +170,12 @@ export class MonomeGrid {
       case "Probabilities":
         // Do not reset page index to 0, this is page 2/index 1 of the Rhythm page group.
         this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 6;
+        break;
+      case "Fills":
+        // Do not reset page index to 0, this is page 3/index 2 of the Rhythm page group.
+        this.activePage = new FillsPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 6;
         break;

@@ -7,6 +7,7 @@ import { AbletonClip } from "./clip";
 export type RhythmStep = {
   state: number;
   probability: number;
+  fillRepeats: number;
 };
 
 
@@ -14,6 +15,8 @@ export class AbletonTrack {
   name: string;
   rhythm: RhythmStep[] = new Array(16);
   defaultProbability: number = 1;
+  fillMeasures: (0|1)[] = [0, 0, 0, 0, 0, 0, 0, 0];
+  fillDuration: string = "8nd";
   // Are the output notes a melody or chord progression?
   notesAreMelody = true;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
@@ -40,7 +43,7 @@ export class AbletonTrack {
     this.name = name;
     this.sequencer = sequencer;
     for (let i = 0; i < this.rhythm.length; i++) {
-      this.rhythm[i] = {state: 0, probability: this.defaultProbability};
+      this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
     }
 
     this.clips = [
