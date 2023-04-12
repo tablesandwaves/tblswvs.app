@@ -18,8 +18,8 @@ export type GridConfig = {
 export type GridButton = {
   mapping: string,
   shiftMapping?: string,
-  type: string,
-  group?: string,
+  // type: string,
+  // group?: string,
   value?: any,
   shiftValue?: any
 }
@@ -56,11 +56,17 @@ export class GridPage {
     if (config.rows) {
       config.rows.forEach((row) => {
         for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
-          let entry: GridButton = { mapping: row.mapping, shiftMapping: row.shiftMapping, type: row.type };
-          if (row.values) entry.value = row.values[i - row.xStart];
-          if (row.value) entry.value = row.value;
+          let entry: GridButton = this.matrix[row.index][i] ? this.matrix[row.index][i] : {mapping: undefined, shiftMapping: undefined};
+
+          entry.mapping      = row.mapping      ? row.mapping      : entry.mapping;
+          entry.shiftMapping = row.shiftMapping ? row.shiftMapping : entry.shiftMapping;
+          entry.value        = row.value        ? row.value        : entry.value;
+          entry.shiftValue   = row.shiftValue   ? row.shiftValue   : entry.shiftValue;
+
+          if (row.values)      entry.value      = row.values[i - row.xStart];
+          if (row.value)       entry.value      = row.value;
           if (row.shiftValues) entry.shiftValue = row.shiftValues[i - row.xStart];
-          if (row.shiftValue) entry.shiftValue = row.shiftValue;
+          if (row.shiftValue)  entry.shiftValue = row.shiftValue;
 
           this.matrix[row.index][i] = entry;
         }
@@ -71,7 +77,12 @@ export class GridPage {
       config.matrices.forEach((matrix) => {
         for (let y = matrix.rowStart; y <= matrix.rowEnd; y++) {
           for (let x = matrix.columnStart; x <= matrix.columnEnd; x++) {
-            let entry: GridButton = { mapping: matrix.mapping, shiftMapping: matrix.shiftMapping, type: matrix.type };
+            let entry: GridButton = this.matrix[y][x] ? this.matrix[y][x] : {mapping: undefined, shiftMapping: undefined};
+
+            entry.mapping      = matrix.mapping      ? matrix.mapping      : entry.mapping;
+            entry.shiftMapping = matrix.shiftMapping ? matrix.shiftMapping : entry.shiftMapping;
+            entry.value        = matrix.value        ? matrix.value        : entry.value;
+            entry.shiftValue   = matrix.shiftValue   ? matrix.shiftValue   : entry.shiftValue;
 
             if (matrix.columnValues)      entry.value      = matrix.columnValues[y - matrix.rowStart];
             if (matrix.shiftColumnValues) entry.shiftValue = matrix.shiftColumnValues[y - matrix.rowStart];

@@ -20,11 +20,20 @@ matrices:
       - 2
 rows:
   -
+    name: Display Rhythm / Clear Fill Repeats
+    description: For any sequencer steps with a current rhythm step, clear existing fills. Will not clear the display.
+    group: clear-fills
+    type: momentary
+    index: 6
+    xStart: 0
+    xLength: 16
+    mapping: clearFillRepeats
+  -
     shiftName: Set Fill Measure
     shiftDescription: The sub-measures of the super measure on which the fill will happen.
     shiftGroup: fill-measures
     shiftType: toggle
-    index: 0
+    index: 6
     xStart: 0
     xLength: 8
     shiftMapping: toggleFillMeasure
@@ -42,7 +51,7 @@ rows:
     shiftDescription: The length of time in which to spread a rhythmic fill.
     shiftGroup: fill-duration
     shiftType: meter
-    index: 0
+    index: 6
     xStart: 8
     xLength: 8
     shiftMapping: setFillDuration

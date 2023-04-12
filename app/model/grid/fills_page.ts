@@ -34,7 +34,11 @@ export class FillsPage extends GridPage {
 
 
   clearFillRepeats(gridPage: FillsPage, press: GridKeyPress) {
-
+    if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = 0;
+      gridPage.setGridFillsDisplay();
+      gridPage.updateGuiRhythmDisplay();
+    }
   }
 
 
@@ -50,26 +54,10 @@ export class FillsPage extends GridPage {
   setGridFillsDisplay() {
     let row;
 
-    // Display the current rhythm on row 7
-    row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
-      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
-    });
-    this.grid.levelRow(0, 6, row.slice(0, 8));
-    this.grid.levelRow(8, 6, row.slice(8, 16));
-
-    // Display the repeats as vertical meters for any steps with a non-zero fill-repeat value
-    for (let y = 0; y < 6; y++) {
-      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x) => {
-        return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.fillRepeats) ? 10 : 0;
-      });
-      this.grid.levelRow(0, y, row.slice(0, 8));
-      this.grid.levelRow(8, y, row.slice(8, 16));
-    }
-
     if (this.grid.shiftKey) {
       // Set the measures on which the fills should play
       row = this.grid.sequencer.daw.getActiveTrack().fillMeasures.map(m => m == 1 ? 10 : 0);
-      this.grid.levelRow(0, 0, row);
+      this.grid.levelRow(0, 6, row);
 
       // Set the fill duration meter buttons
       row = new Array(8).fill(0);
@@ -78,7 +66,23 @@ export class FillsPage extends GridPage {
           row[x] = 10;
         }
       }
-      this.grid.levelRow(8, 0, row);
+      this.grid.levelRow(8, 6, row);
+    } else {
+      // Display the current rhythm on row 7
+      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
+        return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
+      });
+      this.grid.levelRow(0, 6, row.slice(0, 8));
+      this.grid.levelRow(8, 6, row.slice(8, 16));
+    }
+
+    // Display the repeats as vertical meters for any steps with a non-zero fill-repeat value
+    for (let y = 0; y < 6; y++) {
+      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x) => {
+        return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.fillRepeats) ? 10 : 0;
+      });
+      this.grid.levelRow(0, y, row.slice(0, 8));
+      this.grid.levelRow(8, y, row.slice(8, 16));
     }
   }
 }
