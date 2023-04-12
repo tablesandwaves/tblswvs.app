@@ -1,0 +1,57 @@
+name: Fills
+description: Fills are accessed on Rhythm page 2. Set per step fills for each rhythmic gate.
+matrices:
+  -
+    name: Set Step Fill
+    description: Set the number of repeat notes for the x-position rhythm step
+    group: fill
+    type: vertical meter
+    rowStart: 0
+    rowEnd: 5
+    columnStart: 0
+    columnEnd: 15
+    mapping: setFillRepeats
+    columnValues:
+      - 8
+      - 6
+      - 5
+      - 4
+      - 3
+      - 2
+rows:
+  -
+    shiftName: Set Fill Measure
+    shiftDescription: The sub-measures of the super measure on which the fill will happen.
+    shiftGroup: fill-measures
+    shiftType: toggle
+    index: 0
+    xStart: 0
+    xLength: 8
+    shiftMapping: toggleFillMeasure
+    shiftValues:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+  -
+    shiftName: Fill Duration
+    shiftDescription: The length of time in which to spread a rhythmic fill.
+    shiftGroup: fill-duration
+    shiftType: meter
+    index: 0
+    xStart: 8
+    xLength: 8
+    shiftMapping: setFillDuration
+    shiftValues:
+      - 16n
+      - 16nd
+      - 8n
+      - 8nd
+      - 4n
+      - 4nd
+      - 2n
+      - 2nd
