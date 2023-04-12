@@ -29,7 +29,7 @@ rows:
     xLength: 16
     mapping: clearFillRepeats
   -
-    shiftName: Set Fill Measure
+    shiftName: Toggle Fills for Measure
     shiftDescription: The sub-measures of the super measure on which the fill will happen.
     shiftGroup: fill-measures
     shiftType: toggle
@@ -37,7 +37,7 @@ rows:
     xStart: 0
     xLength: 8
     shiftMapping: toggleFillMeasure
-    shiftValues:
+    shiftDisplayValues:
       - 1
       - 2
       - 3

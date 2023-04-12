@@ -51,7 +51,9 @@ export class FillsPage extends GridPage {
 
 
   setFillDuration(gridPage: FillsPage, press: GridKeyPress) {
-
+    gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].shiftValue;
+    gridPage.setGridFillsDisplay();
+    gridPage.updateGuiRhythmDisplay();
   }
 
   setGridFillsDisplay() {
