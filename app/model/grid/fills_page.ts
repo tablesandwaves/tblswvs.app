@@ -43,7 +43,10 @@ export class FillsPage extends GridPage {
 
 
   toggleFillMeasure(gridPage: FillsPage, press: GridKeyPress) {
-
+    const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
+    gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
+    gridPage.setGridFillsDisplay();
+    gridPage.updateGuiRhythmDisplay();
   }
 
 
