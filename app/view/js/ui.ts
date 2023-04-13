@@ -34,7 +34,9 @@ window.parameters.updateScale((event: any, name: string) => updateText("#current
 window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#melody p span", melody));
 window.parameters.updateQueuedProgression((event: any, progression: string) => updateText("#chord-progression p span", progression));
 window.parameters.updateTrackNotes((event: any, notes: string) => updateText("#track-notes p", notes));
-window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length p span", noteLength));
+window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length span.notes", noteLength));
+window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#note-length span.fills", fillsDuration));
+window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#note-length span.fill-measures", fillMeasures));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
@@ -73,25 +75,29 @@ const toggleIndicator = (selector: string, state: boolean) => {
 window.parameters.setRhythmDisplay((event: any, rhythm: any[], beatLength: number) => {
   rhythm.forEach((step, i: number) => {
     if (i < beatLength)
-      document.getElementById(`step-${i}`).classList.remove("active");
+      document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("active");
     else
-      document.getElementById(`step-${i}`).classList.add("active");
+      document.querySelector(`#sequencer-steps .step-${i}`).classList.add("active");
 
     if (step.state == 0) {
-      document.getElementById(`step-${i}`).classList.remove("on");
-      document.querySelector(`#step-${i} span:last-child`).className = "prob000";
+      document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("on");
+      document.querySelector(`#sequencer-steps .step-${i} span:last-child`).className = "prob000";
+      document.querySelector(`#sequencer-fills .step-${i} span`).textContent = "";
     } else {
-      document.getElementById(`step-${i}`).classList.add("on");
-      document.querySelector(`#step-${i} span`).className = "prob" + `${Math.floor(step.probability * 100)}`.padStart(3, "0");
+      document.querySelector(`#sequencer-steps .step-${i}`).classList.add("on");
+      document.querySelector(`#sequencer-steps .step-${i} span`).className = "prob" + `${Math.floor(step.probability * 100)}`.padStart(3, "0");
+      document.querySelector(`#sequencer-fills .step-${i} span`).textContent = step.fillRepeats == 0 ? "" : step.fillRepeats;
     }
   });
 });
 
 
 const updateTransport = (currentStep: number) => {
-  document.getElementById(`step-${previousStep}`).classList.remove("current");
-  document.getElementById(`step-${currentStep}`).classList.add("current");
+  console.log("entered updateTransport()")
+  document.querySelector(`#sequencer-steps .step-${previousStep}`).classList.remove("current");
+  document.querySelector(`#sequencer-steps .step-${currentStep}`).classList.add("current");
   previousStep = currentStep;
+  console.log("leaving updateTransport()")
 }
 
 

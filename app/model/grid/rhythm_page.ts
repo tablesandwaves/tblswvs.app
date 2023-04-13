@@ -44,7 +44,7 @@ export class RhythmPage extends GridPage {
   updateNoteLength(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.levelRow(0, 6, gridPage.#noteLengthRow());
-    gridPage.grid.sequencer.gui.webContents.send("update-note-length", gridPage.grid.sequencer.daw.getActiveTrack().noteLength);
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
   }
 
 

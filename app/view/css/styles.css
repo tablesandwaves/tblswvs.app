@@ -85,6 +85,7 @@ h1 {
 div#track,
 div#note-length,
 div#sequencer-steps,
+div#sequencer-fills,
 div#melody,
 div#chord-progression,
 div#evolution {
@@ -183,6 +184,51 @@ div#sequencer-steps div span.prob050 { height: 20px; }
 div#sequencer-steps div span.prob037 { height: 15px; }
 div#sequencer-steps div span.prob025 { height: 10px; }
 div#sequencer-steps div span.prob000 { height: 0px; }
+
+
+div#sequencer-fills div {
+  width: 42px;
+  height: 1em;
+  margin: 4px;
+}
+
+
+div#sequencer-fills div span {
+  display: inline-block;
+  width: 40px;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  color: #117733;
+}
+
+
+div#note-length ul {
+  padding: 0;
+  margin: 0 0 1em 0;
+}
+
+
+div#note-length ul li {
+  list-style: none;
+  position: relative;
+  float: left;
+  width: 150px;
+  margin-left: 15px;
+  padding: 5px 0;
+}
+
+
+div#note-length ul li:last-child {
+  width: 455px;
+}
+
+
+div#note-length ul li span {
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+  color: #117733;
+  font-weight: bold;
+}
 
 
 div#global-params .parameter {

@@ -46,14 +46,14 @@ export class FillsPage extends GridPage {
     const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
     gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
     gridPage.setGridFillsDisplay();
-    gridPage.updateGuiRhythmDisplay();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillMeasures();
   }
 
 
   setFillDuration(gridPage: FillsPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].shiftValue;
     gridPage.setGridFillsDisplay();
-    gridPage.updateGuiRhythmDisplay();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillsDuration();
   }
 
   setGridFillsDisplay() {

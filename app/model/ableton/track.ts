@@ -58,6 +58,8 @@ export class AbletonTrack {
     this.updateGuiTrackRhythm();
     this.updateGuiNoteLength();
     this.updateGuiTrackNotes();
+    this.updateGuiFillsDuration();
+    this.updateGuiFillMeasures();
   }
 
 
@@ -78,6 +80,22 @@ export class AbletonTrack {
 
   updateGuiNoteLength() {
     this.sequencer.gui.webContents.send("update-note-length", this.noteLength);
+  }
+
+
+  updateGuiFillsDuration() {
+    this.sequencer.gui.webContents.send("update-fills-duration", this.fillDuration);
+  }
+
+
+  updateGuiFillMeasures() {
+    this.sequencer.gui.webContents.send(
+      "update-fill-measures",
+      this.fillMeasures.reduce((fillMeasures, measure, i) => {
+        if (measure == 1) fillMeasures.push(i + 1);
+        return fillMeasures;
+      }, []).join(", ")
+    );
   }
 
 
