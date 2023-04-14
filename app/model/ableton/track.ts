@@ -1,7 +1,7 @@
 import { detect } from "@tonaljs/chord-detect";
 import { Melody, Mutation, note } from "tblswvs";
 import { AbletonClip } from "./clip";
-import { AbletonNote, noteLengthMap } from "./note";
+import { AbletonNote, fillLengthMap, noteLengthMap } from "./note";
 import { AbletonLive } from "./live";
 
 
@@ -64,7 +64,7 @@ export class AbletonTrack {
 
     const sourceNotes = mutation ? this.currentMutation.map(n => [n]) : this.outputNotes;
 
-    abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
+    abletonNotes.push(...expandedRhythm.reduce((stepAbletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
       if (rhythmStep.state == 1) {
         nextNotes = sourceNotes[noteIndex % sourceNotes.length];
         // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
@@ -74,16 +74,27 @@ export class AbletonTrack {
           if (nextNote != undefined) {
             nextNote = this.#shiftNote(noteIndex, nextNote);
 
-            abletonNotes.push(new AbletonNote(
+            stepAbletonNotes.push(new AbletonNote(
               nextNote.midi, (i * 0.25),
               noteLengthMap[this.noteLength].size,
               64, rhythmStep.probability
             ));
+
+            if (rhythmStep.fillRepeats > 1) {
+              const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
+              for (let j = 1; j <= rhythmStep.fillRepeats; j++) {
+                stepAbletonNotes.push(new AbletonNote(
+                  nextNote.midi, (i * 0.25) + (j * fillBeatDuration),
+                  noteLengthMap[this.noteLength].size,
+                  64, rhythmStep.probability
+                ));
+              }
+            }
           }
         });
         noteIndex += 1;
       }
-      return abletonNotes;
+      return stepAbletonNotes;
     }, []));
 
     return abletonNotes;

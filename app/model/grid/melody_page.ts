@@ -25,7 +25,7 @@ export class MelodyPage extends GridPage {
   generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = true;
     gridPage.grid.sequencer.daw.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody.map(n => n);
+    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody;
 
     switch (gridPage.matrix[press.y][press.x].value) {
       case "simple":

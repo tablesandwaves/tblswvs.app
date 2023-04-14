@@ -9,14 +9,14 @@ describe("Sequencer", () => {
       const sequencer = new Sequencer(testing);
       sequencer.superMeasure = 2;
       sequencer.daw.getActiveTrack().beatLength = 12;
-      sequencer.daw.getActiveTrack().rhythm = new Array(12).fill({...{state: 0, probability: 1}});
+      sequencer.daw.getActiveTrack().rhythm = new Array(12).fill({...{state: 0, probability: 1, fillRepeats: 0}});
       sequencer.daw.getActiveTrack().rhythm[0] = {state: 1, probability: 1, fillRepeats: 0};
       sequencer.daw.getActiveTrack().outputNotes = [
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
         [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
       ];
-      let abletonNotes = sequencer.daw.abletonNotesForCurrentTrack();
+      let abletonNotes = sequencer.daw.getActiveTrack().abletonNotes();
 
 
       it("should the have correct number of notes", () => {
@@ -33,7 +33,7 @@ describe("Sequencer", () => {
         expect(abletonNotes[0].clipPosition).to.eq(0);
         expect(abletonNotes[1].clipPosition).to.eq(3);
         expect(abletonNotes[2].clipPosition).to.eq(6);
-      })
+      });
     });
   });
 });
