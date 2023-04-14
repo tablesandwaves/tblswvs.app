@@ -93,11 +93,9 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], beatLength: numbe
 
 
 const updateTransport = (currentStep: number) => {
-  console.log("entered updateTransport()")
   document.querySelector(`#sequencer-steps .step-${previousStep}`).classList.remove("current");
   document.querySelector(`#sequencer-steps .step-${currentStep}`).classList.add("current");
   previousStep = currentStep;
-  console.log("leaving updateTransport()")
 }
 
 
