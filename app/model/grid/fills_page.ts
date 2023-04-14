@@ -27,6 +27,7 @@ export class FillsPage extends GridPage {
     // Only edit fills for steps that are active
     if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = gridPage.matrix[press.y][press.x].value;
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
       gridPage.setGridFillsDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
@@ -36,6 +37,7 @@ export class FillsPage extends GridPage {
   clearFillRepeats(gridPage: FillsPage, press: GridKeyPress) {
     if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = 0;
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
       gridPage.setGridFillsDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
@@ -45,6 +47,7 @@ export class FillsPage extends GridPage {
   toggleFillMeasure(gridPage: FillsPage, press: GridKeyPress) {
     const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
     gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
     gridPage.setGridFillsDisplay();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillMeasures();
   }
@@ -52,6 +55,7 @@ export class FillsPage extends GridPage {
 
   setFillDuration(gridPage: FillsPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].shiftValue;
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
     gridPage.setGridFillsDisplay();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillsDuration();
   }

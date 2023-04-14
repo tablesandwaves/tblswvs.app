@@ -42,7 +42,7 @@ export class MelodyPage extends GridPage {
         break;
     }
 
-    gridPage.grid.sequencer.daw.refresh(gridPage.createNewClip);
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
   }
 

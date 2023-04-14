@@ -54,50 +54,56 @@ export class AbletonTrack {
 
 
   abletonNotes(mutation: boolean = false): AbletonNote[] {
-    let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
-
-    const size           = Math.ceil((this.daw.sequencer.superMeasure * 16 / this.beatLength));
-    const expandedRhythm = new Array(size)
-            .fill(this.rhythm.slice(0, this.beatLength))
-            .flat()
-            .slice(0, this.daw.sequencer.superMeasure * 16);
+    let abletonNotes: AbletonNote[] = new Array(), nextNotes: note[];
 
     const sourceNotes = mutation ? this.currentMutation.map(n => [n]) : this.outputNotes;
 
-    abletonNotes.push(...expandedRhythm.reduce((stepAbletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
-      if (rhythmStep.state == 1) {
-        nextNotes = sourceNotes[noteIndex % sourceNotes.length];
-        // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
-        // represented as a 1-dimensional array because they contain explicit timing offsets.
-        nextNotes.forEach(nextNote => {
-          // An undefined note in the notes array corresponds to a rest in the melody.
-          if (nextNote != undefined) {
-            nextNote = this.#shiftNote(noteIndex, nextNote);
+    for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step++) {
+      if (step % this.beatLength == 0) measure++;
 
-            stepAbletonNotes.push(new AbletonNote(
-              nextNote.midi, (i * 0.25),
-              noteLengthMap[this.noteLength].size,
-              64, rhythmStep.probability
-            ));
+      const rhythmStep = this.rhythm[step % this.rhythm.length];
+      if (rhythmStep.state == 0) continue;
 
-            if (rhythmStep.fillRepeats > 1) {
-              const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
-              for (let j = 1; j <= rhythmStep.fillRepeats; j++) {
-                stepAbletonNotes.push(new AbletonNote(
-                  nextNote.midi, (i * 0.25) + (j * fillBeatDuration),
-                  noteLengthMap[this.noteLength].size,
-                  64, rhythmStep.probability
-                ));
-              }
-            }
+      nextNotes = sourceNotes[noteIndex % sourceNotes.length];
+      // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
+      // represented as a 1-dimensional array because they contain explicit timing offsets.
+      nextNotes.forEach(nextNote => {
+        // An undefined note in the notes array corresponds to a rest in the melody.
+        if (nextNote == undefined) return;
+
+        // Process shifts
+        nextNote = this.#shiftNote(noteIndex, nextNote);
+
+        // Add the current note
+        abletonNotes.push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25));
+
+        // Add fill repeats
+        if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
+          const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
+          for (let j = 1; j <= rhythmStep.fillRepeats; j++) {
+            abletonNotes.push(
+              this.#abletonNoteForNote(
+                nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration)
+              )
+            );
           }
-        });
-        noteIndex += 1;
-      }
-      return stepAbletonNotes;
-    }, []));
+        }
+      });
+      noteIndex += 1;
+    }
 
     return abletonNotes;
+  }
+
+
+  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number): AbletonNote {
+    return new AbletonNote(
+      note.midi,
+      clipPosition,
+      noteLengthMap[this.noteLength].size,
+      64,
+      rhythmStep.probability
+    )
   }
 
 
