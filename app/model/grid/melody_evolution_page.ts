@@ -27,13 +27,13 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   queueMutationStart(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    // Both the individual tracks AND the sequencer must set mutating=true to avoid an evolutionary cycles
+    // Both the individual tracks AND the sequencer must set mutating=true to avoid an evolutionary cycle
     // starting before mutation melodies are in place since mutation cycles happen at the start of each
     // super measure.
-    gridPage.grid.sequencer.daw.tracks.forEach((track, trackIndex) => {
+    gridPage.grid.sequencer.daw.tracks.forEach((track) => {
       if (track.mutating) {
-        gridPage.grid.sequencer.daw.tracks[trackIndex].currentMutation = gridPage.grid.sequencer.daw.tracks[trackIndex].outputNotes.flat();
-        gridPage.grid.sequencer.daw.evolve(trackIndex);
+        track.currentMutation = track.outputNotes.flat();
+        track.evolve();
       }
     });
     gridPage.grid.sequencer.daw.mutating = true;

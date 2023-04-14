@@ -140,10 +140,10 @@ export class Sequencer {
       let currentClip = (this.daw.mutating && track.mutating) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
       this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
 
-      // If the sequencer is in mutation and the current track, but not while trading solos,
+      // If the sequencer is in mutation and the current track, but not while trading solos (caught by return above),
       // evolve the curent track.
       if (this.daw.mutating && track.mutating) {
-        this.daw.evolve(trackIndex);
+        track.evolve();
       }
     });
   }
@@ -154,7 +154,7 @@ export class Sequencer {
     if (this.daw.mutating && this.daw.soloists.length > 0) {
       this.daw.soloistIndex++;
       const soloingTrackIndex = this.daw.soloists[this.daw.soloistIndex % this.daw.soloists.length];
-      this.daw.evolve(soloingTrackIndex, true);
+      this.daw.tracks[soloingTrackIndex].evolve(true);
       this.daw.soloists.forEach(trackIndex => {
         if (trackIndex == soloingTrackIndex) {
           this.emitter.emit(`/tracks/${trackIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);

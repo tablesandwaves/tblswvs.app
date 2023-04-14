@@ -1,7 +1,8 @@
 import { detect } from "@tonaljs/chord-detect";
-import { note } from "tblswvs";
-import { Sequencer } from "../sequencer";
+import { Melody, Mutation, note } from "tblswvs";
 import { AbletonClip } from "./clip";
+import { AbletonNote, noteLengthMap } from "./note";
+import { AbletonLive } from "./live";
 
 
 export type RhythmStep = {
@@ -32,23 +33,107 @@ export class AbletonTrack {
   weightedRhythm: boolean = false;
   noteLength: string = "16n";
   beatLength: number = 16;
-  sequencer: Sequencer;
+  daw: AbletonLive;
+  dawIndex: number;
 
   clips: AbletonClip[];
   currentClip: number = 0;
   mutating: boolean = false;
 
 
-  constructor(name: string, sequencer: Sequencer) {
-    this.name = name;
-    this.sequencer = sequencer;
+  constructor(name: string, daw: AbletonLive, dawIndex: number) {
+    this.name     = name;
+    this.daw      = daw;
+    this.dawIndex = dawIndex;
     for (let i = 0; i < this.rhythm.length; i++) {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
     }
 
-    this.clips = [
-      new AbletonClip(sequencer.superMeasure)
-    ];
+    this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
+  }
+
+
+  abletonNotes(mutation: boolean = false): AbletonNote[] {
+    let abletonNotes: AbletonNote[] = new Array(), noteIndex = 0, nextNotes: note[];
+
+    const size           = Math.ceil((this.daw.sequencer.superMeasure * 16 / this.beatLength));
+    const expandedRhythm = new Array(size)
+            .fill(this.rhythm.slice(0, this.beatLength))
+            .flat()
+            .slice(0, this.daw.sequencer.superMeasure * 16);
+
+    const sourceNotes = mutation ? this.currentMutation.map(n => [n]) : this.outputNotes;
+
+    abletonNotes.push(...expandedRhythm.reduce((abletonNotes: AbletonNote[], rhythmStep: RhythmStep, i) => {
+      if (rhythmStep.state == 1) {
+        nextNotes = sourceNotes[noteIndex % sourceNotes.length];
+        // Track.outputNotes is a 2-d array to accommodate chords. However, the notes passed to Ableton are
+        // represented as a 1-dimensional array because they contain explicit timing offsets.
+        nextNotes.forEach(nextNote => {
+          // An undefined note in the notes array corresponds to a rest in the melody.
+          if (nextNote != undefined) {
+            nextNote = this.#shiftNote(noteIndex, nextNote);
+
+            abletonNotes.push(new AbletonNote(
+              nextNote.midi, (i * 0.25),
+              noteLengthMap[this.noteLength].size,
+              64, rhythmStep.probability
+            ));
+          }
+        });
+        noteIndex += 1;
+      }
+      return abletonNotes;
+    }, []));
+
+    return abletonNotes;
+  }
+
+
+  #shiftNote(noteIndex: number, nextNote: note) {
+    if (!this.vectorShiftsActive) return nextNote;
+
+    let shift = this.vectorShifts[noteIndex % this.vectorShiftsLength];
+    if (shift == 0) return nextNote;
+
+    let octaveShift   = nextNote.octave - 3;
+    let shiftedDegree = nextNote.scaleDegree + shift;
+    if (shiftedDegree == 0) {
+      shiftedDegree = shift > 0 ? shiftedDegree + 1 : shiftedDegree - 1;
+    }
+    return this.daw.sequencer.key.degree(shiftedDegree, octaveShift);
+  }
+
+
+  evolve(tradingVoices?: boolean) {
+    let   mutatedMelody   = new Array();
+    const activeMutations = this.daw.mutations.filter(m => m.active == 1).map(m => m.function);
+    const gatesPerMeasure = this.rhythm.reduce((a, b) => a + b.state, 0);
+
+    let mutationSource = tradingVoices ? this.daw.currentSoloistMelody : this.currentMutation;
+
+    for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
+      const melody = new Array();
+      for (let j = 0; j < gatesPerMeasure; j++) {
+        melody.push(
+          mutationSource[(i * gatesPerMeasure + j) % mutationSource.length]
+        );
+      }
+
+      mutatedMelody = mutatedMelody.concat(Mutation.random(new Melody(melody, this.daw.sequencer.key), activeMutations).notes);
+    }
+
+    // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
+    // (via abletonNotesForCurrentTrack()) and the currentSoloistMelody so it is mutated for the next
+    // soloist when trading voices.
+    this.currentMutation = mutatedMelody;
+    this.daw.currentSoloistMelody = mutatedMelody;
+    this.daw.sequencer.setNotes(
+      this.dawIndex,
+      this.abletonNotes(true),
+      false,
+      AbletonLive.EVOLUTION_SCENE_INDEX
+    );
   }
 
 
@@ -64,32 +149,32 @@ export class AbletonTrack {
 
 
   updateGuiVectorDisplay() {
-    this.sequencer.gui.webContents.send("update-melody-vector", this.vectorShifts, this.vectorShiftsLength, this.vectorShiftsActive);
+    this.daw.sequencer.gui.webContents.send("update-melody-vector", this.vectorShifts, this.vectorShiftsLength, this.vectorShiftsActive);
   }
 
 
   updateGuiTrackNav() {
-    this.sequencer.gui.webContents.send("track-nav", this.name);
+    this.daw.sequencer.gui.webContents.send("track-nav", this.name);
   }
 
 
   updateGuiTrackRhythm() {
-    this.sequencer.gui.webContents.send("track-rhythm", this.rhythm, this.beatLength);
+    this.daw.sequencer.gui.webContents.send("track-rhythm", this.rhythm, this.beatLength);
   }
 
 
   updateGuiNoteLength() {
-    this.sequencer.gui.webContents.send("update-note-length", this.noteLength);
+    this.daw.sequencer.gui.webContents.send("update-note-length", this.noteLength);
   }
 
 
   updateGuiFillsDuration() {
-    this.sequencer.gui.webContents.send("update-fills-duration", this.fillDuration);
+    this.daw.sequencer.gui.webContents.send("update-fills-duration", this.fillDuration);
   }
 
 
   updateGuiFillMeasures() {
-    this.sequencer.gui.webContents.send(
+    this.daw.sequencer.gui.webContents.send(
       "update-fill-measures",
       this.fillMeasures.reduce((fillMeasures, measure, i) => {
         if (measure == 1) fillMeasures.push(i + 1);
@@ -105,7 +190,7 @@ export class AbletonTrack {
 
 
   setGuiMelody() {
-    this.sequencer.gui.webContents.send(
+    this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
       this.algorithm + " " +
       this.inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
@@ -114,9 +199,9 @@ export class AbletonTrack {
 
 
   setGuiChordProgression() {
-    this.sequencer.gui.webContents.send(
+    this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
-      this.sequencer.queuedChordProgression.flatMap(chordNotes => {
+      this.daw.sequencer.queuedChordProgression.flatMap(chordNotes => {
         let chord = chordNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(chordNotes.map(n => n.note))[0];
         chord += namedChord == undefined ? "" : " (" + namedChord + ")";
