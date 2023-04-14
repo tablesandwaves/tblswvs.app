@@ -2,22 +2,21 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 
 
-
 describe("Sequencer", () => {
   describe("generating Ableton notes for a track", () => {
     describe("with a beat length of 12 16th notes", () => {
       const testing = true;
       const sequencer = new Sequencer(testing);
       sequencer.superMeasure = 2;
-      sequencer.getActiveTrack().beatLength = 12;
-      sequencer.getActiveTrack().rhythm = new Array(12).fill({...{state: 0, probability: 1}});
-      sequencer.getActiveTrack().rhythm[0] = {state: 1, probability: 1};
-      sequencer.getActiveTrack().outputNotes = [
+      sequencer.daw.getActiveTrack().beatLength = 12;
+      sequencer.daw.getActiveTrack().rhythm = new Array(12).fill({...{state: 0, probability: 1}});
+      sequencer.daw.getActiveTrack().rhythm[0] = {state: 1, probability: 1, fillRepeats: 0};
+      sequencer.daw.getActiveTrack().outputNotes = [
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
         [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
       ];
-      let abletonNotes = sequencer.abletonNotesForCurrentTrack();
+      let abletonNotes = sequencer.daw.abletonNotesForCurrentTrack();
 
 
       it("should the have correct number of notes", () => {
