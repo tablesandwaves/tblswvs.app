@@ -12,6 +12,16 @@ export type RhythmStep = {
 };
 
 
+const fillVelocities: Record<number,number[]> = {
+  2: [30, 64, 90],
+  3: [30, 64, 90, 120],
+  4: [30, 64, 90, 120, 64],
+  5: [30, 64, 90, 120, 64, 90],
+  6: [30, 40, 50, 64,  90, 120, 64],
+  8: [30, 40, 50, 64,  90, 120, 110, 120],
+}
+
+
 export class AbletonTrack {
   name: string;
   rhythm: RhythmStep[] = new Array(16);
@@ -74,19 +84,18 @@ export class AbletonTrack {
         // Process shifts
         nextNote = this.#shiftNote(noteIndex, nextNote);
 
-        // Add the current note
-        abletonNotes.push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25));
-
-        // Add fill repeats
+        // Add the current note with or without fills
         if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
           const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
-          for (let j = 1; j <= rhythmStep.fillRepeats; j++) {
+          for (let j = 0; j <= rhythmStep.fillRepeats; j++) {
             abletonNotes.push(
               this.#abletonNoteForNote(
-                nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration)
+                nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration), fillVelocities[rhythmStep.fillRepeats][j]
               )
             );
           }
+        } else {
+          abletonNotes.push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25));
         }
       });
       noteIndex += 1;
@@ -96,12 +105,12 @@ export class AbletonTrack {
   }
 
 
-  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number): AbletonNote {
+  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, velocity?: number): AbletonNote {
     return new AbletonNote(
       note.midi,
       clipPosition,
       noteLengthMap[this.noteLength].size,
-      64,
+      velocity ? velocity : 64,
       rhythmStep.probability
     )
   }
