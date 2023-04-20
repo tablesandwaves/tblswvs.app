@@ -25,19 +25,21 @@ export class RhythmPage extends GridPage {
 
   updateBeatLength(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().beatLength = press.x + 1;
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes(false);
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
   }
 
 
   updateRhythm(gridPage: RhythmPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state = 1 - gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state;
+    const stepState = 1 - gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state;
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state = stepState;
     gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
+    if (stepState == 0) gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = 0;
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
 
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes(false);
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.createNewClip);
   }
 
 
