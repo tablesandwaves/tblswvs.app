@@ -71,7 +71,7 @@ export class AbletonTrack {
     for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step++) {
       if (step % this.beatLength == 0) measure++;
 
-      const rhythmStep = this.rhythm[step % this.rhythm.length];
+      const rhythmStep = this.rhythm[step % this.beatLength];
       if (rhythmStep.state == 0) continue;
 
       nextNotes = sourceNotes[noteIndex % sourceNotes.length];
