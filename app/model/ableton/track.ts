@@ -65,9 +65,11 @@ export class AbletonTrack {
 
 
   abletonNotes(mutation: boolean = false): AbletonNote[] {
-    let abletonNotes: AbletonNote[] = new Array(), nextNotes: note[];
+    const defaultDuration = noteLengthMap[this.noteLength].size,
+          noteMap         = new Map<number,AbletonNote[]>(),
+          sourceNotes     = mutation ? this.currentMutation.map(n => [n]) : this.outputNotes;
 
-    const sourceNotes = mutation ? this.currentMutation.map(n => [n]) : this.outputNotes;
+    let nextNotes: note[];
 
     for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step++) {
       if (step % this.beatLength == 0) measure++;
@@ -85,32 +87,47 @@ export class AbletonTrack {
         // Process shifts
         nextNote = this.#shiftNote(noteIndex, nextNote);
 
+        if (!noteMap.has(nextNote.midi)) {
+          noteMap.set(nextNote.midi, []);
+        }
+
         // Add the current note with or without fills
         if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
           const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
           for (let j = 0; j <= rhythmStep.fillRepeats; j++) {
-            abletonNotes.push(
+            noteMap.get(nextNote.midi).push(
               this.#abletonNoteForNote(
-                nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration), fillVelocities[rhythmStep.fillRepeats][j]
+                nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration), defaultDuration, fillVelocities[rhythmStep.fillRepeats][j]
               )
             );
           }
         } else {
-          abletonNotes.push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25));
+          noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25, defaultDuration));
         }
       });
       noteIndex += 1;
     }
 
-    return abletonNotes;
+    // Finally, deal with overlapping notes. Depending on the order in which Live processes notes, overlapping notes may result in
+    // dropped notes in the clips.
+    for (const abletonNotes of noteMap.values()) {
+      abletonNotes.sort((a, b) => a.clipPosition - b.clipPosition);
+      abletonNotes.forEach((note, i, notes) => {
+        if (notes[i - 1] && notes[i - 1].clipPosition + notes[i - 1].duration > note.clipPosition) {
+          notes[i - 1].duration = note.clipPosition - notes[i - 1].clipPosition;
+        }
+      });
+    }
+
+    return [...noteMap.values()].flat();
   }
 
 
-  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, velocity?: number): AbletonNote {
+  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, duration: number, velocity?: number): AbletonNote {
     return new AbletonNote(
       note.midi,
       clipPosition,
-      noteLengthMap[this.noteLength].size,
+      duration,
       velocity ? velocity : 64,
       rhythmStep.probability
     )
