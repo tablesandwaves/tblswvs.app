@@ -24,6 +24,13 @@ export class ChordPage extends GridPage {
   }
 
 
+  refresh() {
+    this.grid.clearGridDisplay();
+    const activeTrack = this.grid.sequencer.daw.getActiveTrack();
+    this.grid.levelSet(15, 2, (activeTrack.createNewClip ? 10 : 0));
+  }
+
+
   addChordNote(gridPage: ChordPage, press: GridKeyPress) {
     if (gridPage.recordingInputChord) {
       if (press.s == 0) {
