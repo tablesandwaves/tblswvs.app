@@ -80,7 +80,7 @@ export class Sequencer {
     // let timeout = 0;
 
     if (newClip) {
-      this.daw.tracks[trackIndex].currentClip = (this.daw.tracks[trackIndex].currentClip + 1) % 8;
+      this.daw.tracks[trackIndex].currentClip = (this.daw.tracks[trackIndex].currentClip + 1) % 4;
       this.emitter.emit(
         `/tracks/${trackIndex}/clips/${this.daw.tracks[trackIndex].currentClip}/create`,
         this.superMeasure * 4
