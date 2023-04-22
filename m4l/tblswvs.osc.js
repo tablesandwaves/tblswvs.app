@@ -73,18 +73,42 @@ function syncClipNotes(trackIndex, clipIndex, newNotes) {
   var currentNoteIdentifiers = new Array();
 
   for (var i = 0; i < newNotes.length; i += 5)
-    newNoteIdentifiers.push(newNotes[i + 1] + "::" + newNotes[i] + "::" + newNotes[i + 4]);
+    newNoteIdentifiers.push(
+      newNotes[i] + "::" +
+      newNotes[i + 1] + "::" +
+      newNotes[i + 2] + "::" +
+      newNotes[i + 3] + "::" +
+      newNotes[i + 4]
+    );
 
   for (var i = 0; i < currentNotes.notes.length; i++)
-    currentNoteIdentifiers.push(currentNotes.notes[i].start_time + "::" + currentNotes.notes[i].pitch + "::" + currentNotes.notes[i].probability);
+    currentNoteIdentifiers.push(
+      currentNotes.notes[i].pitch + "::" +
+      currentNotes.notes[i].start_time + "::" +
+      currentNotes.notes[i].duration + "::" +
+      currentNotes.notes[i].velocity + "::" +
+      currentNotes.notes[i].probability
+    );
 
   for (var i = 0; i < currentNotes.notes.length; i++) {
-    if (newNoteIdentifiers.indexOf(currentNotes.notes[i].start_time + "::" + currentNotes.notes[i].pitch + "::" + currentNotes.notes[i].probability) == -1)
+    if (newNoteIdentifiers.indexOf(
+        currentNotes.notes[i].pitch + "::" +
+        currentNotes.notes[i].start_time + "::" +
+        currentNotes.notes[i].duration + "::" +
+        currentNotes.notes[i].velocity + "::" +
+        currentNotes.notes[i].probability
+      ) == -1)
       removedNoteIds.push(currentNotes.notes[i].note_id);
   }
 
   for (var i = 0; i < newNotes.length; i += 5) {
-    if (currentNoteIdentifiers.indexOf(newNotes[i + 1] + "::" + newNotes[i] + "::" + newNotes[i + 4]) == -1) {
+    if (currentNoteIdentifiers.indexOf(
+        newNotes[i] + "::" +
+        newNotes[i + 1] + "::" +
+        newNotes[i + 2] + "::" +
+        newNotes[i + 3] + "::" +
+        newNotes[i + 4]
+      ) == -1) {
       addedNotes.push(newNotes[i]);
       addedNotes.push(newNotes[i + 1]);
       addedNotes.push(newNotes[i + 2]);
