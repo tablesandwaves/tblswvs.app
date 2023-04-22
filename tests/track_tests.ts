@@ -41,29 +41,48 @@ describe("AbletonTrack", () => {
   });
 
 
-  describe("when successive notes that share the same pitch overlap", () => {
-    track.outputNotes = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
+  describe("truncating note durations for overlapping notes", () => {
     track.noteLength  = "8n";
     track.rhythm      = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
     track.rhythm[0]   = {state: 1, probability: 1, fillRepeats: 0};
     track.rhythm[1]   = {state: 1, probability: 1, fillRepeats: 0};
     track.rhythm[4]   = {state: 1, probability: 1, fillRepeats: 0};
-    const abletonNotes = track.abletonNotes();
 
-    it("truncates earlier notes that share the same pitch", () => {
-      // Measure 1
-      expect(abletonNotes[0].duration).to.eq(0.25);
-      // Measure 2
-      expect(abletonNotes[3].duration).to.eq(0.25);
+    describe("when successive overlapping notes share the same pitch", () => {
+      track.outputNotes = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
+      const abletonNotes = track.abletonNotes();
+
+      it("truncates earlier notes that share the same pitch", () => {
+        // Measure 1
+        expect(abletonNotes[0].duration).to.eq(0.25);
+        // Measure 2
+        expect(abletonNotes[3].duration).to.eq(0.25);
+      });
+
+      it("does not truncate notes that do not overlap", () => {
+        // Measure 1
+        expect(abletonNotes[1].duration).to.eq(0.5);
+        expect(abletonNotes[2].duration).to.eq(0.5);
+        // Measure 2
+        expect(abletonNotes[4].duration).to.eq(0.5);
+        expect(abletonNotes[5].duration).to.eq(0.5);
+      });
     });
 
-    it("does not truncate notes that do not overlap", () => {
-      // Measure 1
-      expect(abletonNotes[1].duration).to.eq(0.5);
-      expect(abletonNotes[2].duration).to.eq(0.5);
-      // Measure 2
-      expect(abletonNotes[4].duration).to.eq(0.5);
-      expect(abletonNotes[5].duration).to.eq(0.5);
+    describe("when successive overlapping notes do not share the same pitch", () => {
+      track.outputNotes = [
+        [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
+        [{ octave: 3, note: 'D', midi: 62, scaleDegree: 1 }],
+        [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]
+      ];
+      const abletonNotes = track.abletonNotes();
+
+      it("does not truncate earlier notes", () => {
+        // Measure 1
+        expect(abletonNotes[0].duration).to.eq(0.5);
+        // Measure 2
+        expect(abletonNotes[3].duration).to.eq(0.5);
+      });
     });
   });
 });
