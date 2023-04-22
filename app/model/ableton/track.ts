@@ -48,6 +48,7 @@ export class AbletonTrack {
 
   clips: AbletonClip[];
   currentClip: number = 0;
+  createNewClip: boolean = false;
   mutating: boolean = false;
 
 
@@ -157,7 +158,6 @@ export class AbletonTrack {
     this.daw.sequencer.setNotes(
       this.dawIndex,
       this.abletonNotes(true),
-      false,
       AbletonLive.EVOLUTION_SCENE_INDEX
     );
   }
@@ -171,6 +171,7 @@ export class AbletonTrack {
     this.updateGuiTrackNotes();
     this.updateGuiFillsDuration();
     this.updateGuiFillMeasures();
+    this.updateGuiCreateNewClip();
   }
 
 
@@ -196,6 +197,11 @@ export class AbletonTrack {
 
   updateGuiFillsDuration() {
     this.daw.sequencer.gui.webContents.send("update-fills-duration", this.fillDuration);
+  }
+
+
+  updateGuiCreateNewClip() {
+    this.daw.sequencer.gui.webContents.send("toggle-create-clip", this.createNewClip);
   }
 
 

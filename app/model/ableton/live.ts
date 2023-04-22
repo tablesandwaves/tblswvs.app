@@ -43,8 +43,8 @@ export class AbletonLive {
   }
 
 
-  updateActiveTrackNotes(newClip: boolean) {
-    this.sequencer.setNotes(this.activeTrack, this.getActiveTrack().abletonNotes(), newClip);
+  updateActiveTrackNotes() {
+    this.sequencer.setNotes(this.activeTrack, this.getActiveTrack().abletonNotes());
   }
 
 

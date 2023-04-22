@@ -44,7 +44,6 @@ export class GridPage {
   functionMap: Map<string, Function> = new Map();
   // Overridden on ChordPage where events happen when released.
   keyReleaseFunctionality: boolean = false;
-  createNewClip: boolean = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -117,9 +116,10 @@ export class GridPage {
   toggleNewClipCreation(gridPage: GridPage, press: GridKeyPress) {
     // Necessary to check for press=1 for the chord page.
     if (press.s == 1) {
-      gridPage.createNewClip = !gridPage.createNewClip;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.createNewClip ? 10 : 0));
-      gridPage.grid.sequencer.gui.webContents.send("toggle-create-clip", gridPage.createNewClip);
+      const track = gridPage.grid.sequencer.daw.getActiveTrack();
+      track.createNewClip = !track.createNewClip;
+      gridPage.grid.levelSet(press.x, press.y, (track.createNewClip ? 10 : 0));
+      track.updateGuiCreateNewClip();
     }
   }
 

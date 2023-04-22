@@ -76,10 +76,10 @@ export class Sequencer {
   }
 
 
-  setNotes(trackIndex: number, notes: AbletonNote[], newClip: boolean, clipIndex?: number) {
+  setNotes(trackIndex: number, notes: AbletonNote[], clipIndex?: number) {
     // let timeout = 0;
 
-    if (newClip) {
+    if (this.daw.tracks[trackIndex].createNewClip) {
       this.daw.tracks[trackIndex].currentClip = (this.daw.tracks[trackIndex].currentClip + 1) % 4;
       this.emitter.emit(
         `/tracks/${trackIndex}/clips/${this.daw.tracks[trackIndex].currentClip}/create`,
