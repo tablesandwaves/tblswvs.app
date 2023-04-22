@@ -23,6 +23,10 @@ export class MelodyPage extends GridPage {
 
 
   generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
+    // Do nothing if there are no queued notes. Happens by inadvertent button press before
+    // input notes are recorded.
+    if (gridPage.grid.sequencer.queuedMelody.length == 0) return;
+
     gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = true;
     gridPage.grid.sequencer.daw.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody;

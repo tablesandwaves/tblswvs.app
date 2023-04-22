@@ -60,7 +60,7 @@ export class ChordPage extends GridPage {
 
 
   setTrackChordProgression(gridPage: ChordPage, press: GridKeyPress) {
-    if (press.s == 1) {
+    if (press.s == 1 && gridPage.grid.sequencer.queuedChordProgression.length > 0) {
       gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = false;
       gridPage.grid.sequencer.daw.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedChordProgression;
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
