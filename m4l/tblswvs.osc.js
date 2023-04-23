@@ -6,6 +6,47 @@ var newClipPattern = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
 var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
 
 
+function clipLaunchObserver() {
+  var clipSlotIndex   = arguments[0][1];
+  var stopAllClipsMsg = "/live/tracks/" + this.trackIndex + "/clips/stopped";
+
+  if (this.trackIndex != undefined) {
+    if (clipSlotIndex == -2) {
+      outlet(1, stopAllClipsMsg);
+    } else if (clipSlotIndex == -1) {
+      var observedTrack = new LiveAPI("live_set tracks " + this.trackIndex);
+      var playingSlot   = observedTrack.get("playing_slot_index")[0];
+      if (playingSlot != -2) {
+        outlet(1, "/live/tracks/" + this.trackIndex + "/clips/" + playingSlot + "/fired");
+      }
+    } else {
+      var clipSlot = new LiveAPI("live_set tracks " + this.trackIndex + " clip_slots " + clipSlotIndex);
+      if (clipSlot.get("has_clip")[0] == 1) {
+        outlet(1, "/live/tracks/" + this.trackIndex + "/clips/" + clipSlotIndex + "/fired");
+      } else {
+        outlet(1, stopAllClipsMsg);
+      }
+    }
+  }
+}
+
+
+function loadbang() {
+  post("patch loaded\n");
+  var trackIds = new LiveAPI("live_set").get("tracks");
+  for (var i = 0; i < trackIds.length; i++) {
+    if (typeof trackIds[i] == "number") {
+      var track                    = new LiveAPI(clipLaunchObserver, "id " + trackIds[i]);
+      var trackClipObserver        = new LiveAPI(clipLaunchObserver, "id " + trackIds[i]);
+      trackClipObserver.trackIndex = parseInt(track.path.replace(/"/g, "").replace("live_set tracks ", ""));
+      trackClipObserver.trackPath  = track.path;
+      trackClipObserver.trackName  = track.get("name")[0];
+      trackClipObserver.property   = "fired_slot_index";
+    }
+  }
+}
+
+
 function osc_message() {
   var a = arrayfromargs(arguments);
   post("Received: " + a[0] + "\n");
