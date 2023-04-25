@@ -27,7 +27,7 @@ Install the Max for Live devices in this repository's [m4l](m4l/) directory.
 
 This Max for Live device communicates with the tblswvs.app Electron app by passing OSC-like messages back and forth. It is a very simple device that uses Max's `[udpreceive]` and `[udpsend]` objects (using ports 33333 and 33334, respectively). For example, when tblswvs.app creates a melody or rhythm, this device is responsible for adding or updating clips and their MIDI notes.
 
-The `tblswvs.osc.amxd` file and its corresponding JavaScript file, `tblswvs.osc.js`, must be accessible to Live. Example setup:
+The files `tblswvs.osc.amxd`, `tblswvs.osc.js` and `tblswvs-clip-observer.maxpat` must be accessible to Live. Example setup:
 
 Copy the files in `m4l/` to your Live presets folder
 

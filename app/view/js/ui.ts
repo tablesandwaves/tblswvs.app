@@ -39,6 +39,7 @@ window.parameters.updateFillsDuration((event: any, fillsDuration: string) => upd
 window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#note-length span.fill-measures", fillMeasures));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
+window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("#current-clip p span", clipIndex));
 window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
   updateText("#mutating-tracks span", trackNames);
   updateText("#mutations span", mutations);

@@ -39,6 +39,7 @@ export class Sequencer {
       this.receiver = new OscReceiver();
       this.receiver.bind(33334, "localhost");
       this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncWithLiveBeat(beatNumber));
+      this.receiver.on("/live/clips", (tIdx: number, cIdx: number) => this.#syncLiveTrackClip(tIdx, cIdx));
 
       // For debugging: all messages are logged.
       // this.receiver.on("message", this.#processLiveMessages);
@@ -131,10 +132,23 @@ export class Sequencer {
   }
 
 
+  #syncLiveTrackClip(trackIndex: number, clipIndex: number) {
+    if (trackIndex >= 0 && trackIndex <= 5) {
+      this.daw.tracks[trackIndex].currentClip = clipIndex == -2 ? -1 : clipIndex;
+      if (trackIndex == this.daw.activeTrack) {
+        this.daw.tracks[trackIndex].updateGuiCurrentClip();
+      }
+    }
+  }
+
+
   #syncTracksToSuperMeasure() {
     this.daw.tracks.forEach((track, trackIndex) => {
       // If the current track is in the soloists group, skip this step as it will sync via #queueNextSoloist()
       if (this.daw.soloists.includes(trackIndex)) return;
+
+      // If the current track is not mutating and has had its clips stopped on the Live side, do not fire it.
+      if (!track.mutating && track.currentClip == -1) return;
 
       // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
       let currentClip = (this.daw.mutating && track.mutating) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;

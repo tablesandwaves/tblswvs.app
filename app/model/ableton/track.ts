@@ -189,6 +189,7 @@ export class AbletonTrack {
     this.updateGuiFillsDuration();
     this.updateGuiFillMeasures();
     this.updateGuiCreateNewClip();
+    this.updateGuiCurrentClip();
   }
 
 
@@ -219,6 +220,11 @@ export class AbletonTrack {
 
   updateGuiCreateNewClip() {
     this.daw.sequencer.gui.webContents.send("toggle-create-clip", this.createNewClip);
+  }
+
+
+  updateGuiCurrentClip() {
+    this.daw.sequencer.gui.webContents.send("update-active-clip", this.currentClip + 1);
   }
 
 
