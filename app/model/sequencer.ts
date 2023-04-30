@@ -133,7 +133,8 @@ export class Sequencer {
 
 
   #syncLiveTrackClip(trackIndex: number, clipIndex: number) {
-    if (trackIndex >= 0 && trackIndex <= 5) {
+    // Only sync tracks 1-6 (index 0-5) and clip scenes 1-4 (index 0-3). Clip scene 5 is for melodic mutations.
+    if (trackIndex >= 0 && trackIndex <= 5 && clipIndex < 4) {
       this.daw.tracks[trackIndex].currentClip = clipIndex == -2 ? -1 : clipIndex;
       if (trackIndex == this.daw.activeTrack) {
         this.daw.tracks[trackIndex].updateGuiCurrentClip();
