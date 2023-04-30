@@ -31,10 +31,9 @@ export class MelodyEvolutionPage extends GridPage {
     // starting before mutation melodies are in place since mutation cycles happen at the start of each
     // super measure.
     gridPage.grid.sequencer.daw.tracks.forEach((track) => {
-      if (track.mutating) {
-        track.currentMutation = track.outputNotes.flat();
-        track.evolve();
-      }
+      // All tracks should have their current mutation sources reset in case they show up to the mutation party late.
+      track.currentMutation = track.outputNotes.flat();
+      track.evolve();
     });
     gridPage.grid.sequencer.daw.mutating = true;
   }
