@@ -1,6 +1,6 @@
 {
   "name": "tblswvs-app",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "An experimental controller for electronic music.",
   "main": "dist/main.js",
   "scripts": {
