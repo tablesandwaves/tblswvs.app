@@ -33,13 +33,21 @@ export class RhythmPage extends GridPage {
 
   updateRhythm(gridPage: RhythmPage, press: GridKeyPress) {
     const stepState = 1 - gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state;
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state = stepState;
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
-    if (stepState == 0) gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = 0;
+    const track     = gridPage.grid.sequencer.daw.getActiveTrack();
+
+    track.rhythm[press.x].state       = stepState;
+    track.rhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
+    if (stepState == 0) track.rhythm[press.x].fillRepeats = 0;
+
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+
+    if (gridPage.#rhythmIsBlank()) {
+      track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
+      track.fillDuration = "8nd";
+    }
   }
 
 
@@ -47,6 +55,8 @@ export class RhythmPage extends GridPage {
     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.levelRow(0, 6, gridPage.#noteLengthRow());
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
+
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
   }
 
 
@@ -78,5 +88,12 @@ export class RhythmPage extends GridPage {
     let row = blank8x8Row.slice();
     row[noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index] = 10;
     return row;
+  }
+
+
+  #rhythmIsBlank() {
+    return this.grid.sequencer.daw.getActiveTrack().rhythm.reduce((total, step) => {
+      return total + step.state;
+    }, 0) == 0;
   }
 }
