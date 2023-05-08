@@ -40,7 +40,7 @@ export class GlobalPage extends GridPage {
     // Tracks may have sent notes to Live during a shorter sequence. Need to refresh notes in live so
     // it does not play blank measures in MIDI clips.
     gridPage.grid.sequencer.daw.tracks.forEach((track) => {
-      gridPage.grid.sequencer.setNotes(track.dawIndex, track.abletonNotes());
+      gridPage.grid.sequencer.setNotes(track);
     });
   }
 

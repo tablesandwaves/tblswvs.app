@@ -42,7 +42,6 @@ export class MonomeGrid {
   device: any;
   playing: any;
   activePage: GridPage;
-  configDirectory: string = path.resolve(__dirname, "../../../config");
   shiftKey: boolean = false;
   pageIndex: number = 0;
 
@@ -55,7 +54,7 @@ export class MonomeGrid {
   async connect() {
     const config: DeviceConfig = yaml.load(
       fs.readFileSync(
-        path.resolve(this.configDirectory, "grid.yml"),
+        path.resolve(Sequencer.CONFIG_DIRECTORY, "grid.yml"),
         "utf8"
       )
     ) as DeviceConfig;
@@ -226,6 +225,6 @@ export class MonomeGrid {
 
 
   #loadConfig(filename: string): any {
-    return yaml.load(fs.readFileSync( path.resolve(this.configDirectory, filename), "utf8" ));
+    return yaml.load(fs.readFileSync( path.resolve(Sequencer.CONFIG_DIRECTORY, filename), "utf8" ));
   }
 }

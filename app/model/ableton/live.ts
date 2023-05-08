@@ -1,3 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
+import * as yaml from "js-yaml";
 import { note } from "tblswvs";
 import { AbletonNote } from "./note";
 import { AbletonTrack } from "./track";
@@ -8,7 +11,7 @@ export class AbletonLive {
   static EVOLUTION_SCENE_INDEX = 4;
 
   fetchedNotes: AbletonNote[] = new Array();
-  tracks: AbletonTrack[];
+  tracks: AbletonTrack[] = new Array();
   sequencer: Sequencer;
   activeTrack: number = 0;
 
@@ -32,23 +35,28 @@ export class AbletonLive {
   constructor(sequencer: Sequencer) {
     this.sequencer = sequencer;
 
-    this.tracks = [
-      new AbletonTrack("Kick",  this, 0),
-      new AbletonTrack("Snare", this, 1),
-      new AbletonTrack("HiHat", this, 2),
-      new AbletonTrack("Perc",  this, 3),
-      new AbletonTrack("Opsix", this, 4),
-      new AbletonTrack("Hydra", this, 5)
-    ];
+    this.#loadConfig().live_tracks.forEach((track: any) => {
+      this.tracks.push(new AbletonTrack(track.name, this, track.dawIndex));
+    });
   }
 
 
   updateActiveTrackNotes() {
-    this.sequencer.setNotes(this.activeTrack, this.getActiveTrack().abletonNotes());
+    this.sequencer.setNotes(this.getActiveTrack());
   }
 
 
   getActiveTrack(): AbletonTrack {
     return this.tracks[this.activeTrack];
+  }
+
+
+  #loadConfig(): any {
+    return yaml.load(
+      fs.readFileSync(
+        path.resolve(Sequencer.CONFIG_DIRECTORY, "tracks.yml"),
+        "utf8"
+      )
+    );
   }
 }

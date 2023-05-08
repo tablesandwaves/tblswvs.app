@@ -172,11 +172,7 @@ export class AbletonTrack {
     // soloist when trading voices.
     this.currentMutation = mutatedMelody;
     this.daw.currentSoloistMelody = mutatedMelody;
-    this.daw.sequencer.setNotes(
-      this.dawIndex,
-      this.abletonNotes(true),
-      AbletonLive.EVOLUTION_SCENE_INDEX
-    );
+    this.daw.sequencer.setNotes(this, true);
   }
 
 

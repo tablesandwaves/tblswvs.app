@@ -1,0 +1,19 @@
+live_tracks:
+  -
+    name: Kick
+    dawIndex: 1
+  -
+    name: Snare
+    dawIndex: 2
+  -
+    name: HiHat
+    dawIndex: 3
+  -
+    name: Perc
+    dawIndex: 4
+  -
+    name: Opsix
+    dawIndex: 5
+  -
+    name: Hydra
+    dawIndex: 6

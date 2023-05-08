@@ -1,16 +1,20 @@
+import * as path from "path";
+
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
+const easymidi    = require("easymidi");
 
-const easymidi = require("easymidi");
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./grid/monome_grid";
 import { AbletonLive } from "./ableton/live";
-import { AbletonNote } from "./ableton/note";
 import { note } from "tblswvs";
+import { AbletonTrack } from "./ableton/track";
 
 
 export class Sequencer {
+  static CONFIG_DIRECTORY: string = path.resolve(__dirname, "../../config");
+
   emitter: any;
   receiver: any;
   grid: MonomeGrid;
@@ -77,29 +81,30 @@ export class Sequencer {
   }
 
 
-  setNotes(trackIndex: number, notes: AbletonNote[], clipIndex?: number) {
+  setNotes(track: AbletonTrack, mutation: boolean = false) {
     // let timeout = 0;
 
-    if (this.daw.tracks[trackIndex].createNewClip) {
-      this.daw.tracks[trackIndex].currentClip = (this.daw.tracks[trackIndex].currentClip + 1) % 4;
+    if (track.createNewClip) {
+      track.currentClip = (track.currentClip + 1) % 4;
       this.emitter.emit(
-        `/tracks/${trackIndex}/clips/${this.daw.tracks[trackIndex].currentClip}/create`,
+        `/tracks/${track.dawIndex}/clips/${track.currentClip}/create`,
         this.superMeasure * 4
       );
     }
 
-    clipIndex = clipIndex == undefined ? this.daw.tracks[trackIndex].currentClip : clipIndex;
+    const clipIndex = mutation ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
+    const notes     = track.abletonNotes(mutation);
     try {
       this.emitter.emit(
-        `/tracks/${trackIndex}/clips/${clipIndex}/notes`,
+        `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
         ...notes.flatMap(note => note.toOscAddedNote())
       );
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
       console.error("input notes:", notes);
       console.error("OSC mapped notes", ...notes.flatMap(note => note.toOscAddedNote()));
-      console.error("trackIndex", trackIndex, "mutating", this.daw.tracks[trackIndex].mutating);
-      console.error("Current track mutation", this.daw.tracks[trackIndex].currentMutation);
+      console.error("trackIndex", track.dawIndex, "mutating", track.mutating);
+      console.error("Current track mutation", track.currentMutation);
     }
 
     // setTimeout(() => {
