@@ -59,20 +59,22 @@ export class MelodyEvolutionPage extends GridPage {
    * @param press the press object represented the grid key press button and state
    */
   toggleImprovisingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.tracks[press.x];
+
     // When in voice trading mode, the lead improvisor should not be removed from the soloists list and taken out
     // of mutating state.
-    if (gridPage.grid.sequencer.daw.soloists[0] != press.x) {
-      gridPage.grid.sequencer.daw.tracks[press.x].mutating = !gridPage.grid.sequencer.daw.tracks[press.x].mutating;
+    if (gridPage.grid.sequencer.daw.soloists[0] != track.dawIndex) {
+      track.mutating = !track.mutating;
     }
 
     // When in voice trading mode and not the lead improvisor...
-    if (gridPage.grid.sequencer.daw.soloists.length > 0 && gridPage.grid.sequencer.daw.soloists[0] != press.x) {
+    if (gridPage.grid.sequencer.daw.soloists.length > 0 && gridPage.grid.sequencer.daw.soloists[0] != track.dawIndex) {
       // Was the pressed track index just set to mutating?
-      if (gridPage.grid.sequencer.daw.tracks[press.x].mutating) {
-        gridPage.grid.sequencer.daw.soloists.push(press.x);
+      if (track.mutating) {
+        gridPage.grid.sequencer.daw.soloists.push(track.dawIndex);
       } else {
         // If the pressed track index is not mutating, remove it from the soloists list.
-        const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
+        const index = gridPage.grid.sequencer.daw.soloists.indexOf(track.dawIndex);
         if (index !== -1) {
           gridPage.grid.sequencer.daw.soloists.splice(index, 1);
         }
@@ -92,13 +94,15 @@ export class MelodyEvolutionPage extends GridPage {
   toggleVoiceTrading(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     if (gridPage.grid.sequencer.daw.soloists.length > 0) {
       // There are currently soloists, clear the soloists and reset all tracks' mutating state
+      gridPage.grid.sequencer.daw.mutating = false;
       gridPage.grid.sequencer.daw.soloists = new Array();
       gridPage.grid.sequencer.daw.tracks.forEach(t => t.mutating = false);
     } else {
       // There are no current soloists, add the active track as the current soloist and reset all other tracks
+      const track = gridPage.grid.sequencer.daw.getActiveTrack();
       gridPage.grid.sequencer.daw.tracks.forEach((t, i) => t.mutating = (i == gridPage.grid.sequencer.daw.activeTrack));
-      gridPage.grid.sequencer.daw.soloists.push(gridPage.grid.sequencer.daw.activeTrack);
-      gridPage.grid.sequencer.daw.currentSoloistMelody = gridPage.grid.sequencer.daw.tracks[gridPage.grid.sequencer.daw.activeTrack].outputNotes.flat();
+      gridPage.grid.sequencer.daw.soloists.push(track.dawIndex);
+      gridPage.grid.sequencer.daw.currentSoloistMelody = track.outputNotes.flat();
       gridPage.grid.sequencer.daw.soloistIndex = -1;
     }
     gridPage.refresh();

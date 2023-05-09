@@ -12,6 +12,7 @@ export class AbletonLive {
 
   fetchedNotes: AbletonNote[] = new Array();
   tracks: AbletonTrack[] = new Array();
+  dawIndices: number[] = new Array();
   sequencer: Sequencer;
   activeTrack: number = 0;
 
@@ -36,6 +37,7 @@ export class AbletonLive {
     this.sequencer = sequencer;
 
     this.#loadConfig().live_tracks.forEach((track: any) => {
+      this.dawIndices.push(track.dawIndex);
       this.tracks.push(new AbletonTrack(track.name, this, track.dawIndex));
     });
   }

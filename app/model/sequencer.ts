@@ -138,27 +138,32 @@ export class Sequencer {
 
 
   #syncLiveTrackClip(trackIndex: number, clipIndex: number) {
-    // Only sync tracks 1-6 (index 0-5) and clip scenes 1-4 (index 0-3). Clip scene 5 is for melodic mutations.
-    if (trackIndex >= 0 && trackIndex <= 5 && clipIndex < 4) {
-      this.daw.tracks[trackIndex].currentClip = clipIndex == -2 ? -1 : clipIndex;
-      if (trackIndex == this.daw.activeTrack) {
-        this.daw.tracks[trackIndex].updateGuiCurrentClip();
+    // Only sync track indices that were loaded by tracks.yml and clip scenes 1-4 (index 0-3).
+    // Clip scene 5 is for melodic mutations.
+    if (this.daw.dawIndices.includes(trackIndex) && clipIndex < 4) {
+      const track = this.daw.tracks.find(t => t.dawIndex == trackIndex);
+
+      if (track.mutating) return;
+
+      track.currentClip = clipIndex == -2 ? -1 : clipIndex;
+      if (this.daw.getActiveTrack().dawIndex == trackIndex) {
+        track.updateGuiCurrentClip();
       }
     }
   }
 
 
   #syncTracksToSuperMeasure() {
-    this.daw.tracks.forEach((track, trackIndex) => {
+    this.daw.tracks.forEach((track) => {
       // If the current track is in the soloists group, skip this step as it will sync via #queueNextSoloist()
-      if (this.daw.soloists.includes(trackIndex)) return;
+      if (this.daw.soloists.includes(track.dawIndex)) return;
 
       // If the current track is not mutating and has had its clips stopped on the Live side, do not fire it.
       if (!track.mutating && track.currentClip == -1) return;
 
       // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
       let currentClip = (this.daw.mutating && track.mutating) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
-      this.emitter.emit(`/tracks/${trackIndex}/clips/${currentClip}/fire`);
+      this.emitter.emit(`/tracks/${track.dawIndex}/clips/${currentClip}/fire`);
 
       // If the sequencer is in mutation and the current track, but not while trading solos (caught by return above),
       // evolve the curent track.
@@ -173,13 +178,14 @@ export class Sequencer {
     // If the sequencer is mutating and there are soloists, setup the next soloists melody.
     if (this.daw.mutating && this.daw.soloists.length > 0) {
       this.daw.soloistIndex++;
-      const soloingTrackIndex = this.daw.soloists[this.daw.soloistIndex % this.daw.soloists.length];
-      this.daw.tracks[soloingTrackIndex].evolve(true);
-      this.daw.soloists.forEach(trackIndex => {
-        if (trackIndex == soloingTrackIndex) {
-          this.emitter.emit(`/tracks/${trackIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
+      const soloingTrackDawIndex = this.daw.soloists[this.daw.soloistIndex % this.daw.soloists.length];
+
+      this.daw.tracks.filter(t => t.dawIndex == soloingTrackDawIndex)[0].evolve(true);
+      this.daw.soloists.forEach(dawIndex => {
+        if (dawIndex == soloingTrackDawIndex) {
+          this.emitter.emit(`/tracks/${dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
         } else {
-          this.emitter.emit(`/tracks/${trackIndex}/clips/stop`);
+          this.emitter.emit(`/tracks/${dawIndex}/clips/stop`);
         }
       });
     }
