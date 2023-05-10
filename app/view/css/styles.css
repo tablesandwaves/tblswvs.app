@@ -108,7 +108,8 @@ div#sequencer-fills {
 
 div#melody,
 div#chord-progression,
-div#evolution {
+div#evolution,
+div#current-scale {
   width: 800px;
 }
 
@@ -132,16 +133,15 @@ div#global-params {
 
 
 div#clip {
-  width: 240px;
+  width: 150px;
   float: right;
   text-align: right;
 }
 
 
 div#track-notes,
-div#chains,
-div#current-scale {
-  width: 520px;
+div#chains {
+  width: 650px;
 }
 
 
@@ -257,7 +257,8 @@ div#chains ol {
   margin: 1em 0;
   padding: 0;
   font-family: 'Courier New', Courier, monospace;
-  color: #ccc;
+  font-weight: bold;
+  color: #aaa;
 }
 
 
@@ -275,7 +276,8 @@ div#chains ol li {
 
 
 div#note-length ul li span,
-div#track-notes p span {
+div#track-notes p span,
+div#global-params p span {
   /* display: inline-block; */
   font-family: 'Courier New', Courier, monospace;
   color: #117733;
@@ -405,7 +407,7 @@ div#melodic-vector div {
 
 div#melodic-vector div#melodic-vector-active {
   height: 200px;
-  width: 180px;
+  width: 150px;
   position: relative;
   float: right;
   border: none;

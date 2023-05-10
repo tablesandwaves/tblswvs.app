@@ -206,7 +206,7 @@ export class AbletonTrack {
 
 
   updateGuiChains() {
-    this.daw.sequencer.gui.webContents.send("update-track-chains", this.chains.map(c => c.name));
+    this.daw.sequencer.gui.webContents.send("update-track-chains", this.chains);
   }
 
 

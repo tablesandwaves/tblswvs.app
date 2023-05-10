@@ -44,6 +44,7 @@ export class Sequencer {
       this.receiver.bind(33334, "localhost");
       this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncWithLiveBeat(beatNumber));
       this.receiver.on("/live/clips", (tIdx: number, cIdx: number) => this.#syncLiveTrackClip(tIdx, cIdx));
+      this.receiver.on("/live/chains", (tIdx: number, chIdx: number, active: number) => this.#syncLiveTrackChain(tIdx, chIdx, active));
 
       // For debugging: all messages are logged.
       // this.receiver.on("message", this.#processLiveMessages);
@@ -150,6 +151,13 @@ export class Sequencer {
         track.updateGuiCurrentClip();
       }
     }
+  }
+
+
+  #syncLiveTrackChain(trackIndex: number, chainIndex: number, active: number) {
+    const track = this.daw.tracks.find(t => t.dawIndex == trackIndex);
+    track.chains[chainIndex].active = active == 1;
+    track.updateGuiChains();
   }
 
 
