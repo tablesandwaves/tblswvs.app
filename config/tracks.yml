@@ -14,6 +14,13 @@ live_tracks:
   -
     name: Opsix
     dawIndex: 5
+    chains:
+      -
+        name: A/B Pad (opsix native)
+      -
+        name: Basic FM (opsix native)
+      -
+        name: Simple Bass (opsix native)
   -
     name: Hydra
     dawIndex: 6

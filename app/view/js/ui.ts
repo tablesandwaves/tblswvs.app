@@ -33,13 +33,16 @@ window.parameters.activateTrackNav((event: any, trackName: string) => {
 window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
 window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#melody p span", melody));
 window.parameters.updateQueuedProgression((event: any, progression: string) => updateText("#chord-progression p span", progression));
-window.parameters.updateTrackNotes((event: any, notes: string) => updateText("#track-notes p", notes));
+window.parameters.updateTrackNotes((event: any, type: string, notes: string) => {
+  updateText("#note-type", type);
+  updateText("#input-notes", notes);
+});
 window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length span.notes", noteLength));
 window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#note-length span.fills", fillsDuration));
 window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#note-length span.fill-measures", fillMeasures));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
-window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("#current-clip p span", clipIndex));
+window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("p#current-clip span", clipIndex));
 window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
   updateText("#mutating-tracks span", trackNames);
   updateText("#mutations span", mutations);
@@ -57,7 +60,7 @@ window.parameters.updateMelodyVector((event: any, vector: number[], activeLength
     vectorStep.querySelector("span:last-child").textContent = `${vector[i]}`;
   });
 
-  document.querySelector("#melodic-vector p span").className = active ? "on" : "";
+  document.querySelector("#melodic-vector-active span").className = active ? "on" : "";
 });
 
 
@@ -103,11 +106,11 @@ const updateTransport = (currentStep: number) => {
 const toggleDocumentation = () => {
   const showingDocs = document.getElementById("documentation").style.display == "block";
   if (showingDocs) {
-    document.getElementById("main").style.display = "block";
+    document.getElementById("app").style.display = "block";
     document.getElementById("documentation").style.display = "none";
     document.getElementById("docs").classList.remove("active");
   } else {
-    document.getElementById("main").style.display = "none";
+    document.getElementById("app").style.display = "none";
     document.getElementById("documentation").style.display = "block";
     document.getElementById("docs").classList.add("active");
   }

@@ -230,7 +230,7 @@ export class AbletonTrack {
       this.fillMeasures.reduce((fillMeasures, measure, i) => {
         if (measure == 1) fillMeasures.push(i + 1);
         return fillMeasures;
-      }, []).join(", ")
+      }, []).join(" ")
     );
   }
 
@@ -243,7 +243,7 @@ export class AbletonTrack {
   setGuiMelody() {
     this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
-      this.algorithm + " " +
+      this.algorithm + " melody",
       this.inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
     );
   }
@@ -252,6 +252,7 @@ export class AbletonTrack {
   setGuiChordProgression() {
     this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
+      "chords",
       this.daw.sequencer.queuedChordProgression.flatMap(chordNotes => {
         let chord = chordNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(chordNotes.map(n => n.note))[0];

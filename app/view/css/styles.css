@@ -4,6 +4,7 @@ body {
   tab-size: 2;
   background-color: black;
   color: #aaa;
+  margin: 0;
 }
 
 
@@ -16,7 +17,7 @@ div.wrapper, ul.wrapper {
 div.nav {
   position: absolute;
   top: 0;
-  width: 150px;
+  width: 90px;
 }
 
 
@@ -24,12 +25,12 @@ div.nav ul {
   margin: 3em 0 0 0;
   padding-left: 0;
   list-style: none;
-  font-size: 1.5em;
+  font-size: 1.35em;
 }
 
 
 div.nav ul li {
-  padding: .5em 1em;
+  padding: .5em .5em;
   border-bottom: 1px solid #555;
   text-align: right;
 }
@@ -56,17 +57,24 @@ div.nav ul li#docs.active {
 }
 
 
-div#main, div#documentation {
+div#main {
   position: absolute;
   top: 0;
-  left: 150px;
+  left: 90px;
   width: 810px;
-  padding-left: 10px;
   min-height: 800px;
   border-left: 1px solid #555;
   margin-left: -1px;
-
   display: block;
+}
+
+
+div#app, div#documentation {
+  position: relative;
+  float: left;
+  display: block;
+  margin: auto 10px;
+  min-height: 800px;
 }
 
 
@@ -82,15 +90,26 @@ h1 {
 }
 
 
+h2 {
+  margin-top: 0;
+  padding-left: 10px;
+  font-size: 1.25em;
+}
+
+
 div#track,
 div#note-length,
 div#sequencer-steps,
-div#sequencer-fills,
+div#sequencer-fills {
+  width: 800px;
+  margin: auto 10px;
+}
+
+
 div#melody,
 div#chord-progression,
 div#evolution {
   width: 800px;
-  margin: auto 10px;
 }
 
 
@@ -106,30 +125,22 @@ div#global-params {
   left:0;
   height: 300px;
   width: 820px;
-  padding: 10px;
-
+  margin: auto 10px;
+  padding: 0;
   border-top: 1px solid #333;
 }
 
 
-div#create-clip,
-div#measure {
-  width: 300px;
-  margin: 10px;
+div#clip {
+  width: 240px;
+  float: right;
+  text-align: right;
 }
 
 
 div#track-notes,
 div#current-scale {
-  width: 460px;
-  margin: 10px;
-}
-
-
-div#measure,
-div#create-clip {
-  float: right;
-  text-align: right;
+  width: 520px;
 }
 
 
@@ -202,7 +213,8 @@ div#sequencer-fills div span {
 }
 
 
-div#note-length ul {
+div#note-length ul,
+div#track-notes ul {
   padding: 0;
   margin: 0 0 1em 0;
 }
@@ -213,28 +225,26 @@ div#note-length ul li {
   position: relative;
   float: left;
   width: 150px;
-  margin-left: 15px;
+  margin-left: 5px;
   padding: 5px 0;
 }
 
 
-div#note-length ul li:last-child {
-  width: 455px;
+div#note-length ul li#fills {
+  width: 280px;
 }
 
 
-div#note-length ul li span {
-  display: inline-block;
-  font-family: 'Courier New', Courier, monospace;
-  color: #117733;
-  font-weight: bold;
+div#note-length ul li#measure {
+  width: 200px;
+  margin: auto 5px auto 0;
+  text-align: right;
 }
 
 
-div#global-params .parameter {
+li#measure .parameter {
   display: inline-block;
   width: 25px;
-  margin: auto 5px;
   padding: 1px 3px;
   border-radius: 3px;
   background-color: #222;
@@ -242,8 +252,24 @@ div#global-params .parameter {
 }
 
 
-div#track div#create-clip span,
-div#melodic-vector p span {
+div#track-notes ul li {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 5px 0;
+}
+
+
+div#note-length ul li span,
+div#track-notes p span {
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+  color: #117733;
+  font-weight: bold;
+}
+
+
+div#track div#clip span,
+div#melodic-vector div#melodic-vector-active span {
   display: inline-block;
   vertical-align: middle;
   width: 20px;
@@ -253,9 +279,15 @@ div#melodic-vector p span {
   background-color: #111;
 }
 
-div#track div#create-clip span.on,
-div#melodic-vector p span.on {
+div#track div#clip span.on,
+div#melodic-vector div#melodic-vector-active span.on {
   background-color: #117733;
+}
+
+
+div#clip p#current-clip span {
+  border: none;
+  background-color: #000;
 }
 
 
@@ -280,7 +312,7 @@ div#documentation ul#page-list li.active {
 
 
 div#documentation div#grid {
-  width: 782px;
+  width: 656px;
   margin: .75em auto;
   padding: 24px;
   border: 1px solid #ccc;
@@ -303,9 +335,9 @@ div#documentation div#grid div.row:last-child {
 div#documentation div#grid div.row div.button {
   position: relative;
   float: left;
-  width: 30px;
-  height: 30px;
-  margin-right: 18px;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -342,7 +374,7 @@ div#documentation div#page-overview {
 
 
 div#melodic-vector {
-  height: 200px;
+  height: 160px;
   width: 800px;
 }
 
@@ -353,6 +385,17 @@ div#melodic-vector div {
   margin: 4px;
   background-color: #111;  /* dark gray: background color for inactive step */
   border: 1px solid #222;  /* medium gray: border color for active step */
+}
+
+
+div#melodic-vector div#melodic-vector-active {
+  height: 200px;
+  width: 180px;
+  position: relative;
+  float: right;
+  border: none;
+  background-color: #000;
+  text-align: right;
 }
 
 
