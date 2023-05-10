@@ -139,6 +139,7 @@ div#clip {
 
 
 div#track-notes,
+div#chains,
 div#current-scale {
   width: 520px;
 }
@@ -252,7 +253,21 @@ li#measure .parameter {
 }
 
 
-div#track-notes ul li {
+div#chains ol {
+  margin: 1em 0;
+  padding: 0;
+  font-family: 'Courier New', Courier, monospace;
+  color: #ccc;
+}
+
+
+div#chains ol li.on {
+  color: #117733;
+}
+
+
+div#track-notes ul li,
+div#chains ol li {
   list-style: none;
   padding: 0;
   margin: 0 0 5px 0;
@@ -261,7 +276,7 @@ div#track-notes ul li {
 
 div#note-length ul li span,
 div#track-notes p span {
-  display: inline-block;
+  /* display: inline-block; */
   font-family: 'Courier New', Courier, monospace;
   color: #117733;
   font-weight: bold;

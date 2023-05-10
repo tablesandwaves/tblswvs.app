@@ -3,7 +3,7 @@ import * as path from "path";
 import * as yaml from "js-yaml";
 import { note } from "tblswvs";
 import { AbletonNote } from "./note";
-import { AbletonTrack } from "./track";
+import { AbletonTrack, TrackConfig } from "./track";
 import { Sequencer } from "../sequencer";
 
 
@@ -36,9 +36,9 @@ export class AbletonLive {
   constructor(sequencer: Sequencer) {
     this.sequencer = sequencer;
 
-    this.#loadConfig().live_tracks.forEach((track: any) => {
-      this.dawIndices.push(track.dawIndex);
-      this.tracks.push(new AbletonTrack(track.name, this, track.dawIndex));
+    this.#loadConfig().live_tracks.forEach((trackConfig: TrackConfig) => {
+      this.dawIndices.push(trackConfig.dawIndex);
+      this.tracks.push(new AbletonTrack(this, trackConfig));
     });
   }
 
@@ -59,6 +59,6 @@ export class AbletonLive {
         path.resolve(Sequencer.CONFIG_DIRECTORY, "tracks.yml"),
         "utf8"
       )
-    );
+    ) as TrackConfig;
   }
 }

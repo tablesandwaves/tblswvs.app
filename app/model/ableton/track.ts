@@ -3,6 +3,14 @@ import { Melody, Mutation, note } from "tblswvs";
 import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap } from "./note";
 import { AbletonLive } from "./live";
+import { AbletonChain, ChainConfig } from "./chain";
+
+
+export type TrackConfig = {
+  name: string,
+  dawIndex: number,
+  chains?: ChainConfig[]
+}
 
 
 export type RhythmStep = {
@@ -51,11 +59,18 @@ export class AbletonTrack {
   createNewClip: boolean = false;
   mutating: boolean = false;
 
+  chains: AbletonChain[] = new Array();
 
-  constructor(name: string, daw: AbletonLive, dawIndex: number) {
-    this.name     = name;
+
+  constructor(daw: AbletonLive, config: TrackConfig) {
     this.daw      = daw;
-    this.dawIndex = dawIndex;
+    this.name     = config.name;
+    this.dawIndex = config.dawIndex;
+
+    if (config.chains) {
+      this.chains = config.chains.map(c => new AbletonChain(c.name));
+    }
+
     for (let i = 0; i < this.rhythm.length; i++) {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
     }
@@ -186,6 +201,12 @@ export class AbletonTrack {
     this.updateGuiFillMeasures();
     this.updateGuiCreateNewClip();
     this.updateGuiCurrentClip();
+    this.updateGuiChains();
+  }
+
+
+  updateGuiChains() {
+    this.daw.sequencer.gui.webContents.send("update-track-chains", this.chains.map(c => c.name));
   }
 
 

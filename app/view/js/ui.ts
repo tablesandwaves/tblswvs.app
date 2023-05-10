@@ -49,6 +49,18 @@ window.parameters.updateMutations((event: any, trackNames: string, mutations: st
 });
 
 
+window.parameters.updateTrackChains((event: any, chains: string[]) => {
+  const chainList = document.querySelector("#chains ol");
+  chainList.querySelectorAll("li").forEach(item => item.remove());
+
+  chains.forEach(chain => {
+    const item = document.createElement("li");
+    item.textContent = chain;
+    chainList.appendChild(item);
+  });
+});
+
+
 window.parameters.updateMelodyVector((event: any, vector: number[], activeLength: number, active: boolean) => {
   document.querySelectorAll(".vector-step").forEach((vectorStep, i) => {
     if (i < activeLength)
