@@ -156,8 +156,10 @@ export class Sequencer {
 
   #syncLiveTrackChain(trackIndex: number, chainIndex: number, active: number) {
     const track = this.daw.tracks.find(t => t.dawIndex == trackIndex);
-    track.chains[chainIndex].active = active == 1;
-    track.updateGuiChains();
+    if (track && track.chains.length > chainIndex) {
+      track.chains[chainIndex].active = active == 1;
+      track.updateGuiChains();
+    }
   }
 
 
