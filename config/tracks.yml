@@ -11,6 +11,11 @@ live_tracks:
   -
     name: Perc
     dawIndex: 4
+    chains:
+      -
+        name: Resonator Perc
+      -
+        name: Kick & Perc Chokes
   -
     name: Opsix
     dawIndex: 5
