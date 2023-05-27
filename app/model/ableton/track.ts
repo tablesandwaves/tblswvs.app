@@ -58,6 +58,7 @@ export class AbletonTrack {
   currentClip: number = 0;
   createNewClip: boolean = false;
   mutating: boolean = false;
+  randomizing: boolean = false;
 
   chains: AbletonChain[] = new Array();
 
@@ -79,17 +80,19 @@ export class AbletonTrack {
   }
 
 
-  abletonNotes(mutation: boolean = false): AbletonNote[] {
+  abletonNotes(): AbletonNote[] {
     const defaultDuration = noteLengthMap[this.noteLength].size,
           noteMap         = new Map<number,AbletonNote[]>(),
-          sourceNotes     = mutation ? this.currentMutation.map(n => [n]) : this.outputNotes;
+          sourceNotes     = this.daw.mutating && (this.mutating || this.randomizing) ? this.currentMutation.map(n => [n]) : this.outputNotes,
+          sourceRhythm    = this.daw.mutating && this.randomizing ? this.#randomRhythm() : this.rhythm,
+          beatLength      = this.daw.mutating && this.randomizing ? sourceRhythm.length : this.beatLength;
 
     let nextNotes: note[];
 
     for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step++) {
       if (step % this.beatLength == 0) measure++;
 
-      const rhythmStep = this.rhythm[step % this.beatLength];
+      const rhythmStep = sourceRhythm[step % beatLength];
       if (rhythmStep.state == 0) continue;
 
       nextNotes = sourceNotes[noteIndex % sourceNotes.length];
@@ -125,9 +128,9 @@ export class AbletonTrack {
 
     // Finally, deal with overlapping notes. Depending on the order in which Live processes notes, overlapping notes may result in
     // dropped notes in the clips.
-    for (const abletonNotes of noteMap.values()) {
-      abletonNotes.sort((a, b) => a.clipPosition - b.clipPosition);
-      abletonNotes.forEach((note, i, notes) => {
+    for (const notes of noteMap.values()) {
+      notes.sort((a, b) => a.clipPosition - b.clipPosition);
+      notes.forEach((note, i, notes) => {
         if (notes[i - 1] && notes[i - 1].clipPosition + notes[i - 1].duration > note.clipPosition) {
           notes[i - 1].duration = note.clipPosition - notes[i - 1].clipPosition;
         }
@@ -164,7 +167,16 @@ export class AbletonTrack {
   }
 
 
-  evolve(tradingVoices?: boolean) {
+  evolve(tradingVoices = false) {
+    if (this.randomizing) {
+      this.randomizeMelody();
+    } else {
+      this.evolveMelody(tradingVoices);
+    }
+  }
+
+
+  evolveMelody(tradingVoices = false) {
     let   mutatedMelody   = new Array();
     const activeMutations = this.daw.mutations.filter(m => m.active == 1).map(m => m.function);
     const gatesPerMeasure = this.rhythm.reduce((a, b) => a + b.state, 0);
@@ -187,7 +199,61 @@ export class AbletonTrack {
     // soloist when trading voices.
     this.currentMutation = mutatedMelody;
     this.daw.currentSoloistMelody = mutatedMelody;
-    this.daw.sequencer.setNotes(this, true);
+    this.daw.sequencer.setNotes(this);
+  }
+
+
+  randomizeMelody() {
+    // [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]
+    let randomizedMelody = new Array();
+
+    for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
+      let sortedNotes = this.inputMelody.slice().sort((a, b) => a.midi - b.midi);
+      let tunedRandomNoteIndices = new Array();
+
+      // Choose a note (by index) at random
+      tunedRandomNoteIndices.push(Math.floor(Math.random() * sortedNotes.length));
+
+      // Choose the next note as 1 note higher in the sorted sequence 75% of the time, one note lower
+      // 25% of the time as the next note.
+      tunedRandomNoteIndices.push((tunedRandomNoteIndices[0] + (Math.random() > 0.25) ? 1 : -1) % sortedNotes.length);
+
+      // Finally choose another random note
+      tunedRandomNoteIndices.push(Math.floor(Math.random() * sortedNotes.length));
+
+      randomizedMelody.push(...tunedRandomNoteIndices.map(i => sortedNotes[i]));
+    }
+
+    // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
+    // (via abletonNotesForCurrentTrack()) and the currentSoloistMelody so it is mutated for the next
+    // soloist when trading voices.
+    this.currentMutation = randomizedMelody;
+    this.daw.sequencer.setNotes(this);
+  }
+
+
+  #randomRhythm(): RhythmStep[] {
+    let rhythm: RhythmStep[] = new Array();
+
+    for (let i = 0; i < 16 * this.daw.sequencer.superMeasure; i++) {
+      rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
+    }
+
+    for (let measure = 0; measure < this.daw.sequencer.superMeasure; measure++) {
+      const randomIndices = new Array();
+      let indices = [...new Array(16).keys()];
+      for (let i = 0; i < 3; i++) {
+        const randomIndex = Math.floor(Math.random() * indices.length);
+        randomIndices.push(indices[randomIndex]);
+        indices.splice(randomIndex, 1);
+      }
+
+      for (let i = 0; i < randomIndices.length; i++) {
+        rhythm[randomIndices[i] + (measure * 16)].state = 1;
+      }
+    }
+
+    return rhythm;
   }
 
 

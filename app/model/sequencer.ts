@@ -82,7 +82,7 @@ export class Sequencer {
   }
 
 
-  setNotes(track: AbletonTrack, mutation: boolean = false) {
+  setNotes(track: AbletonTrack) {
     // let timeout = 0;
 
     if (track.createNewClip) {
@@ -93,8 +93,10 @@ export class Sequencer {
       );
     }
 
-    const clipIndex = mutation ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
-    const notes     = track.abletonNotes(mutation);
+    const clipIndex = this.daw.mutating && (track.mutating || track.randomizing) ?
+                      AbletonLive.EVOLUTION_SCENE_INDEX :
+                      track.currentClip;
+    const notes     = track.abletonNotes();
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
@@ -105,6 +107,7 @@ export class Sequencer {
       console.error("input notes:", notes);
       console.error("OSC mapped notes", ...notes.flatMap(note => note.toOscAddedNote()));
       console.error("trackIndex", track.dawIndex, "mutating", track.mutating);
+      console.error("trackIndex", track.dawIndex, "randomizing", track.randomizing);
       console.error("Current track mutation", track.currentMutation);
     }
 

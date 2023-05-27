@@ -14,6 +14,7 @@ export class MelodyEvolutionPage extends GridPage {
     this.functionMap.set("queueMutationStart", this.queueMutationStart);
     this.functionMap.set("queueMutationStop", this.queueMutationStop);
     this.functionMap.set("toggleVoiceTrading", this.toggleVoiceTrading);
+    this.functionMap.set("toggleVoiceRandomizer", this.toggleVoiceRandomizer);
 
     this.grid.clearGridDisplay();
     this.refresh();
@@ -46,7 +47,10 @@ export class MelodyEvolutionPage extends GridPage {
    * @param press the press object represented the grid key press button and state
    */
   queueMutationStop(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.tracks.forEach(t => t.mutating = false);
+    gridPage.grid.sequencer.daw.tracks.forEach(t => {
+      t.mutating    = false;
+      t.randomizing = false;
+    });
     gridPage.grid.sequencer.daw.mutating = false;
     gridPage.refresh();
   }
@@ -99,8 +103,15 @@ export class MelodyEvolutionPage extends GridPage {
       gridPage.grid.sequencer.daw.tracks.forEach(t => t.mutating = false);
     } else {
       // There are no current soloists, add the active track as the current soloist and reset all other tracks
-      const track = gridPage.grid.sequencer.daw.getActiveTrack();
-      gridPage.grid.sequencer.daw.tracks.forEach((t, i) => t.mutating = (i == gridPage.grid.sequencer.daw.activeTrack));
+
+      // Reset the mutation state of all tracks
+      gridPage.grid.sequencer.daw.tracks.forEach(t => t.mutating = false);
+
+      // Set the current track to the lead soloist and make sure it is not randomizing.
+      const track       = gridPage.grid.sequencer.daw.getActiveTrack();
+      track.mutating    = true;
+      track.randomizing = false;
+
       gridPage.grid.sequencer.daw.soloists.push(track.dawIndex);
       gridPage.grid.sequencer.daw.currentSoloistMelody = track.outputNotes.flat();
       gridPage.grid.sequencer.daw.soloistIndex = -1;
@@ -109,10 +120,22 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
+  toggleVoiceRandomizer(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    const track       = gridPage.grid.sequencer.daw.getActiveTrack();
+    track.randomizing = !track.randomizing; // Flip the current track's randomizing state.
+    track.mutating    = !track.randomizing; // Be sure to set the mutation state mutually exclusive to randomizing
+
+    // Remove the current track from the soloists list if it was put there.
+    gridPage.grid.sequencer.daw.soloists = gridPage.grid.sequencer.daw.soloists.filter(s => s != track.dawIndex);
+
+    gridPage.refresh();
+  }
+
+
   setGridMutationDisplay() {
     // Light up the particpating tracks
     for (let i = 0; i < this.grid.sequencer.daw.tracks.length; i++)
-      this.grid.levelSet(i, 0, this.grid.sequencer.daw.tracks[i].mutating ? 10 : 0);
+      this.grid.levelSet(i, 0, (this.grid.sequencer.daw.tracks[i].mutating || this.grid.sequencer.daw.tracks[i].randomizing) ? 10 : 0);
 
     // Ligth up the active mutations
     const offset = 6;
@@ -121,6 +144,9 @@ export class MelodyEvolutionPage extends GridPage {
 
     // Light up the voice trading/soloists state
     this.grid.levelSet(15, 2, this.grid.sequencer.daw.soloists.length > 0 ? 10 : 0);
+
+    // Ligth up the randomizing state for the current track.
+    this.grid.levelSet(15, 3, this.grid.sequencer.daw.getActiveTrack().randomizing ? 10 : 0);
   }
 
 

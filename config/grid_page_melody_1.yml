@@ -69,3 +69,12 @@ rows:
     xStart: 15
     xLength: 1
     mapping: toggleVoiceTrading
+  -
+    name: Toggle Voice Random
+    description: When on, mutating voices will play random melodies and rhythms
+    group: mutation-controls
+    type: toggle
+    index: 3
+    xStart: 15
+    xLength: 1
+    mapping: toggleVoiceRandomizer
