@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld("parameters", {
   updateFillsDuration: (callback: any) => ipcRenderer.on("update-fills-duration", callback),
   updateFillMeasures: (callback: any) => ipcRenderer.on("update-fill-measures", callback),
   toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback),
+  toggleMelodyRandomizer: (callback: any) => ipcRenderer.on("toggle-melody-randomizer", callback),
   updateActiveClip: (callback: any) => ipcRenderer.on("update-active-clip", callback),
   updateMutations: (callback: any) => ipcRenderer.on("update-mutations", callback),
   updateMelodyVector: (callback: any) => ipcRenderer.on("update-melody-vector", callback),

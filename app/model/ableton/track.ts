@@ -170,7 +170,7 @@ export class AbletonTrack {
   evolve(tradingVoices = false) {
     if (this.randomizing) {
       this.randomizeMelody();
-    } else {
+    } else if (this.mutating) {
       this.evolveMelody(tradingVoices);
     }
   }
@@ -204,7 +204,6 @@ export class AbletonTrack {
 
 
   randomizeMelody() {
-    // [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]
     let randomizedMelody = new Array();
 
     for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
@@ -266,6 +265,7 @@ export class AbletonTrack {
     this.updateGuiFillsDuration();
     this.updateGuiFillMeasures();
     this.updateGuiCreateNewClip();
+    this.updateGuiRandomizeMelody();
     this.updateGuiCurrentClip();
     this.updateGuiChains();
   }
@@ -303,6 +303,11 @@ export class AbletonTrack {
 
   updateGuiCreateNewClip() {
     this.daw.sequencer.gui.webContents.send("toggle-create-clip", this.createNewClip);
+  }
+
+
+  updateGuiRandomizeMelody() {
+    this.daw.sequencer.gui.webContents.send("toggle-melody-randomizer", this.randomizing);
   }
 
 

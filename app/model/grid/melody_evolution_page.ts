@@ -34,7 +34,9 @@ export class MelodyEvolutionPage extends GridPage {
     gridPage.grid.sequencer.daw.tracks.forEach((track) => {
       // All tracks should have their current mutation sources reset in case they show up to the mutation party late.
       track.currentMutation = track.outputNotes.flat();
-      track.evolve();
+      if (track.mutating || track.randomizing) {
+        track.evolve();
+      }
     });
     gridPage.grid.sequencer.daw.mutating = true;
   }
@@ -158,6 +160,11 @@ export class MelodyEvolutionPage extends GridPage {
         return activeTracks;
       }, []).join(" "),
       this.grid.sequencer.daw.mutations.filter(m => m.active == 1).map(m => m.name).join(" ")
+    );
+
+    this.grid.sequencer.gui.webContents.send(
+      "toggle-melody-randomizer",
+      this.grid.sequencer.daw.getActiveTrack().randomizing
     );
   }
 }

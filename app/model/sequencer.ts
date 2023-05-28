@@ -172,15 +172,15 @@ export class Sequencer {
       if (this.daw.soloists.includes(track.dawIndex)) return;
 
       // If the current track is not mutating and has had its clips stopped on the Live side, do not fire it.
-      if (!track.mutating && track.currentClip == -1) return;
+      if (!track.mutating && !track.randomizing && track.currentClip == -1) return;
 
       // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
-      let currentClip = (this.daw.mutating && track.mutating) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
+      let currentClip = (this.daw.mutating && (track.mutating || track.randomizing)) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
       this.emitter.emit(`/tracks/${track.dawIndex}/clips/${currentClip}/fire`);
 
       // If the sequencer is in mutation and the current track, but not while trading solos (caught by return above),
       // evolve the curent track.
-      if (this.daw.mutating && track.mutating) {
+      if (this.daw.mutating && (track.mutating || track.randomizing)) {
         track.evolve();
       }
     });
