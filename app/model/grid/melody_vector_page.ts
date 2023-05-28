@@ -11,6 +11,8 @@ export class MelodyVectorPage extends GridPage {
 
     this.functionMap.set("setStepShift", this.setStepShift);
     this.functionMap.set("setShiftSequenceLength", this.setShiftSequenceLength);
+
+    this.grid.clearGridDisplay();
   }
 
 
