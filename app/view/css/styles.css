@@ -286,7 +286,8 @@ div#global-params p span {
 
 
 div#track div#clip span,
-div#melodic-vector div#melodic-vector-active span {
+div#melodic-states div#melodic-vector-active span,
+div#melodic-states div#randomizer-active span {
   display: inline-block;
   vertical-align: middle;
   width: 20px;
@@ -297,7 +298,8 @@ div#melodic-vector div#melodic-vector-active span {
 }
 
 div#track div#clip span.on,
-div#melodic-vector div#melodic-vector-active span.on {
+div#melodic-states div#melodic-vector-active span.on,
+div#melodic-states div#randomizer-active span.on {
   background-color: #117733;
 }
 
@@ -390,9 +392,28 @@ div#documentation div#page-overview {
 }
 
 
+div#melodic-states {
+  width: 200px;
+  height: 160px;
+  /* float: right; */
+}
+
+
+div#melodic-states div#melodic-vector-active,
+div#melodic-states div#randomizer-active {
+  width: 200px;
+  position: relative;
+  margin: 0 0 5px;
+  float: right;
+  border: none;
+  background-color: #000;
+  text-align: right;
+}
+
+
 div#melodic-vector {
   height: 160px;
-  width: 800px;
+  width: 600px;
 }
 
 
@@ -402,17 +423,6 @@ div#melodic-vector div {
   margin: 4px;
   background-color: #111;  /* dark gray: background color for inactive step */
   border: 1px solid #222;  /* medium gray: border color for active step */
-}
-
-
-div#melodic-vector div#melodic-vector-active {
-  height: 200px;
-  width: 150px;
-  position: relative;
-  float: right;
-  border: none;
-  background-color: #000;
-  text-align: right;
 }
 
 
