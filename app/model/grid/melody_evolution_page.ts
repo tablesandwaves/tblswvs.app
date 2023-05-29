@@ -22,8 +22,8 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   refresh() {
-    this.setGridMutationDisplay();
-    this.setUiMutations();
+    this.#setGridMutationDisplay();
+    this.#setUiMutations();
   }
 
 
@@ -134,10 +134,9 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  setGridMutationDisplay() {
+  #setGridMutationDisplay() {
     // Light up the particpating tracks
-    for (let i = 0; i < this.grid.sequencer.daw.tracks.length; i++)
-      this.grid.levelSet(i, 0, (this.grid.sequencer.daw.tracks[i].mutating || this.grid.sequencer.daw.tracks[i].randomizing) ? 10 : 0);
+    this.#displayParticipatingTracks();
 
     // Ligth up the active mutations
     const offset = 6;
@@ -152,7 +151,36 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  setUiMutations() {
+  #displayParticipatingTracks() {
+    const activeTrack = this.grid.sequencer.daw.getActiveTrack();
+
+    // Reset all participating tracks to start from a clean state
+    for (let i = 0; i < this.grid.sequencer.daw.tracks.length; i++)
+      this.grid.levelSet(i, 0, 0);
+
+    if (activeTrack.randomizing) {
+      // If the active track is randomzing, light it up only and no other tracks. Reset all, light up active
+      this.grid.levelSet(activeTrack.dawIndex - 1, 0, 10);
+
+    } else if (this.grid.sequencer.daw.soloists.length > 0) {
+
+      // If the active track is the lead soloist, light it up bright and the other soloists, dimmer
+      for (let i = 0; i < this.grid.sequencer.daw.soloists.length; i++) {
+        const soloistIndex = this.grid.sequencer.daw.soloists[i] - 1;
+        this.grid.levelSet(soloistIndex, 0, i == 0 ? 12 : 4);
+      }
+
+    } else {
+
+      // Otherwise just display all the tracks that are mutating with the dim amount
+      for (let i = 0; i < this.grid.sequencer.daw.tracks.length; i++) {
+        this.grid.levelSet(i, 0, this.grid.sequencer.daw.tracks[i].mutating ? 4 : 0);
+      }
+    }
+  }
+
+
+  #setUiMutations() {
     this.grid.sequencer.gui.webContents.send(
       "update-mutations",
       this.grid.sequencer.daw.tracks.reduce((activeTracks, track, tIdx) => {
