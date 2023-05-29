@@ -7,7 +7,7 @@ import { AbletonLive } from "../app/model/ableton/live";
 const testing   = true;
 const sequencer = new Sequencer(testing);
 const daw       = new AbletonLive(sequencer);
-const track     = new AbletonTrack("Kick", daw, 0);
+const track     = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
 sequencer.superMeasure = 2;
 
 
