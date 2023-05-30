@@ -1,5 +1,5 @@
 import { detect } from "@tonaljs/chord-detect";
-import { Melody, Mutation, note } from "tblswvs";
+import { Melody, Mutation, note, unique } from "tblswvs";
 import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap } from "./note";
 import { AbletonLive } from "./live";
@@ -207,7 +207,8 @@ export class AbletonTrack {
     let randomizedMelody = new Array();
 
     for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
-      let sortedNotes = this.inputMelody.slice().sort((a, b) => a.midi - b.midi);
+      // let sortedNotes = this.inputMelody.slice().sort((a, b) => a.midi - b.midi);
+      let sortedNotes = this.outputNotes.flat().slice().filter(unique).sort((a, b) => a.midi - b.midi);
       let tunedRandomNoteIndices = new Array();
 
       // Choose a note (by index) at random
@@ -220,7 +221,7 @@ export class AbletonTrack {
       // Finally choose another random note
       tunedRandomNoteIndices.push(Math.floor(Math.random() * sortedNotes.length));
 
-      randomizedMelody.push(...tunedRandomNoteIndices.map(i => sortedNotes[i]));
+      randomizedMelody.push(...tunedRandomNoteIndices.map(i => sortedNotes.at(i)));
     }
 
     // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
