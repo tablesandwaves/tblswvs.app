@@ -16,6 +16,8 @@ live_tracks:
         name: Resonator Perc
       -
         name: Kick & Perc Chokes
+      -
+        name: FM Four Pluck
   -
     name: Opsix
     dawIndex: 5
@@ -29,3 +31,8 @@ live_tracks:
   -
     name: Hydra
     dawIndex: 6
+    chains:
+      -
+        name: Hydrasynth
+      -
+        name: Glacial Tolerance
