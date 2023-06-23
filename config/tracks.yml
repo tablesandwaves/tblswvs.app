@@ -28,6 +28,8 @@ live_tracks:
         name: Basic FM
       -
         name: Simple Bass
+      -
+        name: OSC Juno
   -
     name: Hydra
     dawIndex: 6

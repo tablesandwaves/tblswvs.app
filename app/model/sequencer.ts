@@ -161,7 +161,9 @@ export class Sequencer {
     const track = this.daw.tracks.find(t => t.dawIndex == trackIndex);
     if (track && track.chains.length > chainIndex) {
       track.chains[chainIndex].active = active == 1;
-      track.updateGuiChains();
+      if (this.daw.getActiveTrack().dawIndex == trackIndex) {
+        track.updateGuiChains();
+      }
     }
   }
 
