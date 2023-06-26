@@ -50,6 +50,7 @@ export class AbletonTrack {
   algorithm: string = "simple";
   weightedRhythm: boolean = false;
   noteLength: string = "16n";
+  pulseRate: string = "16n";
   beatLength: number = 16;
   daw: AbletonLive;
   dawIndex: number;

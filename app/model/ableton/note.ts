@@ -4,6 +4,14 @@ type noteLength = {
 }
 
 
+export const pulseRateMap: Record<string, noteLength> = {
+  "16n": {size: 0.25, index: 0},
+  "8n":  {size: 0.5,  index: 1},
+  "4n":  {size: 1,    index: 2},
+  "2n":  {size: 2,    index: 3}
+}
+
+
 export const noteLengthMap: Record<string, noteLength> = {
   "16n": {size: 0.25, index: 0},
   "8n":  {size: 0.5,  index: 1},

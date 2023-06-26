@@ -1,7 +1,6 @@
 import { MonomeGrid } from "./monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { noteLengthMap } from "../ableton/note";
-import { blank8x8Row } from "../../helpers/utils";
+import { noteLengthMap, pulseRateMap } from "../ableton/note";
 import { RhythmStep } from "../ableton/track";
 
 
@@ -14,6 +13,7 @@ export class RhythmPage extends GridPage {
     this.functionMap.set("updateRhythm", this.updateRhythm);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
     this.functionMap.set("updateBeatLength", this.updateBeatLength);
+    this.functionMap.set("updatePulse", this.updatePulse);
   }
 
 
@@ -53,10 +53,16 @@ export class RhythmPage extends GridPage {
 
   updateNoteLength(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.levelRow(0, 6, gridPage.#noteLengthRow());
+    gridPage.toggleRadioButton(0, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+  }
+
+
+  updatePulse(gridPage: RhythmPage, press: GridKeyPress) {
+    gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
+    gridPage.toggleRadioButton(0, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
   }
 
 
@@ -80,14 +86,8 @@ export class RhythmPage extends GridPage {
 
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
-    this.grid.levelRow(0, 6, this.#noteLengthRow());
-  }
-
-
-  #noteLengthRow(): number[] {
-    let row = blank8x8Row.slice();
-    row[noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index] = 10;
-    return row;
+    this.toggleRadioButton(0, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+    this.toggleRadioButton(0, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
   }
 
 

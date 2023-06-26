@@ -19,7 +19,7 @@ rows:
     index: 5
     xStart: 0
     xLength: 4
-    mapping: updateTrackPulse
+    mapping: updatePulse
     values:
       - 16n
       - 8n

@@ -1,4 +1,5 @@
 import { MonomeGrid } from "./monome_grid";
+import { blank8x8Row } from "../../helpers/utils";
 
 
 export type GridKeyPress = {
@@ -141,6 +142,13 @@ export class GridPage {
 
   updateGuiRhythmTransport(highlightIndex: number) {
     this.grid.sequencer.gui.webContents.send("transport", highlightIndex);
+  }
+
+
+  toggleRadioButton(startIndex: number, rowIndex: number, selectedIndex: number) {
+    let row = blank8x8Row.slice();
+    row[selectedIndex] = 10;
+    this.grid.levelRow(startIndex, rowIndex, row);
   }
 
 
