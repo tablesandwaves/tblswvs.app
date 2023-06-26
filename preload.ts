@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld("parameters", {
   updateQueuedProgression: (callback: any) => ipcRenderer.on("update-progression", callback),
   updateTrackNotes: (callback: any) => ipcRenderer.on("update-track-notes", callback),
   updateNoteLength: (callback: any) => ipcRenderer.on("update-note-length", callback),
+  updatePulseRate: (callback: any) => ipcRenderer.on("update-pulse-rate", callback),
   updateFillsDuration: (callback: any) => ipcRenderer.on("update-fills-duration", callback),
   updateFillMeasures: (callback: any) => ipcRenderer.on("update-fill-measures", callback),
   toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback),

@@ -63,6 +63,7 @@ export class RhythmPage extends GridPage {
   updatePulse(gridPage: RhythmPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
     gridPage.toggleRadioButton(0, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
   }
 
 

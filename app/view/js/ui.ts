@@ -38,6 +38,7 @@ window.parameters.updateTrackNotes((event: any, type: string, notes: string) => 
   updateText("#input-notes", notes);
 });
 window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length span.notes", noteLength));
+window.parameters.updatePulseRate((event: any, pulse: string) => updateText("#note-length span.pulse", pulse));
 window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#note-length span.fills", fillsDuration));
 window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#note-length span.fill-measures", fillMeasures));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));

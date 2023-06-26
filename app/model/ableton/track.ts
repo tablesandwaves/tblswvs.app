@@ -262,6 +262,7 @@ export class AbletonTrack {
     this.updateGuiTrackNav();
     this.updateGuiVectorDisplay();
     this.updateGuiTrackRhythm();
+    this.updateGuiPulseRate();
     this.updateGuiNoteLength();
     this.updateGuiTrackNotes();
     this.updateGuiFillsDuration();
@@ -290,6 +291,11 @@ export class AbletonTrack {
 
   updateGuiTrackRhythm() {
     this.daw.sequencer.gui.webContents.send("track-rhythm", this.rhythm, this.beatLength);
+  }
+
+
+  updateGuiPulseRate() {
+    this.daw.sequencer.gui.webContents.send("update-pulse-rate", this.pulseRate);
   }
 
 
