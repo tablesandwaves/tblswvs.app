@@ -10,6 +10,7 @@ import { MonomeGrid } from "./grid/monome_grid";
 import { AbletonLive } from "./ableton/live";
 import { note } from "tblswvs";
 import { AbletonTrack } from "./ableton/track";
+import { pulseRateMap } from "./ableton/note";
 
 
 export class Sequencer {
@@ -63,9 +64,13 @@ export class Sequencer {
   async follow() {
     this.midiIn.on("clock", () => {
       this.ticks++;
+      // 6 MIDI clock ticks equals a 16th note.
       if (this.ticks % 6 != 0) return;
 
-      this.grid.displayRhythmWithTransport(this.step % this.daw.getActiveTrack().beatLength);
+      // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
+      const trackStep = Math.floor(this.step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
+      this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength);
+
       this.step = this.step == this.superMeasure * 16 - 1 ? 0 : this.step + 1;
     });
 

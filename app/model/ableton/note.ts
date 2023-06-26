@@ -4,14 +4,22 @@ type noteLength = {
 }
 
 
+/**
+ * noteLength.size is a multiplier of 16th notes, used for following MIDI clock ticks from Live
+ * noteLength.index is the index in row 6 on the grid
+ */
 export const pulseRateMap: Record<string, noteLength> = {
-  "16n": {size: 0.25, index: 0},
-  "8n":  {size: 0.5,  index: 1},
-  "4n":  {size: 1,    index: 2},
-  "2n":  {size: 2,    index: 3}
+  "16n": {size: 1, index: 0},
+  "8n":  {size: 2,  index: 1},
+  "4n":  {size: 4,    index: 2},
+  "2n":  {size: 8,    index: 3}
 }
 
 
+/**
+ * noteLength.size is a multiplier of quarter notes
+ * noteLength.index is the index in row 7 on the grid
+ */
 export const noteLengthMap: Record<string, noteLength> = {
   "16n": {size: 0.25, index: 0},
   "8n":  {size: 0.5,  index: 1},
@@ -24,6 +32,10 @@ export const noteLengthMap: Record<string, noteLength> = {
 }
 
 
+/**
+ * noteLength.size is a multiplier of quarter notes
+ * noteLength.index is the column indices on the grid fills page
+ */
 export const fillLengthMap: Record<string, noteLength> = {
   "16n":  {size: 0.25,  index: 0},
   "16nd": {size: 0.375, index: 1},
