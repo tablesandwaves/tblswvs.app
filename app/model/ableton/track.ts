@@ -1,7 +1,7 @@
 import { detect } from "@tonaljs/chord-detect";
 import { Melody, Mutation, note, unique } from "tblswvs";
 import { AbletonClip } from "./clip";
-import { AbletonNote, fillLengthMap, noteLengthMap } from "./note";
+import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note";
 import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 
@@ -90,10 +90,10 @@ export class AbletonTrack {
 
     let nextNotes: note[];
 
-    for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step++) {
+    for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step += pulseRateMap[this.pulseRate].size) {
       if (step % this.beatLength == 0) measure++;
 
-      const rhythmStep = sourceRhythm[step % beatLength];
+      const rhythmStep = sourceRhythm[(step / pulseRateMap[this.pulseRate].size) % beatLength];
       if (rhythmStep.state == 0) continue;
 
       nextNotes = sourceNotes[noteIndex % sourceNotes.length];
