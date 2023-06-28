@@ -217,7 +217,7 @@ export class AbletonTrack {
 
       // Choose the next note as 1 note higher in the sorted sequence 75% of the time, one note lower
       // 25% of the time as the next note.
-      tunedRandomNoteIndices.push((tunedRandomNoteIndices[0] + (Math.random() > 0.25) ? 1 : -1) % sortedNotes.length);
+      tunedRandomNoteIndices.push((tunedRandomNoteIndices[0] + ((Math.random() > 0.25) ? 1 : -1)) % sortedNotes.length);
 
       // Finally choose another random note
       tunedRandomNoteIndices.push(Math.floor(Math.random() * sortedNotes.length));
