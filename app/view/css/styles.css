@@ -225,19 +225,18 @@ div#note-length ul li {
   list-style: none;
   position: relative;
   float: left;
-  width: 150px;
   margin-left: 5px;
   padding: 5px 0;
+  font-size: .9em;
 }
 
 
-div#note-length ul li#fills {
-  width: 280px;
-}
-
-
+div#note-length ul li:nth-child(1) { width: 85px; }
+div#note-length ul li:nth-child(2) { width: 135px; }
+div#note-length ul li:nth-child(3) { width: 135px; }
+div#note-length ul li#fills { width: 240px; }
 div#note-length ul li#measure {
-  width: 200px;
+  width: 180px;
   margin: auto 5px auto 0;
   text-align: right;
 }
@@ -245,7 +244,7 @@ div#note-length ul li#measure {
 
 li#measure .parameter {
   display: inline-block;
-  width: 25px;
+  width: 20px;
   padding: 1px 3px;
   border-radius: 3px;
   background-color: #222;
