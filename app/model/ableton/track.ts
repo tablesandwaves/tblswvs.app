@@ -148,7 +148,7 @@ export class AbletonTrack {
       clipPosition,
       duration,
       velocity ? velocity : 64,
-      rhythmStep.probability
+      (this.randomizing && this.daw.mutating ? 1 : rhythmStep.probability)
     )
   }
 
