@@ -37,5 +37,8 @@
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
     "tblswvs": "^0.18.0-beta.3"
+  },
+  "overrides": {
+    "semver": "^7.5.3"
   }
 }
