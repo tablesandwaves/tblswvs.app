@@ -2,9 +2,21 @@ live_tracks:
   -
     name: Kick
     dawIndex: 1
+    chains:
+      -
+        name: Kick Flared Out
+      -
+        name: Kick Synth Melt
   -
     name: Snare
     dawIndex: 2
+    chains:
+      -
+        name: Snare DMX
+      -
+        name: Safari Slaps 3
+      -
+        name: Clap 808
   -
     name: HiHat
     dawIndex: 3
@@ -25,7 +37,7 @@ live_tracks:
       -
         name: A/B Pad
       -
-        name: Basic FM
+        name: Drift Stutter FM
       -
         name: Simple Bass
       -
@@ -38,3 +50,5 @@ live_tracks:
         name: Hydrasynth
       -
         name: Glacial Tolerance
+      -
+        name: Sad Broken Drift
