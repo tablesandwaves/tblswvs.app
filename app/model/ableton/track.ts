@@ -242,7 +242,8 @@ export class AbletonTrack {
 
     for (let measure = 0; measure < this.daw.sequencer.superMeasure; measure++) {
       const randomIndices = new Array();
-      let indices = [...new Array(16).keys()];
+      // Selecting only the even indices restricts the randomized rhythm to 8th notes
+      let indices = [...new Array(16).keys()].filter(i => i % 2 == 0);;
       for (let i = 0; i < 3; i++) {
         const randomIndex = Math.floor(Math.random() * indices.length);
         randomIndices.push(indices[randomIndex]);
