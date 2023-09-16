@@ -27,13 +27,15 @@ Install the Max for Live devices in this repository's [m4l](m4l/) directory.
 
 This Max for Live device communicates with the tblswvs.app Electron app by passing OSC-like messages back and forth. It is a very simple device that uses Max's `[udpreceive]` and `[udpsend]` objects (using ports 33333 and 33334, respectively). For example, when tblswvs.app creates a melody or rhythm, this device is responsible for adding or updating clips and their MIDI notes.
 
-The files `tblswvs.osc.amxd`, `tblswvs.osc.js` and `tblswvs-clip-observer.maxpat` must be accessible to Live. Example setup:
+Two Max for Live devices, `tblswvs.osc.amxd` and `tblswvs.rampseq` along with their supporting abstractions, gen~ and JavaScript files must be accessible to Live.
 
 Copy the files in `m4l/` to your Live presets folder
 
 ```
 $ mkdir -p ~/Music/Ableton/User\ Library/Presets/MIDI\ Effects/Max\ MIDI\ Effect/Tables\ and\ Waves\ OSC
-$ cp m4l/* ~/Music/Ableton/User\ Library/Presets/MIDI\ Effects/Max\ MIDI\ Effect/Tables\ and\ Waves\ OSC
+$ cp m4l/midi-effect/* ~/Music/Ableton/User\ Library/Presets/MIDI\ Effects/Max\ MIDI\ Effect/Tables\ and\ Waves\ OSC
+$ mkdir -p ~/Music/Ableton/User\ Library/Presets/MIDI\ Effects/Max\ Audio\ Effect/Tables\ and\ Waves\ OSC
+$ cp m4l/audio-effect/* ~/Music/Ableton/User\ Library/Presets/MIDI\ Effects/Max\ Audio\ Effect/Tables\ and\ Waves\ OSC
 ```
 
 Create a new Live Set containing 7 MIDI tracks. Tracks 1-6 will be used for the voice tracks. Track 7 should simply have the Max for Live MIDI device `tblswvs.osc.amxd` added.
