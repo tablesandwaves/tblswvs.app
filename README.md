@@ -60,44 +60,7 @@ This will transpile the Typescript code and copy all relevant files into a `./di
 
 ## Grid Interface
 
-### Global Row
-
-The bottom row (number 8, index 7) is a global row.
-
-* Buttons 1-6 (Indices 0-5): Track/Voice Selection
-  * Kick
-  * Snare
-  * HiHat
-  * Perc
-  * Opsix
-  * Hydra
-* Button 7 (index 8): Rhythm Pages
-* Button 8 (index 7): Chord Page
-* Button 9 (index 8): Melody Page
-* Buttons 10-12 (indices 9-11): Undefined
-* Button 13 (index 12): Global Page
-* Button 14 (index 13): Shift Key
-* Button 15 (index 14): Page Left
-* Button 16 (index 15): Page Right
-
-### Grid Page Settings
-
-Grid pages are bundles of related functionality. Specific key press functionality is defined in [config files](config/).
-
-#### Rhythm
-
-Controls variable length rhythmic sequences between 1 and 16 steps.
-
-#### Chord
-
-Grid buttons are mapped to chords depending on the Scale and Tonic settings from the Melody Page.
-
-#### Melody
-
-* Configure the current Scale and Tonic settings
-* Add input melodies
-* Apply melodic algorithms to the active track
-* On melody page 2, run melodic mutation algorithms for tracks
+The Electron app has an embedded 'Docs' tab that lays out the grid interface pages and button mappings.
 
 #### Global Settings
 
