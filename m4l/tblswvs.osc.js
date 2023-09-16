@@ -1,9 +1,11 @@
 outlets = 2;
 
-var notesPattern = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
-var clipFirePattern = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
-var newClipPattern = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
+
+var notesPattern        = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
+var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
+var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
 var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
+var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq/;
 
 
 function osc_message() {
@@ -19,6 +21,11 @@ function osc_message() {
   var fireMatch = a[0].match(clipFirePattern);
   if (fireMatch) {
     fireClipSlot(fireMatch[1], fireMatch[2]);
+  }
+
+  var rampSeqMatch = a[0].match(rampSeqPattern);
+  if (rampSeqMatch) {
+    messnamed("rampseq_" + rampSeqMatch[1], a.slice(1));
   }
 
   var newClipMatch = a[0].match(newClipPattern);
