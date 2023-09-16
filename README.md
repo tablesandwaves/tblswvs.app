@@ -62,10 +62,6 @@ This will transpile the Typescript code and copy all relevant files into a `./di
 
 The Electron app has an embedded 'Docs' tab that lays out the grid interface pages and button mappings.
 
-#### Global Settings
-
-* Set the super measure length
-
 ## Inspiration
 
 This project is inspired by [William Fields'](https://williamfields.com/) work on his FieldsOS project.
