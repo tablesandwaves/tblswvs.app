@@ -91,6 +91,13 @@ describe("RampSequence", () => {
         [0, 0, 0, 0,  1, 1, 1, 1,  1, 1, 1, 1,  1, 0, 0, 0]
       )
     });
+
+    it("generates a grid row for high to low ranges", () => {
+      rampSequence.updateRange(0, 0.75, 0.25);
+      expect(rampSequence.gridRangeRow(0)).to.have.ordered.members(
+        [0, 0, 0, 0,  1, 1, 1, 1,  1, 1, 1, 1,  1, 0, 0, 0]
+      );
+    });
   });
 
 
@@ -242,7 +249,7 @@ describe("RampSequence", () => {
       rampSequence.updateRange(0, 0.5, 0.5);
       expect(rampSequence.segments[0].range.start).to.eq(0.5);
       expect(rampSequence.segments[0].range.end).to.eq(0.5);
-    })
+    });
   });
 
 
