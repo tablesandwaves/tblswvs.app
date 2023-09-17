@@ -29,8 +29,8 @@ export class RampSequencePage extends GridPage {
 
   setGridRampSequenceDisplay(highlightIndex?: number) {
     this.setGridRampSequenceTransportRowDisplay(highlightIndex);
-    this.setGridRampSequenceInnerDivDisplay();
-    this.setGridRampSequenceRangeDisplay();
+    this.setGridSubdivisionDisplay();
+    this.setGridRangeDisplay();
   }
 
 
@@ -47,25 +47,30 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  setGridRampSequenceInnerDivDisplay() {
-    const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
-    let row = rampSequence.gridSubdivisionRow().map((sequenceStep: (0|1), i): number => {
-      if (sequenceStep &&
-        i >= this.activeSegment.startIndex &&
-        i <  this.activeSegment.startIndex + this.activeSegment.length) {
-          return this.activeDivisionBrightness;
-        }
+  setGridSubdivisionDisplay() {
+    let row;
 
-        return sequenceStep ? this.inactiveDivisionBrightness : 0;
-    });
+    if (this.activeSegment == undefined) {
+      row = new Array(16).fill(0);
+    } else {
+      const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
+      row = rampSequence.gridSubdivisionRow().map((sequenceStep: (0|1), i): number => {
+        if (sequenceStep &&
+          i >= this.activeSegment.startIndex &&
+          i <  this.activeSegment.startIndex + this.activeSegment.length) {
+            return this.activeDivisionBrightness;
+          }
 
+          return sequenceStep ? this.inactiveDivisionBrightness : 0;
+      });
+    }
 
     this.grid.levelRow(0, 1, row.slice(0, 8));
     this.grid.levelRow(8, 1, row.slice(8, 16));
   }
 
 
-  setGridRampSequenceRangeDisplay() {
+  setGridRangeDisplay() {
     let row;
 
     if (this.activeSegment == undefined) {
@@ -110,8 +115,10 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  updateSubdivision() {
-
+  updateSubdivision(gridPage: RampSequencePage, press: GridKeyPress) {
+    const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().rampSequence;
+    rampSequence.updateSubdivisionLength(gridPage.activeSegment.startIndex, press.x - gridPage.activeSegment.startIndex + 1);
+    gridPage.setGridSubdivisionDisplay();
   }
 
 
