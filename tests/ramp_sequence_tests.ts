@@ -98,6 +98,13 @@ describe("RampSequence", () => {
         [0, 0, 0, 0,  1, 1, 1, 1,  1, 1, 1, 1,  1, 0, 0, 0]
       );
     });
+
+    it("generates a grid row for static ranges", () => {
+      rampSequence.updateRange(0, 0.75, 0.75);
+      expect(rampSequence.gridRangeRow(0)).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0]
+      );
+    });
   });
 
 
