@@ -9,7 +9,7 @@ rows:
     index: 0
     xStart: 0
     xLength: 16
-    mapping: updateOuterDivision
+    mapping: updateSegment
   -
     name: Inner Divisions
     description: Set the cycle length for the corresponding outer division
@@ -18,7 +18,7 @@ rows:
     index: 1
     xStart: 0
     xLength: 16
-    mapping: updateInnerDivision
+    mapping: updateSubdivision
   -
     name: Ramp Range
     description: Set the 0-1 range for the currently active outer ramp.

@@ -1,3 +1,4 @@
+import { RampSegment } from "../ableton/ramp_sequence";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { MonomeGrid } from "./monome_grid";
 
@@ -5,19 +6,15 @@ import { MonomeGrid } from "./monome_grid";
 export class RampSequencePage extends GridPage {
   type = "RampSequence";
 
-  inactiveDivisionBrightness = 5;
-  activeDivisionBrightness   = 10;
-
-  // The absolute index of the currently active outer step in the ramp sequence.
-  activeOuterAbsoluteIndex:   number = undefined;
-  // The sequential index of the currently active outer step in the ramp sequence.
-  activeOuterSequentialIndex: number = undefined;
+  inactiveDivisionBrightness = 3;
+  activeDivisionBrightness   = 12;
+  activeSegment: RampSegment;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
-    this.functionMap.set("updateOuterDivision", this.updateOuterDivision);
-    this.functionMap.set("updateInnerDivision", this.updateInnerDivision);
+    this.functionMap.set("updateSegment", this.updateSegment);
+    this.functionMap.set("updateSubdivision", this.updateSubdivision);
     this.functionMap.set("updateRange", this.updateRange);
 
     this.refresh();
@@ -38,10 +35,11 @@ export class RampSequencePage extends GridPage {
 
 
   setGridRampSequenceTransportRowDisplay(highlightIndex?: number) {
-    let row = this.grid.sequencer.daw.getActiveTrack().rampSequenceOuter.map((sequenceStep: (0|1), i): number => {
-      if (i == this.activeOuterAbsoluteIndex) return this.activeDivisionBrightness;
+    let row = this.grid.sequencer.daw.getActiveTrack().rampSequence.gridSegmentRow().map((sequenceStep: (0|1), i): number => {
+      if (this.activeSegment && i == this.activeSegment.startIndex) return this.activeDivisionBrightness;
       return sequenceStep ? this.inactiveDivisionBrightness : 0;
     });
+
     if (highlightIndex != undefined) row[highlightIndex] = 15;
 
     this.grid.levelRow(0, 0, row.slice(0, 8));
@@ -50,39 +48,34 @@ export class RampSequencePage extends GridPage {
 
 
   setGridRampSequenceInnerDivDisplay() {
-    let row = this.grid.sequencer.daw.getActiveTrack().rampSequenceInner.map((sequenceStep: (0|1), i): number => {
-      if (sequenceStep == 1 &&
-        i >= this.activeOuterAbsoluteIndex &&
-        i <= this.#activeOuterDivLength() + this.activeOuterAbsoluteIndex) {
-        return this.activeDivisionBrightness;
-      }
+    const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
+    let row = rampSequence.gridSubdivisionRow().map((sequenceStep: (0|1), i): number => {
+      if (sequenceStep &&
+        i >= this.activeSegment.startIndex &&
+        i <  this.activeSegment.startIndex + this.activeSegment.length) {
+          return this.activeDivisionBrightness;
+        }
 
-      return sequenceStep ? this.inactiveDivisionBrightness : 0;
+        return sequenceStep ? this.inactiveDivisionBrightness : 0;
     });
+
 
     this.grid.levelRow(0, 1, row.slice(0, 8));
     this.grid.levelRow(8, 1, row.slice(8, 16));
   }
 
 
-  // Consider this a cached property on the class, so it does not need to be computed so frequently.
-  #activeOuterDivLength(): number {
-    let length = 1;
-    for (let i = this.activeOuterAbsoluteIndex + 1; i < this.grid.sequencer.daw.getActiveTrack().rampSequenceInner.length; i++, length++) {
-      if (this.grid.sequencer.daw.getActiveTrack().rampSequenceInner[i] == 1) break;
-    }
-    return length;
-  }
-
-
   setGridRampSequenceRangeDisplay() {
-    if (this.activeOuterSequentialIndex == undefined) return;
+    let row;
 
-    const range = this.grid.sequencer.daw.getActiveTrack().rampSequenceRanges[this.activeOuterSequentialIndex];
-    const row   = [...new Array(16)].map((e, i) => {
-      if (i / 16 >= range[0] && i / 16 <= range[1]) return this.activeDivisionBrightness;
-      return 0;
-    });
+    if (this.activeSegment == undefined) {
+      row = new Array(16).fill(0);
+    } else {
+      const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
+      row = rampSequence.gridRangeRow(this.activeSegment.startIndex).map((sequenceStep: (0|1)) => {
+        return sequenceStep ? this.activeDivisionBrightness : 0;
+      });
+    }
 
     this.grid.levelRow(0, 2, row.slice(0, 8));
     this.grid.levelRow(8, 2, row.slice(8, 16));
@@ -95,65 +88,29 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  updateOuterDivision(gridPage: RampSequencePage, press: GridKeyPress) {
-    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+  updateSegment(gridPage: RampSequencePage, press: GridKeyPress) {
+    const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().rampSequence;
+    const selectedSegment = rampSequence.segments.find(s => s.startIndex == press.x);
 
-    // Removing the active division
-    if (gridPage.activeOuterAbsoluteIndex != undefined && press.x == gridPage.activeOuterAbsoluteIndex) {
-      track.rampSequenceOuter[press.x] = 0;
-      track.rampSequenceRanges.splice(gridPage.#absoluteToSequentialOuterIndex(press.x), 1);
-
-      gridPage.activeOuterAbsoluteIndex   = undefined;
-      gridPage.activeOuterSequentialIndex = undefined;
+    // Remove the active segment
+    if (selectedSegment && gridPage.activeSegment && selectedSegment.startIndex == gridPage.activeSegment.startIndex) {
+      rampSequence.removeSegment(gridPage.activeSegment.startIndex);
+      gridPage.activeSegment = undefined;
     }
-    // Selecting an existing division
-    else if (track.rampSequenceOuter[press.x] == 1) {
-      gridPage.activeOuterAbsoluteIndex   = press.x;
-      gridPage.activeOuterSequentialIndex = gridPage.#absoluteToSequentialOuterIndex(press.x);
+    // Select an another segment
+    else if (selectedSegment) {
+      gridPage.activeSegment = selectedSegment;
     }
-    // Adding a outer division
+    // Add a segment
     else {
-      track.rampSequenceOuter[press.x] = 1;
-      const sequentialIndex = gridPage.#absoluteToSequentialOuterIndex(press.x);
-      track.rampSequenceRanges.splice(sequentialIndex, 0, [0, 1]);
-
-      gridPage.activeOuterAbsoluteIndex   = press.x;
-      gridPage.activeOuterSequentialIndex = sequentialIndex;
+      gridPage.activeSegment = rampSequence.addSegment(press.x);
     }
 
     gridPage.refresh();
   }
 
 
-  #nextOuterStepIndex(absoluteIndex: number): (number|undefined) {
-    let nextStepIndex = undefined;
-
-    const outerRampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequenceOuter;
-    for (let i = absoluteIndex + 1; i < outerRampSequence.length; i++) {
-      if (outerRampSequence[i] == 1) {
-        nextStepIndex = i;
-        break;
-      }
-    }
-
-    return nextStepIndex;
-  }
-
-
-  #absoluteToSequentialOuterIndex(absoluteIndex: number): number {
-    let sequentialIndex = 0;
-
-    const outerRampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequenceOuter;
-    for (let i = 0; i < outerRampSequence.length; i++) {
-      if (i == absoluteIndex) break;
-      if (outerRampSequence[i] == 1) sequentialIndex++;
-    }
-
-    return sequentialIndex;
-  }
-
-
-  updateInnerDivision() {
+  updateSubdivision() {
 
   }
 

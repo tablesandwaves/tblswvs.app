@@ -4,6 +4,7 @@ import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note";
 import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
+import { RampSequence } from "./ramp_sequence";
 
 
 export type TrackConfig = {
@@ -47,9 +48,7 @@ export class AbletonTrack {
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
   vectorShiftsActive: boolean = false;
-  rampSequenceOuter: (0|1)[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
-  rampSequenceInner: (0|1)[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
-  rampSequenceRanges: number[][] = new Array();
+  rampSequence: RampSequence;
   rampSequenceActive: boolean = false;
   algorithm: string = "simple";
   noteLength: string = "16n";
@@ -81,6 +80,8 @@ export class AbletonTrack {
     }
 
     this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
+
+    this.rampSequence = new RampSequence();
   }
 
 
