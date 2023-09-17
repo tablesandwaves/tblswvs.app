@@ -125,7 +125,7 @@ export class GridPage {
   }
 
 
-  // Overridden on the GridRhythm page where the grid's transport row also needs to be updated.
+  // Overridden on the RhythmPage and RampSequencePage where the grid's transport row also needs to be updated.
   displayRhythmWithTransport(highlightIndex: number) {
     this.updateGuiRhythmTransport(highlightIndex);
   }

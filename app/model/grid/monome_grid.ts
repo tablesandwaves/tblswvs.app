@@ -14,6 +14,7 @@ import { MelodyPage } from "./melody_page";
 import { MelodyEvolutionPage } from "./melody_evolution_page";
 import { MelodyVectorPage } from "./melody_vector_page";
 import { blank16x16Row } from "../../helpers/utils";
+import { RampSequencePage } from "./ramp_sequence_page";
 
 
 export type DeviceConfig = {
@@ -25,15 +26,17 @@ const globalKeyPageTypeMap: Record<number, string> = {
   6:  "Rhythm",
   7:  "Chords",
   8:  "Melody",
+  9:  "RampSequence",
   12: "Global"
 }
 
 
 const pageTypeMap: Record<string, string[]> = {
-  "Rhythm": ["Rhythm", "Probabilities", "Fills"],
-  "Chords": ["Chords"],
-  "Melody": ["Melody", "Mutation", "MelodyVector"],
-  "Global": ["Global"]
+  "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
+  "Chords":       ["Chords"],
+  "Melody":       ["Melody", "Mutation", "MelodyVector"],
+  "RampSequence": ["RampSequence"],
+  "Global":       ["Global"]
 }
 
 
@@ -44,10 +47,15 @@ export class MonomeGrid {
   activePage: GridPage;
   shiftKey: boolean = false;
   pageIndex: number = 0;
+  testing = false;
 
 
-  constructor(sequencer: Sequencer) {
+  constructor(sequencer: Sequencer, testing = false) {
     this.sequencer = sequencer;
+
+    if (testing != undefined) {
+      this.testing = testing;
+    }
   }
 
 
@@ -130,12 +138,14 @@ export class MonomeGrid {
 
 
   levelSet(x: number, y: number, s: number) {
-    this.device.levelSet(x, y, s);
+    if (!this.testing)
+      this.device.levelSet(x, y, s);
   }
 
 
   levelRow(xOffset: number, y: number, row: number[]) {
-    this.device.levelRow(xOffset, y, row);
+    if (!this.testing)
+      this.device.levelRow(xOffset, y, row);
   }
 
 
@@ -201,6 +211,12 @@ export class MonomeGrid {
         this.activePage = new MelodyVectorPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
+        break;
+      case "RampSequence":
+        this.pageIndex = 0;
+        this.activePage = new RampSequencePage(this.#loadConfig(`grid_page_ramps_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 9;
         break;
       case "Global":
         this.pageIndex = 0;

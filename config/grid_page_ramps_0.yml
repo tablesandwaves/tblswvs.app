@@ -1,0 +1,30 @@
+name: Ramps
+description: Generate ramp sequences for the active track.
+rows:
+  -
+    name: Outer Divisions
+    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    group: outer-divs
+    type: toggle
+    index: 0
+    xStart: 0
+    xLength: 16
+    mapping: updateOuterDivision
+  -
+    name: Inner Divisions
+    description: Set the cycle length for the corresponding outer division
+    group: inner-divs
+    type: meter
+    index: 1
+    xStart: 0
+    xLength: 16
+    mapping: updateInnerDivision
+  -
+    name: Ramp Range
+    description: Set the 0-1 range for the currently active outer ramp.
+    group: ramp-range
+    type: range
+    index: 2
+    xStart: 0
+    xLength: 16
+    mapping: updateRange

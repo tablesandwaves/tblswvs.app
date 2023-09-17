@@ -44,11 +44,14 @@ export class AbletonTrack {
   // Using a 2-dimensional array to accommodate polyphony.
   outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
-  vectorShifts: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
   vectorShiftsActive: boolean = false;
+  rampSequenceOuter: (0|1)[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
+  rampSequenceInner: (0|1)[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
+  rampSequenceRanges: number[][] = new Array();
+  rampSequenceActive: boolean = false;
   algorithm: string = "simple";
-  weightedRhythm: boolean = false;
   noteLength: string = "16n";
   pulseRate: string = "16n";
   beatLength: number = 16;

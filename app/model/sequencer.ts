@@ -33,7 +33,6 @@ export class Sequencer {
 
   constructor(testing: boolean = false) {
     if (!testing) {
-      this.grid   = new MonomeGrid(this);
       this.midiIn = new easymidi.Input("tblswvs in", true);
 
       // To Live
@@ -50,8 +49,9 @@ export class Sequencer {
       // For debugging: all messages are logged.
       // this.receiver.on("message", this.#processLiveMessages);
     }
-    this.daw = new AbletonLive(this);
-    this.key = new Key(60, Scale.Minor);
+    this.grid = new MonomeGrid(this, testing);
+    this.daw  = new AbletonLive(this);
+    this.key  = new Key(60, Scale.Minor);
   }
 
 
