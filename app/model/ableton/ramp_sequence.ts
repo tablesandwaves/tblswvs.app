@@ -16,18 +16,22 @@ export class RampSequence {
   segments: RampSegment[] = new Array();
 
 
-  addSegment(index: number) {
+  addSegment(index: number): RampSegment {
     if (index < 0) index = 0;
     if (index > 15) index = 15;
 
-    this.segments.push({
+    const rampSegment = {
       startIndex: index,
       length: -1,
       subdivisionLength: -1,
       range: {start: 0, end: 1}
-    });
+    }
+
+    this.segments.push(rampSegment);
 
     this.#rebalance();
+
+    return rampSegment;
   }
 
 

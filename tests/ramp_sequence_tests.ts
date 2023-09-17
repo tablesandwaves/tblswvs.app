@@ -32,27 +32,27 @@ describe("RampSequence", () => {
 
   describe("adding the first outer steps at position 0", () => {
     const rampSequence = new RampSequence();
-    rampSequence.addSegment(0);
+    const rampSegment = rampSequence.addSegment(0);
 
     it("should have one segment", () => {
       expect(rampSequence.segments.length).to.eq(1);
     });
 
     it("should store the outer gate", () => {
-      expect(rampSequence.segments[0].startIndex).to.eq(0);
+      expect(rampSegment.startIndex).to.eq(0);
     });
 
     it("should set the default length", () => {
-      expect(rampSequence.segments[0].length).to.eq(16);
+      expect(rampSegment.length).to.eq(16);
     });
 
     it("should set the default value for the subdivision length", () => {
-      expect(rampSequence.segments[0].subdivisionLength).to.eq(16);
+      expect(rampSegment.subdivisionLength).to.eq(16);
     });
 
     it("should set the default value for the range", () => {
-      expect(rampSequence.segments[0].range.start).to.eq(0);
-      expect(rampSequence.segments[0].range.end).to.eq(1);
+      expect(rampSegment.range.start).to.eq(0);
+      expect(rampSegment.range.end).to.eq(1);
     });
 
     it("can generate a grid segment row", () => {
