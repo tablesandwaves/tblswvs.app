@@ -5,10 +5,11 @@ import { detect } from "@tonaljs/chord-detect";
 
 export class ChordPage extends GridPage {
   type = "Chords";
-  recordingInputChord: boolean = false;
-  keyPressCount: number = 0;
-  chordNotes: note[] = new Array();
-  keyReleaseFunctionality: boolean = true;
+
+  recordingInputChord     = false;
+  keyReleaseFunctionality = true;
+  keyPressCount           = 0;
+  chordNotes: note[]      = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
