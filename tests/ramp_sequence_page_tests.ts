@@ -7,8 +7,6 @@ const testing   = true;
 
 
 describe("RampSequencePage", () => {
-
-
   describe("Range editing", () => {
     it("can set a range from zero to any number", () => {
       const sequencer = new Sequencer(testing);
@@ -19,14 +17,12 @@ describe("RampSequencePage", () => {
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
       expect(rampSequencePage.rampPressRange).to.eq(undefined);
 
-      // Set the segment range to 0.0625
+      // Press the first two range buttons
       sequencer.grid.keyPress({y: 2, x: 0, s: 1});
-      expect(rampSequencePage.rampPressRange.startIndex).to.eq(1);
-      expect(rampSequencePage.rampPressRange.endIndex).to.eq(undefined);
-
       sequencer.grid.keyPress({y: 2, x: 1, s: 1});
       sequencer.grid.keyPress({y: 2, x: 0, s: 0});
       sequencer.grid.keyPress({y: 2, x: 1, s: 0});
+      expect(rampSequencePage.rampPressRange.startIndex).to.eq(0);
       expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.start).to.eq(0);
       expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.end).to.eq(0.125);
       expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
@@ -65,22 +61,4 @@ describe("RampSequencePage", () => {
       );
     });
   });
-
-  // describe("after selecting the ramp sequencer and adding outer steps", () => {
-  //   sequencer.grid.keyPress({y: 0, x: 6, s: 1});
-
-  //   it("should set the active page to RampSequencerPage", () => {
-  //     expect(sequencer.grid.activePage.type).to.eq("RampSequence");
-  //   });
-
-  //   it("should have the correct outer sequence", () => {
-  //     expect(sequencer.daw.getActiveTrack().rampSequenceOuter).to.have.ordered.members(
-  //       [1, 0, 0, 0,  0, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-  //     );
-  //   });
-
-  //   it("should have default inner divisions for the steps", () => {
-  //     expect(sequencer.daw.getActiveTrack())
-  //   })
-  // });
 });

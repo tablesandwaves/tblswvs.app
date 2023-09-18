@@ -172,6 +172,13 @@ export class RampSequencePage extends GridPage {
           gridPage.rampPressRange.endIndex   = 0;
         }
 
+        // Special Case: extending down to zero
+        if (gridPage.rampPressRange.startIndex == 1 &&
+            gridPage.rampPressRange.endIndex != 1 &&
+            gridPage.rampPressRange.endIndex != undefined) {
+          gridPage.rampPressRange.startIndex = 0;
+        }
+
         gridPage.grid.sequencer.daw.getActiveTrack().rampSequence.updateRange(
           gridPage.activeSegment.startIndex,
           gridPage.rampPressRange.startIndex / 16,
