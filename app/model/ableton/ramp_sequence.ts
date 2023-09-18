@@ -99,17 +99,4 @@ export class RampSequence {
                 .concat(new Array(segment.length - segment.subdivisionLength).fill(0));
     }, new Array());
   }
-
-
-  gridRangeRow(segmentStartIndex: number): (0|1)[] {
-    if (this.segments.length == 0) return new Array(16).fill(0);
-
-    const segment = this.segments.find(segment => segment.startIndex == segmentStartIndex);
-
-    return [...new Array(16)].map((e, i) => {
-      if (segment.range.start <= segment.range.end && i / 16 >= segment.range.start && i / 16 <= segment.range.end) return 1;
-      if (segment.range.start >  segment.range.end && i / 16 <= segment.range.start && i / 16 >= segment.range.end) return 1;
-      return 0;
-    });
-  }
 }

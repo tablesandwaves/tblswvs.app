@@ -67,12 +67,6 @@ describe("RampSequence", () => {
       )
     });
 
-    it("can generate a grid range row", () => {
-      expect(rampSequence.gridRangeRow(0)).to.have.ordered.members(
-        [1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1]
-      )
-    });
-
     it("can have its subdivision length updated, which updates the grid subdivision row", () => {
       const rampSequence = new RampSequence();
       rampSequence.addSegment(0);
@@ -87,23 +81,6 @@ describe("RampSequence", () => {
       rampSequence.updateRange(0, 0.25, 0.75);
       expect(rampSequence.segments[0].range.start).to.eq(0.25);
       expect(rampSequence.segments[0].range.end).to.eq(0.75);
-      expect(rampSequence.gridRangeRow(0)).to.have.ordered.members(
-        [0, 0, 0, 0,  1, 1, 1, 1,  1, 1, 1, 1,  1, 0, 0, 0]
-      )
-    });
-
-    it("generates a grid row for high to low ranges", () => {
-      rampSequence.updateRange(0, 0.75, 0.25);
-      expect(rampSequence.gridRangeRow(0)).to.have.ordered.members(
-        [0, 0, 0, 0,  1, 1, 1, 1,  1, 1, 1, 1,  1, 0, 0, 0]
-      );
-    });
-
-    it("generates a grid row for static ranges", () => {
-      rampSequence.updateRange(0, 0.75, 0.75);
-      expect(rampSequence.gridRangeRow(0)).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0]
-      );
     });
   });
 
