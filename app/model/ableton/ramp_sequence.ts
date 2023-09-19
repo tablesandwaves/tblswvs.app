@@ -78,15 +78,4 @@ export class RampSequence {
     this.segments.find(segment => segment.startIndex == segmentStartIndex).range.start = start;
     this.segments.find(segment => segment.startIndex == segmentStartIndex).range.end = end;
   }
-
-
-  gridSegmentRow(): (0|1)[] {
-    if (this.segments.length == 0) return new Array(16).fill(0);
-
-    return this.segments.reduce((row, segment) => {
-      const subsegment = new Array(segment.length).fill(0);
-      subsegment[0] = 1;
-      return row.concat(subsegment);
-    }, new Array());
-  }
 }

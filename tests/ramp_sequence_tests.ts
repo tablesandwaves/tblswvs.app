@@ -9,12 +9,6 @@ describe("RampSequence", () => {
     it("has an empty segment array", () => {
       expect(rampSequence.segments.length).to.eq(0);
     });
-
-    it("has an all-zeroes grid segment row", () => {
-      expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-    });
   });
 
 
@@ -41,12 +35,6 @@ describe("RampSequence", () => {
     it("should set the default value for the range", () => {
       expect(rampSegment.range.start).to.eq(0);
       expect(rampSegment.range.end).to.eq(1);
-    });
-
-    it("can generate a grid segment row", () => {
-      expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
-        [1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
     });
 
     it("can have its subdivision length updated, which updates the grid subdivision row", () => {
@@ -87,12 +75,6 @@ describe("RampSequence", () => {
       expect(rampSequence.segments[0].subdivisionLength).to.eq(6);
       expect(rampSequence.segments[1].subdivisionLength).to.eq(10);
     });
-
-    it("can generate a grid segment row", () => {
-      expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
-        [1, 0, 0, 0,  0, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-    });
   });
 
 
@@ -120,12 +102,6 @@ describe("RampSequence", () => {
     it("does not allow a subdivision length to be greater than the segment length", () => {
       expect(rampSequence.segments[0].subdivisionLength).to.eq(6);
       expect(rampSequence.segments[1].subdivisionLength).to.eq(3);
-    });
-
-    it("can generate a grid segment row", () => {
-      expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
-        [1, 0, 0, 0,  0, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
     });
   });
 
@@ -209,15 +185,8 @@ describe("RampSequence", () => {
       const rampSequence = new RampSequence();
       rampSequence.addSegment(0);
       expect(rampSequence.segments.length).to.eq(1);
-      expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
-        [1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-
       rampSequence.removeSegment(0);
       expect(rampSequence.segments.length).to.eq(0);
-      expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
     });
 
 

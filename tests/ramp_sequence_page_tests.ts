@@ -17,8 +17,15 @@ describe("RampSequencePage", () => {
     const rampSequencePage = sequencer.grid.activePage as RampSequencePage;
 
     it("sets the active page to a ramp sequence page",() => expect(rampSequencePage).to.be.instanceOf(RampSequencePage));
+    it("has no active segment", () => expect(rampSequencePage.activeSegment).to.be.undefined);
     it("has a track with a ramp sequence", () => expect(track.rampSequence).to.be.instanceOf(RampSequence));
     it("has no segments", () => expect(track.rampSequence.segments.length).to.eq(0));
+
+    it("has a blank segment row", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
 
     it("has a blank subdivision row", () => {
       expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
@@ -42,12 +49,19 @@ describe("RampSequencePage", () => {
     // Add a segment at index 0
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
 
+    it("sets the activeSegment", () => expect(rampSequencePage.activeSegment).not.to.be.undefined);
     it("adds the segment to a track", () => expect(rampSequence.segments.length).to.eq(1));
     it("has the default length", () => expect(rampSequence.segments[0].length).to.eq(16));
     it("has the default subdiv length", () => expect(rampSequence.segments[0].subdivisionLength).to.eq(16));
     it("has the start index", () => expect(rampSequence.segments[0].startIndex).to.eq(0));
     it("has the default range start", () => expect(rampSequence.segments[0].range.start).to.eq(0));
     it("has the default range end", () => expect(rampSequence.segments[0].range.end).to.eq(1));
+
+    it("produces the specified grid segment row", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [12, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
 
     it("produces the default grid subdivision row", () => {
       expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
@@ -58,6 +72,85 @@ describe("RampSequencePage", () => {
     it("produces the default grid range row", () => {
       expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
         [12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+      );
+    });
+  });
+
+
+  describe("adding multiple segments", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+    let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+
+    // Add a segment at index 0
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 6, s: 1});
+
+    it("adds the segment to a track", () => expect(rampSequence.segments.length).to.eq(2));
+    it("adjusts the first segment length", () => expect(rampSequence.segments[0].length).to.eq(6));
+    it("has the default second segment length", () => expect(rampSequence.segments[1].length).to.eq(10));
+    it("adjusts the first segment subdiv length", () => expect(rampSequence.segments[0].subdivisionLength).to.eq(6));
+    it("has the default second segment subdiv length", () => expect(rampSequence.segments[1].subdivisionLength).to.eq(10));
+    it("leaves the first segment start index in place", () => expect(rampSequence.segments[0].startIndex).to.eq(0));
+    it("adds the specified second segment start index", () => expect(rampSequence.segments[1].startIndex).to.eq(6));
+    it("leaves the default ranges in tact", () => {
+      expect(rampSequence.segments[0].range.start).to.eq(0);
+      expect(rampSequence.segments[0].range.end).to.eq(1);
+      expect(rampSequence.segments[1].range.start).to.eq(0);
+      expect(rampSequence.segments[1].range.end).to.eq(1);
+    });
+
+    it("produces a grid segment row with the most recently added segment highlighted ", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [3, 0, 0, 0,  0, 0, 12, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("produces a subdivision row with the most recently added segment highlighted", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [3, 3, 3, 3,  3, 3, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+      );
+    });
+
+    it("produces the default grid range row", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+      );
+    });
+  });
+
+
+  describe("removing a segment", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+    let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+
+    // Add a segment at index 0
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    expect(rampSequence.segments.length).to.eq(1);
+
+    // Remove the segment
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+    it("unsets the active segment", () => expect(rampSequencePage.activeSegment).to.be.undefined);
+
+    it("has a blank segment row", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("has a blank subdivision row", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("has a blank range row", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
   });
