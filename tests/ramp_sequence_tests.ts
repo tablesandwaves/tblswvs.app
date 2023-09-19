@@ -15,19 +15,7 @@ describe("RampSequence", () => {
         [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
-
-    it("has an all-zeroes grid subdivisions row", () => {
-      expect(rampSequence.gridSubdivisionRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-    });
-
-    it("has an all-zeroes grid range row", () => {
-      expect(rampSequence.gridSubdivisionRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-    });
-  })
+  });
 
 
   describe("adding the first outer steps at position 0", () => {
@@ -58,13 +46,7 @@ describe("RampSequence", () => {
     it("can generate a grid segment row", () => {
       expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
         [1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      )
-    });
-
-    it("can generate a grid subdivision row", () => {
-      expect(rampSequence.gridSubdivisionRow()).to.have.ordered.members(
-        [1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1]
-      )
+      );
     });
 
     it("can have its subdivision length updated, which updates the grid subdivision row", () => {
@@ -72,9 +54,6 @@ describe("RampSequence", () => {
       rampSequence.addSegment(0);
       rampSequence.updateSubdivisionLength(0, 5);
       expect(rampSequence.segments[0].subdivisionLength).to.eq(5);
-      expect(rampSequence.gridSubdivisionRow()).to.have.ordered.members(
-        [1, 1, 1, 1,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      )
     });
 
     it("can have its range updated, which updates the grid range row", () => {
@@ -112,13 +91,7 @@ describe("RampSequence", () => {
     it("can generate a grid segment row", () => {
       expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
         [1, 0, 0, 0,  0, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      )
-    });
-
-    it("can generate a grid subdivision row", () => {
-      expect(rampSequence.gridSubdivisionRow()).to.have.ordered.members(
-        [1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1]
-      )
+      );
     });
   });
 
@@ -152,13 +125,7 @@ describe("RampSequence", () => {
     it("can generate a grid segment row", () => {
       expect(rampSequence.gridSegmentRow()).to.have.ordered.members(
         [1, 0, 0, 0,  0, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      )
-    });
-
-    it("can generate a grid subdivision row", () => {
-      expect(rampSequence.gridSubdivisionRow()).to.have.ordered.members(
-        [1, 1, 1, 1,  1, 1, 1, 1,  1, 0, 0, 0,  0, 0, 0, 0]
-      )
+      );
     });
   });
 

@@ -57,23 +57,7 @@ export class RampSequencePage extends GridPage {
 
 
   setGridSubdivisionDisplay() {
-    let row;
-
-    if (this.activeSegment == undefined) {
-      row = new Array(16).fill(0);
-    } else {
-      const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
-      row = rampSequence.gridSubdivisionRow().map((sequenceStep: (0|1), i): number => {
-        if (sequenceStep &&
-          i >= this.activeSegment.startIndex &&
-          i <  this.activeSegment.startIndex + this.activeSegment.length) {
-            return this.activeDivisionBrightness;
-          }
-
-          return sequenceStep ? this.inactiveDivisionBrightness : 0;
-      });
-    }
-
+    const row = this.gridSubdivisionRow();
     this.grid.levelRow(0, 1, row.slice(0, 8));
     this.grid.levelRow(8, 1, row.slice(8, 16));
   }
@@ -184,6 +168,25 @@ export class RampSequencePage extends GridPage {
       if (this.#inRange((i + 1) / 16, this.activeSegment.range.start, this.activeSegment.range.end)) return this.activeDivisionBrightness;
       return 0;
     });
+  }
+
+
+  gridSubdivisionRow(): number[] {
+    if (this.activeSegment == undefined || (this.activeSegment.range.start == 0 && this.activeSegment.range.end == 0)) {
+      return new Array(16).fill(0);
+    }
+
+    const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
+
+    return rampSequence.segments.reduce((row, segment) => {
+      return row.concat(
+        this.activeSegment.startIndex == segment.startIndex ?
+        new Array(segment.subdivisionLength).fill(this.activeDivisionBrightness) :
+        new Array(segment.subdivisionLength).fill(this.inactiveDivisionBrightness)
+      ).concat(
+        new Array(segment.length - segment.subdivisionLength).fill(0)
+      );
+    }, new Array());
   }
 
 

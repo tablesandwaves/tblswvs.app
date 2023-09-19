@@ -89,14 +89,4 @@ export class RampSequence {
       return row.concat(subsegment);
     }, new Array());
   }
-
-
-  gridSubdivisionRow(): (0|1)[] {
-    if (this.segments.length == 0) return new Array(16).fill(0);
-
-    return this.segments.reduce((row, segment) => {
-      return row.concat(new Array(segment.subdivisionLength).fill(1))
-                .concat(new Array(segment.length - segment.subdivisionLength).fill(0));
-    }, new Array());
-  }
 }
