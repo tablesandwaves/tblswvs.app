@@ -37,17 +37,23 @@ describe("RampSequence", () => {
       expect(rampSegment.range.end).to.eq(1);
     });
 
+    it("should generate a tblswvs.rampseq M4L device data", () => {
+      expect(rampSequence.deviceData()).to.have.ordered.members([0, 16, 16, 0, 1]);
+    });
+
     it("can have its subdivision length updated, which updates the grid subdivision row", () => {
       const rampSequence = new RampSequence();
       rampSequence.addSegment(0);
       rampSequence.updateSubdivisionLength(0, 5);
       expect(rampSequence.segments[0].subdivisionLength).to.eq(5);
+      expect(rampSequence.deviceData()).to.have.ordered.members([0, 16, 5, 0, 1]);
     });
 
     it("can have its range updated, which updates the grid range row", () => {
       rampSequence.updateRange(0, 0.25, 0.75);
       expect(rampSequence.segments[0].range.start).to.eq(0.25);
       expect(rampSequence.segments[0].range.end).to.eq(0.75);
+      expect(rampSequence.deviceData()).to.have.ordered.members([0, 16, 16, 0.25, 0.75]);
     });
   });
 
@@ -74,6 +80,10 @@ describe("RampSequence", () => {
     it("should set the default value for the subdivision length", () => {
       expect(rampSequence.segments[0].subdivisionLength).to.eq(6);
       expect(rampSequence.segments[1].subdivisionLength).to.eq(10);
+    });
+
+    it("should extend the tblswvs.rampseq M4L device data", () => {
+      expect(rampSequence.deviceData()).to.have.ordered.members([0, 6, 6, 0, 1,  6, 10, 10, 0, 1]);
     });
   });
 
@@ -102,6 +112,10 @@ describe("RampSequence", () => {
     it("does not allow a subdivision length to be greater than the segment length", () => {
       expect(rampSequence.segments[0].subdivisionLength).to.eq(6);
       expect(rampSequence.segments[1].subdivisionLength).to.eq(3);
+    });
+
+    it("generate the correct tblswvs.rampseq M4L device data", () => {
+      expect(rampSequence.deviceData()).to.have.ordered.members([0, 6, 6, 0, 1,  6, 10, 3, 0, 1]);
     });
   });
 

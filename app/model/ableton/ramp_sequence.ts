@@ -78,4 +78,15 @@ export class RampSequence {
     this.segments.find(segment => segment.startIndex == segmentStartIndex).range.start = start;
     this.segments.find(segment => segment.startIndex == segmentStartIndex).range.end = end;
   }
+
+
+  deviceData(): number[] {
+    return this.segments.flatMap(segment => [
+      segment.startIndex,
+      segment.length,
+      segment.subdivisionLength,
+      segment.range.start,
+      segment.range.end
+    ]);
+  }
 }
