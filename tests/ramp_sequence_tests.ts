@@ -38,7 +38,7 @@ describe("RampSequence", () => {
     });
 
     it("should generate a tblswvs.rampseq M4L device data", () => {
-      expect(rampSequence.deviceData()).to.have.ordered.members([0, 16, 16, 0, 1]);
+      expect(rampSequence.deviceData()).to.have.ordered.members([16, 16, 0, 1]);
     });
 
     it("can have its subdivision length updated, which updates the grid subdivision row", () => {
@@ -46,14 +46,14 @@ describe("RampSequence", () => {
       rampSequence.addSegment(0);
       rampSequence.updateSubdivisionLength(0, 5);
       expect(rampSequence.segments[0].subdivisionLength).to.eq(5);
-      expect(rampSequence.deviceData()).to.have.ordered.members([0, 16, 5, 0, 1]);
+      expect(rampSequence.deviceData()).to.have.ordered.members([16, 5, 0, 1]);
     });
 
     it("can have its range updated, which updates the grid range row", () => {
       rampSequence.updateRange(0, 0.25, 0.75);
       expect(rampSequence.segments[0].range.start).to.eq(0.25);
       expect(rampSequence.segments[0].range.end).to.eq(0.75);
-      expect(rampSequence.deviceData()).to.have.ordered.members([0, 16, 16, 0.25, 0.75]);
+      expect(rampSequence.deviceData()).to.have.ordered.members([16, 16, 0.25, 0.75]);
     });
   });
 
@@ -83,7 +83,7 @@ describe("RampSequence", () => {
     });
 
     it("should extend the tblswvs.rampseq M4L device data", () => {
-      expect(rampSequence.deviceData()).to.have.ordered.members([0, 6, 6, 0, 1,  6, 10, 10, 0, 1]);
+      expect(rampSequence.deviceData()).to.have.ordered.members([6, 6, 0, 1,  10, 10, 0, 1]);
     });
   });
 
@@ -115,7 +115,7 @@ describe("RampSequence", () => {
     });
 
     it("generate the correct tblswvs.rampseq M4L device data", () => {
-      expect(rampSequence.deviceData()).to.have.ordered.members([0, 6, 6, 0, 1,  6, 10, 3, 0, 1]);
+      expect(rampSequence.deviceData()).to.have.ordered.members([6, 6, 0, 1,  10, 3, 0, 1]);
     });
   });
 

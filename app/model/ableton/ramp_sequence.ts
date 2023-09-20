@@ -82,7 +82,6 @@ export class RampSequence {
 
   deviceData(): number[] {
     return this.segments.flatMap(segment => [
-      segment.startIndex,
       segment.length,
       segment.subdivisionLength,
       segment.range.start,
