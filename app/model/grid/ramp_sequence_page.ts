@@ -169,13 +169,15 @@ export class RampSequencePage extends GridPage {
 
 
   gridSubdivisionRow(): number[] {
-    if (this.activeSegment == undefined) return new Array(16).fill(0);
+    // if (this.activeSegment == undefined) return new Array(16).fill(0);
 
     const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
 
+    if (rampSequence.segments.length == 0) return new Array(16).fill(0);
+
     return rampSequence.segments.reduce((row, segment) => {
       return row.concat(
-        this.activeSegment.startIndex == segment.startIndex ?
+        this.activeSegment && this.activeSegment.startIndex == segment.startIndex ?
         new Array(segment.subdivisionLength).fill(this.activeDivisionBrightness) :
         new Array(segment.subdivisionLength).fill(this.inactiveDivisionBrightness)
       ).concat(
@@ -186,13 +188,15 @@ export class RampSequencePage extends GridPage {
 
 
   gridSegmentRow(): number[] {
-    if (this.activeSegment == undefined) return new Array(16).fill(0);
+    // if (this.activeSegment == undefined) return new Array(16).fill(0);
 
     const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
 
+    if (rampSequence.segments.length == 0) return new Array(16).fill(0);
+
     return rampSequence.segments.reduce((row, segment) => {
       const subsegment = new Array(segment.length).fill(0);
-      subsegment[0] = this.activeSegment.startIndex == segment.startIndex ?
+      subsegment[0] = this.activeSegment && this.activeSegment.startIndex == segment.startIndex ?
                       this.activeDivisionBrightness :
                       this.inactiveDivisionBrightness;
       return row.concat(subsegment);

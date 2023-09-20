@@ -226,6 +226,36 @@ describe("RampSequencePage", () => {
       it("extends the first segment length", () => expect(rampSequence.segments[0].length).to.eq(16));
       it("does not extend the shortened subdivision length", () => expect(rampSequence.segments[0].subdivisionLength).to.eq(4));
     });
+
+
+    describe("Removing a segment updates the grid rows", () => {
+      const sequencer = new Sequencer(testing);
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+
+      // Add segments at index 0, 8, then press
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+
+      it("has the non-removed segment row", () => {
+        expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+          [3, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+        );
+      });
+
+      it("has the non-removed segment subdivision row", () => {
+        expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+          [3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3]
+        );
+      });
+
+      it("has an empty range row with no active segment", () => {
+        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+          [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+        );
+      });
+    });
   });
 
 
