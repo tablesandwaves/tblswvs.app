@@ -1,4 +1,4 @@
-import { RampSegment, RampRange } from "../ableton/ramp_sequence";
+import { RampSegment } from "../ableton/ramp_sequence";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
 import { MonomeGrid } from "./monome_grid";
 
@@ -31,6 +31,7 @@ export class RampSequencePage extends GridPage {
 
 
   refresh() {
+    this.activeSegment = undefined;
     this.grid.clearGridDisplay();
     this.setGridRampSequenceDisplay();
   }
@@ -92,7 +93,7 @@ export class RampSequencePage extends GridPage {
         gridPage.activeSegment = rampSequence.addSegment(press.x);
       }
 
-      gridPage.refresh();
+      gridPage.setGridRampSequenceDisplay();
     }
   }
 
@@ -159,6 +160,9 @@ export class RampSequencePage extends GridPage {
     if (this.activeSegment == undefined || (this.activeSegment.range.start == 0 && this.activeSegment.range.end == 0)) {
       return new Array(16).fill(0);
     }
+    // const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
+
+    // if (rampSequence.segments.length == 0) return new Array(16).fill(0);
 
     let row = new Array(16).fill(0);
     return row.map((elem, i) => {
@@ -169,8 +173,6 @@ export class RampSequencePage extends GridPage {
 
 
   gridSubdivisionRow(): number[] {
-    // if (this.activeSegment == undefined) return new Array(16).fill(0);
-
     const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
 
     if (rampSequence.segments.length == 0) return new Array(16).fill(0);
@@ -188,8 +190,6 @@ export class RampSequencePage extends GridPage {
 
 
   gridSegmentRow(): number[] {
-    // if (this.activeSegment == undefined) return new Array(16).fill(0);
-
     const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
 
     if (rampSequence.segments.length == 0) return new Array(16).fill(0);

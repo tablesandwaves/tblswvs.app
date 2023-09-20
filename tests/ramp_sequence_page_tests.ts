@@ -226,35 +226,137 @@ describe("RampSequencePage", () => {
       it("extends the first segment length", () => expect(rampSequence.segments[0].length).to.eq(16));
       it("does not extend the shortened subdivision length", () => expect(rampSequence.segments[0].subdivisionLength).to.eq(4));
     });
+  });
 
 
-    describe("Removing a segment updates the grid rows", () => {
-      const sequencer = new Sequencer(testing);
-      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
-      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+  describe("Removing a segment updates the grid rows", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
 
-      // Add segments at index 0, 8, then press
-      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-      sequencer.grid.keyPress({y: 0, x: 8, s: 1});
-      sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+    // Add segments at index 0, 8, then press
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 8, s: 1});
 
-      it("has the non-removed segment row", () => {
-        expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
-          [3, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-        );
-      });
+    it("has the non-removed segment row", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [3, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
 
-      it("has the non-removed segment subdivision row", () => {
-        expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
-          [3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3]
-        );
-      });
+    it("has the non-removed segment subdivision row", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3]
+      );
+    });
 
-      it("has an empty range row with no active segment", () => {
-        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-          [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-        );
-      });
+    it("has an empty range row with no active segment", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("Selecting another track while on the ramp sequence page", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+
+    // Add segments at index 0, 8, then press
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+
+    expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+      [3, 0, 0, 0,  0, 0, 0, 0,  12, 0, 0, 0,  0, 0, 0, 0]
+    );
+    expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+      [3, 3, 3, 3,  3, 3, 3, 3,  12, 12, 12, 12,  12, 12, 12, 12]
+    );
+    expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+      [12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+    );
+
+    // Select a different track. Simulating track selection via keyPress:
+    //
+    //  sequencer.grid.keyPress({y: 7, x: 1, s: 1});
+    //
+    // would trigger an attempt to update the Electron browser window, which is not available in tests
+    // (for now, at least). Therefore set the track and call the refresh() manually, as if
+    //
+    //   MonomeGrid.#setActiveTrack(1)
+    //
+    // were called.
+    sequencer.daw.activeTrack = 1;
+    rampSequencePage.refresh();
+
+    it("empties the segment row", () => {
+      [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+    });
+
+    it("empties subdivision row", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("empties the range row", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("Going back to a track with segments while on the ramp sequence page", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+
+    // Add segments at index 0, 8, then press
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+
+    expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+      [3, 0, 0, 0,  0, 0, 0, 0,  12, 0, 0, 0,  0, 0, 0, 0]
+    );
+    expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+      [3, 3, 3, 3,  3, 3, 3, 3,  12, 12, 12, 12,  12, 12, 12, 12]
+    );
+    expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+      [12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+    );
+
+    // Select a different track. Simulating track selection via keyPress:
+    //
+    //  sequencer.grid.keyPress({y: 7, x: 1, s: 1});
+    //
+    // would trigger an attempt to update the Electron browser window, which is not available in tests
+    // (for now, at least). Therefore set the track and call the refresh() manually, as if
+    //
+    //   MonomeGrid.#setActiveTrack(1)
+    //
+    // were called.
+    sequencer.daw.activeTrack = 1;
+    rampSequencePage.refresh();
+    sequencer.daw.activeTrack = 0;
+    rampSequencePage.refresh();
+
+    it("displays the segment row with no active segment", () => {
+      [3, 0, 0, 0,  0, 0, 0, 0,  3, 0, 0, 0,  0, 0, 0, 0]
+    });
+
+    it("displays the subdivision row with no active segment", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3]
+      );
+    });
+
+    it("displays an empty range row because no segment is active", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
     });
   });
 
