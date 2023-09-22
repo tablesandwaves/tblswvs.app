@@ -9,6 +9,12 @@ export type RampPressRange = {
 }
 
 
+// Scale the grid row integers 0-15 to 0-1
+export const RAMP_SEQ_RANGE_STEPS = [...new Array(16)].map((_, i) => i).map((step) => {
+  return Math.round((((step - 0) / 15) * 1000)) / 1000;
+});
+
+
 export class RampSequencePage extends GridPage {
   type = "RampSequence";
 
@@ -102,45 +108,30 @@ export class RampSequencePage extends GridPage {
 
 
   updateRange(gridPage: RampSequencePage, press: GridKeyPress) {
-    // Button Press
+    // Button press
     if (press.s == 1) {
 
       gridPage.keyPressCount++;
 
       if (gridPage.keyPressCount == 1) {
-        gridPage.rampPressRange = { startIndex: press.x + 1, endIndex: undefined }
+        gridPage.rampPressRange = { startIndex: press.x, endIndex: undefined };
       } else {
-        gridPage.rampPressRange.endIndex = press.x + 1;
+        gridPage.rampPressRange.endIndex = press.x;
       }
     }
-    // Button Release (press.s = 0)
+    // Button release (press.s = 0)
     else {
 
       gridPage.keyPressCount--;
 
-      // If all buttons are released, flush the cached rampPressRange to the active segment.
       if (gridPage.keyPressCount == 0) {
-
-        // Special Case: zeroing out the range
-        if (gridPage.rampPressRange.startIndex == 1 &&
-            gridPage.rampPressRange.endIndex   == undefined &&
-            gridPage.activeSegment.range.start == 0.0625 &&
-            gridPage.activeSegment.range.end   == 0.0625) {
-          gridPage.rampPressRange.startIndex = 0;
-          gridPage.rampPressRange.endIndex   = 0;
-        }
-
-        // Special Case: extending down to zero
-        if (gridPage.rampPressRange.startIndex == 1 &&
-            gridPage.rampPressRange.endIndex != 1 &&
-            gridPage.rampPressRange.endIndex != undefined) {
-          gridPage.rampPressRange.startIndex = 0;
-        }
 
         gridPage.grid.sequencer.daw.getActiveTrack().rampSequence.updateRange(
           gridPage.activeSegment.startIndex,
-          gridPage.rampPressRange.startIndex / 16,
-          gridPage.rampPressRange.endIndex == undefined ? gridPage.rampPressRange.startIndex / 16 : gridPage.rampPressRange.endIndex / 16
+          RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.startIndex],
+          gridPage.rampPressRange.endIndex == undefined ?
+          RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.startIndex] :
+          RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.endIndex]
         );
 
         gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
@@ -151,15 +142,18 @@ export class RampSequencePage extends GridPage {
 
 
   gridRangeRow(): number[] {
-    if (this.activeSegment == undefined || (this.activeSegment.range.start == 0 && this.activeSegment.range.end == 0)) {
-      return new Array(16).fill(0);
+    if (this.activeSegment == undefined) return new Array(16).fill(0);
+
+    let min: number, max: number;
+    if (this.activeSegment.range.start <= this.activeSegment.range.end) {
+      min = this.activeSegment.range.start;
+      max = this.activeSegment.range.end;
+    } else {
+      min = this.activeSegment.range.end;
+      max = this.activeSegment.range.start;
     }
 
-    let row = new Array(16).fill(0);
-    return row.map((elem, i) => {
-      if (this.#inRange((i + 1) / 16, this.activeSegment.range.start, this.activeSegment.range.end)) return this.activeDivisionBrightness;
-      return 0;
-    });
+    return RAMP_SEQ_RANGE_STEPS.map(step => step < min || step > max ? 0 : this.activeDivisionBrightness);
   }
 
 
@@ -196,7 +190,7 @@ export class RampSequencePage extends GridPage {
 
 
   #inRange(x: number, start: number, end: number): boolean {
-    let [min, max] = [start, end].sort();
+    let [min, max] = [start, end].sort((a, b) => a - b);
     return x >= min && x <= max;
   }
 }

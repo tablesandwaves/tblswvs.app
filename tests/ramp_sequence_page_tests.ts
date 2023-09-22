@@ -362,7 +362,57 @@ describe("RampSequencePage", () => {
 
 
   describe("Range editing", () => {
-    it("can set a range between 0 and 1", () => {
+    describe("can set a range between 0 and 1", () => {
+      const sequencer = new Sequencer(testing);
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+
+      // Add a segment at index 0
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+      // Press buttons for the range between 0.267 and 0.733, the middle 8 buttons
+      sequencer.grid.keyPress({y: 2, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 2, x: 11, s: 1});
+      sequencer.grid.keyPress({y: 2, x: 4, s: 0});
+      sequencer.grid.keyPress({y: 2, x: 11, s: 0});
+
+      it("updates the range start", () => expect(rampSequence.segments[0].range.start).to.eq(0.267));
+      it("updates the range end", () => expect(rampSequence.segments[0].range.end).to.eq(0.733));
+
+      it("updates the grid range row", () => {
+        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+          [0, 0, 0, 0,  12, 12, 12, 12,  12, 12, 12, 12,  0, 0, 0, 0]
+        );
+      });
+    });
+
+    describe("setting a high-to-low range", () => {
+      const sequencer = new Sequencer(testing);
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+
+      // Add a segment at index 0
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+      // Press buttons for the range between 0.733 and 0.267, th middle 8 buttons
+      sequencer.grid.keyPress({y: 2, x: 11, s: 1});
+      sequencer.grid.keyPress({y: 2, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 2, x: 4, s: 0});
+      sequencer.grid.keyPress({y: 2, x: 11, s: 0});
+
+      it("updates the range start", () => expect(rampSequence.segments[0].range.start).to.eq(0.733));
+      it("updates the range end", () => expect(rampSequence.segments[0].range.end).to.eq(0.267));
+
+      it("updates the grid range row", () => {
+        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+          [0, 0, 0, 0,  12, 12, 12, 12,  12, 12, 12, 12,  0, 0, 0, 0]
+        );
+      });
+    });
+
+    describe("setting a static range", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
@@ -373,85 +423,19 @@ describe("RampSequencePage", () => {
 
       // Press buttons for the range between 0.25 and 0.75
       sequencer.grid.keyPress({y: 2, x: 3, s: 1});
-      sequencer.grid.keyPress({y: 2, x: 11, s: 1});
-      sequencer.grid.keyPress({y: 2, x: 3, s: 0});
-      sequencer.grid.keyPress({y: 2, x: 11, s: 0});
-
-      expect(rampSequence.segments.length).to.eq(1);
-      expect(rampSequence.segments[0].range.start).to.eq(0.25);
-      expect(rampSequence.segments[0].range.end).to.eq(0.75);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [0, 0, 0, 12,  12, 12, 12, 12,  12, 12, 12, 12,  0, 0, 0, 0]
-      );
-    });
-
-    it("can set a high-to-low range", () => {
-      const sequencer = new Sequencer(testing);
-      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
-      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
-
-      // Add a segment at index 0
-      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-
-      // Press buttons for the range between 0.75 and 0.25
-      sequencer.grid.keyPress({y: 2, x: 11, s: 1});
-      sequencer.grid.keyPress({y: 2, x: 3, s: 1});
-      sequencer.grid.keyPress({y: 2, x: 3, s: 0});
-      sequencer.grid.keyPress({y: 2, x: 11, s: 0});
-
-      expect(rampSequence.segments.length).to.eq(1);
-      expect(rampSequence.segments[0].range.start).to.eq(0.75);
-      expect(rampSequence.segments[0].range.end).to.eq(0.25);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [0, 0, 0, 12,  12, 12, 12, 12,  12, 12, 12, 12,  0, 0, 0, 0]
-      );
-    });
-
-    it("can set a static range", () => {
-      const sequencer = new Sequencer(testing);
-      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
-      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
-
-      // Add a segment at index 0
-      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-
-      // Press buttons for the range between 0.25 and 0.75
-      sequencer.grid.keyPress({y: 2, x: 3, s: 1});
       sequencer.grid.keyPress({y: 2, x: 3, s: 0});
 
-      expect(rampSequence.segments.length).to.eq(1);
-      expect(rampSequence.segments[0].range.start).to.eq(0.25);
-      expect(rampSequence.segments[0].range.end).to.eq(0.25);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [0, 0, 0, 12,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
+      it("updates the range start", () => expect(rampSequence.segments[0].range.start).to.eq(0.2));
+      it("updates the range end", () => expect(rampSequence.segments[0].range.end).to.eq(0.2));
+
+      it("updates the grid range row", () => {
+        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+          [0, 0, 0, 12,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+        );
+      });
     });
 
-    it("can set a range from zero to any number", () => {
-      const sequencer = new Sequencer(testing);
-      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
-      let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-
-      // Add a segment at index 0
-      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-      expect(rampSequencePage.rampPressRange).to.eq(undefined);
-
-      // Press the first two range buttons
-      sequencer.grid.keyPress({y: 2, x: 0, s: 1});
-      sequencer.grid.keyPress({y: 2, x: 1, s: 1});
-      sequencer.grid.keyPress({y: 2, x: 0, s: 0});
-      sequencer.grid.keyPress({y: 2, x: 1, s: 0});
-      expect(rampSequencePage.rampPressRange.startIndex).to.eq(0);
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.start).to.eq(0);
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.end).to.eq(0.125);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [12, 12, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-    });
-
-    it("can set a static range of 1", () => {
+    describe("setting a static range of 1", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
@@ -464,43 +448,37 @@ describe("RampSequencePage", () => {
       sequencer.grid.keyPress({y: 2, x: 15, s: 1});
       sequencer.grid.keyPress({y: 2, x: 15, s: 0});
 
-      expect(rampSequence.segments.length).to.eq(1);
-      expect(rampSequence.segments[0].range.start).to.eq(1);
-      expect(rampSequence.segments[0].range.end).to.eq(1);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 12]
-      );
+      it("updates the range start", () => expect(rampSequence.segments[0].range.start).to.eq(1));
+      it("updates the range end", () => expect(rampSequence.segments[0].range.end).to.eq(1));
+
+      it("updates the grid range row", () => {
+        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+          [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 12]
+        );
+      });
     });
 
-    it("can set a static range of 0", () => {
+    describe("setting a static range of 0", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
 
       // Add a segment at index 0
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-      expect(rampSequencePage.rampPressRange).to.eq(undefined);
 
-      // Set the segment range to 0.0625
-      sequencer.grid.keyPress({y: 2, x: 0, s: 1});
-      expect(rampSequencePage.rampPressRange.startIndex).to.eq(1);
-      expect(rampSequencePage.rampPressRange.endIndex).to.eq(undefined);
-
-      sequencer.grid.keyPress({y: 2, x: 0, s: 0});
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.start).to.eq(0.0625);
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.end).to.eq(0.0625);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [12, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
-
-      // Set the segment range to 0 by pressing the same 0-index button again while it is on
+      // Press buttons for the range between 0.25 and 0.75
       sequencer.grid.keyPress({y: 2, x: 0, s: 1});
       sequencer.grid.keyPress({y: 2, x: 0, s: 0});
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.start).to.eq(0);
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].range.end).to.eq(0);
-      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
-      );
+
+      it("updates the range start", () => expect(rampSequence.segments[0].range.start).to.eq(0));
+      it("updates the range end", () => expect(rampSequence.segments[0].range.end).to.eq(0));
+
+      it("updates the grid range row", () => {
+        expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+          [12, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+        );
+      });
     });
   });
 });

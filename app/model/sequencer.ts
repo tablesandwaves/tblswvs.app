@@ -29,10 +29,13 @@ export class Sequencer {
   key: Key;
   queuedMelody: note[] = new Array();
   queuedChordProgression: note[][] = new Array();
+  testing: boolean;
 
 
   constructor(testing: boolean = false) {
-    if (!testing) {
+    this.testing = testing;
+
+    if (!this.testing) {
       this.midiIn = new easymidi.Input("tblswvs in", true);
 
       // To Live
@@ -126,6 +129,7 @@ export class Sequencer {
 
 
   setRampSequence(track: AbletonTrack) {
+    if (this.testing) return;
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/ramp_seq`,
