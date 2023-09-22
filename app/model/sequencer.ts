@@ -125,6 +125,20 @@ export class Sequencer {
   }
 
 
+  setRampSequence(track: AbletonTrack) {
+    try {
+      this.emitter.emit(
+        `/tracks/${track.dawIndex}/ramp_seq`,
+        ...track.rampSequence.deviceData()
+      );
+    } catch (e) {
+      console.error(e.name, e.message, "while sending notes to Live:");
+      console.error("ramp sequence data:", track.rampSequence.deviceData());
+      console.error("trackIndex", track.dawIndex);
+    }
+  }
+
+
   #syncWithLiveBeat(beat: number) {
     // Only sync during measure boundaries
     if (beat % 4 != 0) return;

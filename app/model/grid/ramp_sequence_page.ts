@@ -37,18 +37,15 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  setGridRampSequenceDisplay(highlightIndex?: number) {
-    this.setGridRampSequenceTransportRowDisplay(highlightIndex);
+  setGridRampSequenceDisplay() {
+    this.setGridSegmentDisplay();
     this.setGridSubdivisionDisplay();
     this.setGridRangeDisplay();
   }
 
 
-  setGridRampSequenceTransportRowDisplay(highlightIndex?: number) {
+  setGridSegmentDisplay() {
     const row = this.gridSegmentRow();
-
-    if (highlightIndex != undefined) row[highlightIndex] = 15;
-
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
   }
@@ -65,12 +62,6 @@ export class RampSequencePage extends GridPage {
     const row = this.gridRangeRow();
     this.grid.levelRow(0, 2, row.slice(0, 8));
     this.grid.levelRow(8, 2, row.slice(8, 16));
-  }
-
-
-  displayRhythmWithTransport(highlightIndex: number) {
-    this.setGridRampSequenceTransportRowDisplay(highlightIndex);
-    this.updateGuiRhythmTransport(highlightIndex);
   }
 
 
@@ -93,6 +84,7 @@ export class RampSequencePage extends GridPage {
         gridPage.activeSegment = rampSequence.addSegment(press.x);
       }
 
+      gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
       gridPage.setGridRampSequenceDisplay();
     }
   }
@@ -102,6 +94,8 @@ export class RampSequencePage extends GridPage {
     if (press.s == 1) {
       const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().rampSequence;
       rampSequence.updateSubdivisionLength(gridPage.activeSegment.startIndex, press.x - gridPage.activeSegment.startIndex + 1);
+
+      gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
       gridPage.setGridSubdivisionDisplay();
     }
   }
@@ -114,7 +108,6 @@ export class RampSequencePage extends GridPage {
       gridPage.keyPressCount++;
 
       if (gridPage.keyPressCount == 1) {
-        // gridPage.rampPressRange = { startIndex: press.x == 15 ? 16 : press.x, endIndex: undefined }
         gridPage.rampPressRange = { startIndex: press.x + 1, endIndex: undefined }
       } else {
         gridPage.rampPressRange.endIndex = press.x + 1;
@@ -150,6 +143,7 @@ export class RampSequencePage extends GridPage {
           gridPage.rampPressRange.endIndex == undefined ? gridPage.rampPressRange.startIndex / 16 : gridPage.rampPressRange.endIndex / 16
         );
 
+        gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
         gridPage.setGridRangeDisplay();
       }
     }
@@ -160,9 +154,6 @@ export class RampSequencePage extends GridPage {
     if (this.activeSegment == undefined || (this.activeSegment.range.start == 0 && this.activeSegment.range.end == 0)) {
       return new Array(16).fill(0);
     }
-    // const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
-
-    // if (rampSequence.segments.length == 0) return new Array(16).fill(0);
 
     let row = new Array(16).fill(0);
     return row.map((elem, i) => {
