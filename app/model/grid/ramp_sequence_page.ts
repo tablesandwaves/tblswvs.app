@@ -158,34 +158,32 @@ export class RampSequencePage extends GridPage {
 
 
   gridSubdivisionRow(): number[] {
+    const segmentRow   = new Array(16).fill(0);
     const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
 
-    if (rampSequence.segments.length == 0) return new Array(16).fill(0);
+    rampSequence.segments.forEach(segment => {
+      for (let i = segment.startIndex; i < segment.startIndex + segment.subdivisionLength; i++) {
+        segmentRow[i] = this.activeSegment && this.activeSegment.startIndex == segment.startIndex ?
+        this.activeDivisionBrightness :
+        this.inactiveDivisionBrightness
+      }
+    });
 
-    return rampSequence.segments.reduce((row, segment) => {
-      return row.concat(
-        this.activeSegment && this.activeSegment.startIndex == segment.startIndex ?
-        new Array(segment.subdivisionLength).fill(this.activeDivisionBrightness) :
-        new Array(segment.subdivisionLength).fill(this.inactiveDivisionBrightness)
-      ).concat(
-        new Array(segment.length - segment.subdivisionLength).fill(0)
-      );
-    }, new Array());
+    return segmentRow;
   }
 
 
   gridSegmentRow(): number[] {
+    const segmentRow   = new Array(16).fill(0);
     const rampSequence = this.grid.sequencer.daw.getActiveTrack().rampSequence;
 
-    if (rampSequence.segments.length == 0) return new Array(16).fill(0);
+    rampSequence.segments.map(s => s.startIndex).forEach(index => {
+      segmentRow[index] = this.activeSegment && this.activeSegment.startIndex == index ?
+      this.activeDivisionBrightness :
+      this.inactiveDivisionBrightness;
+    });
 
-    return rampSequence.segments.reduce((row, segment) => {
-      const subsegment = new Array(segment.length).fill(0);
-      subsegment[0] = this.activeSegment && this.activeSegment.startIndex == segment.startIndex ?
-                      this.activeDivisionBrightness :
-                      this.inactiveDivisionBrightness;
-      return row.concat(subsegment);
-    }, new Array());
+    return segmentRow;
   }
 
 

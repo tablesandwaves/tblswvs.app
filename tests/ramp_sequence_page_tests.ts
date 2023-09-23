@@ -77,13 +77,13 @@ describe("RampSequencePage", () => {
   });
 
 
-  describe("adding multiple segments", () => {
+  describe("Adding multiple segments", () => {
     const sequencer = new Sequencer(testing);
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
     let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
 
-    // Add a segment at index 0
+    // Add segments at index 0 and 6
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 0, x: 6, s: 1});
 
@@ -121,7 +121,7 @@ describe("RampSequencePage", () => {
   });
 
 
-  describe("removing a segment", () => {
+  describe("Removing a segment", () => {
     const sequencer = new Sequencer(testing);
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
@@ -149,6 +149,50 @@ describe("RampSequencePage", () => {
     });
 
     it("has a blank range row", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("Removing the first segment when two were added", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+    // let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+
+    // Add segments at indices 0 and 8
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+
+    // Select the first segment (index 0) and remove it (press it twice)
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+    it("unsets the active segment", () => expect(rampSequencePage.activeSegment).to.be.undefined);
+
+    it("the track's ramp sequence size is updated", () => {
+      expect(sequencer.daw.getActiveTrack().rampSequence.segments.length).to.eq(1);
+    });
+
+    it("the track's ramp sequence has a remaining segment at the right index", () => {
+      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].startIndex).to.eq(8);
+    });
+
+    it("has a segment row that only includes the remaining segment", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  3, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("has a subdivision row for the remaining segment", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  3, 3, 3, 3,  3, 3, 3, 3]
+      );
+    });
+
+    it("has a blank range row with no active segment", () => {
       expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
         [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
       );
