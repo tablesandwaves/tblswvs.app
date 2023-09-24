@@ -74,7 +74,7 @@ div#app, div#documentation {
   float: left;
   display: block;
   margin: auto 10px;
-  min-height: 800px;
+  min-height: 1000px;
 }
 
 
@@ -100,7 +100,8 @@ h2 {
 div#track,
 div#note-length,
 div#sequencer-steps,
-div#sequencer-fills {
+div#sequencer-fills,
+div#ramp-sequence {
   width: 800px;
   margin: auto 10px;
 }
@@ -211,6 +212,12 @@ div#sequencer-fills div span {
   text-align: center;
   font-family: 'Courier New', Courier, monospace;
   color: #117733;
+}
+
+
+div#ramp-sequence {
+  height: 100px;
+  margin-bottom: 10px;
 }
 
 

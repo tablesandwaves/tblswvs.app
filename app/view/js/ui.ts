@@ -3,6 +3,9 @@ let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
 let gridMatrix: any[] = new Array(8);
 
+const RAMP_SEQ_HEIGHT     = 80;
+const RAMP_SEQ_STEP_WIDTH = 50;
+
 
 window.documentation.pageDocumentation((event: any, page: any) => {
   pageDocumentation[page.name] = page;
@@ -315,7 +318,55 @@ const resetRelatedButtons = () => {
 }
 
 
+const drawRampSequence = () => {
+  console.log("drawRampSequence()");
+
+  const canvas = <HTMLCanvasElement> document.getElementById("rampseq");
+  const ctx = canvas.getContext("2d");
+
+  ctx.strokeStyle = "#117733";
+
+  const rampSequence = [
+    6, 4, 0, 1,
+    4, 3, 0, 1,
+    3, 1, 0, 1,
+    3, 2, 0, 1
+  ];
+  let segmentStartX = 0;
+
+  for (let i = 0; i < rampSequence.length; i += 4) {
+    console.log("segment", i / 4)
+    const segmentStepLength = rampSequence[i];
+    const segmentLength     = segmentStepLength * RAMP_SEQ_STEP_WIDTH;
+    const subdivStepLength  = rampSequence[i + 1];
+    const subdivLength      = subdivStepLength * RAMP_SEQ_STEP_WIDTH;
+    const numSegments = segmentStepLength / subdivStepLength;
+
+    for (let j = 0; j < numSegments; j++) {
+      let rampStartX = (subdivLength * j) + segmentStartX;
+      let rampEndX   = (subdivLength * j) + subdivLength + segmentStartX;
+      let rampStartY = RAMP_SEQ_HEIGHT;
+      let rampEndY   = 0;
+
+      if (rampEndX > segmentLength + segmentStartX) {
+        const percentFit = (segmentLength - rampStartX + segmentStartX) / subdivLength;
+        rampEndX = segmentLength + segmentStartX;
+        rampEndY = RAMP_SEQ_HEIGHT - (RAMP_SEQ_HEIGHT * percentFit);
+      }
+
+      ctx.moveTo(rampStartX, rampStartY);
+      ctx.lineTo(rampEndX, rampEndY);
+      if (rampEndX < 800) ctx.lineTo(rampEndX, rampStartY);
+      ctx.stroke();
+    }
+
+    segmentStartX += segmentLength;
+  }
+}
+
+
 const ready = () => {
+  drawRampSequence();
   setupGridMatrix();
   document.getElementById("docs").addEventListener("click", toggleDocumentation);
   document.querySelectorAll("#page-list li").forEach(page => page.addEventListener("click", () => loadPageDocumentation(page)));
