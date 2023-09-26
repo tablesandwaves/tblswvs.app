@@ -47,6 +47,7 @@ export class RampSequencePage extends GridPage {
     this.setGridSegmentDisplay();
     this.setGridSubdivisionDisplay();
     this.setGridRangeDisplay();
+    this.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
   }
 
 
@@ -92,6 +93,7 @@ export class RampSequencePage extends GridPage {
 
       gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
       gridPage.setGridRampSequenceDisplay();
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
     }
   }
 
@@ -103,6 +105,7 @@ export class RampSequencePage extends GridPage {
 
       gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
       gridPage.setGridSubdivisionDisplay();
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
     }
   }
 
@@ -136,6 +139,7 @@ export class RampSequencePage extends GridPage {
 
         gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
         gridPage.setGridRangeDisplay();
+        gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
       }
     }
   }

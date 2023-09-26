@@ -276,6 +276,12 @@ export class AbletonTrack {
     this.updateGuiRandomizeMelody();
     this.updateGuiCurrentClip();
     this.updateGuiChains();
+    this.updateGuiRampSequence();
+  }
+
+
+  updateGuiRampSequence() {
+    this.daw.sequencer.gui.webContents.send("update-ramp-sequence", this.rampSequence.deviceData());
   }
 
 
