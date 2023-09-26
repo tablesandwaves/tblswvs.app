@@ -319,49 +319,58 @@ const resetRelatedButtons = () => {
 
 
 const drawRampSequence = () => {
-  console.log("drawRampSequence()");
-
   const canvas = <HTMLCanvasElement> document.getElementById("rampseq");
   const ctx = canvas.getContext("2d");
 
   ctx.strokeStyle = "#117733";
 
   const rampSequence = [
-    6, 4, 0, 1,
-    4, 3, 0, 1,
+    6, 4, 0.25, 0.75,
+    4, 3, 0.75, 0.25,
     3, 1, 0, 1,
     3, 2, 0, 1
   ];
   let segmentStartX = 0;
 
   for (let i = 0; i < rampSequence.length; i += 4) {
-    console.log("segment", i / 4)
     const segmentStepLength = rampSequence[i];
-    const segmentLength     = segmentStepLength * RAMP_SEQ_STEP_WIDTH;
     const subdivStepLength  = rampSequence[i + 1];
-    const subdivLength      = subdivStepLength * RAMP_SEQ_STEP_WIDTH;
-    const numSegments = segmentStepLength / subdivStepLength;
+    const segmentStartY     = RAMP_SEQ_HEIGHT - (rampSequence[i + 2] * RAMP_SEQ_HEIGHT);
+    const segmentEndY       = RAMP_SEQ_HEIGHT - (rampSequence[i + 3] * RAMP_SEQ_HEIGHT);
+    const segmentLength     = segmentStepLength * RAMP_SEQ_STEP_WIDTH;
+    const subdivLength      = subdivStepLength  * RAMP_SEQ_STEP_WIDTH;
+    const numSegments       = segmentStepLength / subdivStepLength;
 
     for (let j = 0; j < numSegments; j++) {
       let rampStartX = (subdivLength * j) + segmentStartX;
       let rampEndX   = (subdivLength * j) + subdivLength + segmentStartX;
-      let rampStartY = RAMP_SEQ_HEIGHT;
-      let rampEndY   = 0;
+      let rampStartY = segmentStartY;
+      let rampEndY   = segmentEndY;
 
-      if (rampEndX > segmentLength + segmentStartX) {
-        const percentFit = (segmentLength - rampStartX + segmentStartX) / subdivLength;
+      if (i != 0 && j == 0) {
+        ctx.lineTo(rampStartX, rampStartY);
+      }
+
+      const percentFit = (segmentLength - rampStartX + segmentStartX) / subdivLength;
+      if (percentFit < 1) {
         rampEndX = segmentLength + segmentStartX;
-        rampEndY = RAMP_SEQ_HEIGHT - (RAMP_SEQ_HEIGHT * percentFit);
+        if (segmentStartY > segmentEndY) {
+          rampEndY = segmentStartY - ((segmentStartY - segmentEndY) * percentFit);
+        } else {
+          rampEndY = segmentStartY + ((segmentEndY - segmentStartY) * percentFit);
+        }
       }
 
       ctx.moveTo(rampStartX, rampStartY);
       ctx.lineTo(rampEndX, rampEndY);
-      if (rampEndX < 800) ctx.lineTo(rampEndX, rampStartY);
-      ctx.stroke();
+      if (percentFit >= 1 && rampEndX != segmentStartX + segmentLength) {
+        ctx.lineTo(rampEndX, segmentStartY);
+      }
     }
 
     segmentStartX += segmentLength;
   }
+  ctx.stroke();
 }
 
 
