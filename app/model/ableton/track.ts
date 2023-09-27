@@ -281,6 +281,7 @@ export class AbletonTrack {
 
 
   updateGuiRampSequence() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send("update-ramp-sequence", this.rampSequence.deviceData());
   }
 
