@@ -94,6 +94,10 @@ export class RampSequencePage extends GridPage {
       gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
       gridPage.setGridRampSequenceDisplay();
       gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
+
+      if (gridPage.grid.sequencer.daw.getActiveTrack().rampSequence.segments.length == 0) {
+        gridPage.grid.sequencer.clearSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+      }
     }
   }
 
