@@ -14,13 +14,16 @@ function init_buffer(uniq_patch_id) {
 
 
 function init_receiver() {
-  var trackName = new LiveAPI("this_device canonical_parent").get("name");
+  var track = new LiveAPI("this_device canonical_parent");
+  var trackName = track.get("name");
   outlet(0, "receiver", "rampseq_" + (parseInt(("" + trackName).split(" ")[0]) - 1));
 }
 
 
-function list()
-{
+function list() {
+  // If the macro/live.remote connection has been unset, remap them.
+  map_macros();
+
   var sequenceDivisions = arrayfromargs(arguments);
 
   var step = 0;
@@ -37,12 +40,16 @@ function list()
 }
 
 
+function clear_macro() {
+  outlet(0, "unmap16", "bang");
+}
+
+
 function map_macros() {
   var param15, param16;
-
   var firstDevice = new LiveAPI("this_device canonical_parent devices 0");
+  var parameters  = firstDevice.get("parameters");
 
-  var parameters = firstDevice.get("parameters");
   for (var i = 0; i < parameters.length; i += 2) {
     var param = new LiveAPI("id " + firstDevice.get("parameters")[i+1]);
     if (param.get("original_name") == "Macro 15") {
