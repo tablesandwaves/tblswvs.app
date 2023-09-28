@@ -1,23 +1,31 @@
-var rampSequenceBufferName = "ramp_sequence";
+// var rampSequenceBufferName = "ramp_sequence";
 var rampSequenceBuffer;
 
 
-function init(uniq_patch_id) {
-  init_buffer(uniq_patch_id);
-  init_receiver();
+function init() {
+  var track        = new LiveAPI("this_device canonical_parent");
+  var trackName    = track.get("name");
+  var trackNumber  = (parseInt(("" + trackName).split(" ")[0]) - 1);
+  var bufferName   = "ramp_sequence_" + trackNumber;
+  var receiverName = "rampseq_" + trackNumber;
+
+  init_buffer(bufferName);
+  // init_receiver();
+  outlet(0, "receiver", receiverName);
+  outlet(0, "buffer", bufferName);
 }
 
 
-function init_buffer(uniq_patch_id) {
-	rampSequenceBuffer = new Buffer(uniq_patch_id + "_" + rampSequenceBufferName);
+function init_buffer(bufferName) {
+	rampSequenceBuffer = new Buffer(bufferName);
 }
 
 
-function init_receiver() {
-  var track = new LiveAPI("this_device canonical_parent");
-  var trackName = track.get("name");
-  outlet(0, "receiver", "rampseq_" + (parseInt(("" + trackName).split(" ")[0]) - 1));
-}
+// function init_receiver(trackNumber) {
+//   // var track = new LiveAPI("this_device canonical_parent");
+//   // var trackName = track.get("name");
+//   outlet(0, "receiver", "rampseq_" + trackNumber);
+// }
 
 
 function list() {
