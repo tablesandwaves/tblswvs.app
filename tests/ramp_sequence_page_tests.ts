@@ -18,8 +18,8 @@ describe("RampSequencePage", () => {
 
     it("sets the active page to a ramp sequence page",() => expect(rampSequencePage).to.be.instanceOf(RampSequencePage));
     it("has no active segment", () => expect(rampSequencePage.activeSegment).to.be.undefined);
-    it("has a track with a ramp sequence", () => expect(track.rampSequence).to.be.instanceOf(RampSequence));
-    it("has no segments", () => expect(track.rampSequence.segments.length).to.eq(0));
+    it("has a track with a ramp sequence", () => expect(track.getRampSequence(0)).to.be.instanceOf(RampSequence));
+    it("has no segments", () => expect(track.getRampSequence(0).segments.length).to.eq(0));
 
     it("has a blank segment row", () => {
       expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
@@ -44,7 +44,7 @@ describe("RampSequencePage", () => {
     const sequencer = new Sequencer(testing);
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-    let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+    let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
     // Add a segment at index 0
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -81,7 +81,7 @@ describe("RampSequencePage", () => {
     const sequencer = new Sequencer(testing);
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-    let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+    let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
     // Add segments at index 0 and 6
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -125,7 +125,7 @@ describe("RampSequencePage", () => {
     const sequencer = new Sequencer(testing);
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-    let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+    let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
     // Add a segment at index 0
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -173,11 +173,11 @@ describe("RampSequencePage", () => {
     it("unsets the active segment", () => expect(rampSequencePage.activeSegment).to.be.undefined);
 
     it("the track's ramp sequence size is updated", () => {
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments.length).to.eq(1);
+      expect(sequencer.daw.getActiveTrack().getRampSequence(0).segments.length).to.eq(1);
     });
 
     it("the track's ramp sequence has a remaining segment at the right index", () => {
-      expect(sequencer.daw.getActiveTrack().rampSequence.segments[0].startIndex).to.eq(8);
+      expect(sequencer.daw.getActiveTrack().getRampSequence(0).segments[0].startIndex).to.eq(8);
     });
 
     it("has a segment row that only includes the remaining segment", () => {
@@ -205,7 +205,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add a segment at index 0 and adjust the subdivision length
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -227,7 +227,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add segments at index 0, 8, then press
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -252,7 +252,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add segments at index 0, 8, then press
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -410,7 +410,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add a segment at index 0
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -435,7 +435,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add a segment at index 0
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -460,7 +460,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add a segment at index 0
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -483,7 +483,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add a segment at index 0
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -506,7 +506,7 @@ describe("RampSequencePage", () => {
       const sequencer = new Sequencer(testing);
       sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
-      let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
+      let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
 
       // Add a segment at index 0
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
