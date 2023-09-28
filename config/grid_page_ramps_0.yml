@@ -21,10 +21,19 @@ rows:
     mapping: updateSubdivision
   -
     name: Ramp Range
-    description: Set the 0-1 range for the currently active outer ramp.
+    description: Set the 0-1 range for the currently active outer ramp
     group: ramp-range
     type: range
     index: 2
     xStart: 0
     xLength: 16
     mapping: updateRange
+  -
+    name: Ramp Sequence Index
+    description: Select between the first and second ramp sequences for the active track
+    group: ramp-seq-index
+    type: radio
+    index: 6
+    xStart: 0
+    xLength: 2
+    mapping: updateActiveRampSequenceIndex

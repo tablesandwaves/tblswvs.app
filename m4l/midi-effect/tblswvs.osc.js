@@ -5,7 +5,7 @@ var notesPattern        = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
 var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
 var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
 var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
-var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq/;
+var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq\/(\d+)/;
 
 
 function osc_message() {
@@ -25,7 +25,8 @@ function osc_message() {
 
   var rampSeqMatch = a[0].match(rampSeqPattern);
   if (rampSeqMatch) {
-    messnamed("rampseq_" + rampSeqMatch[1], a.slice(1));
+    var rampSequenceData = [parseInt(rampSeqMatch[2])].concat(a.slice(1));
+    messnamed("rampseq_" + rampSeqMatch[1], rampSequenceData);
   }
 
   var newClipMatch = a[0].match(newClipPattern);

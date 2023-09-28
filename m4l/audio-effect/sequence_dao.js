@@ -1,46 +1,46 @@
-// var rampSequenceBufferName = "ramp_sequence";
-var rampSequenceBuffer;
+// var rampSequenceBuffer;
+var buffers = new Array();
 
 
 function init() {
   var track        = new LiveAPI("this_device canonical_parent");
   var trackName    = track.get("name");
-  var trackNumber  = (parseInt(("" + trackName).split(" ")[0]) - 1);
-  var bufferName   = "ramp_sequence_" + trackNumber;
-  var receiverName = "rampseq_" + trackNumber;
+  var trackIndex   = (parseInt(("" + trackName).split(" ")[0]) - 1);
+  var receiverName = "rampseq_" + trackIndex;
 
-  init_buffer(bufferName);
-  // init_receiver();
+  init_buffers(trackIndex);
   outlet(0, "receiver", receiverName);
-  outlet(0, "buffer", bufferName);
 }
 
 
-function init_buffer(bufferName) {
-	rampSequenceBuffer = new Buffer(bufferName);
+function init_buffers(trackIndex) {
+  for (var i = 0; i < 2; i++) {
+    var bufferName   = "ramp_sequence_" + trackIndex + "_" + i;
+    var buffer = new Buffer(bufferName);
+    buffers[i] = buffer;
+
+    outlet(0, "buffer_" + i, bufferName);
+  }
 }
-
-
-// function init_receiver(trackNumber) {
-//   // var track = new LiveAPI("this_device canonical_parent");
-//   // var trackName = track.get("name");
-//   outlet(0, "receiver", "rampseq_" + trackNumber);
-// }
-
 
 function list() {
   // If the macro/live.remote connection has been unset, remap them.
   map_macros();
 
-  var sequenceDivisions = arrayfromargs(arguments);
+  var args              = arrayfromargs(arguments);
+  post(args, "\n");
+  var bufferIndex       = args.slice(0, 1);
+  post(bufferIndex, "\n");
+  var sequenceDivisions = args.slice(1);
+  post(sequenceDivisions, "\n");
 
   var step = 0;
   for (var i = 0; i < sequenceDivisions.length; i += 4) {
     for (var rampStep = 0; rampStep < sequenceDivisions[i]; rampStep++, step++) {
-      rampSequenceBuffer.poke(1, step, sequenceDivisions[i] * 0.0625);
-      rampSequenceBuffer.poke(2, step, sequenceDivisions[i + 1] / sequenceDivisions[i]);
-	    rampSequenceBuffer.poke(3, step, sequenceDivisions[i + 2]);
-	    rampSequenceBuffer.poke(4, step, sequenceDivisions[i + 3]);
+      buffers[bufferIndex].poke(1, step, sequenceDivisions[i] * 0.0625);
+      buffers[bufferIndex].poke(2, step, sequenceDivisions[i + 1] / sequenceDivisions[i]);
+	    buffers[bufferIndex].poke(3, step, sequenceDivisions[i + 2]);
+	    buffers[bufferIndex].poke(4, step, sequenceDivisions[i + 3]);
     }
   }
 

@@ -48,8 +48,8 @@ export class AbletonTrack {
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
   vectorShiftsActive: boolean = false;
-  rampSequence: RampSequence;
-  rampSequenceActive: boolean = false;
+  rampSequence0: RampSequence;
+  rampSequence1: RampSequence;
   algorithm: string = "simple";
   noteLength: string = "16n";
   pulseRate: string = "16n";
@@ -81,7 +81,8 @@ export class AbletonTrack {
 
     this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
 
-    this.rampSequence = new RampSequence();
+    this.rampSequence0 = new RampSequence();
+    this.rampSequence1 = new RampSequence();
   }
 
 
@@ -276,13 +277,21 @@ export class AbletonTrack {
     this.updateGuiRandomizeMelody();
     this.updateGuiCurrentClip();
     this.updateGuiChains();
-    this.updateGuiRampSequence();
+    this.updateGuiRampSequence(0);
   }
 
 
-  updateGuiRampSequence() {
+  updateGuiRampSequence(rampSequenceIndex: (0|1)) {
     if (this.daw.sequencer.gui == undefined) return;
-    this.daw.sequencer.gui.webContents.send("update-ramp-sequence", this.rampSequence.deviceData());
+    this.daw.sequencer.gui.webContents.send(
+      "update-ramp-sequence",
+      rampSequenceIndex == 0 ? this.rampSequence0.deviceData() : this.rampSequence1.deviceData()
+    );
+  }
+
+
+  getRampSequence(rampSequenceIndex: (0|1)): RampSequence {
+    return rampSequenceIndex == 0 ? this.rampSequence0 : this.rampSequence1;
   }
 
 

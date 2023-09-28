@@ -128,28 +128,28 @@ export class Sequencer {
   }
 
 
-  setRampSequence(track: AbletonTrack) {
+  setRampSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
     if (this.testing) return;
     try {
       this.emitter.emit(
-        `/tracks/${track.dawIndex}/ramp_seq`,
-        ...track.rampSequence.deviceData()
+        `/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`,
+        ...track.getRampSequence(rampSequenceIndex).deviceData()
       );
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
-      console.error("ramp sequence data:", track.rampSequence.deviceData());
+      console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
       console.error("trackIndex", track.dawIndex);
     }
   }
 
 
-  clearSequence(track: AbletonTrack) {
+  clearSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
     if (this.testing) return;
     try {
-      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq`, "clear_macro");
+      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "clear_macro");
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
-      console.error("ramp sequence data:", track.rampSequence.deviceData());
+      console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
       console.error("trackIndex", track.dawIndex);
     }
   }
