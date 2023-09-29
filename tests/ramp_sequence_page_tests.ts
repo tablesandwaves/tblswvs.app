@@ -38,6 +38,12 @@ describe("RampSequencePage", () => {
         [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
+
+    it("produces the default grid ramp sequence globals row with the first track selected", () => {
+      expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
+        [10, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
   });
 
   describe("Adding a segment", () => {
@@ -195,6 +201,98 @@ describe("RampSequencePage", () => {
     it("has a blank range row with no active segment", () => {
       expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
         [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("Adding segments to both of a track's 2 ramp sequences", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+    let rampSequence1 = sequencer.daw.getActiveTrack().getRampSequence(0);
+    let rampSequence2 = sequencer.daw.getActiveTrack().getRampSequence(1);
+
+    // Add a segment at index 0
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+    // Select the second ramp segment, then add two segments to it.
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 6, s: 1});
+
+    it("adds the the correct segments to the first track", () => expect(rampSequence1.segments.length).to.eq(1));
+    it("adds the the correct segments to the second track", () => expect(rampSequence2.segments.length).to.eq(2));
+
+    it("produces a grid segment row with the most recently added ramp sequence's most recent segment highlighted ", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [3, 0, 0, 0,  0, 0, 12, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("produces a subdivision row with the most recently added segment highlighted", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [3, 3, 3, 3,  3, 3, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+      );
+    });
+
+    it("produces the default grid range row", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12]
+      );
+    });
+
+    it("produces the grid ramp sequence globals row with the last selected track", () => {
+      expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
+        [0, 10, 0, 0,  0, 0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("Adding segments to both of a track's 2 ramp sequences and reselecting the first edited segment", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+    let rampSequence1 = sequencer.daw.getActiveTrack().getRampSequence(0);
+    let rampSequence2 = sequencer.daw.getActiveTrack().getRampSequence(1);
+
+    // Add a segment at index 0
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+    // Select the second ramp segment, then add two segments to it.
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 6, s: 1});
+
+    // Re-select the track's first ramp segment
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+
+    it("adds the the correct segments to the first track", () => expect(rampSequence1.segments.length).to.eq(1));
+    it("adds the the correct segments to the second track", () => expect(rampSequence2.segments.length).to.eq(2));
+    it("unsets the the grid page's active segment", () => expect(rampSequencePage.activeSegment).to.be.undefined);
+
+    it("produces a grid segment row with no segment highlighted ", () => {
+      expect(rampSequencePage.gridSegmentRow()).to.have.ordered.members(
+        [3, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("produces a subdivision row with no segment highlighted", () => {
+      expect(rampSequencePage.gridSubdivisionRow()).to.have.ordered.members(
+        [3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3,  3, 3, 3, 3]
+      );
+    });
+
+    it("produces an empty grid range row because no segment is selected", () => {
+      expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+      );
+    });
+
+    it("produces the grid ramp sequence globals row with the last selected track", () => {
+      expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
+        [10, 0, 0, 0,  0, 0, 0, 0]
       );
     });
   });
@@ -454,6 +552,12 @@ describe("RampSequencePage", () => {
           [0, 0, 0, 0,  12, 12, 12, 12,  12, 12, 12, 12,  0, 0, 0, 0]
         );
       });
+
+      it("produces a grid ramp sequence globals row with the high-to-low indicator on", () => {
+        expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
+          [10, 0, 10, 0,  0, 0, 0, 0]
+        );
+      });
     });
 
     describe("setting a static range", () => {
@@ -475,6 +579,12 @@ describe("RampSequencePage", () => {
       it("updates the grid range row", () => {
         expect(rampSequencePage.gridRangeRow()).to.have.ordered.members(
           [0, 0, 0, 12,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]
+        );
+      });
+
+      it("does not produce a grid ramp sequence globals row with the high-to-low indicator on", () => {
+        expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
+          [10, 0, 0, 0,  0, 0, 0, 0]
         );
       });
     });

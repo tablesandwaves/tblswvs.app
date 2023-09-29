@@ -76,22 +76,14 @@ export class RampSequencePage extends GridPage {
 
 
   setGridRampGlobalsDisplay() {
-    const row = new Array(8).fill(0);
-
-    // Select which of the current track's 2 ramp sequences are being edited.
-    row[this.activeRampSequenceIndex] = 10;
-
-    // Is the current segment low-to-high? If yes, light up column 3
-    if (this.activeSegment) {
-      row[2] = this.activeSegment.range.start > this.activeSegment.range.end ? 10 : 0;
-    }
-
+    const row = this.gridRampSequenceGlobalsRow();
     this.grid.levelRow(0, 6, row);
   }
 
 
   updateActiveRampSequenceIndex(gridPage: RampSequencePage, press: GridKeyPress) {
     if (press.s == 1) {
+      gridPage.activeSegment = undefined;
       gridPage.activeRampSequenceIndex = press.x == 0 ? 0 : 1;
       gridPage.setGridRampSequenceDisplay();
     }
@@ -220,5 +212,20 @@ export class RampSequencePage extends GridPage {
     });
 
     return segmentRow;
+  }
+
+
+  gridRampSequenceGlobalsRow(): number[] {
+    const row = new Array(8).fill(0);
+
+    // Select which of the current track's 2 ramp sequences are being edited.
+    row[this.activeRampSequenceIndex] = 10;
+
+    // Is the current segment low-to-high? If yes, light up column 3
+    if (this.activeSegment) {
+      row[2] = this.activeSegment.range.start > this.activeSegment.range.end ? 10 : 0;
+    }
+
+    return row;
   }
 }
