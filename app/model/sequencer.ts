@@ -143,10 +143,22 @@ export class Sequencer {
   }
 
 
-  clearSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
+  clearRampSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
     if (this.testing) return;
     try {
       this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "clear_macro");
+    } catch (e) {
+      console.error(e.name, e.message, "while sending notes to Live:");
+      console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
+      console.error("trackIndex", track.dawIndex);
+    }
+  }
+
+
+  activateRampSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
+    if (this.testing) return;
+    try {
+      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "map_macro");
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
       console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());

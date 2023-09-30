@@ -101,6 +101,10 @@ export class GridPage {
   refresh(): void {}
 
 
+  // Blank method to catch buttons that light up but provide no user interaction
+  ignoredIndicator(): void {}
+
+
   // May be overridden by any subclasses extending GridPage
   keyPress(press: GridKeyPress) {
     if ((press.s == 0 && !this.keyReleaseFunctionality) || this.matrix[press.y][press.x] == undefined)

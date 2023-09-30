@@ -13,6 +13,7 @@ export type RampSegment = {
 
 
 export class RampSequence {
+  active: boolean = false;
   segments: RampSegment[] = new Array();
 
 

@@ -24,23 +24,32 @@ function init_buffers(trackIndex) {
 }
 
 function list() {
-  // If the macro/live.remote connection has been unset, remap them.
-  map_macros();
+  var args      = arrayfromargs(arguments);
+  var rampIndex = args.slice(0, 1);
 
-  var args              = arrayfromargs(arguments);
-  post(args, "\n");
-  var bufferIndex       = args.slice(0, 1);
-  post(bufferIndex, "\n");
-  var sequenceDivisions = args.slice(1);
-  post(sequenceDivisions, "\n");
+  if (args[1] == "clear_macro") {
 
-  var step = 0;
-  for (var i = 0; i < sequenceDivisions.length; i += 4) {
-    for (var rampStep = 0; rampStep < sequenceDivisions[i]; rampStep++, step++) {
-      buffers[bufferIndex].poke(1, step, sequenceDivisions[i] * 0.0625);
-      buffers[bufferIndex].poke(2, step, sequenceDivisions[i + 1] / sequenceDivisions[i]);
-	    buffers[bufferIndex].poke(3, step, sequenceDivisions[i + 2]);
-	    buffers[bufferIndex].poke(4, step, sequenceDivisions[i + 3]);
+    if (rampIndex == 0)
+      outlet(0, "unmap15", "bang");
+    else
+      outlet(0, "unmap16", "bang");
+
+  } else if (args[1] == "map_macro") {
+
+    map_macro(rampIndex);
+
+  } else {
+    var sequenceDivisions = args.slice(1);
+    post(sequenceDivisions, "\n");
+
+    var step = 0;
+    for (var i = 0; i < sequenceDivisions.length; i += 4) {
+      for (var rampStep = 0; rampStep < sequenceDivisions[i]; rampStep++, step++) {
+        buffers[rampIndex].poke(1, step, sequenceDivisions[i] * 0.0625);
+        buffers[rampIndex].poke(2, step, sequenceDivisions[i + 1] / sequenceDivisions[i]);
+        buffers[rampIndex].poke(3, step, sequenceDivisions[i + 2]);
+        buffers[rampIndex].poke(4, step, sequenceDivisions[i + 3]);
+      }
     }
   }
 
@@ -48,21 +57,17 @@ function list() {
 }
 
 
-function clear_macro() {
-  outlet(0, "unmap16", "bang");
-}
-
-
-function map_macros() {
+function map_macro(rampIndex) {
   var param15, param16;
   var firstDevice = new LiveAPI("this_device canonical_parent devices 0");
   var parameters  = firstDevice.get("parameters");
 
   for (var i = 0; i < parameters.length; i += 2) {
     var param = new LiveAPI("id " + firstDevice.get("parameters")[i+1]);
-    if (param.get("original_name") == "Macro 15") {
+
+    if (rampIndex == 0 && param.get("original_name") == "Macro 15") {
       param15 = parseInt(param.id);
-    } else if (param.get("original_name") == "Macro 16") {
+    } else if (rampIndex == 1 && param.get("original_name") == "Macro 16") {
       param16 = parseInt(param.id);
     }
   }

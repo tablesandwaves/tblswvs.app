@@ -37,3 +37,21 @@ rows:
     xStart: 0
     xLength: 2
     mapping: updateActiveRampSequenceIndex
+  -
+    name: Activate Ramp Index
+    description: Toggle the currently selected ramp sequence on or off
+    group: ramp-seq-active
+    type: toggle
+    index: 6
+    xStart: 2
+    xLength: 1
+    mapping: toggleRampSequence
+  -
+    name: Active Segment Inverted
+    description: Lights up when the active segment ramps from high to low
+    group: active-segment-high-to-low
+    type: indicator
+    index: 6
+    xStart: 3
+    xLength: 1
+    mapping: ignoredIndicator

@@ -33,6 +33,7 @@ export class RampSequencePage extends GridPage {
     this.functionMap.set("updateSubdivision", this.updateSubdivision);
     this.functionMap.set("updateRange", this.updateRange);
     this.functionMap.set("updateActiveRampSequenceIndex", this.updateActiveRampSequenceIndex);
+    this.functionMap.set("toggleRampSequence", this.toggleRampSequence);
 
     this.refresh();
   }
@@ -90,6 +91,21 @@ export class RampSequencePage extends GridPage {
   }
 
 
+  toggleRampSequence(gridPage: RampSequencePage, press: GridKeyPress) {
+    if (press.s == 1) {
+      const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getRampSequence(gridPage.activeRampSequenceIndex);
+      rampSequence.active = !rampSequence.active;
+
+      if (rampSequence.active) {
+        gridPage.grid.sequencer.activateRampSequence(gridPage.grid.sequencer.daw.getActiveTrack(), gridPage.activeRampSequenceIndex);
+      } else {
+        gridPage.grid.sequencer.clearRampSequence(gridPage.grid.sequencer.daw.getActiveTrack(), gridPage.activeRampSequenceIndex);
+      }
+      gridPage.setGridRampGlobalsDisplay();
+    }
+  }
+
+
   updateSegment(gridPage: RampSequencePage, press: GridKeyPress) {
     if (press.s == 1) {
 
@@ -113,10 +129,6 @@ export class RampSequencePage extends GridPage {
       gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack(), gridPage.activeRampSequenceIndex);
       gridPage.setGridRampSequenceDisplay();
       gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence(gridPage.activeRampSequenceIndex);
-
-      if (rampSequence.segments.length == 0) {
-        gridPage.grid.sequencer.clearSequence(gridPage.grid.sequencer.daw.getActiveTrack(), gridPage.activeRampSequenceIndex);
-      }
     }
   }
 
@@ -152,7 +164,9 @@ export class RampSequencePage extends GridPage {
 
       if (gridPage.keyPressCount == 0) {
 
-        gridPage.grid.sequencer.daw.getActiveTrack().getRampSequence(gridPage.activeRampSequenceIndex).updateRange(
+        const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getRampSequence(gridPage.activeRampSequenceIndex);
+
+        rampSequence.updateRange(
           gridPage.activeSegment.startIndex,
           RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.startIndex],
           gridPage.rampPressRange.endIndex == undefined ?
@@ -221,9 +235,12 @@ export class RampSequencePage extends GridPage {
     // Select which of the current track's 2 ramp sequences are being edited.
     row[this.activeRampSequenceIndex] = 10;
 
+    // Is the active ramp seqeunce active (is the corresponding Live device macro mapped)?
+    row[2] = this.grid.sequencer.daw.getActiveTrack().getRampSequence(this.activeRampSequenceIndex).active ? 10 : 0;
+
     // Is the current segment low-to-high? If yes, light up column 3
     if (this.activeSegment) {
-      row[2] = this.activeSegment.range.start > this.activeSegment.range.end ? 10 : 0;
+      row[3] = this.activeSegment.range.start > this.activeSegment.range.end ? 10 : 0;
     }
 
     return row;

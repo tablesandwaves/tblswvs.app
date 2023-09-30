@@ -162,6 +162,29 @@ describe("RampSequencePage", () => {
   });
 
 
+  describe("Activating a ramp sequence", () => {
+    const sequencer = new Sequencer(testing);
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequencePage = sequencer.grid.activePage as RampSequencePage;
+    let rampSequence = sequencer.daw.getActiveTrack().getRampSequence(0);
+
+    // Add a segment at index 0
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    expect(rampSequence.segments.length).to.eq(1);
+
+    // Activate the ramp sequence in Live
+    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
+
+    it("actives the ramp sequence", () => expect(rampSequence.active).to.be.true);
+
+    it("lights up the 'active' indicator in the grid ramp sequence globals row", () => {
+      expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
+        [10, 0, 10, 0,  0, 0, 0, 0]
+      );
+    });
+  });
+
+
   describe("Removing the first segment when two were added", () => {
     const sequencer = new Sequencer(testing);
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -555,7 +578,7 @@ describe("RampSequencePage", () => {
 
       it("produces a grid ramp sequence globals row with the high-to-low indicator on", () => {
         expect(rampSequencePage.gridRampSequenceGlobalsRow()).to.have.ordered.members(
-          [10, 0, 10, 0,  0, 0, 0, 0]
+          [10, 0, 0, 10,  0, 0, 0, 0]
         );
       });
     });
