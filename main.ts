@@ -36,7 +36,7 @@ app.whenReady().then(() => {
     // to set the grid to the track 1, rhythm page.
     setTimeout(() => {
       sequencer.grid.keyPress({x: 0, y: 7, s: 1});
-      sequencer.grid.keyPress({x: 6, y: 7, s: 1});
+      sequencer.grid.keyPress({x: 7, y: 7, s: 1});
     }, 500);
 
     setTimeout(() => {

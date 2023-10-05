@@ -20,35 +20,48 @@ live_tracks:
   -
     name: HiHat
     dawIndex: 3
+    chains:
+      -
+        name: Hihat 909 Closed
+      -
+        name: Hihat Open Tokyo 1 Distorted
   -
     name: Perc
     dawIndex: 4
     chains:
       -
-        name: Resonator Perc
+        name: E-Perc BittyBot
       -
-        name: Kick & Perc Chokes
+        name: Reverb Kick & Perc Choked Kit
+  -
+    name: Bass
+    dawIndex: 5
+    chains:
+      -
+        name: Simple Bass
+      -
+        name: cnstrct.acid-bass
+      -
+        name: cnstrct.reese-bass
+      -
+        name: cnstrct.synth-bass
       -
         name: FM Four Pluck
   -
-    name: Opsix
-    dawIndex: 5
+    name: Keys
+    dawIndex: 6
     chains:
       -
         name: A/B Pad
       -
-        name: Drift Stutter FM
-      -
-        name: Simple Bass
+        name: FM Depth/Reverb Mod
       -
         name: OSC Juno
-  -
-    name: Hydra
-    dawIndex: 6
-    chains:
-      -
-        name: Hydrasynth
       -
         name: Glacial Tolerance
       -
         name: Sad Broken Drift
+
+  -
+    name: Hydra
+    dawIndex: 7

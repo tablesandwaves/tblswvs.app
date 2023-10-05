@@ -23,10 +23,10 @@ export type DeviceConfig = {
 
 
 const globalKeyPageTypeMap: Record<number, string> = {
-  6:  "Rhythm",
-  7:  "Chords",
-  8:  "Melody",
-  9:  "RampSequence",
+  7:  "Rhythm",
+  8:  "Chords",
+  9:  "Melody",
+  10: "RampSequence",
   12: "Global"
 }
 
@@ -95,9 +95,9 @@ export class MonomeGrid {
     // Bottom row: global controls
     if (press.y == 7) {
 
-      if (press.x <= 5 && press.s == 1) {
+      if (press.x <= 6 && press.s == 1) {
         this.#setActiveTrack(press);
-      } else if (press.s == 1 && press.x >= 6 && press.x <= 12) {
+      } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
         this.#setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {
         this.setShiftState(press);
@@ -162,7 +162,7 @@ export class MonomeGrid {
 
     if (this.activePage) this.activePage.refresh();
 
-    this.#selectGlobalGridKey(0, 5, press.x);
+    this.#selectGlobalGridKey(0, 6, press.x);
     this.sequencer.daw.getActiveTrack().updateGui();
   }
 
@@ -174,49 +174,49 @@ export class MonomeGrid {
         this.pageIndex = 0;
         this.activePage = new RhythmPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 6;
+        globalKeyIndex = 7;
         break;
       case "Probabilities":
         // Do not reset page index to 0, this is page 2/index 1 of the Rhythm page group.
         this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 6;
+        globalKeyIndex = 7;
         break;
       case "Fills":
         // Do not reset page index to 0, this is page 3/index 2 of the Rhythm page group.
         this.activePage = new FillsPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 6;
+        globalKeyIndex = 7;
         break;
       case "Chords":
         this.pageIndex = 0;
         this.activePage = new ChordPage(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 7;
+        globalKeyIndex = 8;
         break;
       case "Melody":
         this.pageIndex = 0;
         this.activePage = new MelodyPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         break;
       case "Mutation":
         // Do not reset page index to 0, this is page 2/index 1 of the Melody page group.
         this.activePage = new MelodyEvolutionPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         break;
       case "MelodyVector":
         // Do not reset page index to 0, this is page 3/index 2 of the Melody page group.
         this.activePage = new MelodyVectorPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         break;
       case "RampSequence":
         this.pageIndex = 0;
         this.activePage = new RampSequencePage(this.#loadConfig(`grid_page_ramps_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 9;
+        globalKeyIndex = 10;
         break;
       case "Global":
         this.pageIndex = 0;
@@ -228,7 +228,7 @@ export class MonomeGrid {
 
     if (updated) {
       this.activePage.refresh();
-      this.#selectGlobalGridKey(6, 12, globalKeyIndex);
+      this.#selectGlobalGridKey(7, 12, globalKeyIndex);
     }
   }
 
