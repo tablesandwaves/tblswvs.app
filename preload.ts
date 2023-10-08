@@ -25,10 +25,12 @@ contextBridge.exposeInMainWorld("parameters", {
   updateMutations: (callback: any) => ipcRenderer.on("update-mutations", callback),
   updateMelodyVector: (callback: any) => ipcRenderer.on("update-melody-vector", callback),
   updateTrackChains: (callback: any) => ipcRenderer.on("update-track-chains", callback),
-  updateRampSequence: (callback: any) => ipcRenderer.on("update-ramp-sequence", callback)
+  updateRampSequence: (callback: any) => ipcRenderer.on("update-ramp-sequence", callback),
+  setPianoRollNotes: (callback: any) => ipcRenderer.on("piano-roll-notes", callback)
 });
 
 
 contextBridge.exposeInMainWorld("documentation", {
-  pageDocumentation: (callback: any) => ipcRenderer.on("documentation-page", callback)
+  pageDocumentation: (callback: any) => ipcRenderer.on("documentation-page", callback),
+  setNoteData: (callback: any) => ipcRenderer.on("note-data", callback),
 });

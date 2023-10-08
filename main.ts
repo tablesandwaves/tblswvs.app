@@ -2,6 +2,7 @@ import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
+import { noteData } from "tblswvs";
 import { Sequencer } from "./app/model/sequencer";
 
 
@@ -10,7 +11,7 @@ const sequencer = new Sequencer();
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 930,
+    width: 1630,
     height: 1000,
     webPreferences: {
       preload: path.join(__dirname, "preload.js")
@@ -19,7 +20,7 @@ const createWindow = () => {
 
   sequencer.gui = mainWindow;
   mainWindow.loadFile("app/view/index.html");
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on("closed", () => {
     sequencer.grid.clearGridDisplay(8);
@@ -49,6 +50,9 @@ app.whenReady().then(() => {
           }
         });
       });
+
+      sequencer.gui.webContents.send("note-data", noteData);
+      sequencer.gui.webContents.send("piano-roll-notes", [], 4);
     }, 1000);
   });
 }).then(() => {

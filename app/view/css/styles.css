@@ -101,7 +101,8 @@ div#track,
 div#note-length,
 div#sequencer-steps,
 div#sequencer-fills,
-div#ramp-sequence {
+div#ramp-sequence,
+div#piano-roll {
   width: 800px;
   margin: auto 10px;
 }
@@ -217,6 +218,12 @@ div#sequencer-fills div span {
 
 div#ramp-sequence {
   height: 80px;
+  margin-bottom: 10px;
+}
+
+
+div#piano-roll {
+  height: 300px;
   margin-bottom: 10px;
 }
 

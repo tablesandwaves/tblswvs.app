@@ -2,6 +2,7 @@ let previousStep = 15;
 let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
 let gridMatrix: any[] = new Array(8);
+let noteData: any[];
 
 const RAMP_SEQ_HEIGHT     = 80;
 const RAMP_SEQ_STEP_WIDTH = 50;
@@ -17,6 +18,9 @@ window.documentation.pageDocumentation((event: any, page: any) => {
     loadButtonRows(pageDocumentation[page.name].rows);
   }
 });
+
+
+window.documentation.setNoteData((event: any, _noteData: any[]) => noteData = _noteData);
 
 
 window.stepSequencer.transport((event: any, currentStep: number) => updateTransport(currentStep));
@@ -170,6 +174,56 @@ window.parameters.updateRampSequence((event: any, rampSequence: number[]) => {
     segmentStartX += segmentLength;
   }
   ctx.stroke();
+});
+
+
+window.parameters.setPianoRollNotes((event: any, notes: number[], superMeasureLength: number) => {
+  if (notes.length == 0) notes = [...new Array(12)].map((_, i) => i + 60);
+
+  const low          = notes.slice().sort().at(0);
+  const high         = notes.slice().sort().at(-1);
+  const noteSpan     = [...new Array(high - low + 1)].map((_, i) => i + low);
+  const canvasWidth  = 800;
+  const canvasHeight = 300;
+
+  const pianoRollWrapper = document.getElementById("piano-roll");
+  const currentCanvas = document.getElementById("pianoroll");
+  if (currentCanvas != undefined) pianoRollWrapper.removeChild(currentCanvas);
+
+  const newCanvas = document.createElement("canvas");
+  newCanvas.setAttribute("id", "pianoroll");
+  newCanvas.setAttribute("width", "" + canvasWidth);
+  newCanvas.setAttribute("height", "" + canvasHeight);
+  pianoRollWrapper.appendChild(newCanvas);
+
+  const ctx = newCanvas.getContext("2d");
+
+  let keyHeight = canvasHeight / noteSpan.length;
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 0.25;
+
+  noteSpan.reverse().forEach((midiNoteNumber, i) => {
+    ctx.fillStyle = noteData[midiNoteNumber].note.at(-1) == "#" ? "#111" : "#333";
+    ctx.fillRect(0, i * keyHeight, canvasWidth, keyHeight);
+
+    ctx.beginPath();
+    ctx.moveTo(0, (i * keyHeight) + keyHeight);
+    ctx.lineTo(800, (i * keyHeight) + keyHeight);
+    ctx.stroke();
+  });
+
+  let stepWidth = 800 / (superMeasureLength * 16);
+  for (let i = 0; i <= superMeasureLength * 16; i++) {
+    const xPos = i * stepWidth;
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth   = i % 16 == 0 ? 0.5 : 0.25;
+
+    ctx.moveTo(xPos, 0);
+    ctx.lineTo(xPos, canvasHeight);
+    ctx.stroke();
+  }
 });
 
 
@@ -378,7 +432,6 @@ const resetRelatedButtons = () => {
 
 
 const ready = () => {
-  // drawRampSequence();
   setupGridMatrix();
   document.getElementById("docs").addEventListener("click", toggleDocumentation);
   document.querySelectorAll("#page-list li").forEach(page => page.addEventListener("click", () => loadPageDocumentation(page)));
