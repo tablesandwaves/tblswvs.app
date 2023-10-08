@@ -1,6 +1,7 @@
 outlets = 2;
 
 
+var selectTrackPattern  = /\/tracks\/(\d+)/;
 var notesPattern        = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
 var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
 var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
@@ -10,7 +11,12 @@ var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq\/(\d+)/;
 
 function osc_message() {
   var a = arrayfromargs(arguments);
-  post("Received: " + a[0] + "\n");
+  // post("Received: " + a[0] + "\n");
+
+  var selectTrackMatch = a[0].match(selectTrackPattern);
+  if (selectTrackMatch) {
+    selectTrack(selectTrackMatch[1]);
+  }
 
   var notesMatch = a[0].match(notesPattern);
   if (notesMatch) {
@@ -178,4 +184,11 @@ function getClipNoteIds(trackIndex, clipIndex) {
   }
 
   return notes;
+}
+
+
+function selectTrack(trackIndex) {
+  var liveSet = new LiveAPI('live_set view');
+  var targetTrackDevice = new LiveAPI("live_set tracks " + trackIndex + " devices 0");
+  liveSet.call("select_device", "id " + targetTrackDevice.id);
 }

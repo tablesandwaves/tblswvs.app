@@ -164,6 +164,7 @@ export class MonomeGrid {
 
     this.#selectGlobalGridKey(0, 6, press.x);
     this.sequencer.daw.getActiveTrack().updateGui();
+    this.sequencer.selectActiveTrack(this.sequencer.daw.getActiveTrack());
   }
 
 

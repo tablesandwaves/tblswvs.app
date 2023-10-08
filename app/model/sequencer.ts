@@ -136,7 +136,7 @@ export class Sequencer {
         ...track.getRampSequence(rampSequenceIndex).deviceData()
       );
     } catch (e) {
-      console.error(e.name, e.message, "while sending notes to Live:");
+      console.error(e.name, e.message, "while sending ramp sequence data to Live:");
       console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
       console.error("trackIndex", track.dawIndex);
     }
@@ -148,7 +148,7 @@ export class Sequencer {
     try {
       this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "clear_macro");
     } catch (e) {
-      console.error(e.name, e.message, "while sending notes to Live:");
+      console.error(e.name, e.message, "while clearing ramp sequence in Live:");
       console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
       console.error("trackIndex", track.dawIndex);
     }
@@ -160,8 +160,19 @@ export class Sequencer {
     try {
       this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "map_macro");
     } catch (e) {
-      console.error(e.name, e.message, "while sending notes to Live:");
+      console.error(e.name, e.message, "while activating ramp sequence in Live:");
       console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
+      console.error("trackIndex", track.dawIndex);
+    }
+  }
+
+
+  selectActiveTrack(track: AbletonTrack) {
+    if (this.testing) return;
+    try {
+      this.emitter.emit(`/tracks/${track.dawIndex}`);
+    } catch (e) {
+      console.error(e.name, e.message, "while selecting the active track in Live:");
       console.error("trackIndex", track.dawIndex);
     }
   }
