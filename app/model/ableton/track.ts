@@ -278,6 +278,16 @@ export class AbletonTrack {
     this.updateGuiCurrentClip();
     this.updateGuiChains();
     this.updateGuiRampSequence(0);
+    this.updateGuiPianoRoll();
+  }
+
+
+  updateGuiPianoRoll() {
+    this.daw.sequencer.gui.webContents.send(
+      "piano-roll-notes",
+      this.abletonNotes().map(n => n.toPianoRollNote()),
+      this.daw.sequencer.superMeasure
+    );
   }
 
 

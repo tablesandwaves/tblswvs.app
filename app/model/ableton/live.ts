@@ -45,6 +45,7 @@ export class AbletonLive {
 
   updateActiveTrackNotes() {
     this.sequencer.setNotes(this.getActiveTrack());
+    this.getActiveTrack().updateGuiPianoRoll();
   }
 
 
