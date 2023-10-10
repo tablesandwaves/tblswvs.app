@@ -119,6 +119,8 @@ export class Sequencer {
       console.error("Current track mutation", track.currentMutation);
     }
 
+    this.gui.webContents.send("piano-roll-notes", notes.map(n => n.toPianoRollNote()), this.superMeasure);
+
     // setTimeout(() => {
     //   this.emitter.emit(
     //     `/tracks/${trackIndex}/clips/${clipIndex}/notes`,

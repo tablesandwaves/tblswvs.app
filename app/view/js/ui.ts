@@ -177,11 +177,17 @@ window.parameters.updateRampSequence((event: any, rampSequence: number[]) => {
 });
 
 
-window.parameters.setPianoRollNotes((event: any, notes: number[], superMeasureLength: number) => {
-  if (notes.length == 0) notes = [...new Array(12)].map((_, i) => i + 60);
+window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasureLength: number) => {
+  let low: number, high: number;
+  if (notes.length == 0) {
+    low  = 60;
+    high = 72;
+  } else {
+    low  = notes.slice().sort().at(0).at(0);
+    high = notes.slice().sort().at(-1).at(-3);
+    if (high < low + 12) high = low + 12;
+  }
 
-  const low          = notes.slice().sort().at(0);
-  const high         = notes.slice().sort().at(-1);
   const noteSpan     = [...new Array(high - low + 1)].map((_, i) => i + low);
   const canvasWidth  = 800;
   const canvasHeight = 300;
@@ -218,12 +224,21 @@ window.parameters.setPianoRollNotes((event: any, notes: number[], superMeasureLe
 
     ctx.beginPath();
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth   = i % 16 == 0 ? 0.5 : 0.25;
+    ctx.lineWidth   = i % 16 == 0 ? 1 : i % 4 == 0 ? 0.5 : 0.25;
 
     ctx.moveTo(xPos, 0);
     ctx.lineTo(xPos, canvasHeight);
     ctx.stroke();
   }
+
+  console.log("low", low, "high", high);
+  notes.forEach(note => {
+    console.log("note", note, high - note[0]);
+    const xPos = (note[1] / 0.25) * stepWidth;
+    const yPos = (high - note[0]) * keyHeight;
+    ctx.fillStyle = "#117733";
+    ctx.fillRect(xPos, yPos, stepWidth, keyHeight);
+  });
 });
 
 

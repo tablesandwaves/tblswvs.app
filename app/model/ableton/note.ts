@@ -74,4 +74,13 @@ export class AbletonNote {
       {type: "float",   value: this.probability}
     ];
   }
+
+
+  toPianoRollNote(): number[] {
+    return [
+      this.midiNote,
+      this.clipPosition,
+      this.duration
+    ]
+  }
 }
