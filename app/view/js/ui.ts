@@ -236,8 +236,15 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasure
     console.log("note", note, high - note[0]);
     const xPos = (note[1] / 0.25) * stepWidth;
     const yPos = (high - note[0]) * keyHeight;
+    const dur  = (note[2] / 0.25) * stepWidth;
     ctx.fillStyle = "#117733";
-    ctx.fillRect(xPos, yPos, stepWidth, keyHeight);
+    ctx.fillRect(xPos, yPos, dur, keyHeight);
+    ctx.strokeStyle = "#5be88a";
+
+    ctx.beginPath();
+    ctx.moveTo(xPos + dur, yPos);
+    ctx.lineTo(xPos + dur, yPos + keyHeight);
+    ctx.stroke();
   });
 });
 
