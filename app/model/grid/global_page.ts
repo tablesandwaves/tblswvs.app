@@ -42,6 +42,7 @@ export class GlobalPage extends GridPage {
     gridPage.grid.sequencer.daw.tracks.forEach((track) => {
       gridPage.grid.sequencer.setNotes(track);
     });
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
   }
 
 
