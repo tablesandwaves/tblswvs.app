@@ -286,6 +286,7 @@ export class AbletonTrack {
     this.daw.sequencer.gui.webContents.send(
       "piano-roll-notes",
       this.abletonNotes().map(n => n.toPianoRollNote()),
+      this.daw.sequencer.key.midiTonic,
       this.daw.sequencer.superMeasure
     );
   }

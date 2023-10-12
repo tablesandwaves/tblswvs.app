@@ -177,14 +177,19 @@ window.parameters.updateRampSequence((event: any, rampSequence: number[]) => {
 });
 
 
-window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasureLength: number) => {
+window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: number, superMeasureLength: number) => {
   let low: number, high: number;
   if (notes.length == 0) {
     low  = 60;
     high = 72;
   } else {
-    low  = notes.slice().sort().at(0).at(0);
-    high = notes.slice().sort().at(-1).at(-3);
+    const sortedNotes = notes.sort((a,b) => {
+      if (a[0] < b[0]) return -1;
+      if (a[0] > b[0]) return 1;
+      return 0;
+    });
+    low  = sortedNotes.at(0).at(0);
+    high = sortedNotes.at(-1).at(0);
     if (high < low + 12) high = low + 12;
   }
 
@@ -204,23 +209,26 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasure
 
   const ctx = newCanvas.getContext("2d");
 
-  let keyHeight = canvasHeight / noteSpan.length;
+  const pianoRollMargin = {top: 0, right: 0, bottom: 0, left: 32};
+  const pianoRollWidth  = canvasWidth - pianoRollMargin.left;
+  const keyHeight       = canvasHeight / noteSpan.length;
+
   ctx.strokeStyle = "#ffffff";
   ctx.lineWidth = 0.25;
 
   noteSpan.reverse().forEach((midiNoteNumber, i) => {
     ctx.fillStyle = noteData[midiNoteNumber].note.at(-1) == "#" ? "#111" : "#333";
-    ctx.fillRect(0, i * keyHeight, canvasWidth, keyHeight);
+    ctx.fillRect(pianoRollMargin.left, i * keyHeight, pianoRollWidth, keyHeight);
 
     ctx.beginPath();
-    ctx.moveTo(0, (i * keyHeight) + keyHeight);
-    ctx.lineTo(800, (i * keyHeight) + keyHeight);
+    ctx.moveTo(pianoRollMargin.left, (i * keyHeight) + keyHeight);
+    ctx.lineTo(pianoRollMargin.left + pianoRollWidth, (i * keyHeight) + keyHeight);
     ctx.stroke();
   });
 
-  let stepWidth = 800 / (superMeasureLength * 16);
+  let stepWidth = pianoRollWidth / (superMeasureLength * 16);
   for (let i = 0; i <= superMeasureLength * 16; i++) {
-    const xPos = i * stepWidth;
+    const xPos = (i * stepWidth) + pianoRollMargin.left;
 
     ctx.beginPath();
     ctx.strokeStyle = "#ffffff";
@@ -232,7 +240,7 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasure
   }
 
   notes.forEach(note => {
-    const xPos = (note[1] / 0.25) * stepWidth;
+    const xPos = ((note[1] / 0.25) * stepWidth) + pianoRollMargin.left;
     const yPos = (high - note[0]) * keyHeight;
     const dur  = (note[2] / 0.25) * stepWidth;
     ctx.fillStyle = "#117733";
@@ -243,6 +251,27 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasure
     ctx.moveTo(xPos + dur, yPos);
     ctx.lineTo(xPos + dur, yPos + keyHeight);
     ctx.stroke();
+  });
+
+  ctx.font = "12px sans-serif";
+  ctx.fillStyle = "#cccccc";
+  ctx.fillText(noteData[low].note + noteData[low].octave, 0, canvasHeight - 2);
+  ctx.fillText(noteData[high].note + noteData[high].octave, 0, 12);
+
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 0.25;
+  noteSpan.slice(1, -1).forEach((note, i) => {
+    if (note % 12 == midiTonic % 12) {
+      const xPos = 0;
+      // * 2 because of slice. Above the first and last are already added.
+      const yPos = (i * keyHeight) + (keyHeight * 2);
+      ctx.beginPath();
+      ctx.moveTo(xPos, yPos);
+      ctx.lineTo(pianoRollMargin.left, yPos);
+      ctx.stroke();
+
+      ctx.fillText(noteData[note].note + noteData[note].octave, 0, yPos);
+    }
   });
 });
 
