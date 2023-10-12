@@ -1,7 +1,6 @@
 let previousStep = 15;
-let currentPianoRollStep = 0;
 let previousPianoRollStep = 63;
-let maxPianoRollStep = 63;
+
 let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
 let gridMatrix: any[] = new Array(8);
@@ -51,7 +50,10 @@ window.parameters.updateNoteLength((event: any, noteLength: string) => updateTex
 window.parameters.updatePulseRate((event: any, pulse: string) => updateText("#note-length span.pulse", pulse));
 window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#note-length span.fills", fillsDuration));
 window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#note-length span.fill-measures", fillMeasures));
-window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updateText("#super-measure", superMeasure));
+window.parameters.updateSuperMeasure((event: any, superMeasure: string) => {
+  updateText("#super-measure", superMeasure);
+  updatePianoRollTransport(parseInt(superMeasure) * 16);
+});
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 window.parameters.toggleMelodyRandomizer((event: any, state: boolean) => toggleIndicator("#randomizer-active span", state));
 window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("p#current-clip span", clipIndex));
@@ -494,6 +496,7 @@ const updatePianoRollTransport = (numSteps: number) => {
     const step = document.createElement("div");
     step.classList.add("step");
     step.setAttribute("id", `pianoroll-step-${i}`);
+    step.style.width = (768 / numSteps) + "px";
     pianoRollTransport.appendChild(step);
   }
 }
