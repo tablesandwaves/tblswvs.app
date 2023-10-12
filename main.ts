@@ -33,13 +33,8 @@ app.whenReady().then(() => {
     console.log(msg);
     sequencer.follow();
 
-    // The grid needs a moment to be fully ready. Wait half a second, then simulate a key press
+    // The grid and UI need a moment to be fully ready. Wait half a second, then simulate a key press
     // to set the grid to the track 1, rhythm page.
-    setTimeout(() => {
-      sequencer.grid.keyPress({x: 0, y: 7, s: 1});
-      sequencer.grid.keyPress({x: 7, y: 7, s: 1});
-    }, 500);
-
     setTimeout(() => {
       const configDirectory = "./config";
       fs.readdir(configDirectory, (err, files) => {
@@ -52,7 +47,8 @@ app.whenReady().then(() => {
       });
 
       sequencer.gui.webContents.send("note-data", noteData);
-      sequencer.gui.webContents.send("piano-roll-notes", [], 4);
+      sequencer.grid.keyPress({x: 0, y: 7, s: 1});
+      sequencer.grid.keyPress({x: 7, y: 7, s: 1});
     }, 1000);
   });
 }).then(() => {

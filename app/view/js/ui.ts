@@ -231,9 +231,7 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], superMeasure
     ctx.stroke();
   }
 
-  console.log("low", low, "high", high);
   notes.forEach(note => {
-    console.log("note", note, high - note[0]);
     const xPos = (note[1] / 0.25) * stepWidth;
     const yPos = (high - note[0]) * keyHeight;
     const dur  = (note[2] / 0.25) * stepWidth;
