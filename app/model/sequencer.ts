@@ -72,7 +72,7 @@ export class Sequencer {
 
       // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
       const trackStep = Math.floor(this.step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
-      this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength);
+      this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength, this.step);
 
       this.step = this.step == this.superMeasure * 16 - 1 ? 0 : this.step + 1;
     });
@@ -85,7 +85,7 @@ export class Sequencer {
 
       this.ticks = 0;
       this.step  = 0;
-      this.grid.displayRhythmWithTransport(this.step);
+      this.grid.displayRhythmWithTransport(this.step, this.step);
     });
   }
 

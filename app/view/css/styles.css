@@ -102,6 +102,7 @@ div#note-length,
 div#sequencer-steps,
 div#sequencer-fills,
 div#ramp-sequence,
+div#pianoroll-transport,
 div#piano-roll {
   width: 800px;
   margin: auto 10px;
@@ -225,6 +226,27 @@ div#ramp-sequence {
 div#piano-roll {
   height: 300px;
   margin-bottom: 10px;
+}
+
+
+div#pianoroll-transport {
+  width: 768px;
+  height: 3px;
+  margin-bottom: 0;
+  margin-left: 42px;
+}
+
+
+div#pianoroll-transport div.step {
+  position: relative;
+  float: left;
+  width: 12px;
+  height: 3px;
+}
+
+
+div#pianoroll-transport div.step.current {
+  background-color: #117733;
 }
 
 

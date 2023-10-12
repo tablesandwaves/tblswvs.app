@@ -130,8 +130,8 @@ export class GridPage {
 
 
   // Overridden on the RhythmPage and RampSequencePage where the grid's transport row also needs to be updated.
-  displayRhythmWithTransport(highlightIndex: number) {
-    this.updateGuiRhythmTransport(highlightIndex);
+  displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
   }
 
 
@@ -144,8 +144,8 @@ export class GridPage {
   }
 
 
-  updateGuiRhythmTransport(highlightIndex: number) {
-    this.grid.sequencer.gui.webContents.send("transport", highlightIndex);
+  updateGuiRhythmTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    this.grid.sequencer.gui.webContents.send("transport", highlightIndex, pianoRollHighlightIndex);
   }
 
 

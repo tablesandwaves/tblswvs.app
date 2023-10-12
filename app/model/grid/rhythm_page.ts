@@ -69,9 +69,9 @@ export class RhythmPage extends GridPage {
   }
 
 
-  displayRhythmWithTransport(highlightIndex: number) {
+  displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     this.setGridRhythmDisplay(highlightIndex);
-    this.updateGuiRhythmTransport(highlightIndex);
+    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
   }
 
 

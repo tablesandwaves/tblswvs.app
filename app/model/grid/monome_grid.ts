@@ -86,8 +86,8 @@ export class MonomeGrid {
   }
 
 
-  displayRhythmWithTransport(highlightIndex: number) {
-    this.activePage.displayRhythmWithTransport(highlightIndex);
+  displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    this.activePage.displayRhythmWithTransport(highlightIndex, pianoRollHighlightIndex);
   }
 
 

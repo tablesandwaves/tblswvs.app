@@ -1,4 +1,7 @@
 let previousStep = 15;
+let currentPianoRollStep = 0;
+let previousPianoRollStep = 63;
+let maxPianoRollStep = 63;
 let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
 let gridMatrix: any[] = new Array(8);
@@ -23,7 +26,7 @@ window.documentation.pageDocumentation((event: any, page: any) => {
 window.documentation.setNoteData((event: any, _noteData: any[]) => noteData = _noteData);
 
 
-window.stepSequencer.transport((event: any, currentStep: number) => updateTransport(currentStep));
+window.stepSequencer.transport((event: any, currentStep: number, currentPianoRollStep: number) => updateTransport(currentStep, currentPianoRollStep));
 window.stepSequencer.transportBeat((event: any, beat: string) => updateText("#current-beat", beat));
 
 
@@ -276,10 +279,14 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
 });
 
 
-const updateTransport = (currentStep: number) => {
-  document.querySelector(`#sequencer-steps .step-${previousStep}`).classList.remove("current");
-  document.querySelector(`#sequencer-steps .step-${currentStep}`).classList.add("current");
-  previousStep = currentStep;
+const updateTransport = (currentStep: number, currentPianoRollStep: number) => {
+  // document.querySelector(`#sequencer-steps .step-${previousStep}`).classList.remove("current");
+  // document.querySelector(`#sequencer-steps .step-${currentStep}`).classList.add("current");
+  // previousStep = currentStep;
+
+  document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`).classList.remove("current");
+  document.querySelector(`#pianoroll-transport #pianoroll-step-${currentPianoRollStep}`).classList.add("current");
+  previousPianoRollStep = currentPianoRollStep;
 }
 
 
@@ -480,7 +487,20 @@ const resetRelatedButtons = () => {
 }
 
 
+const updatePianoRollTransport = (numSteps: number) => {
+  const pianoRollTransport = document.querySelector("#pianoroll-transport");
+  document.querySelectorAll("#pianoroll-transport .step").forEach(e => pianoRollTransport.removeChild(e));
+  for (let i = 0; i < numSteps; i++) {
+    const step = document.createElement("div");
+    step.classList.add("step");
+    step.setAttribute("id", `pianoroll-step-${i}`);
+    pianoRollTransport.appendChild(step);
+  }
+}
+
+
 const ready = () => {
+  updatePianoRollTransport(64);
   setupGridMatrix();
   document.getElementById("docs").addEventListener("click", toggleDocumentation);
   document.querySelectorAll("#page-list li").forEach(page => page.addEventListener("click", () => loadPageDocumentation(page)));
