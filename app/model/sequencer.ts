@@ -2,7 +2,6 @@ import * as path from "path";
 
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
-const easymidi    = require("easymidi");
 
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
@@ -20,11 +19,8 @@ export class Sequencer {
   receiver: any;
   grid: MonomeGrid;
   daw: AbletonLive;
-  midiIn: any;
-  // midiOut: any;
   ticks: number = 0;
   superMeasure: number = 4;
-  step: number = 0;
   gui: BrowserWindow;
   key: Key;
   queuedMelody: note[] = new Array();
@@ -36,7 +32,6 @@ export class Sequencer {
     this.testing = testing;
 
     if (!this.testing) {
-      this.midiIn = new easymidi.Input("tblswvs in", true);
 
       // To Live
       this.emitter = new OscEmitter();
@@ -48,6 +43,7 @@ export class Sequencer {
       this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncWithLiveBeat(beatNumber));
       this.receiver.on("/live/clips", (tIdx: number, cIdx: number) => this.#syncLiveTrackClip(tIdx, cIdx));
       this.receiver.on("/live/chains", (tIdx: number, chIdx: number, active: number) => this.#syncLiveTrackChain(tIdx, chIdx, active));
+      this.receiver.on("/live/transport", (step: number) => this.transport(step));
 
       // For debugging: all messages are logged.
       // this.receiver.on("message", this.#processLiveMessages);
@@ -64,29 +60,10 @@ export class Sequencer {
   }
 
 
-  async follow() {
-    this.midiIn.on("clock", () => {
-      this.ticks++;
-      // 6 MIDI clock ticks equals a 16th note.
-      if (this.ticks % 6 != 0) return;
-
-      // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
-      const trackStep = Math.floor(this.step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
-      this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength, this.step);
-
-      this.step = this.step == this.superMeasure * 16 - 1 ? 0 : this.step + 1;
-    });
-
-    this.midiIn.on("start", () => {
-    });
-
-    this.midiIn.on("position", (data: any) => {
-      if (data.value != 0) return;
-
-      this.ticks = 0;
-      this.step  = 0;
-      this.grid.displayRhythmWithTransport(this.step, this.step);
-    });
+  transport(step: number) {
+    // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
+    const trackStep = Math.floor(step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
+    this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength, step);
   }
 
 
