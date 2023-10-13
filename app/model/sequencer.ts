@@ -87,6 +87,10 @@ export class Sequencer {
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
         ...notes.flatMap(note => note.toOscAddedNote())
       );
+
+      if (track.createNewClip) {
+        this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/fire`);
+      }
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
       console.error("input notes:", notes);
