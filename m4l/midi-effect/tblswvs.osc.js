@@ -1,4 +1,4 @@
-outlets = 2;
+outlets = 3;
 
 
 var selectTrackPattern  = /\/tracks\/(\d+)/;
@@ -8,6 +8,8 @@ var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
 var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
 var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq\/(\d+)/;
 
+var activeTrackClips = [-1, 0, 0, 0, 0, 0, 0, 0];
+
 
 function osc_message() {
   var a = arrayfromargs(arguments);
@@ -16,6 +18,7 @@ function osc_message() {
   var selectTrackMatch = a[0].match(selectTrackPattern);
   if (selectTrackMatch) {
     selectTrack(selectTrackMatch[1]);
+    outlet(2, selectTrackMatch[1], activeTrackClips[selectTrackMatch[1]]);
   }
 
   var notesMatch = a[0].match(notesPattern);
@@ -27,6 +30,7 @@ function osc_message() {
   var fireMatch = a[0].match(clipFirePattern);
   if (fireMatch) {
     fireClipSlot(fireMatch[1], fireMatch[2]);
+    activeTrackClips[fireMatch[1]] = fireMatch[2];
   }
 
   var rampSeqMatch = a[0].match(rampSeqPattern);
@@ -45,6 +49,7 @@ function osc_message() {
   var stopClipMatch = a[0].match(stopAllClipsPattern);
   if (stopClipMatch) {
     stopTrackClips(stopClipMatch[1]);
+    activeTrackClips[stopClipMatch[1]] = -1;
     outlet(0, stopClipMatch[0], "Stopped");
     outlet(1, stopClipMatch[0], "Stopped");
   }
