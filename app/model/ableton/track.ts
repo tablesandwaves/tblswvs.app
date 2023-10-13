@@ -31,6 +31,9 @@ const fillVelocities: Record<number,number[]> = {
 }
 
 
+const CLIP_16N_COUNT = 128;
+
+
 export class AbletonTrack {
   name: string;
   rhythm: RhythmStep[] = new Array(16);
@@ -95,7 +98,7 @@ export class AbletonTrack {
 
     let nextNotes: note[];
 
-    for (let step = 0, noteIndex = 0, measure = -1; step < this.daw.sequencer.superMeasure * 16; step += pulseRateMap[this.pulseRate].size) {
+    for (let step = 0, noteIndex = 0, measure = -1; step < CLIP_16N_COUNT; step += pulseRateMap[this.pulseRate].size) {
       if (step % this.beatLength == 0) measure++;
 
       const rhythmStep = sourceRhythm[(step / pulseRateMap[this.pulseRate].size) % beatLength];

@@ -7,6 +7,7 @@ var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
 var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
 var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
 var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq\/(\d+)/;
+var superMeasurePattern = /\/set\/super_measure/
 
 var activeTrackClips = [-1, 0, 0, 0, 0, 0, 0, 0];
 
@@ -44,6 +45,14 @@ function osc_message() {
     createClip(newClipMatch[1], newClipMatch[2], a[1]);
     outlet(0, newClipMatch[0], "Created");
     outlet(1, newClipMatch[0], "Created");
+  }
+
+  var superMeasureMatch = a[0].match(superMeasurePattern);
+  if (superMeasureMatch) {
+    for (var trackIndex = 0; trackIndex < 8; trackIndex++) {
+      new LiveAPI("live_set tracks " + trackIndex + " clip_slots " + activeTrackClips[trackIndex] + " clip")
+          .set("loop_end", parseInt(a[1]) * 4);
+    }
   }
 
   var stopClipMatch = a[0].match(stopAllClipsPattern);

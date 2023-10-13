@@ -155,6 +155,16 @@ export class Sequencer {
   }
 
 
+  setSuperMeasure() {
+    if (this.testing) return;
+    try {
+      this.emitter.emit(`/set/super_measure`, this.superMeasure);
+    } catch (e) {
+      console.error(e.name, e.message, "while updating the super measure in Live:");
+    }
+  }
+
+
   #syncWithLiveBeat(beat: number) {
     // Only sync during measure boundaries
     if (beat % 4 != 0) return;
@@ -165,9 +175,6 @@ export class Sequencer {
 
     // If not on the last measure of a super measure, finished.
     if (measure != this.superMeasure) return;
-
-    // Fire clips for all tracks not participating in voice trading to resync to super measure
-    this.#syncTracksToSuperMeasure();
 
     // For any tracks that are participating in voice trading evolution, evolve the melody and fire clips
     if (this.daw.mutating && this.daw.soloists.length > 0) {
@@ -200,27 +207,6 @@ export class Sequencer {
         track.updateGuiChains();
       }
     }
-  }
-
-
-  #syncTracksToSuperMeasure() {
-    this.daw.tracks.forEach((track) => {
-      // If the current track is in the soloists group, skip this step as it will sync via #queueNextSoloist()
-      if (this.daw.soloists.includes(track.dawIndex)) return;
-
-      // If the current track is not mutating and has had its clips stopped on the Live side, do not fire it.
-      if (!track.mutating && !track.randomizing && track.currentClip == -1) return;
-
-      // The track may be set to mutating before the evolutionary/mutation cycle has been queued.
-      let currentClip = (this.daw.mutating && (track.mutating || track.randomizing)) ? AbletonLive.EVOLUTION_SCENE_INDEX : track.currentClip;
-      this.emitter.emit(`/tracks/${track.dawIndex}/clips/${currentClip}/fire`);
-
-      // If the sequencer is in mutation and the current track, but not while trading solos (caught by return above),
-      // evolve the curent track.
-      if (this.daw.mutating && (track.mutating || track.randomizing)) {
-        track.evolve();
-      }
-    });
   }
 
 

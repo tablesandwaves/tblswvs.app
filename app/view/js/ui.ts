@@ -286,8 +286,10 @@ const updateTransport = (currentStep: number, currentPianoRollStep: number) => {
   // document.querySelector(`#sequencer-steps .step-${currentStep}`).classList.add("current");
   // previousStep = currentStep;
 
-  document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`).classList.remove("current");
-  document.querySelector(`#pianoroll-transport #pianoroll-step-${currentPianoRollStep}`).classList.add("current");
+  if (document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`))
+    document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`).classList.remove("current");
+  if (document.querySelector(`#pianoroll-transport #pianoroll-step-${currentPianoRollStep}`))
+    document.querySelector(`#pianoroll-transport #pianoroll-step-${currentPianoRollStep}`).classList.add("current");
   previousPianoRollStep = currentPianoRollStep;
 }
 
