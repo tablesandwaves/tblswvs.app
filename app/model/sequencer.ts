@@ -83,10 +83,9 @@ export class Sequencer {
   setNotesInLive(track: AbletonTrack) {
     if (track.createNewClip) {
       track.currentClip = (track.currentClip + 1) % 4;
-      this.emitter.emit(
-        `/tracks/${track.dawIndex}/clips/${track.currentClip}/create`,
-        this.superMeasure * 4
-      );
+      this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/create`, 32);
+      // Redundant for existing tracks, but need to set the loop end for newly created clip
+      setTimeout(() => this.setSuperMeasure(), 100);
     }
 
     const clipIndex = this.daw.mutating && (track.mutating || track.randomizing) ?
