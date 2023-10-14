@@ -8,7 +8,6 @@ const testing   = true;
 const sequencer = new Sequencer(testing);
 const daw       = new AbletonLive(sequencer);
 const track     = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
-sequencer.superMeasure = 2;
 
 
 describe("AbletonTrack", () => {
@@ -22,11 +21,16 @@ describe("AbletonTrack", () => {
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
         [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
       ];
-      let abletonNotes = track.abletonNotes();
+      let abletonNotes = track.abletonNotes().sort((a, b) => {
+        if (a.clipPosition > b.clipPosition) return 1;
+        if (a.clipPosition < b.clipPosition) return -1;
+        return 0;
+      });
+      console.log(abletonNotes)
 
 
-      it("should the have correct number of notes", () => {
-        expect(abletonNotes.length).to.eq(3);
+      it("should the have correct number of notes for the maximum super measure of 8", () => {
+        expect(abletonNotes.length).to.eq(11);
       });
 
       it("should have the right notes in order", () => {
@@ -51,8 +55,8 @@ describe("AbletonTrack", () => {
     track.fillMeasures[1]  = 1;
     let abletonNotes = track.abletonNotes();
 
-    it("should the have correct number of notes", () => {
-      expect(abletonNotes.length).to.eq(5);
+    it("should the have correct number of notes for the maximum super measure of 8", () => {
+      expect(abletonNotes.length).to.eq(11);
     });
 
     it("should have the right notes in order", () => {
