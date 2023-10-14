@@ -16,47 +16,44 @@ export class MelodyEvolutionPage extends GridPage {
     this.functionMap.set("toggleMutations", this.toggleMutations);
 
     this.grid.clearGridDisplay();
-    this.refresh();
   }
 
 
   refresh() {
     this.setGridEvolutionDisplay();
-    // this.#setGridMutationDisplay();
     // this.#setUiMutations();
   }
 
 
   setGridEvolutionDisplay() {
-    this.setGridRamdonizingTracksDisplay();
-    this.setGridIndependentMutatingTracksDisplay();
+    this.setGridTopRow();
+    this.setGridMutatingTracksDisplay();
     this.setGridSoloistMutatingTracksDisplay();
-    this.setGridActiveMutationsRow();
-    this.setGridMutationsButton();
+    // this.setGridActiveMutationsRow();
+    // this.setGridMutationsButton();
   }
 
 
-  setGridRamdonizingTracksDisplay() {
-    const row = this.gridRandomizingTracksRow();
-    this.grid.levelRow(0, 0, row);
+  setGridTopRow() {
+    let row = this.gridRandomizingTracksRow()
+    row = row.concat(this.gridActiveMutationsRow())
+    row.push(this.gridMutationsEnabledButton());
+    this.grid.levelRow(0, 0, row.slice(0, 8));
+    this.grid.levelRow(8, 0, row.slice(8, 16));
   }
 
 
-  setGridIndependentMutatingTracksDisplay() {
+  setGridMutatingTracksDisplay() {
     const row = this.gridMutatingTracksRow();
+    row.push(INACTIVE_BRIGHTNESS); // Grid requires updates of 8 per row
     this.grid.levelRow(0, 1, row);
   }
 
 
   setGridSoloistMutatingTracksDisplay() {
     const row = this.gridSoloingTracksRow();
+    row.push(INACTIVE_BRIGHTNESS); // Grid requires updates of 8 per row
     this.grid.levelRow(0, 2, row);
-  }
-
-
-  setGridActiveMutationsRow() {
-    const row = this.gridActiveMutationsRow();
-    this.grid.levelRow(0, 7, row);
   }
 
 
@@ -67,6 +64,8 @@ export class MelodyEvolutionPage extends GridPage {
 
   toggleMutations(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.mutating = !gridPage.grid.sequencer.daw.mutating;
+    // Flag for resetting all tracks to their current clips at the next super measure boundary
+    if (!gridPage.grid.sequencer.daw.mutating) gridPage.grid.sequencer.daw.stopMutationQueued = true;
     gridPage.setGridMutationsButton();
   }
 
@@ -74,11 +73,13 @@ export class MelodyEvolutionPage extends GridPage {
   toggleRandomizingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
 
-    track.randomizing = true;
-    track.mutating    = false;
+    track.randomizing = !track.randomizing;
 
-    const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
-    if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+    if (track.randomizing) {
+      track.mutating = false;
+      const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
+      if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+    }
 
     gridPage.refresh();
   }
@@ -87,11 +88,14 @@ export class MelodyEvolutionPage extends GridPage {
   toggleMutatingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
 
-    track.randomizing = false;
-    track.mutating    = true;
+    track.mutating = !track.mutating;
 
-    const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
-    if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+    if (track.mutating) {
+      track.currentMutation = track.outputNotes.flat();
+      track.randomizing = false;
+      const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
+      if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+    }
 
     gridPage.refresh();
   }
@@ -100,12 +104,11 @@ export class MelodyEvolutionPage extends GridPage {
   toggleSoloingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
 
-    track.randomizing = false;
-    track.mutating    = false;
-
     const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
     if (index === -1) {
       gridPage.grid.sequencer.daw.soloists.push(press.x);
+      track.randomizing = false;
+      track.mutating    = false;
     } else {
       gridPage.grid.sequencer.daw.soloists.splice(index, 1);
     }
@@ -115,7 +118,7 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   toggleMutationAlgorithm(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
-    const offset = 6;
+    const offset = 7;
     gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
     gridPage.refresh();
   }

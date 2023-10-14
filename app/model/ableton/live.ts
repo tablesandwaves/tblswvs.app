@@ -18,6 +18,7 @@ export class AbletonLive {
 
   // Melodic Evolution
   mutating: boolean = false;
+  stopMutationQueued: boolean = false;
   mutations = [
     {name: "trps-2",  function: "transposeDown2",  active: 0},
     {name: "rev",     function: "reverse",         active: 0},

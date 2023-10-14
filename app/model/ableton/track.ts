@@ -216,8 +216,8 @@ export class AbletonTrack {
     let randomizedMelody = new Array();
 
     for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
-      // let sortedNotes = this.inputMelody.slice().sort((a, b) => a.midi - b.midi);
-      let sortedNotes = this.outputNotes.flat().slice().filter(unique).sort((a, b) => a.midi - b.midi);
+      // Start with a unique list of sorted notes
+      let sortedNotes = this.outputNotes.flat().filter(unique).sort((a, b) => a.midi - b.midi);
       let tunedRandomNoteIndices = new Array();
 
       // Choose a note (by index) at random

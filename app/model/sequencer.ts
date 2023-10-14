@@ -180,6 +180,9 @@ export class Sequencer {
     // If not on the last measure of a super measure, finished.
     if (measure != this.superMeasure) return;
 
+    // Fire clips for all mutating tracks not participating in voice trading to resync to super measure
+    this.#syncTracksToSuperMeasure();
+
     // For any tracks that are participating in voice trading evolution, evolve the melody and fire clips
     if (this.daw.mutating && this.daw.soloists.length > 0) {
       this.#queueNextSoloist();
@@ -210,6 +213,34 @@ export class Sequencer {
       if (this.daw.getActiveTrack().dawIndex == trackIndex) {
         track.updateGuiChains();
       }
+    }
+  }
+
+
+  #syncTracksToSuperMeasure() {
+    // If the DAW is not mutating AND the DAW stopMutationFlag is set
+    // * Get all tracks back to their current clip (which may be -1 for stopped)
+    // * reset the DAW's stopMutationFlag
+    if (!this.daw.mutating && this.daw.stopMutationQueued) {
+
+      this.daw.tracks.forEach(track => {
+        if (track.currentClip >= 0) {
+          this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/fire`);
+        } else {
+          this.emitter.emit(`/tracks/${track.dawIndex}/clips/stop`);
+        }
+      });
+      this.daw.stopMutationQueued = false;
+
+    } else if (this.daw.mutating) {
+
+      // Otherwise, evolve all mutating and randomizing tracks
+      this.daw.tracks.forEach(track => {
+        if (track.randomizing || track.mutating) {
+          track.evolve();
+          this.emitter.emit(`/tracks/${track.dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
+        }
+      });
     }
   }
 
