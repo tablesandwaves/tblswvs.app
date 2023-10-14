@@ -21,7 +21,8 @@ describe("AbletonTrack", () => {
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
         [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
       ];
-      let abletonNotes = track.abletonNotes().sort((a, b) => {
+      track.updateCurrentAbletonNotes();
+      let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
         if (a.clipPosition > b.clipPosition) return 1;
         if (a.clipPosition < b.clipPosition) return -1;
         return 0;
@@ -51,7 +52,13 @@ describe("AbletonTrack", () => {
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
     track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 3};
     track.fillMeasures[1]  = 1;
-    let abletonNotes = track.abletonNotes();
+    track.updateCurrentAbletonNotes();
+    const abletonNotes = track.currentAbletonNotes.sort((a, b) => {
+      if (a.clipPosition > b.clipPosition) return 1;
+      if (a.clipPosition < b.clipPosition) return -1;
+      return 0;
+    });
+    console.log(abletonNotes)
 
     it("should the have correct number of notes for the maximum super measure of 8", () => {
       expect(abletonNotes.length).to.eq(11);
@@ -85,7 +92,13 @@ describe("AbletonTrack", () => {
 
     describe("when successive overlapping notes share the same pitch", () => {
       track.outputNotes = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
-      const abletonNotes = track.abletonNotes();
+      track.updateCurrentAbletonNotes();
+
+      const abletonNotes = track.currentAbletonNotes.sort((a, b) => {
+        if (a.clipPosition > b.clipPosition) return 1;
+        if (a.clipPosition < b.clipPosition) return -1;
+        return 0;
+      });
 
       it("truncates earlier notes that share the same pitch", () => {
         // Measure 1
@@ -110,13 +123,13 @@ describe("AbletonTrack", () => {
         [{ octave: 3, note: 'D', midi: 62, scaleDegree: 1 }],
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]
       ];
-      const abletonNotes = track.abletonNotes();
+      track.updateCurrentAbletonNotes();
 
       it("does not truncate earlier notes", () => {
         // Measure 1
-        expect(abletonNotes[0].duration).to.eq(0.5);
+        expect(track.currentAbletonNotes[0].duration).to.eq(0.5);
         // Measure 2
-        expect(abletonNotes[3].duration).to.eq(0.5);
+        expect(track.currentAbletonNotes[3].duration).to.eq(0.5);
       });
     });
   });
