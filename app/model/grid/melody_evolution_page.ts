@@ -47,7 +47,7 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   setGridIndependentMutatingTracksDisplay() {
-    const row = this.gridIndependentMutatingTracksRow();
+    const row = this.gridMutatingTracksRow();
     this.grid.levelRow(0, 1, row);
   }
 
@@ -276,7 +276,7 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  gridIndependentMutatingTracksRow() {
+  gridMutatingTracksRow() {
     return this.grid.sequencer.daw.tracks.map(t => {
       return t.mutating && !this.grid.sequencer.daw.soloists.includes(t.dawIndex) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
     });

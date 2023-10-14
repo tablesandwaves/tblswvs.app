@@ -35,7 +35,7 @@ describe("MelodyEvolutionPage", () => {
     });
 
     it("has a blank independent mutations row", () => {
-      expect(evolutionPage.gridIndependentMutatingTracksRow()).to.have.ordered.members(
+      expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
         [0, 0, 0, 0,  0, 0, 0]
       );
     });
@@ -80,6 +80,120 @@ describe("MelodyEvolutionPage", () => {
   });
 
 
+  describe("setting a previously mutating track to randomizing", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the melody page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
+
+    // Set the snare track to mutating
+    sequencer.grid.keyPress({y: 1, x: 1, s: 1});
+    expect(sequencer.daw.tracks[1].mutating).to.be.true;
+    expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+
+    // Then set it to randomizing
+    sequencer.grid.keyPress({y: 0, x: 1, s: 1});
+
+    it("enables the track's randomization mode", () => {
+      expect(sequencer.daw.tracks[1].randomizing).to.be.true;
+    });
+
+    it("disables the track's mutating mode", () => {
+      expect(sequencer.daw.tracks[1].mutating).to.be.false;
+    });
+
+    it("updates the randomizing row", () => {
+      expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
+        [0, 10, 0, 0,  0, 0, 0]
+      );
+    });
+
+    it("updates the mutating row", () => {
+      expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("setting a previously randomizing track to mutating", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the melody page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
+
+    // Set the snare track to randomizing
+    sequencer.grid.keyPress({y: 0, x: 1, s: 1});
+    expect(sequencer.daw.tracks[1].randomizing).to.be.true;
+    expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+
+    // Then set it to mutating
+    sequencer.grid.keyPress({y: 1, x: 1, s: 1});
+
+    it("enables the track's mutating mode", () => {
+      expect(sequencer.daw.tracks[1].mutating).to.be.true;
+    });
+
+    it("disables the track's randomizing mode", () => {
+      expect(sequencer.daw.tracks[1].randomizing).to.be.false;
+    });
+
+    it("updates the mutating row", () => {
+      expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
+        [0, 10, 0, 0,  0, 0, 0]
+      );
+    });
+
+    it("updates the randomizing row", () => {
+      expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0]
+      );
+    });
+  });
+
+
+  describe("setting a previously soloing track to mutating", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the melody page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
+
+    // Set the snare track to soloing
+    sequencer.grid.keyPress({y: 2, x: 1, s: 1});
+    expect(sequencer.daw.soloists).to.include(1);
+    expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+
+    // Then set it to mutating
+    sequencer.grid.keyPress({y: 1, x: 1, s: 1});
+
+    it("enables the track's mutating mode", () => {
+      expect(sequencer.daw.tracks[1].mutating).to.be.true;
+    });
+
+    it("removes the track from the soloists", () => {
+      expect(sequencer.daw.soloists).not.to.include(1);
+    });
+
+    it("updates the mutating row", () => {
+      expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
+        [0, 10, 0, 0,  0, 0, 0]
+      );
+    });
+
+    it("updates the soloists row", () => {
+      expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0]
+      );
+    });
+  });
+
+
   describe("setting tracks to mutating", () => {
     const sequencer = new Sequencer(testing);
 
@@ -88,7 +202,7 @@ describe("MelodyEvolutionPage", () => {
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
 
-    // Set the snare and keys track to randomizing
+    // Set the snare and keys track to mutating
     sequencer.grid.keyPress({y: 1, x: 1, s: 1});
     sequencer.grid.keyPress({y: 1, x: 5, s: 1});
 
@@ -99,7 +213,7 @@ describe("MelodyEvolutionPage", () => {
     });
 
     it("updates the randomizing row", () => {
-      expect(evolutionPage.gridIndependentMutatingTracksRow()).to.have.ordered.members(
+      expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
         [0, 10, 0, 0,  0, 10, 0]
       );
     });
@@ -114,7 +228,7 @@ describe("MelodyEvolutionPage", () => {
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
 
-    // Set the snare and keys track to randomizing
+    // Set the snare and keys track to soloing
     sequencer.grid.keyPress({y: 2, x: 1, s: 1});
     sequencer.grid.keyPress({y: 2, x: 5, s: 1});
 
