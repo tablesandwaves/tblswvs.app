@@ -1,4 +1,4 @@
-import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
+import { GridPage, GridConfig, GridKeyPress, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./grid_page";
 import { MonomeGrid } from "./monome_grid";
 
 
@@ -22,8 +22,41 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   refresh() {
-    this.#setGridMutationDisplay();
-    this.#setUiMutations();
+    this.setGridEvolutionDisplay();
+    // this.#setGridMutationDisplay();
+    // this.#setUiMutations();
+  }
+
+
+  setGridEvolutionDisplay() {
+    this.setGridRamdonizingTracksDisplay();
+    this.setGridIndependentMutatingTracksDisplay();
+    this.setGridSoloistMutatingTracksDisplay();
+    this.setGridActiveMutationsRow();
+  }
+
+
+  setGridRamdonizingTracksDisplay() {
+    const row = this.gridRandomizingTracksRow();
+    this.grid.levelRow(0, 0, row);
+  }
+
+
+  setGridIndependentMutatingTracksDisplay() {
+    const row = this.gridIndependentMutatingTracksRow();
+    this.grid.levelRow(0, 1, row);
+  }
+
+
+  setGridSoloistMutatingTracksDisplay() {
+    const row = this.gridSoloistMutatingTracksRow();
+    this.grid.levelRow(0, 2, row);
+  }
+
+
+  setGridActiveMutationsRow() {
+    const row = this.gridActiveMutationsRow();
+    this.grid.levelRow(0, 7, row);
   }
 
 
@@ -194,5 +227,29 @@ export class MelodyEvolutionPage extends GridPage {
       "toggle-melody-randomizer",
       this.grid.sequencer.daw.getActiveTrack().randomizing
     );
+  }
+
+
+  gridRandomizingTracksRow() {
+    return this.grid.sequencer.daw.tracks.map(t => t.randomizing ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+  }
+
+
+  gridIndependentMutatingTracksRow() {
+    return this.grid.sequencer.daw.tracks.map(t => {
+      return t.mutating && !this.grid.sequencer.daw.soloists.includes(t.dawIndex) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+    });
+  }
+
+
+  gridSoloistMutatingTracksRow() {
+    return this.grid.sequencer.daw.tracks.map(t => {
+      return t.mutating && this.grid.sequencer.daw.soloists.includes(t.dawIndex) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+    });
+  }
+
+
+  gridActiveMutationsRow() {
+    return this.grid.sequencer.daw.mutations.map(m => m.active ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 }

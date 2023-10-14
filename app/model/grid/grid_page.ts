@@ -38,6 +38,10 @@ export const octaveTransposeMapping: Record<number, number> = {
 }
 
 
+export const ACTIVE_BRIGHTNESS   = 10;
+export const INACTIVE_BRIGHTNESS = 0;
+
+
 export class GridPage {
   type = "Generic";
   grid: MonomeGrid;
