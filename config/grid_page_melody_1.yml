@@ -95,20 +95,11 @@ rows:
       - inv-rev
       - bitflip
   -
-    name: Queue Mutation Start
-    description: Press to start mutation on the start of the next super measure
+    name: Toggle Mutations
+    description: Enable or disable mutation mode for all tracks at the start of the next super measure. Must be on for mutations to occur
     group: mutation-controls
-    type: momentary
+    type: toggle
     index: 0
     xStart: 15
     xLength: 1
-    mapping: queueMutationStart
-  -
-    name: Queue Mutation Stop
-    description: Press to stop mutation on the start of the next super measure
-    group: mutation-controls
-    type: momentary
-    index: 1
-    xStart: 15
-    xLength: 1
-    mapping: queueMutationStop
+    mapping: toggleMutations

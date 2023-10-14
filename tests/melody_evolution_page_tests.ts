@@ -242,4 +242,39 @@ describe("MelodyEvolutionPage", () => {
       );
     });
   });
+
+  describe("enabling the mutations to start", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the melody page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
+
+    // Press the enable mutation button
+    sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+
+    it("enables on the DAW's mutation state", () => expect(sequencer.daw.mutating).to.be.true);
+    it("returns the brightness for the button", () => expect(evolutionPage.gridMutationsEnabledButton()).to.eq(10));
+  });
+
+
+  describe("disabling mutations", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the melody page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionPage;
+
+    // Press the enable mutation button
+    sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+    expect(sequencer.daw.mutating).to.be.true;
+
+    // Press the enable mutation button again
+    sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+
+    it("enables on the DAW's mutation state", () => expect(sequencer.daw.mutating).to.be.false);
+    it("returns the brightness for the button", () => expect(evolutionPage.gridMutationsEnabledButton()).to.eq(0));
+  });
 });
