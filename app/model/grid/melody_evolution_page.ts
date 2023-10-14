@@ -10,11 +10,15 @@ export class MelodyEvolutionPage extends GridPage {
     super(config, grid);
 
     this.functionMap.set("toggleMutationAlgorithm", this.toggleMutationAlgorithm);
-    this.functionMap.set("toggleImprovisingVoice", this.toggleImprovisingVoice);
+    this.functionMap.set("toggleRandomizingVoice", this.toggleRandomizingVoice);
+    this.functionMap.set("toggleMutatingVoice", this.toggleMutatingVoice);
+    this.functionMap.set("toggleSoloingVoice", this.toggleSoloingVoice);
     this.functionMap.set("queueMutationStart", this.queueMutationStart);
     this.functionMap.set("queueMutationStop", this.queueMutationStop);
-    this.functionMap.set("toggleVoiceTrading", this.toggleVoiceTrading);
-    this.functionMap.set("toggleVoiceRandomizer", this.toggleVoiceRandomizer);
+
+    // this.functionMap.set("toggleImprovisingVoice", this.toggleImprovisingVoice);
+    // this.functionMap.set("toggleVoiceTrading", this.toggleVoiceTrading);
+    // this.functionMap.set("toggleVoiceRandomizer", this.toggleVoiceRandomizer);
 
     this.grid.clearGridDisplay();
     this.refresh();
@@ -49,7 +53,7 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   setGridSoloistMutatingTracksDisplay() {
-    const row = this.gridSoloistMutatingTracksRow();
+    const row = this.gridSoloingTracksRow();
     this.grid.levelRow(0, 2, row);
   }
 
@@ -88,6 +92,43 @@ export class MelodyEvolutionPage extends GridPage {
     });
     gridPage.grid.sequencer.daw.mutating = false;
     gridPage.refresh();
+  }
+
+
+  toggleRandomizingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.tracks[press.x];
+
+    track.randomizing = true;
+    track.mutating    = false;
+
+    const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
+    if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+  }
+
+
+  toggleMutatingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.tracks[press.x];
+
+    track.randomizing = false;
+    track.mutating    = true;
+
+    const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
+    if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+  }
+
+
+  toggleSoloingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.tracks[press.x];
+
+    track.randomizing = false;
+    track.mutating    = false;
+
+    const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
+    if (index === -1) {
+      gridPage.grid.sequencer.daw.soloists.push(press.x);
+    } else {
+      gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+    }
   }
 
 
@@ -242,9 +283,9 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  gridSoloistMutatingTracksRow() {
-    return this.grid.sequencer.daw.tracks.map(t => {
-      return t.mutating && this.grid.sequencer.daw.soloists.includes(t.dawIndex) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+  gridSoloingTracksRow() {
+    return this.grid.sequencer.daw.tracks.map((_, i) => {
+      return this.grid.sequencer.daw.soloists.includes(i) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
     });
   }
 

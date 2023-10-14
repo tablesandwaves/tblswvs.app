@@ -2,14 +2,14 @@ name: Mutation
 description: Mutations are accessed on Melody page 2. Mutate melodic sequences and launch voice trading among tracks.
 rows:
   -
-    name: Participating Voices
-    description: Select the voices participating in mutation
-    group: mutation-voices
+    name: Randomizing Voices
+    description: Select the voices to randomize
+    group: randomizing-voices
     type: toggle
     index: 0
     xStart: 0
-    xLength: 6
-    mapping: toggleImprovisingVoice
+    xLength: 7
+    mapping: toggleRandomizingVoice
     values:
       - 0
       - 1
@@ -17,12 +17,64 @@ rows:
       - 3
       - 4
       - 5
+      - 6
     displayValues:
       - Kick
       - Snare
       - HiHat
       - Perc
-      - Opsix
+      - Bass
+      - Keys
+      - Hydra
+  -
+    name: Independent Mutating Voices
+    description: Select the voices to mutate
+    group: mutating-voices
+    type: toggle
+    index: 1
+    xStart: 0
+    xLength: 7
+    mapping: toggleMutatingVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Bass
+      - Keys
+      - Hydra
+  -
+    name: Trading Solo Voices
+    description: Select the voices to mutate, taking turns (trading solos)
+    group: trading-solos
+    type: toggle
+    index: 2
+    xStart: 0
+    xLength: 7
+    mapping: toggleSoloingVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Bass
+      - Keys
       - Hydra
   -
     name: Mutation Algorithms
@@ -30,7 +82,7 @@ rows:
     group: mutation-algorithms
     type: toggle
     index: 0
-    xStart: 6
+    xStart: 7
     xLength: 8
     mapping: toggleMutationAlgorithm
     values:
@@ -60,21 +112,3 @@ rows:
     xStart: 15
     xLength: 1
     mapping: queueMutationStop
-  -
-    name: Enable Voice Trading
-    description: When on, mutating voices will take turns for the length of each super measure
-    group: mutation-controls
-    type: toggle
-    index: 2
-    xStart: 15
-    xLength: 1
-    mapping: toggleVoiceTrading
-  -
-    name: Toggle Voice Random
-    description: When on, mutating voices will play random melodies and rhythms
-    group: mutation-controls
-    type: toggle
-    index: 3
-    xStart: 15
-    xLength: 1
-    mapping: toggleVoiceRandomizer
