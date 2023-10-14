@@ -19,7 +19,6 @@ function osc_message() {
   var selectTrackMatch = a[0].match(selectTrackPattern);
   if (selectTrackMatch) {
     selectTrack(selectTrackMatch[1]);
-    outlet(2, selectTrackMatch[1], activeTrackClips[selectTrackMatch[1]]);
   }
 
   var notesMatch = a[0].match(notesPattern);
@@ -53,6 +52,7 @@ function osc_message() {
       new LiveAPI("live_set tracks " + trackIndex + " clip_slots " + activeTrackClips[trackIndex] + " clip")
           .set("loop_end", parseInt(a[1]) * 4);
     }
+    outlet(2, parseInt(a[1]) * 16);
   }
 
   var stopClipMatch = a[0].match(stopAllClipsPattern);

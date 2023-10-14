@@ -40,7 +40,6 @@ export class Sequencer {
       // From Live
       this.receiver = new OscReceiver();
       this.receiver.bind(33334, "localhost");
-      this.receiver.on("/live/song/beat", (beatNumber: number) => this.#syncWithLiveBeat(beatNumber));
       this.receiver.on("/live/clips", (tIdx: number, cIdx: number) => this.#syncLiveTrackClip(tIdx, cIdx));
       this.receiver.on("/live/chains", (tIdx: number, chIdx: number, active: number) => this.#syncLiveTrackChain(tIdx, chIdx, active));
       this.receiver.on("/live/transport", (step: number) => this.transport(step));
@@ -64,6 +63,20 @@ export class Sequencer {
     // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
     const trackStep = Math.floor(step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
     this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength, step);
+
+    const measure = Math.floor(step / 16) + 1;
+    this.gui.webContents.send("transport-beat", measure);
+
+    // If on the last beat of the last measure of a super measure, update mutations that may be active.
+    if (step == (this.superMeasure * 16) - 4) {
+      // Update randomizing and mutating tracks.
+      this.#syncTracksToSuperMeasure();
+
+      // Update soloing tracks.
+      if (this.daw.mutating && this.daw.soloists.length > 0) {
+        this.#queueNextSoloist();
+      }
+    }
   }
 
 
@@ -156,27 +169,6 @@ export class Sequencer {
       this.emitter.emit(`/set/super_measure`, this.superMeasure);
     } catch (e) {
       console.error(e.name, e.message, "while updating the super measure in Live:");
-    }
-  }
-
-
-  #syncWithLiveBeat(beat: number) {
-    // Only sync during measure boundaries
-    if (beat % 4 != 0) return;
-
-    // Sync the UI measure transport
-    const measure = ((beat / 4) % this.superMeasure) + 1;
-    this.gui.webContents.send("transport-beat", measure);
-
-    // If not on the last measure of a super measure, finished.
-    if (measure != this.superMeasure) return;
-
-    // Fire clips for all mutating tracks not participating in voice trading to resync to super measure
-    this.#syncTracksToSuperMeasure();
-
-    // For any tracks that are participating in voice trading evolution, evolve the melody and fire clips
-    if (this.daw.mutating && this.daw.soloists.length > 0) {
-      this.#queueNextSoloist();
     }
   }
 
