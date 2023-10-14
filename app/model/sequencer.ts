@@ -67,9 +67,7 @@ export class Sequencer {
   }
 
 
-  setNotes(track: AbletonTrack) {
-    // let timeout = 0;
-
+  setNotesInLive(track: AbletonTrack) {
     if (track.createNewClip) {
       track.currentClip = (track.currentClip + 1) % 4;
       this.emitter.emit(
@@ -81,11 +79,11 @@ export class Sequencer {
     const clipIndex = this.daw.mutating && (track.mutating || track.randomizing) ?
                       AbletonLive.EVOLUTION_SCENE_INDEX :
                       track.currentClip;
-    const notes     = track.abletonNotes();
+    track.updateCurrentAbletonNotes();
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
-        ...notes.flatMap(note => note.toOscAddedNote())
+        ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
       );
 
       if (track.createNewClip) {
@@ -93,19 +91,12 @@ export class Sequencer {
       }
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
-      console.error("input notes:", notes);
-      console.error("OSC mapped notes", ...notes.flatMap(note => note.toOscAddedNote()));
+      console.error("input notes:", track.currentAbletonNotes);
+      console.error("OSC mapped notes", ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote()));
       console.error("trackIndex", track.dawIndex, "mutating", track.mutating);
       console.error("trackIndex", track.dawIndex, "randomizing", track.randomizing);
       console.error("Current track mutation", track.currentMutation);
     }
-
-    // setTimeout(() => {
-    //   this.emitter.emit(
-    //     `/tracks/${trackIndex}/clips/${clipIndex}/notes`,
-    //     ...notes.flatMap(note => note.toOscAddedNote())
-    //   );
-    // }, timeout);
   }
 
 
@@ -228,6 +219,10 @@ export class Sequencer {
           this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/fire`);
         } else {
           this.emitter.emit(`/tracks/${track.dawIndex}/clips/stop`);
+        }
+        track.updateCurrentAbletonNotes();
+        if (track.dawIndex == this.daw.getActiveTrack().dawIndex) {
+          track.updateGuiPianoRoll();
         }
       });
       this.daw.stopMutationQueued = false;

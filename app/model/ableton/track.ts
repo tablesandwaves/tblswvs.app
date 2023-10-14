@@ -36,10 +36,16 @@ const CLIP_16N_COUNT = 128;
 
 export class AbletonTrack {
   name: string;
+
   rhythm: RhythmStep[] = new Array(16);
   defaultProbability: number = 1;
   fillMeasures: (0|1)[] = [0, 0, 0, 0, 0, 0, 0, 0];
   fillDuration: string = "8nd";
+  noteLength: string = "16n";
+  pulseRate: string = "16n";
+  beatLength: number = 16;
+
+  algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
   notesAreMelody = true;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
@@ -48,21 +54,21 @@ export class AbletonTrack {
   // Using a 2-dimensional array to accommodate polyphony.
   outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
+  currentAbletonNotes: AbletonNote[] = new Array();
+
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
   vectorShiftsActive: boolean = false;
+
   rampSequence0: RampSequence;
   rampSequence1: RampSequence;
-  algorithm: string = "simple";
-  noteLength: string = "16n";
-  pulseRate: string = "16n";
-  beatLength: number = 16;
   daw: AbletonLive;
   dawIndex: number;
 
   clips: AbletonClip[];
   currentClip: number = 0;
   createNewClip: boolean = false;
+
   mutating: boolean = false;
   randomizing: boolean = false;
 
@@ -89,7 +95,7 @@ export class AbletonTrack {
   }
 
 
-  abletonNotes(): AbletonNote[] {
+  updateCurrentAbletonNotes() {
     const defaultDuration = noteLengthMap[this.noteLength].size,
           noteMap         = new Map<number,AbletonNote[]>(),
           sourceNotes     = this.daw.mutating && (this.mutating || this.randomizing) ? this.currentMutation.map(n => [n]) : this.outputNotes,
@@ -146,7 +152,7 @@ export class AbletonTrack {
       });
     }
 
-    return [...noteMap.values()].flat();
+    this.currentAbletonNotes = [...noteMap.values()].flat();
   }
 
 
@@ -208,7 +214,11 @@ export class AbletonTrack {
     // soloist when trading voices.
     this.currentMutation = mutatedMelody;
     this.daw.currentSoloistMelody = mutatedMelody;
-    this.daw.sequencer.setNotes(this);
+    this.daw.sequencer.setNotesInLive(this);
+
+    if (this.daw.getActiveTrack().dawIndex == this.dawIndex) {
+      this.updateGuiPianoRoll();
+    }
   }
 
 
@@ -237,7 +247,11 @@ export class AbletonTrack {
     // (via abletonNotesForCurrentTrack()) and the currentSoloistMelody so it is mutated for the next
     // soloist when trading voices.
     this.currentMutation = randomizedMelody;
-    this.daw.sequencer.setNotes(this);
+    this.daw.sequencer.setNotesInLive(this);
+
+    if (this.daw.getActiveTrack().dawIndex == this.dawIndex) {
+      this.updateGuiPianoRoll();
+    }
   }
 
 
@@ -288,7 +302,7 @@ export class AbletonTrack {
   updateGuiPianoRoll() {
     this.daw.sequencer.gui.webContents.send(
       "piano-roll-notes",
-      this.abletonNotes().map(n => n.toPianoRollNote()),
+      this.currentAbletonNotes.map(n => n.toPianoRollNote()),
       this.daw.sequencer.key.midiTonic,
       this.daw.sequencer.superMeasure
     );
