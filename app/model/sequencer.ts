@@ -86,6 +86,7 @@ export class Sequencer {
       this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/create`, 32);
       // Redundant for existing tracks, but need to set the loop end for newly created clip
       setTimeout(() => this.setSuperMeasure(), 100);
+      this.daw.stagedClipChangeTracks.push(track.dawIndex);
     }
 
     const clipIndex = this.daw.mutating && (track.mutating || track.randomizing) ?
@@ -97,10 +98,6 @@ export class Sequencer {
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
         ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
       );
-
-      if (track.createNewClip) {
-        this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/fire`);
-      }
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
       console.error("input notes:", track.currentAbletonNotes);
@@ -227,6 +224,16 @@ export class Sequencer {
           this.emitter.emit(`/tracks/${track.dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
         }
       });
+    }
+
+    // Look for any tracks that have added new clips in the current super measure
+    if (this.daw.stagedClipChangeTracks.length > 0) {
+      this.daw.tracks.forEach(track => {
+        if (this.daw.stagedClipChangeTracks.includes(track.dawIndex)) {
+          this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/fire`);
+        }
+      });
+      this.daw.stagedClipChangeTracks = new Array();
     }
   }
 
