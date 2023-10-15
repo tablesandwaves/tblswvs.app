@@ -10,6 +10,7 @@ import { AbletonLive } from "./ableton/live";
 import { note } from "tblswvs";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
+import { INACTIVE_BRIGHTNESS } from "./grid/grid_page";
 
 
 export class Sequencer {
@@ -87,6 +88,10 @@ export class Sequencer {
       // Redundant for existing tracks, but need to set the loop end for newly created clip
       setTimeout(() => this.setSuperMeasure(), 100);
       this.daw.stagedClipChangeTracks.push(track.dawIndex);
+
+      track.createNewClip = false;
+      this.grid.levelSet(15, 2, INACTIVE_BRIGHTNESS);
+      track.updateGuiCreateNewClip();
     }
 
     const clipIndex = this.daw.mutating && (track.mutating || track.randomizing) ?
