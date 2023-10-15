@@ -69,8 +69,9 @@ export class AbletonTrack {
   currentClip: number = 0;
   createNewClip: boolean = false;
 
-  mutating: boolean = false;
-  randomizing: boolean = false;
+  #randomizing: boolean = false;
+  #mutating:    boolean = false;
+  #soloing:     boolean = false;
 
   chains: AbletonChain[] = new Array();
 
@@ -95,10 +96,69 @@ export class AbletonTrack {
   }
 
 
+  get randomizing() {
+    return this.#randomizing;
+  }
+
+
+  set randomizing(state: boolean) {
+    this.#randomizing = state;
+
+    if (this.#randomizing) {
+      this.#mutating = false;
+      this.#soloing  = false;
+
+      const index = this.daw.soloists.indexOf(this.dawIndex);
+      if (index !== -1) this.daw.soloists.splice(index, 1);
+    }
+  }
+
+
+  get mutating() {
+    return this.#mutating;
+  }
+
+
+  set mutating(state: boolean) {
+    this.#mutating    = state;
+
+    if (this.#mutating) {
+      this.#randomizing = false;
+      this.#soloing     = false;
+
+      const index = this.daw.soloists.indexOf(this.dawIndex);
+      if (index !== -1) this.daw.soloists.splice(index, 1);
+    }
+  }
+
+
+  /**
+   * Using the cached boolean property rather than computing everytime so extra array lookups
+   * are not incurred.
+   */
+  get soloing() {
+    return this.#soloing;
+  }
+
+
+  set soloing(state: boolean) {
+    if (state) {
+      if (!this.daw.soloists.includes(this.dawIndex)) this.daw.soloists.push(this.dawIndex);
+      this.#soloing     = true;
+      this.#randomizing = false;
+      this.#mutating    = false;
+    } else {
+      this.#soloing = false;
+      const index = this.daw.soloists.indexOf(this.dawIndex);
+      if (index !== -1) this.daw.soloists.splice(index, 1);
+    }
+  }
+
+
   updateCurrentAbletonNotes() {
     const defaultDuration = noteLengthMap[this.noteLength].size,
           noteMap         = new Map<number,AbletonNote[]>(),
-          sourceNotes     = this.daw.mutating && (this.mutating || this.randomizing) ? this.currentMutation.map(n => [n]) : this.outputNotes,
+          sourceNotes     = this.#getSourceNotes(),
           sourceRhythm    = this.daw.mutating && this.randomizing ? this.#randomRhythm() : this.rhythm,
           beatLength      = this.daw.mutating && this.randomizing ? sourceRhythm.length : this.beatLength;
 
@@ -156,6 +216,26 @@ export class AbletonTrack {
   }
 
 
+  /**
+   * Select the note source from which to generate notes for Live. Sources include:
+   *
+   * 1. The note list added to the track in the form of a melody or chord progression
+   * 2. The current track's evolving/mutating note list
+   * 3. The soloing tracks' shared evolving/mutating note list
+   */
+  #getSourceNotes(): note[][] {
+    if (this.daw.mutating && (this.mutating || this.randomizing)) {
+      return this.currentMutation.map(n => [n]);
+    }
+
+    if (this.daw.mutating && this.daw.soloists.includes(this.dawIndex)) {
+      return this.daw.currentSoloistMelody.map(n => [n]);
+    }
+
+    return this.outputNotes;
+  }
+
+
   #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, duration: number, velocity?: number): AbletonNote {
     return new AbletonNote(
       note.midi,
@@ -185,7 +265,7 @@ export class AbletonTrack {
   evolve(tradingVoices = false) {
     if (this.randomizing) {
       this.randomizeMelody();
-    } else if (this.mutating) {
+    } else if (this.mutating || this.soloing) {
       this.evolveMelody(tradingVoices);
     }
   }
@@ -205,7 +285,6 @@ export class AbletonTrack {
           mutationSource[(i * gatesPerMeasure + j) % mutationSource.length]
         );
       }
-
       mutatedMelody = mutatedMelody.concat(Mutation.random(new Melody(melody, this.daw.sequencer.key), activeMutations).notes);
     }
 

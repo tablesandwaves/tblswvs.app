@@ -94,7 +94,7 @@ export class Sequencer {
       track.updateGuiCreateNewClip();
     }
 
-    const clipIndex = this.daw.mutating && (track.mutating || track.randomizing) ?
+    const clipIndex = this.daw.mutating && (track.mutating || track.randomizing || track.soloing) ?
                       AbletonLive.EVOLUTION_SCENE_INDEX :
                       track.currentClip;
     track.updateCurrentAbletonNotes();
@@ -180,7 +180,7 @@ export class Sequencer {
     if (this.daw.dawIndices.includes(trackIndex) && clipIndex < 4) {
       const track = this.daw.tracks.find(t => t.dawIndex == trackIndex);
 
-      if (track.mutating) return;
+      if (track.mutating || track.randomizing || track.soloing) return;
 
       track.currentClip = clipIndex == -2 ? -1 : clipIndex;
       if (this.daw.getActiveTrack().dawIndex == trackIndex) {
@@ -249,7 +249,7 @@ export class Sequencer {
       this.daw.soloistIndex++;
       const soloingTrackDawIndex = this.daw.soloists[this.daw.soloistIndex % this.daw.soloists.length];
 
-      this.daw.tracks.filter(t => t.dawIndex == soloingTrackDawIndex)[0].evolve(true);
+      this.daw.tracks.find(t => t.dawIndex == soloingTrackDawIndex).evolve(true);
       this.daw.soloists.forEach(dawIndex => {
         if (dawIndex == soloingTrackDawIndex) {
           this.emitter.emit(`/tracks/${dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);

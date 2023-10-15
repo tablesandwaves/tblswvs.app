@@ -7,7 +7,7 @@ const testing   = true;
 
 
 describe("MelodyEvolutionPage", () => {
-  describe("Selecting the initial blank ramp sequence page", () => {
+  describe("Selecting the initial blank melody evolution page", () => {
     const sequencer = new Sequencer(testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
@@ -166,7 +166,7 @@ describe("MelodyEvolutionPage", () => {
 
     // Set the snare track to soloing
     sequencer.grid.keyPress({y: 2, x: 1, s: 1});
-    expect(sequencer.daw.soloists).to.include(1);
+    expect(sequencer.daw.soloists).to.include(2);
     expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
 
     // Then set it to mutating
@@ -177,7 +177,7 @@ describe("MelodyEvolutionPage", () => {
     });
 
     it("removes the track from the soloists", () => {
-      expect(sequencer.daw.soloists).not.to.include(1);
+      expect(sequencer.daw.soloists).not.to.include(2);
     });
 
     it("updates the mutating row", () => {
@@ -196,6 +196,12 @@ describe("MelodyEvolutionPage", () => {
 
   describe("setting tracks to mutating", () => {
     const sequencer = new Sequencer(testing);
+    const outputNotes = [
+      [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
+      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
+      [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
+    ];
+    sequencer.daw.tracks[1].outputNotes = outputNotes;
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -212,16 +218,26 @@ describe("MelodyEvolutionPage", () => {
       );
     });
 
-    it("updates the randomizing row", () => {
+    it("updates the mutating row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
         [0, 10, 0, 0,  0, 10, 0]
       );
+    });
+
+    it("sets a track's current mutation to its flattened output notes", () => {
+      expect(sequencer.daw.tracks[1].currentMutation).to.have.ordered.members(outputNotes.flat());
     });
   });
 
 
   describe("setting tracks to soloing", () => {
     const sequencer = new Sequencer(testing);
+    const outputNotes = [
+      [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
+      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
+      [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
+    ];
+    sequencer.daw.tracks[1].outputNotes = outputNotes;
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -232,14 +248,18 @@ describe("MelodyEvolutionPage", () => {
     sequencer.grid.keyPress({y: 2, x: 1, s: 1});
     sequencer.grid.keyPress({y: 2, x: 5, s: 1});
 
-    it("adds the tracks to the soloists list", () => {
-      expect(sequencer.daw.soloists).to.have.ordered.members([1, 5]);
+    it("adds the tracks' DAW indices to the soloists list", () => {
+      expect(sequencer.daw.soloists).to.have.ordered.members([2, 6]);
     });
 
     it("updates the soloing row", () => {
       expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members(
         [0, 10, 0, 0,  0, 10, 0]
       );
+    });
+
+    it("sets the DAW's current mutation to the first soloist's flattened output notes", () => {
+      expect(sequencer.daw.currentSoloistMelody).to.have.ordered.members(outputNotes.flat());
     });
   });
 

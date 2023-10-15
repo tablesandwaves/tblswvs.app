@@ -72,14 +72,7 @@ export class MelodyEvolutionPage extends GridPage {
 
   toggleRandomizingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
-
     track.randomizing = !track.randomizing;
-
-    if (track.randomizing) {
-      track.mutating = false;
-      const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
-      if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
-    }
 
     gridPage.refresh();
   }
@@ -87,14 +80,11 @@ export class MelodyEvolutionPage extends GridPage {
 
   toggleMutatingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
-
     track.mutating = !track.mutating;
 
+    // Seed the initial mutating melody
     if (track.mutating) {
       track.currentMutation = track.outputNotes.flat();
-      track.randomizing = false;
-      const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
-      if (index !== -1) gridPage.grid.sequencer.daw.soloists.splice(index, 1);
     }
 
     gridPage.refresh();
@@ -103,14 +93,11 @@ export class MelodyEvolutionPage extends GridPage {
 
   toggleSoloingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
+    track.soloing = !track.soloing;
 
-    const index = gridPage.grid.sequencer.daw.soloists.indexOf(press.x);
-    if (index === -1) {
-      gridPage.grid.sequencer.daw.soloists.push(press.x);
-      track.randomizing = false;
-      track.mutating    = false;
-    } else {
-      gridPage.grid.sequencer.daw.soloists.splice(index, 1);
+    // Seed the initial mutating melody from the first soloist
+    if (gridPage.grid.sequencer.daw.soloists.length == 1) {
+      gridPage.grid.sequencer.daw.currentSoloistMelody = track.outputNotes.flat();
     }
 
     gridPage.refresh();
@@ -154,9 +141,7 @@ export class MelodyEvolutionPage extends GridPage {
 
 
   gridSoloingTracksRow() {
-    return this.grid.sequencer.daw.tracks.map((_, i) => {
-      return this.grid.sequencer.daw.soloists.includes(i) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
-    });
+    return this.grid.sequencer.daw.tracks.map(t => t.soloing ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 

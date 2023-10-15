@@ -7,10 +7,62 @@ import { AbletonLive } from "../app/model/ableton/live";
 const testing   = true;
 const sequencer = new Sequencer(testing);
 const daw       = new AbletonLive(sequencer);
-const track     = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
+const track     = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
 
 
 describe("AbletonTrack", () => {
+  describe("melodic evolution properties exhibit mutual exclusivity", () => {
+    describe("setting a mutating track to randomizing", () => {
+      const daw   = new AbletonLive(sequencer);
+      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
+
+      track.mutating    = true;
+      track.randomizing = true;
+
+      it("sets the randomizing property to true", () => expect(track.randomizing).to.be.true);
+      it("unsets the mutating property (sets to false)", () => expect(track.mutating).to.be.false);
+    });
+
+
+    describe("setting a randomizing track to mutating", () => {
+      const daw   = new AbletonLive(sequencer);
+      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
+
+      track.randomizing = true;
+      track.mutating    = true;
+
+      it("sets the mutating property to true", () => expect(track.mutating).to.be.true);
+      it("unsets the randomizing property (sets to false)", () => expect(track.randomizing).to.be.false);
+    });
+
+
+    describe("setting a randomizing track to soloing", () => {
+      const daw   = new AbletonLive(sequencer);
+      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
+
+      track.randomizing = true;
+      track.soloing     = true;
+
+      it("sets the soloing property to true", () => expect(track.soloing).to.be.true);
+      it("adds the track's DAW index to the soloists", () => expect(daw.soloists).to.include(track.dawIndex));
+      it("unsets the randomizing property (sets to false)", () => expect(track.randomizing).to.be.false);
+    });
+
+
+    describe("setting a soloing track to randomizing", () => {
+      const daw   = new AbletonLive(sequencer);
+      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
+
+      track.soloing     = true;
+      track.randomizing = true;
+
+      it("sets the randomizing property to true", () => expect(track.randomizing).to.be.true);
+      it("sets the soloing property to false", () => expect(track.soloing).to.be.false);
+      it("removes the track's DAW index from the soloists", () => expect(daw.soloists).not.to.include(track.dawIndex));
+    });
+  });
+
+
   describe("generating Ableton notes for a track", () => {
     describe("with a beat length of 12 16th notes", () => {
       track.beatLength  = 12;
