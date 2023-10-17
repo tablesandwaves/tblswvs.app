@@ -11,7 +11,7 @@ const sequencer = new Sequencer();
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1630,
+    width: 1440,
     height: 1000,
     webPreferences: {
       preload: path.join(__dirname, "preload.js")

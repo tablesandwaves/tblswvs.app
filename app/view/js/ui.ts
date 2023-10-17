@@ -199,7 +199,7 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
   }
 
   const noteSpan     = [...new Array(high - low + 1)].map((_, i) => i + low);
-  const canvasWidth  = 800;
+  const canvasWidth  = 1280;
   const canvasHeight = 300;
 
   const pianoRollWrapper = document.getElementById("piano-roll");

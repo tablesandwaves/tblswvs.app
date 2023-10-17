@@ -17,7 +17,7 @@ div.wrapper, ul.wrapper {
 div.nav {
   position: absolute;
   top: 0;
-  width: 90px;
+  width: 96px;
 }
 
 
@@ -60,12 +60,60 @@ div.nav ul li#docs.active {
 div#main {
   position: absolute;
   top: 0;
-  left: 90px;
-  width: 810px;
-  min-height: 800px;
+  left: 96px;
+  width: 1344px;
+  height: 960px;
   border-left: 1px solid #555;
   margin-left: -1px;
   display: block;
+  overflow: hidden;
+}
+
+
+div#top-row {
+  display: block;
+  width: 1344px;
+}
+
+
+div#top-row div#app-name,
+div#top-row div#top-extra {
+  display: block;
+  width: 272px;
+}
+
+
+div#top-row div#app-name h1 {
+  position: relative;
+  float: left;
+  width: 212px;
+  padding-left: 30px;
+  padding-right: 30px;
+  font-size: 2em;
+  text-align: center;
+}
+
+
+div#top-row div#step-sequencer,
+div#top-row div#step-sequencer div#sequencer-steps,
+div#top-row div#step-sequencer div#sequencer-fills,
+div#top-row div#step-sequencer div#note-length {
+  display: block;
+  width: 800px;
+}
+
+
+div#top-row div#step-sequencer div#note-length {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+
+div#piano-roll {
+  margin: auto 16px;
+  width: 1312px;
+  height: 300px;
+  margin-bottom: 10px;
 }
 
 
@@ -83,13 +131,6 @@ div#documentation {
 }
 
 
-h1 {
-  width: 800px;
-  padding-left: 20px;
-  font-size: 1.5em;
-}
-
-
 h2 {
   margin-top: 0;
   padding-left: 10px;
@@ -98,12 +139,8 @@ h2 {
 
 
 div#track,
-div#note-length,
-div#sequencer-steps,
-div#sequencer-fills,
 div#ramp-sequence,
-div#pianoroll-transport,
-div#piano-roll {
+div#pianoroll-transport {
   width: 800px;
   margin: auto 10px;
 }
@@ -223,24 +260,18 @@ div#ramp-sequence {
 }
 
 
-div#piano-roll {
-  height: 300px;
-  margin-bottom: 10px;
-}
-
-
 div#pianoroll-transport {
-  width: 768px;
+  margin: auto 16px;
+  width: 1280px;
   height: 3px;
   margin-bottom: 0;
-  margin-left: 42px;
 }
 
 
 div#pianoroll-transport div.step {
   position: relative;
   float: left;
-  width: 12px;
+  width: 20px;
   height: 3px;
 }
 
@@ -261,7 +292,7 @@ div#note-length ul li {
   list-style: none;
   position: relative;
   float: left;
-  margin-left: 5px;
+  /* margin-left: 5px; */
   padding: 5px 0;
   font-size: .9em;
 }
