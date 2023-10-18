@@ -123,61 +123,73 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], beatLength: numbe
 });
 
 
-window.parameters.updateRampSequence((event: any, rampSequence: number[]) => {
+window.parameters.updateRampSequence((event: any, rampSequence: number[], superMeasureLength: number) => {
   const rampSequenceWrapper = document.getElementById("ramp-sequence");
   const currentCanvas = document.getElementById("rampseq");
   if (currentCanvas != undefined) rampSequenceWrapper.removeChild(currentCanvas);
 
+  const canvasWidth  = 1280;
+  const canvasHeight = 80;
+
   const newCanvas = document.createElement("canvas");
   newCanvas.setAttribute("id", "rampseq");
-  newCanvas.setAttribute("width", "800");
-  newCanvas.setAttribute("height", "100");
+  newCanvas.setAttribute("width", "" + canvasWidth);
+  newCanvas.setAttribute("height", "" + canvasHeight);
   rampSequenceWrapper.appendChild(newCanvas);
 
-  // const canvas = <HTMLCanvasElement> document.getElementById("rampseq");
   const ctx = newCanvas.getContext("2d");
   ctx.strokeStyle = "#117733";
 
-  let segmentStartX = 0;
+  let measureWidth       = canvasWidth / superMeasureLength;
+  let rampSeqStepWidth   = measureWidth / 16;
 
-  for (let i = 0; i < rampSequence.length; i += 4) {
-    const segmentStepLength = rampSequence[i];
-    const subdivStepLength  = rampSequence[i + 1];
-    const segmentStartY     = RAMP_SEQ_HEIGHT - (rampSequence[i + 2] * RAMP_SEQ_HEIGHT);
-    const segmentEndY       = RAMP_SEQ_HEIGHT - (rampSequence[i + 3] * RAMP_SEQ_HEIGHT);
-    const segmentLength     = segmentStepLength * RAMP_SEQ_STEP_WIDTH;
-    const subdivLength      = subdivStepLength  * RAMP_SEQ_STEP_WIDTH;
-    const numSegments       = segmentStepLength / subdivStepLength;
+  for (let currentMeasure = 0; currentMeasure < superMeasureLength; currentMeasure++) {
+    let segmentStartX = currentMeasure * measureWidth;
 
-    for (let j = 0; j < numSegments; j++) {
-      let rampStartX = (subdivLength * j) + segmentStartX;
-      let rampEndX   = (subdivLength * j) + subdivLength + segmentStartX;
-      let rampStartY = segmentStartY;
-      let rampEndY   = segmentEndY;
+    for (let i = 0; i < rampSequence.length; i += 4) {
+      const segmentStepLength = rampSequence[i];
+      const subdivStepLength  = rampSequence[i + 1];
+      const segmentStartY     = canvasHeight - (rampSequence[i + 2] * canvasHeight);
+      const segmentEndY       = canvasHeight - (rampSequence[i + 3] * canvasHeight);
+      const segmentLength     = segmentStepLength * rampSeqStepWidth;
+      const subdivLength      = subdivStepLength  * rampSeqStepWidth;
+      const numSegments       = segmentStepLength / subdivStepLength;
 
-      if (i != 0 && j == 0) {
-        ctx.lineTo(rampStartX, rampStartY);
-      }
+      for (let j = 0; j < numSegments; j++) {
+        let rampStartX = (subdivLength * j) + segmentStartX;
+        let rampEndX   = (subdivLength * j) + subdivLength + segmentStartX;
+        let rampStartY = segmentStartY;
+        let rampEndY   = segmentEndY;
 
-      const percentFit = (segmentLength - rampStartX + segmentStartX) / subdivLength;
-      if (percentFit < 1) {
-        rampEndX = segmentLength + segmentStartX;
-        if (segmentStartY > segmentEndY) {
-          rampEndY = segmentStartY - ((segmentStartY - segmentEndY) * percentFit);
-        } else {
-          rampEndY = segmentStartY + ((segmentEndY - segmentStartY) * percentFit);
+        if (currentMeasure > 0 && j == 0) {
+          ctx.lineTo(rampStartX, rampStartY);
+        }
+
+        if (i != 0 && j == 0) {
+          ctx.lineTo(rampStartX, rampStartY);
+        }
+
+        const percentFit = (segmentLength - rampStartX + segmentStartX) / subdivLength;
+        if (percentFit < 1) {
+          rampEndX = segmentLength + segmentStartX;
+          if (segmentStartY > segmentEndY) {
+            rampEndY = segmentStartY - ((segmentStartY - segmentEndY) * percentFit);
+          } else {
+            rampEndY = segmentStartY + ((segmentEndY - segmentStartY) * percentFit);
+          }
+        }
+
+        ctx.moveTo(rampStartX, rampStartY);
+        ctx.lineTo(rampEndX, rampEndY);
+        if (percentFit >= 1 && rampEndX != segmentStartX + segmentLength) {
+          ctx.lineTo(rampEndX, segmentStartY);
         }
       }
 
-      ctx.moveTo(rampStartX, rampStartY);
-      ctx.lineTo(rampEndX, rampEndY);
-      if (percentFit >= 1 && rampEndX != segmentStartX + segmentLength) {
-        ctx.lineTo(rampEndX, segmentStartY);
-      }
+      segmentStartX += segmentLength;
     }
-
-    segmentStartX += segmentLength;
   }
+
   ctx.stroke();
 });
 
@@ -199,7 +211,7 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
   }
 
   const noteSpan     = [...new Array(high - low + 1)].map((_, i) => i + low);
-  const canvasWidth  = 1280;
+  const canvasWidth  = 1312;
   const canvasHeight = 300;
 
   const pianoRollWrapper = document.getElementById("piano-roll");

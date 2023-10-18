@@ -39,6 +39,7 @@ export class GlobalPage extends GridPage {
     gridPage.#setGridSuperMeasureDisplay();
     gridPage.#setGuiSuperMeasureDisplay();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
   }
 
 

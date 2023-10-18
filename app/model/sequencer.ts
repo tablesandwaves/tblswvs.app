@@ -114,40 +114,40 @@ export class Sequencer {
   }
 
 
-  setRampSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
+  setRampSequence(track: AbletonTrack) {
     if (this.testing) return;
     try {
       this.emitter.emit(
-        `/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`,
-        ...track.getRampSequence(rampSequenceIndex).deviceData()
+        `/tracks/${track.dawIndex}/ramp_seq/${track.editableRampSequence}`,
+        ...track.getEditableRampSequence().deviceData()
       );
     } catch (e) {
       console.error(e.name, e.message, "while sending ramp sequence data to Live:");
-      console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
+      console.error("ramp sequence data:", track.getEditableRampSequence().deviceData());
       console.error("trackIndex", track.dawIndex);
     }
   }
 
 
-  clearRampSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
+  clearRampSequence(track: AbletonTrack) {
     if (this.testing) return;
     try {
-      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "clear_macro");
+      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${track.editableRampSequence}`, "clear_macro");
     } catch (e) {
       console.error(e.name, e.message, "while clearing ramp sequence in Live:");
-      console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
+      console.error("ramp sequence data:", track.getEditableRampSequence().deviceData());
       console.error("trackIndex", track.dawIndex);
     }
   }
 
 
-  activateRampSequence(track: AbletonTrack, rampSequenceIndex: (0|1)) {
+  activateRampSequence(track: AbletonTrack) {
     if (this.testing) return;
     try {
-      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${rampSequenceIndex}`, "map_macro");
+      this.emitter.emit(`/tracks/${track.dawIndex}/ramp_seq/${track.editableRampSequence}`, "map_macro");
     } catch (e) {
       console.error(e.name, e.message, "while activating ramp sequence in Live:");
-      console.error("ramp sequence data:", track.getRampSequence(rampSequenceIndex).deviceData());
+      console.error("ramp sequence data:", track.getEditableRampSequence().deviceData());
       console.error("trackIndex", track.dawIndex);
     }
   }

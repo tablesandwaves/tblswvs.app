@@ -62,6 +62,7 @@ export class AbletonTrack {
 
   rampSequence0: RampSequence;
   rampSequence1: RampSequence;
+  editableRampSequence: (0|1) = 0;
   daw: AbletonLive;
   dawIndex: number;
 
@@ -373,7 +374,7 @@ export class AbletonTrack {
     this.updateGuiRandomizeMelody();
     this.updateGuiCurrentClip();
     this.updateGuiChains();
-    this.updateGuiRampSequence(0);
+    this.updateGuiRampSequence();
     this.updateGuiPianoRoll();
   }
 
@@ -388,17 +389,18 @@ export class AbletonTrack {
   }
 
 
-  updateGuiRampSequence(rampSequenceIndex: (0|1)) {
+  updateGuiRampSequence() {
     if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send(
       "update-ramp-sequence",
-      rampSequenceIndex == 0 ? this.rampSequence0.deviceData() : this.rampSequence1.deviceData()
+      this.editableRampSequence == 0 ? this.rampSequence0.deviceData() : this.rampSequence1.deviceData(),
+      this.daw.sequencer.superMeasure
     );
   }
 
 
-  getRampSequence(rampSequenceIndex: (0|1)): RampSequence {
-    return rampSequenceIndex == 0 ? this.rampSequence0 : this.rampSequence1;
+  getEditableRampSequence(): RampSequence {
+    return this.editableRampSequence == 0 ? this.rampSequence0 : this.rampSequence1;
   }
 
 

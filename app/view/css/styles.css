@@ -117,6 +117,13 @@ div#piano-roll {
 }
 
 
+div#ramp-sequence {
+  width: 1280px;
+  height: 80px;
+  margin: auto 16px auto 48px;
+}
+
+
 div#app, div#documentation {
   position: relative;
   float: left;
@@ -138,9 +145,7 @@ h2 {
 }
 
 
-div#track,
-div#ramp-sequence,
-div#pianoroll-transport {
+div#track {
   width: 800px;
   margin: auto 10px;
 }
@@ -251,12 +256,6 @@ div#sequencer-fills div span {
   text-align: center;
   font-family: 'Courier New', Courier, monospace;
   color: #117733;
-}
-
-
-div#ramp-sequence {
-  height: 80px;
-  margin-bottom: 10px;
 }
 
 

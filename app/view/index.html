@@ -81,61 +81,59 @@
     <div id="top-extra" class="wrapper">
     </div>
   </div>
-  <div id="app">
-    <div id="ramp-sequence" class="wrapper">
-      <canvas id="rampseq" width="800" height="100"></canvas>
+  <div id="ramp-sequence" class="wrapper">
+    <canvas id="rampseq" width="1312" height="80"></canvas>
+  </div>
+  <div id="pianoroll-transport" class="wrapper"></div>
+  <div id="piano-roll" class="wrapper">
+    <canvas id="pianoroll" width="800" height="300"></canvas>
+  </div>
+  <div id="track" class="wrapper">
+    <div id="melodic-vector" class="wrapper">
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
+      <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
     </div>
-    <div id="pianoroll-transport" class="wrapper"></div>
-    <div id="piano-roll" class="wrapper">
-      <canvas id="pianoroll" width="800" height="300"></canvas>
+    <div id="melodic-states" class="wrapper">
+      <div id="melodic-vector-active">Melody Vector <span></span></div>
+      <div id="randomizer-active">Randomizer <span></span></div>
     </div>
-    <div id="track" class="wrapper">
-      <div id="melodic-vector" class="wrapper">
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-        <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
-      </div>
-      <div id="melodic-states" class="wrapper">
-        <div id="melodic-vector-active">Melody Vector <span></span></div>
-        <div id="randomizer-active">Randomizer <span></span></div>
-      </div>
-      <div id="clip" class="wrapper">
-        <p id="current-clip">Current Clip: <span></span></p>
-        <p id="create-clip">Create New: <span></span></p>
-      </div>
-      <div id="track-notes" class="wrapper">
-        <p>Type: <span id="note-type"></span></p>
-        <p>Input Notes: <br> <span id="input-notes"></span></p>
-      </div>
-      <div id="chains" class="wrapper">
-        <ol>
-          <!-- Will be filled in dynamically from the track config. -->
-        </ol>
-      </div>
+    <div id="clip" class="wrapper">
+      <p id="current-clip">Current Clip: <span></span></p>
+      <p id="create-clip">Create New: <span></span></p>
     </div>
-    <div id="global-params" class="wrapper">
-      <div id="current-scale" class="wrapper">
-        <p>Key: <span>C Minor</span></p>
-      </div>
-      <div id="melody" class="wrapper">
-        <p>Queued Melody:<br><span></span></p>
-      </div>
-      <div id="chord-progression" class="wrapper">
-        <p>Queued Progression:<br><span></span></p>
-      </div>
-      <div id="evolution" class="wrapper">
-        <p id="mutating-tracks">Mutating Tracks: <span></span></p>
-        <p id="mutations">Mutations: <span></span></p>
-      </div>
+    <div id="track-notes" class="wrapper">
+      <p>Type: <span id="note-type"></span></p>
+      <p>Input Notes: <br> <span id="input-notes"></span></p>
+    </div>
+    <div id="chains" class="wrapper">
+      <ol>
+        <!-- Will be filled in dynamically from the track config. -->
+      </ol>
+    </div>
+  </div>
+  <div id="global-params" class="wrapper">
+    <div id="current-scale" class="wrapper">
+      <p>Key: <span>C Minor</span></p>
+    </div>
+    <div id="melody" class="wrapper">
+      <p>Queued Melody:<br><span></span></p>
+    </div>
+    <div id="chord-progression" class="wrapper">
+      <p>Queued Progression:<br><span></span></p>
+    </div>
+    <div id="evolution" class="wrapper">
+      <p id="mutating-tracks">Mutating Tracks: <span></span></p>
+      <p id="mutations">Mutations: <span></span></p>
     </div>
   </div>
 
