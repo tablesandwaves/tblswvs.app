@@ -81,14 +81,19 @@
     <div id="top-extra" class="wrapper">
     </div>
   </div>
-  <div id="ramp-sequence" class="wrapper">
-    <canvas id="rampseq" width="1312" height="80"></canvas>
-  </div>
   <div id="pianoroll-transport" class="wrapper"></div>
   <div id="piano-roll" class="wrapper">
     <canvas id="pianoroll" width="800" height="300"></canvas>
   </div>
-  <div id="track" class="wrapper">
+  <div id="ramp-sequence" class="wrapper">
+    <canvas id="rampseq" width="1312" height="80"></canvas>
+  </div>
+  <div class="row wrapper">
+    <div id="chains" class="wrapper">
+      <ol>
+        <!-- Will be filled in dynamically from the track config. -->
+      </ol>
+    </div>
     <div id="melodic-vector" class="wrapper">
       <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
       <div class="active vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
@@ -106,19 +111,17 @@
     <div id="melodic-states" class="wrapper">
       <div id="melodic-vector-active">Melody Vector <span></span></div>
       <div id="randomizer-active">Randomizer <span></span></div>
-    </div>
-    <div id="clip" class="wrapper">
       <p id="current-clip">Current Clip: <span></span></p>
       <p id="create-clip">Create New: <span></span></p>
     </div>
+  </div>
+  <div id="track" class="wrapper">
+    <!-- <div id="clip" class="wrapper">
+
+    </div> -->
     <div id="track-notes" class="wrapper">
       <p>Type: <span id="note-type"></span></p>
       <p>Input Notes: <br> <span id="input-notes"></span></p>
-    </div>
-    <div id="chains" class="wrapper">
-      <ol>
-        <!-- Will be filled in dynamically from the track config. -->
-      </ol>
     </div>
   </div>
   <div id="global-params" class="wrapper">

@@ -70,7 +70,8 @@ div#main {
 }
 
 
-div#top-row {
+div#top-row,
+div.row {
   display: block;
   width: 1344px;
 }
@@ -121,6 +122,34 @@ div#ramp-sequence {
   width: 1280px;
   height: 80px;
   margin: auto 16px auto 48px;
+}
+
+
+div#chains, div#melodic-states {
+  width: 340px;
+  margin: auto 16px;
+}
+
+
+div#chains ol {
+  margin: 1em 0;
+  padding: 0;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  color: #aaa;
+}
+
+
+div#chains ol li.on {
+  color: #117733;
+}
+
+
+div#track-notes ul li,
+div#chains ol li {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 5px 0;
 }
 
 
@@ -184,8 +213,7 @@ div#clip {
 }
 
 
-div#track-notes,
-div#chains {
+div#track-notes {
   width: 650px;
 }
 
@@ -318,26 +346,7 @@ li#measure .parameter {
 }
 
 
-div#chains ol {
-  margin: 1em 0;
-  padding: 0;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  color: #aaa;
-}
 
-
-div#chains ol li.on {
-  color: #117733;
-}
-
-
-div#track-notes ul li,
-div#chains ol li {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 5px 0;
-}
 
 
 div#note-length ul li span,
@@ -454,13 +463,6 @@ div#documentation div#button-details {
 
 div#documentation div#page-overview {
   min-height: 50px;
-}
-
-
-div#melodic-states {
-  width: 200px;
-  height: 160px;
-  /* float: right; */
 }
 
 
