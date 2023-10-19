@@ -78,7 +78,9 @@
         <div class="active wrapper step-15"><span></span></div>
       </div>
     </div>
-    <div id="top-extra" class="wrapper">
+    <div id="clip-details" class="wrapper">
+      <div id="current-clip" class="wrapper indicator">Current Clip: <span></span></div>
+      <div id="create-clip" class="wrapper indicator">Create New: <span></span></div>
     </div>
   </div>
   <div id="pianoroll-transport" class="wrapper"></div>
@@ -109,16 +111,13 @@
       <div class="vector-step wrapper"><span class="shift0"></span><span class="shift-value">0</span></div>
     </div>
     <div id="melodic-states" class="wrapper">
-      <div id="melodic-vector-active">Melody Vector <span></span></div>
-      <div id="randomizer-active">Randomizer <span></span></div>
-      <p id="current-clip">Current Clip: <span></span></p>
-      <p id="create-clip">Create New: <span></span></p>
+      <div id="melodic-vector-active" class="wrapper indicator">Melody Vector <span></span></div>
+      <div id="randomizer-active" class="wrapper indicator">Randomizing <span></span></div>
+      <div id="randomizer-active" class="wrapper indicator">Mutating <span></span></div>
+      <div id="randomizer-active" class="wrapper indicator">Soloing <span></span></div>
     </div>
   </div>
   <div id="track" class="wrapper">
-    <!-- <div id="clip" class="wrapper">
-
-    </div> -->
     <div id="track-notes" class="wrapper">
       <p>Type: <span id="note-type"></span></p>
       <p>Input Notes: <br> <span id="input-notes"></span></p>
