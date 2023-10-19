@@ -56,7 +56,7 @@ window.parameters.updateSuperMeasure((event: any, superMeasure: string) => {
 });
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 window.parameters.toggleMelodyRandomizer((event: any, state: boolean) => toggleIndicator("#randomizer-active span", state));
-window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("p#current-clip span", clipIndex));
+window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("div#current-clip span", clipIndex));
 window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
   updateText("#mutating-tracks span", trackNames);
   updateText("#mutations span", mutations);

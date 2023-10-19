@@ -372,16 +372,13 @@ li#measure .parameter {
 div#note-length ul li span,
 div#track-notes p span,
 div#global-params p span {
-  /* display: inline-block; */
   font-family: 'Courier New', Courier, monospace;
   color: #117733;
   font-weight: bold;
 }
 
 
-div#top-row div#clip-details span,
-div#melodic-states div#melodic-vector-active span,
-div#melodic-states div#randomizer-active span {
+.indicator span {
   display: inline-block;
   vertical-align: middle;
   width: 20px;
@@ -391,14 +388,13 @@ div#melodic-states div#randomizer-active span {
   background-color: #111;
 }
 
-div#top-row div#create-clip span.on,
-div#melodic-states div#melodic-vector-active span.on,
-div#melodic-states div#randomizer-active span.on {
+
+.indicator span.on {
   background-color: #117733;
 }
 
 
-div#clip p#current-clip span {
+div#clip-details div#current-clip span {
   border: none;
   background-color: #000;
 }
