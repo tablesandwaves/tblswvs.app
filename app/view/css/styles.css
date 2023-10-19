@@ -253,12 +253,76 @@ div#global-params p {
 
 
 div#global-params {
-  position:absolute;
-  bottom:0;
-  left:0;
-  width: 1344px;
-  padding: 0;
+  width: 1312px;
+  padding: 16px;
   border-top: 1px solid #333;
+}
+
+
+div#global-params div#global-note-data {
+  width: 912px;
+  margin-right: 16px;
+}
+
+
+div#global-params div#evolution {
+  width: 384px;
+}
+
+
+div#global-params div#evolution div#randomizing-tracks,
+div#global-params div#evolution div#mutating-tracks,
+div#global-params div#evolution div#soloing-tracks {
+  margin: 10px auto;
+}
+
+
+div#global-params div#evolution div.evolution-label {
+  width: 120px;
+  padding-right: 10px;
+  float: left;
+  text-align: right;
+}
+
+
+div#global-params div#evolution div#randomizing-tracks ol,
+div#global-params div#evolution div#mutating-tracks ol,
+div#global-params div#evolution div#soloing-tracks ol {
+  /* display: block; */
+  padding-left: 0;
+  margin: 0;
+  float: left;
+  width: 254px;
+}
+
+
+div#global-params div#evolution div#mutations {
+  width: 384px;
+}
+
+
+div#global-params div#evolution div#mutations ul {
+  column-count: 3;
+  width: 320px;
+  margin: 16px 16px 16px 48px;
+  padding: 0;
+  list-style: none;
+}
+
+
+div#global-params div#evolution div#mutations ul li {
+  display: inline-block;
+  margin: 8px 0 0 0;
+  padding: 0;
+  width: 116px;
+}
+
+
+div#global-note-data div#melody,
+div#global-note-data div#chord-progression {
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
 }
 
 
@@ -397,7 +461,10 @@ div#global-params p span {
 }
 
 
-.indicator span {
+.indicator span,
+#randomizing-tracks li,
+#mutating-tracks li,
+#soloing-tracks li {
   display: inline-block;
   vertical-align: middle;
   width: 20px;
