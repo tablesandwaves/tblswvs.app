@@ -56,9 +56,15 @@ window.parameters.updateSuperMeasure((event: any, superMeasure: string) => {
 });
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("div#current-clip span", clipIndex));
-window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
-  updateText("#mutating-tracks span", trackNames);
-  updateText("#mutations span", mutations);
+
+
+window.parameters.updateMutations((event: any, mutations: string) => {
+  document.querySelectorAll("#mutations ul li").forEach(mutation => {
+    if (mutations.includes(mutation.textContent))
+      mutation.classList.add("on");
+    else
+      mutation.classList.remove("on");
+  });
 });
 
 

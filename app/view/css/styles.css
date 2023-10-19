@@ -315,6 +315,12 @@ div#global-params div#evolution div#mutations ul li {
   margin: 8px 0 0 0;
   padding: 0;
   width: 116px;
+  color: #aaa;
+}
+
+
+div#global-params div#evolution div#mutations ul li.on {
+  color: #117733;
 }
 
 
