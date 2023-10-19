@@ -83,10 +83,17 @@
       <div id="create-clip" class="wrapper indicator">Create New: <span></span></div>
     </div>
   </div>
-  <div id="pianoroll-transport" class="wrapper"></div>
+  <div id="track-notes" class="wrapper">
+    <div id="track-input-notes" class="wrapper">
+      <div id="input-notes-label">Input Notes:</div>
+      <div id="input-notes">C3</div>
+    </div>
+    <div id="track-notes-type" class="wrapper">Type: <span id="note-type">simple melody</span></div>
+  </div>
   <div id="piano-roll" class="wrapper">
     <canvas id="pianoroll" width="800" height="300"></canvas>
   </div>
+  <div id="pianoroll-transport" class="wrapper"></div>
   <div id="ramp-sequence" class="wrapper">
     <canvas id="rampseq" width="1312" height="80"></canvas>
   </div>
@@ -118,10 +125,7 @@
     </div>
   </div>
   <div id="track" class="wrapper">
-    <div id="track-notes" class="wrapper">
-      <p>Type: <span id="note-type"></span></p>
-      <p>Input Notes: <br> <span id="input-notes"></span></p>
-    </div>
+
   </div>
   <div id="global-params" class="wrapper">
     <div id="current-scale" class="wrapper">

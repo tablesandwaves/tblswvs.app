@@ -133,11 +133,50 @@ div.indicator {
 }
 
 
+div#track-notes {
+  width: 1312px;
+  margin: 5px 16px;
+}
+
+
+div#track-notes div#track-input-notes {
+  width: 1062px;
+}
+
+
+div#track-notes div#track-input-notes div {
+  display: block;
+  position: relative;
+  float: left;
+}
+
+div#track-notes div#track-input-notes div#input-notes-label {
+  width: 100px;
+}
+
+
+div#track-notes div#track-input-notes div#input-notes {
+  width: 962px;
+  height: 20px;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+  color: #117733;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+
+div#track-notes div#track-notes-type {
+  width: 250px;
+  text-align: right;
+}
+
+
 div#piano-roll {
   margin: auto 16px;
   width: 1312px;
   height: 300px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 
@@ -147,6 +186,10 @@ div#ramp-sequence {
   margin: auto 16px auto 48px;
 }
 
+
+div#chains, div#melodic-states, div#melodic-vector {
+  margin-top: 10px;
+}
 
 div#chains, div#melodic-states {
   width: 340px;
@@ -168,7 +211,6 @@ div#chains ol li.on {
 }
 
 
-div#track-notes ul li,
 div#chains ol li {
   list-style: none;
   padding: 0;
@@ -233,11 +275,6 @@ div#clip {
   width: 150px;
   float: right;
   text-align: right;
-}
-
-
-div#track-notes {
-  width: 650px;
 }
 
 
@@ -311,10 +348,9 @@ div#sequencer-fills div span {
 
 
 div#pianoroll-transport {
-  margin: auto 16px;
+  margin: auto 16px 10px 48px;
   width: 1280px;
   height: 3px;
-  margin-bottom: 0;
 }
 
 
@@ -331,8 +367,7 @@ div#pianoroll-transport div.step.current {
 }
 
 
-div#note-length ul,
-div#track-notes ul {
+div#note-length ul {
   padding: 0;
   margin: 0 0 1em 0;
 }
@@ -370,7 +405,7 @@ li#measure .parameter {
 
 
 div#note-length ul li span,
-div#track-notes p span,
+div#track-notes div span,
 div#global-params p span {
   font-family: 'Courier New', Courier, monospace;
   color: #117733;

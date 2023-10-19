@@ -510,7 +510,7 @@ const updatePianoRollTransport = (numSteps: number) => {
     const step = document.createElement("div");
     step.classList.add("step");
     step.setAttribute("id", `pianoroll-step-${i}`);
-    step.style.width = (768 / numSteps) + "px";
+    step.style.width = (1280 / numSteps) + "px";
     pianoRollTransport.appendChild(step);
   }
 }
