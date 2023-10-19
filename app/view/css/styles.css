@@ -239,12 +239,6 @@ h2 {
 }
 
 
-div#track {
-  width: 800px;
-  margin: auto 10px;
-}
-
-
 div#melody,
 div#chord-progression,
 div#evolution,
@@ -253,7 +247,6 @@ div#current-scale {
 }
 
 
-div#track p,
 div#global-params p {
   margin: 10px auto;
 }
@@ -263,18 +256,9 @@ div#global-params {
   position:absolute;
   bottom:0;
   left:0;
-  height: 300px;
-  width: 820px;
-  margin: auto 10px;
+  width: 1344px;
   padding: 0;
   border-top: 1px solid #333;
-}
-
-
-div#clip {
-  width: 150px;
-  float: right;
-  text-align: right;
 }
 
 
