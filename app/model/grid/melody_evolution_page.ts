@@ -21,7 +21,7 @@ export class MelodyEvolutionPage extends GridPage {
 
   refresh() {
     this.setGridEvolutionDisplay();
-    // this.#setUiMutations();
+    this.#setUiTrackEvolutions();
   }
 
 
@@ -29,8 +29,6 @@ export class MelodyEvolutionPage extends GridPage {
     this.setGridTopRow();
     this.setGridMutatingTracksDisplay();
     this.setGridSoloistMutatingTracksDisplay();
-    // this.setGridActiveMutationsRow();
-    // this.setGridMutationsButton();
   }
 
 
@@ -108,6 +106,20 @@ export class MelodyEvolutionPage extends GridPage {
     const offset = 7;
     gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
     gridPage.refresh();
+  }
+
+
+  #setUiTrackEvolutions() {
+    this.grid.sequencer.gui.webContents.send(
+      "update-track-evolution",
+      ...this.grid.sequencer.daw.tracks.reduce((evolutionStates, track, tIdx) => {
+        if (track.randomizing) evolutionStates[0].push(tIdx);
+        else if (track.mutating) evolutionStates[1].push(tIdx);
+        else if (track.soloing) evolutionStates[2].push(tIdx);
+
+        return evolutionStates;
+      }, [[], [], []])
+    );
   }
 
 

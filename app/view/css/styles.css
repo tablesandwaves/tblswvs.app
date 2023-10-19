@@ -475,7 +475,10 @@ div#global-params p span {
 }
 
 
-.indicator span.on {
+.indicator span.on,
+#randomizing-tracks li.on,
+#mutating-tracks li.on,
+#soloing-tracks li.on {
   background-color: #117733;
 }
 

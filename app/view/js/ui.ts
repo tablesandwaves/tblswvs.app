@@ -55,7 +55,6 @@ window.parameters.updateSuperMeasure((event: any, superMeasure: string) => {
   updatePianoRollTransport(parseInt(superMeasure) * 16);
 });
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
-window.parameters.toggleMelodyRandomizer((event: any, state: boolean) => toggleIndicator("#randomizer-active span", state));
 window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("div#current-clip span", clipIndex));
 window.parameters.updateMutations((event: any, trackNames: string, mutations: string) => {
   updateText("#mutating-tracks span", trackNames);
@@ -74,6 +73,23 @@ window.parameters.updateTrackChains((event: any, chains: any[]) => {
     chainList.appendChild(item);
   });
 });
+
+
+window.parameters.updateTrackEvolution((event: any, randomizingTracks: number[], mutatingTracks: number[], soloingTracks: number[]) => {
+  toggleEvolutionIndicator("randomizing", randomizingTracks);
+  toggleEvolutionIndicator("mutating", mutatingTracks);
+  toggleEvolutionIndicator("soloing", soloingTracks);
+});
+
+
+const toggleEvolutionIndicator = (evolutionType: string, trackIndices: number[]) => {
+  document.querySelectorAll(`#${evolutionType}-tracks ol li`).forEach((trackItem, i) => {
+    if (trackIndices.includes(i))
+      trackItem.classList.add("on");
+    else
+      trackItem.classList.remove("on");
+  });
+}
 
 
 window.parameters.updateMelodyVector((event: any, vector: number[], activeLength: number, active: boolean) => {
