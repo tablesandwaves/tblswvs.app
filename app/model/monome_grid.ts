@@ -230,6 +230,7 @@ export class MonomeGrid {
     }
 
     if (updated) {
+      this.clearGridDisplay();
       this.activePage.refresh();
       this.#selectGlobalGridKey(7, 12, globalKeyIndex);
     }

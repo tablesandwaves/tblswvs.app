@@ -18,7 +18,6 @@ export class RhythmController extends ApplicationController {
 
 
   refresh() {
-    this.grid.clearGridDisplay();
     this.setGridRhythmDisplay();
   }
 

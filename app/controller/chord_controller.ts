@@ -20,13 +20,10 @@ export class ChordController extends ApplicationController {
     this.functionMap.set("toggleNewClipCreation",    this.toggleNewClipCreation);
     this.functionMap.set("setTrackChordProgression", this.setTrackChordProgression);
     this.functionMap.set("toggleChordRecording",     this.toggleChordRecording);
-
-    this.grid.clearGridDisplay();
   }
 
 
   refresh() {
-    this.grid.clearGridDisplay();
     const activeTrack = this.grid.sequencer.daw.getActiveTrack();
     this.grid.levelSet(15, 2, (activeTrack.createNewClip ? 10 : 0));
   }

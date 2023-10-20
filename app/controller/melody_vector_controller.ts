@@ -11,8 +11,6 @@ export class MelodyVectorController extends ApplicationController {
 
     this.functionMap.set("setStepShift", this.setStepShift);
     this.functionMap.set("setShiftSequenceLength", this.setShiftSequenceLength);
-
-    this.grid.clearGridDisplay();
   }
 
 

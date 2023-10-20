@@ -14,8 +14,6 @@ export class MelodyEvolutionController extends ApplicationController {
     this.functionMap.set("toggleMutatingVoice", this.toggleMutatingVoice);
     this.functionMap.set("toggleSoloingVoice", this.toggleSoloingVoice);
     this.functionMap.set("toggleMutations", this.toggleMutations);
-
-    this.grid.clearGridDisplay();
   }
 
 

@@ -44,7 +44,6 @@ export class GlobalController extends ApplicationController {
 
 
   refresh(): void {
-    this.grid.clearGridDisplay();
     this.#setGridSuperMeasureDisplay();
     this.#setGridScaleOrTonicDisplay();
   }

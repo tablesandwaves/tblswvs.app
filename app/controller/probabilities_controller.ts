@@ -32,7 +32,6 @@ export class ProbabilitiesController extends ApplicationController {
 
 
   refresh() {
-    this.grid.clearGridDisplay();
     this.setGridProbabilitiesDisplay();
   }
 

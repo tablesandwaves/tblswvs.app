@@ -18,7 +18,6 @@ export class FillsController extends ApplicationController {
 
 
   refresh() {
-    this.grid.clearGridDisplay();
     this.setGridFillsDisplay();
   }
 

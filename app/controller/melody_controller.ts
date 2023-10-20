@@ -17,8 +17,6 @@ export class MelodyController extends ApplicationController {
     this.functionMap.set("generateMelody", this.generateMelody);
     this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
     this.functionMap.set("toggleVectorShifts", this.toggleVectorShifts);
-
-    this.refresh();
   }
 
 
@@ -60,7 +58,6 @@ export class MelodyController extends ApplicationController {
 
 
   refresh() {
-    this.grid.clearGridDisplay();
     const activeTrack = this.grid.sequencer.daw.getActiveTrack();
     this.grid.levelSet(15, 2, (activeTrack.createNewClip      ? 10 : 0));
     this.grid.levelSet(15, 3, (activeTrack.vectorShiftsActive ? 10 : 0));

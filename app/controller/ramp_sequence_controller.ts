@@ -33,14 +33,11 @@ export class RampSequenceController extends ApplicationController {
     this.functionMap.set("updateRange", this.updateRange);
     this.functionMap.set("updateActiveRampSequenceIndex", this.updateActiveRampSequenceIndex);
     this.functionMap.set("toggleRampSequence", this.toggleRampSequence);
-
-    this.refresh();
   }
 
 
   refresh() {
     this.activeSegment = undefined;
-    this.grid.clearGridDisplay();
     this.setGridRampSequenceDisplay();
   }
 
