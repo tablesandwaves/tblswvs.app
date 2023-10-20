@@ -3,7 +3,7 @@ description: Generate ramp sequences for the active track.
 rows:
   -
     name: Outer Divisions
-    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    description: Turn rhythm gate steps on/off
     group: outer-divs
     type: toggle
     index: 0

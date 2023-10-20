@@ -528,6 +528,7 @@ div#documentation div#grid div.row {
   position: relative;
   float: left;
   margin-bottom: 18px;
+  width: 656px;
 }
 
 
@@ -569,10 +570,12 @@ div#documentation div#grid div.row div.button:last-child {
 
 div#documentation div#button-details {
   font-family: 'Courier New', Courier, monospace;
+  width: 100%;
 }
 
 
 div#documentation div#page-overview {
+  width: 100%;
   min-height: 50px;
 }
 
