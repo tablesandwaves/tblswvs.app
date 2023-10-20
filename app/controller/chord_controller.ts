@@ -1,9 +1,9 @@
 import { note } from "tblswvs";
-import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
+import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 import { detect } from "@tonaljs/chord-detect";
 
-export class ChordPage extends GridPage {
+export class ChordController extends ApplicationController {
   type = "Chords";
 
   recordingInputChord     = false;
@@ -32,7 +32,7 @@ export class ChordPage extends GridPage {
   }
 
 
-  addChordNote(gridPage: ChordPage, press: GridKeyPress) {
+  addChordNote(gridPage: ChordController, press: GridKeyPress) {
     if (gridPage.recordingInputChord) {
       if (press.s == 0) {
         gridPage.keyPressCount--;
@@ -52,7 +52,7 @@ export class ChordPage extends GridPage {
   }
 
 
-  removeLastChord(gridPage: ChordPage, press: GridKeyPress) {
+  removeLastChord(gridPage: ChordController, press: GridKeyPress) {
     if (gridPage.recordingInputChord && press.s == 1) {
       gridPage.grid.sequencer.queuedChordProgression.pop();
       gridPage.setUiQueuedChordProgression();
@@ -60,7 +60,7 @@ export class ChordPage extends GridPage {
   }
 
 
-  setTrackChordProgression(gridPage: ChordPage, press: GridKeyPress) {
+  setTrackChordProgression(gridPage: ChordController, press: GridKeyPress) {
     if (press.s == 1 && gridPage.grid.sequencer.queuedChordProgression.length > 0) {
       gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = false;
       gridPage.grid.sequencer.daw.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedChordProgression;
@@ -70,7 +70,7 @@ export class ChordPage extends GridPage {
   }
 
 
-  toggleChordRecording(gridPage: ChordPage, press: GridKeyPress) {
+  toggleChordRecording(gridPage: ChordController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.recordingInputChord = !gridPage.recordingInputChord;
       gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputChord ? 10 : 0));

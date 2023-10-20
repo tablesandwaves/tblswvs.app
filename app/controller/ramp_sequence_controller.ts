@@ -1,5 +1,5 @@
 import { RampSegment } from "../model/ableton/ramp_sequence";
-import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 
 
@@ -15,7 +15,7 @@ export const RAMP_SEQ_RANGE_STEPS = [...new Array(16)].map((_, i) => i).map((ste
 });
 
 
-export class RampSequencePage extends GridPage {
+export class RampSequenceController extends ApplicationController {
   type = "RampSequence";
 
   inactiveDivisionBrightness = 3;
@@ -81,7 +81,7 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  updateActiveRampSequenceIndex(gridPage: RampSequencePage, press: GridKeyPress) {
+  updateActiveRampSequenceIndex(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.activeSegment = undefined;
       gridPage.grid.sequencer.daw.getActiveTrack().editableRampSequence = press.x == 0 ? 0 : 1;
@@ -90,7 +90,7 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  toggleRampSequence(gridPage: RampSequencePage, press: GridKeyPress) {
+  toggleRampSequence(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
       const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
       rampSequence.active = !rampSequence.active;
@@ -105,7 +105,7 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  updateSegment(gridPage: RampSequencePage, press: GridKeyPress) {
+  updateSegment(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
 
       const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
@@ -132,7 +132,7 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  updateSubdivision(gridPage: RampSequencePage, press: GridKeyPress) {
+  updateSubdivision(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
       const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
       rampSequence.updateSubdivisionLength(gridPage.activeSegment.startIndex, press.x - gridPage.activeSegment.startIndex + 1);
@@ -144,7 +144,7 @@ export class RampSequencePage extends GridPage {
   }
 
 
-  updateRange(gridPage: RampSequencePage, press: GridKeyPress) {
+  updateRange(gridPage: RampSequenceController, press: GridKeyPress) {
     // Button press
     if (press.s == 1) {
 

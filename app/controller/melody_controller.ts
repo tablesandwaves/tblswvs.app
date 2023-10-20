@@ -1,9 +1,9 @@
 import { Melody, note } from "tblswvs";
 import { MonomeGrid } from "../model/grid/monome_grid";
-import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
+import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
 
 
-export class MelodyPage extends GridPage {
+export class MelodyController extends ApplicationController {
   type = "Melody";
   recordingInputMelody: boolean = false;
 
@@ -22,7 +22,7 @@ export class MelodyPage extends GridPage {
   }
 
 
-  generateMelody(gridPage: MelodyPage, press: GridKeyPress) {
+  generateMelody(gridPage: MelodyController, press: GridKeyPress) {
     // Do nothing if there are no queued notes. Happens by inadvertent button press before
     // input notes are recorded.
     if (gridPage.grid.sequencer.queuedMelody.length == 0) return;
@@ -51,7 +51,7 @@ export class MelodyPage extends GridPage {
   }
 
 
-  toggleVectorShifts(gridPage: MelodyPage, press: GridKeyPress) {
+  toggleVectorShifts(gridPage: MelodyController, press: GridKeyPress) {
     const activeTrack = gridPage.grid.sequencer.daw.getActiveTrack();
     activeTrack.vectorShiftsActive = !activeTrack.vectorShiftsActive;
     gridPage.grid.levelSet(press.x, press.y, (activeTrack.vectorShiftsActive ? 10 : 0));
@@ -79,7 +79,7 @@ export class MelodyPage extends GridPage {
   }
 
 
-  toggleMelodyRecording(gridPage: MelodyPage, press: GridKeyPress) {
+  toggleMelodyRecording(gridPage: MelodyController, press: GridKeyPress) {
     gridPage.recordingInputMelody = !gridPage.recordingInputMelody;
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputMelody ? 10 : 0));
     if (gridPage.recordingInputMelody) {
@@ -89,7 +89,7 @@ export class MelodyPage extends GridPage {
   }
 
 
-  addNote(gridPage: MelodyPage, press: GridKeyPress) {
+  addNote(gridPage: MelodyController, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
       let octaveTranspose = octaveTransposeMapping[press.y];
       // Spread operator used to clone the object because otherwise calling array element by ref?
@@ -99,7 +99,7 @@ export class MelodyPage extends GridPage {
   }
 
 
-  removeLastNote(gridPage: MelodyPage, press: GridKeyPress) {
+  removeLastNote(gridPage: MelodyController, press: GridKeyPress) {
     if (gridPage.recordingInputMelody) {
       gridPage.grid.sequencer.queuedMelody.pop();
       gridPage.setUiQueuedMelody();

@@ -42,7 +42,7 @@ export const ACTIVE_BRIGHTNESS   = 10;
 export const INACTIVE_BRIGHTNESS = 0;
 
 
-export class GridPage {
+export class ApplicationController {
   type = "Generic";
   grid: MonomeGrid;
   matrix: GridButton[][] = new Array(8);
@@ -122,7 +122,7 @@ export class GridPage {
   }
 
 
-  toggleNewClipCreation(gridPage: GridPage, press: GridKeyPress) {
+  toggleNewClipCreation(gridPage: ApplicationController, press: GridKeyPress) {
     // Necessary to check for press=1 for the chord page.
     if (press.s == 1) {
       const track = gridPage.grid.sequencer.daw.getActiveTrack();

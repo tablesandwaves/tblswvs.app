@@ -1,8 +1,8 @@
-import { GridPage, GridConfig, GridKeyPress, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./grid_page";
+import { ApplicationController, GridConfig, GridKeyPress, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 
 
-export class MelodyEvolutionPage extends GridPage {
+export class MelodyEvolutionController extends ApplicationController {
   type = "Melody";
 
 
@@ -64,7 +64,7 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  toggleMutations(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+  toggleMutations(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.mutating = !gridPage.grid.sequencer.daw.mutating;
     // Flag for resetting all tracks to their current clips at the next super measure boundary
     if (!gridPage.grid.sequencer.daw.mutating) gridPage.grid.sequencer.daw.stopMutationQueued = true;
@@ -72,7 +72,7 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  toggleRandomizingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+  toggleRandomizingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.randomizing = !track.randomizing;
 
@@ -80,7 +80,7 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  toggleMutatingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+  toggleMutatingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.mutating = !track.mutating;
 
@@ -93,7 +93,7 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  toggleSoloingVoice(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+  toggleSoloingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.soloing = !track.soloing;
 
@@ -106,7 +106,7 @@ export class MelodyEvolutionPage extends GridPage {
   }
 
 
-  toggleMutationAlgorithm(gridPage: MelodyEvolutionPage, press: GridKeyPress) {
+  toggleMutationAlgorithm(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const offset = 7;
     gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
     gridPage.refresh();

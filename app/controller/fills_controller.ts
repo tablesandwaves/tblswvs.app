@@ -1,10 +1,10 @@
-import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
+import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 import { RhythmStep } from "../model/ableton/track";
 import { fillLengthMap } from "../model/ableton/note";
 
 
-export class FillsPage extends GridPage {
+export class FillsController extends ApplicationController {
   type = "Rhythm";
 
 
@@ -23,7 +23,7 @@ export class FillsPage extends GridPage {
   }
 
 
-  setFillRepeats(gridPage: FillsPage, press: GridKeyPress) {
+  setFillRepeats(gridPage: FillsController, press: GridKeyPress) {
     // Only edit fills for steps that are active
     if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = gridPage.matrix[press.y][press.x].value;
@@ -34,7 +34,7 @@ export class FillsPage extends GridPage {
   }
 
 
-  clearFillRepeats(gridPage: FillsPage, press: GridKeyPress) {
+  clearFillRepeats(gridPage: FillsController, press: GridKeyPress) {
     if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].fillRepeats = 0;
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -44,7 +44,7 @@ export class FillsPage extends GridPage {
   }
 
 
-  toggleFillMeasure(gridPage: FillsPage, press: GridKeyPress) {
+  toggleFillMeasure(gridPage: FillsController, press: GridKeyPress) {
     const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
     gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -53,7 +53,7 @@ export class FillsPage extends GridPage {
   }
 
 
-  setFillDuration(gridPage: FillsPage, press: GridKeyPress) {
+  setFillDuration(gridPage: FillsController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].shiftValue;
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridFillsDisplay();

@@ -1,9 +1,9 @@
-import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
+import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 import { RhythmStep } from "../model/ableton/track";
 
 
-export class ProbabilitiesPage extends GridPage {
+export class ProbabilitiesController extends ApplicationController {
   type = "Rhythm";
 
 
@@ -14,7 +14,7 @@ export class ProbabilitiesPage extends GridPage {
   }
 
 
-  updateProbability(gridPage: ProbabilitiesPage, press: GridKeyPress) {
+  updateProbability(gridPage: ProbabilitiesController, press: GridKeyPress) {
     // Only edit probabilities for steps that are active
     if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.matrix[press.y][press.x].value;
@@ -25,7 +25,7 @@ export class ProbabilitiesPage extends GridPage {
   }
 
 
-  updateTrackProbability(gridPage: ProbabilitiesPage, press: GridKeyPress) {
+  updateTrackProbability(gridPage: ProbabilitiesController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
     gridPage.setGridProbabilitiesDisplay();
   }

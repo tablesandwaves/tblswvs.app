@@ -1,5 +1,5 @@
 import { Key, Scale } from "tblswvs";
-import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
+import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 import { notes } from "../helpers/utils";
 
@@ -20,7 +20,7 @@ const configuredScales: Record<string, {scale: Scale, index: number}> = {
 }
 
 
-export class GlobalPage extends GridPage {
+export class GlobalController extends ApplicationController {
   type = "Global";
 
 
@@ -32,7 +32,7 @@ export class GlobalPage extends GridPage {
   }
 
 
-  updateSuperMeasure(gridPage: GlobalPage, press: GridKeyPress) {
+  updateSuperMeasure(gridPage: GlobalController, press: GridKeyPress) {
     gridPage.grid.sequencer.superMeasure = press.x + 1;
     gridPage.grid.sequencer.setSuperMeasure();
 
@@ -62,7 +62,7 @@ export class GlobalPage extends GridPage {
   }
 
 
-  setScaleOrTonic(gridPage: GlobalPage, press: GridKeyPress) {
+  setScaleOrTonic(gridPage: GlobalController, press: GridKeyPress) {
     let tonic: number, scale: Scale;
     if (gridPage.grid.shiftKey) {
       tonic = gridPage.matrix[press.y][press.x].shiftValue + 60;

@@ -1,10 +1,10 @@
 import { MonomeGrid } from "../model/grid/monome_grid";
-import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
+import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
 import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
 import { RhythmStep } from "../model/ableton/track";
 
 
-export class RhythmPage extends GridPage {
+export class RhythmController extends ApplicationController {
   type = "Rhythm";
 
 
@@ -23,7 +23,7 @@ export class RhythmPage extends GridPage {
   }
 
 
-  updateBeatLength(gridPage: RhythmPage, press: GridKeyPress) {
+  updateBeatLength(gridPage: RhythmController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().beatLength = press.x + 1;
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
@@ -31,7 +31,7 @@ export class RhythmPage extends GridPage {
   }
 
 
-  updateRhythm(gridPage: RhythmPage, press: GridKeyPress) {
+  updateRhythm(gridPage: RhythmController, press: GridKeyPress) {
     const stepState = 1 - gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state;
     const track     = gridPage.grid.sequencer.daw.getActiveTrack();
 
@@ -51,7 +51,7 @@ export class RhythmPage extends GridPage {
   }
 
 
-  updateNoteLength(gridPage: RhythmPage, press: GridKeyPress) {
+  updateNoteLength(gridPage: RhythmController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
     gridPage.toggleRadioButton(0, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
@@ -60,7 +60,7 @@ export class RhythmPage extends GridPage {
   }
 
 
-  updatePulse(gridPage: RhythmPage, press: GridKeyPress) {
+  updatePulse(gridPage: RhythmController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
     gridPage.toggleRadioButton(0, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();

@@ -1,8 +1,8 @@
-import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
+import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/grid/monome_grid";
 
 
-export class MelodyVectorPage extends GridPage {
+export class MelodyVectorController extends ApplicationController {
   type = "Melody";
 
 
@@ -22,7 +22,7 @@ export class MelodyVectorPage extends GridPage {
   }
 
 
-  setStepShift(gridPage: MelodyVectorPage, press: GridKeyPress) {
+  setStepShift(gridPage: MelodyVectorController, press: GridKeyPress) {
     if (gridPage.grid.shiftKey && press.y == 0 && gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] == -1) {
       gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] = 0;
     } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] == 1) {
@@ -39,7 +39,7 @@ export class MelodyVectorPage extends GridPage {
   }
 
 
-  setShiftSequenceLength(gridPage: MelodyVectorPage, press: GridKeyPress) {
+  setShiftSequenceLength(gridPage: MelodyVectorController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().vectorShiftsLength = gridPage.matrix[press.y][press.x].value;
     gridPage.setGridShiftLengthDisplay();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiVectorDisplay();

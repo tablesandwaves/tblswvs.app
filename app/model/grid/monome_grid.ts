@@ -4,17 +4,17 @@ import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
 
 import { Sequencer } from "../sequencer";
-import { GridConfig, GridKeyPress, GridPage } from "../../controller/grid_page";
-import { GlobalPage } from "../../controller/global_page";
-import { RhythmPage } from "../../controller/rhythm_page";
-import { ProbabilitiesPage } from "../../controller/probabilities_page";
-import { FillsPage } from "../../controller/fills_page";
-import { ChordPage } from "../../controller/chord_page";
-import { MelodyPage } from "../../controller/melody_page";
-import { MelodyEvolutionPage } from "../../controller/melody_evolution_page";
-import { MelodyVectorPage } from "../../controller/melody_vector_page";
+import { GridConfig, GridKeyPress, ApplicationController } from "../../controller/application_controller";
+import { GlobalController } from "../../controller/global_controller";
+import { RhythmController } from "../../controller/rhythm_controller";
+import { ProbabilitiesController } from "../../controller/probabilities_controller";
+import { FillsController } from "../../controller/fills_controller";
+import { ChordController } from "../../controller/chord_controller";
+import { MelodyController } from "../../controller/melody_controller";
+import { MelodyEvolutionController } from "../../controller/melody_evolution_controller";
+import { MelodyVectorController } from "../../controller/melody_vector_controller";
 import { blank16x16Row } from "../../helpers/utils";
-import { RampSequencePage } from "../../controller/ramp_sequence_page";
+import { RampSequenceController } from "../../controller/ramp_sequence_controller";
 
 
 export type DeviceConfig = {
@@ -44,7 +44,7 @@ export class MonomeGrid {
   sequencer: Sequencer;
   device: any;
   playing: any;
-  activePage: GridPage;
+  activePage: ApplicationController;
   shiftKey: boolean = false;
   pageIndex: number = 0;
   testing = false;
@@ -175,55 +175,55 @@ export class MonomeGrid {
     switch(pageType) {
       case "Rhythm":
         this.pageIndex = 0;
-        this.activePage = new RhythmPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;
       case "Probabilities":
         // Do not reset page index to 0, this is page 2/index 1 of the Rhythm page group.
-        this.activePage = new ProbabilitiesPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new ProbabilitiesController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;
       case "Fills":
         // Do not reset page index to 0, this is page 3/index 2 of the Rhythm page group.
-        this.activePage = new FillsPage(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;
       case "Chords":
         this.pageIndex = 0;
-        this.activePage = new ChordPage(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new ChordController(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
       case "Melody":
         this.pageIndex = 0;
-        this.activePage = new MelodyPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new MelodyController(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
         break;
       case "Mutation":
         // Do not reset page index to 0, this is page 2/index 1 of the Melody page group.
-        this.activePage = new MelodyEvolutionPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new MelodyEvolutionController(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
         break;
       case "MelodyVector":
         // Do not reset page index to 0, this is page 3/index 2 of the Melody page group.
-        this.activePage = new MelodyVectorPage(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new MelodyVectorController(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
         break;
       case "RampSequence":
         this.pageIndex = 0;
-        this.activePage = new RampSequencePage(this.#loadConfig(`grid_page_ramps_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new RampSequenceController(this.#loadConfig(`grid_page_ramps_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 10;
         break;
       case "Global":
         this.pageIndex = 0;
-        this.activePage = new GlobalPage(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new GlobalController(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 12;
         break;
