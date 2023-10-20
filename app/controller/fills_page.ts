@@ -1,7 +1,7 @@
 import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
-import { MonomeGrid } from "./monome_grid";
-import { RhythmStep } from "../ableton/track";
-import { fillLengthMap } from "../ableton/note";
+import { MonomeGrid } from "../model/grid/monome_grid";
+import { RhythmStep } from "../model/ableton/track";
+import { fillLengthMap } from "../model/ableton/note";
 
 
 export class FillsPage extends GridPage {
@@ -65,7 +65,7 @@ export class FillsPage extends GridPage {
 
     if (this.grid.shiftKey) {
       // Set the measures on which the fills should play
-      row = this.grid.sequencer.daw.getActiveTrack().fillMeasures.map(m => m == 1 ? 10 : 0);
+      row = this.grid.sequencer.daw.getActiveTrack().fillMeasures.map((m: number) => m == 1 ? 10 : 0);
       this.grid.levelRow(0, 6, row);
 
       // Set the fill duration meter buttons
@@ -78,7 +78,7 @@ export class FillsPage extends GridPage {
       this.grid.levelRow(8, 6, row);
     } else {
       // Display the current rhythm on row 7
-      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
+      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i: any) => {
         return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
       });
       this.grid.levelRow(0, 6, row.slice(0, 8));
@@ -87,7 +87,7 @@ export class FillsPage extends GridPage {
 
     // Display the repeats as vertical meters for any steps with a non-zero fill-repeat value
     for (let y = 0; y < 6; y++) {
-      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x) => {
+      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x: number) => {
         return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.fillRepeats) ? 10 : 0;
       });
       this.grid.levelRow(0, y, row.slice(0, 8));

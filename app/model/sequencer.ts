@@ -10,7 +10,7 @@ import { AbletonLive } from "./ableton/live";
 import { note } from "tblswvs";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
-import { INACTIVE_BRIGHTNESS } from "./grid/grid_page";
+import { INACTIVE_BRIGHTNESS } from "../controller/grid_page";
 
 
 export class Sequencer {

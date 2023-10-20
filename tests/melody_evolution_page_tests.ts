@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
-import { MelodyEvolutionPage } from "../app/model/grid/melody_evolution_page";
+import { MelodyEvolutionPage } from "../app/controller/melody_evolution_page";
 
 
 const testing   = true;

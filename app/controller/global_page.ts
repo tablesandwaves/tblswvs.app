@@ -1,7 +1,7 @@
 import { Key, Scale } from "tblswvs";
 import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
-import { MonomeGrid } from "./monome_grid";
-import { notes } from "../../helpers/utils";
+import { MonomeGrid } from "../model/grid/monome_grid";
+import { notes } from "../helpers/utils";
 
 
 const configuredScales: Record<string, {scale: Scale, index: number}> = {

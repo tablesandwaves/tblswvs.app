@@ -1,6 +1,6 @@
 import { note } from "tblswvs";
 import { GridConfig, GridKeyPress, GridPage, octaveTransposeMapping } from "./grid_page";
-import { MonomeGrid } from "./monome_grid";
+import { MonomeGrid } from "../model/grid/monome_grid";
 import { detect } from "@tonaljs/chord-detect";
 
 export class ChordPage extends GridPage {
@@ -85,7 +85,7 @@ export class ChordPage extends GridPage {
   setUiQueuedChordProgression() {
     this.grid.sequencer.gui.webContents.send(
       "update-progression",
-      this.grid.sequencer.queuedChordProgression.flatMap(chordNotes => {
+      this.grid.sequencer.queuedChordProgression.flatMap((chordNotes: note[]) => {
         let chord = chordNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(chordNotes.map(n => n.note))[0];
         chord += namedChord == undefined ? "" : " (" + namedChord + ")";

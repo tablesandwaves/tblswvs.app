@@ -1,7 +1,7 @@
-import { MonomeGrid } from "./monome_grid";
+import { MonomeGrid } from "../model/grid/monome_grid";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { noteLengthMap, pulseRateMap } from "../ableton/note";
-import { RhythmStep } from "../ableton/track";
+import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
+import { RhythmStep } from "../model/ableton/track";
 
 
 export class RhythmPage extends GridPage {

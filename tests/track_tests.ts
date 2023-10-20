@@ -110,7 +110,6 @@ describe("AbletonTrack", () => {
       if (a.clipPosition < b.clipPosition) return -1;
       return 0;
     });
-    console.log(abletonNotes)
 
     it("should the have correct number of notes for the maximum super measure of 8", () => {
       expect(abletonNotes.length).to.eq(11);

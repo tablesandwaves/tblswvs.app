@@ -1,5 +1,5 @@
-import { MonomeGrid } from "./monome_grid";
-import { blank8x8Row } from "../../helpers/utils";
+import { MonomeGrid } from "../model/grid/monome_grid";
+import { blank8x8Row } from "../helpers/utils";
 
 
 export type GridKeyPress = {

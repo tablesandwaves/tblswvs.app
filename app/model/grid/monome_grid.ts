@@ -4,17 +4,17 @@ import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
 
 import { Sequencer } from "../sequencer";
-import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { GlobalPage } from "./global_page";
-import { RhythmPage } from "./rhythm_page";
-import { ProbabilitiesPage } from "./probabilities_page";
-import { FillsPage } from "./fills_page";
-import { ChordPage } from "./chord_page";
-import { MelodyPage } from "./melody_page";
-import { MelodyEvolutionPage } from "./melody_evolution_page";
-import { MelodyVectorPage } from "./melody_vector_page";
+import { GridConfig, GridKeyPress, GridPage } from "../../controller/grid_page";
+import { GlobalPage } from "../../controller/global_page";
+import { RhythmPage } from "../../controller/rhythm_page";
+import { ProbabilitiesPage } from "../../controller/probabilities_page";
+import { FillsPage } from "../../controller/fills_page";
+import { ChordPage } from "../../controller/chord_page";
+import { MelodyPage } from "../../controller/melody_page";
+import { MelodyEvolutionPage } from "../../controller/melody_evolution_page";
+import { MelodyVectorPage } from "../../controller/melody_vector_page";
 import { blank16x16Row } from "../../helpers/utils";
-import { RampSequencePage } from "./ramp_sequence_page";
+import { RampSequencePage } from "../../controller/ramp_sequence_page";
 
 
 export type DeviceConfig = {

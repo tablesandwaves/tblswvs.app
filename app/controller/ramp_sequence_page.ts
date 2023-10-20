@@ -1,6 +1,6 @@
-import { RampSegment } from "../ableton/ramp_sequence";
+import { RampSegment } from "../model/ableton/ramp_sequence";
 import { GridConfig, GridKeyPress, GridPage } from "./grid_page";
-import { MonomeGrid } from "./monome_grid";
+import { MonomeGrid } from "../model/grid/monome_grid";
 
 
 export type RampPressRange = {

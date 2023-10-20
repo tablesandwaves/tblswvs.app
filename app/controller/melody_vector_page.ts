@@ -1,5 +1,5 @@
 import { GridPage, GridConfig, GridKeyPress } from "./grid_page";
-import { MonomeGrid } from "./monome_grid";
+import { MonomeGrid } from "../model/grid/monome_grid";
 
 
 export class MelodyVectorPage extends GridPage {

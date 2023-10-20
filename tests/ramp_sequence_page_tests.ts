@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
-import { RampSequencePage } from "../app/model/grid/ramp_sequence_page";
+import { RampSequencePage } from "../app/controller/ramp_sequence_page";
 import { RampSequence } from "../app/model/ableton/ramp_sequence";
 
 

@@ -1,5 +1,5 @@
 import { GridPage, GridConfig, GridKeyPress, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./grid_page";
-import { MonomeGrid } from "./monome_grid";
+import { MonomeGrid } from "../model/grid/monome_grid";
 
 
 export class MelodyEvolutionPage extends GridPage {
@@ -21,8 +21,11 @@ export class MelodyEvolutionPage extends GridPage {
 
   refresh() {
     this.setGridEvolutionDisplay();
-    this.#setUiTrackEvolutions();
-    this.#setUiActiveMutations();
+
+    if (!this.grid.sequencer.testing) {
+      this.#setUiTrackEvolutions();
+      this.#setUiActiveMutations();
+    }
   }
 
 
