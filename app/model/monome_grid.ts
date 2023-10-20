@@ -3,18 +3,18 @@ import * as fs from "fs";
 import * as yaml from "js-yaml";
 const serialosc = require("serialosc");
 
-import { Sequencer } from "../sequencer";
-import { GridConfig, GridKeyPress, ApplicationController } from "../../controller/application_controller";
-import { GlobalController } from "../../controller/global_controller";
-import { RhythmController } from "../../controller/rhythm_controller";
-import { ProbabilitiesController } from "../../controller/probabilities_controller";
-import { FillsController } from "../../controller/fills_controller";
-import { ChordController } from "../../controller/chord_controller";
-import { MelodyController } from "../../controller/melody_controller";
-import { MelodyEvolutionController } from "../../controller/melody_evolution_controller";
-import { MelodyVectorController } from "../../controller/melody_vector_controller";
-import { blank16x16Row } from "../../helpers/utils";
-import { RampSequenceController } from "../../controller/ramp_sequence_controller";
+import { Sequencer } from "./sequencer";
+import { GridConfig, GridKeyPress, ApplicationController } from "../controller/application_controller";
+import { GlobalController } from "../controller/global_controller";
+import { RhythmController } from "../controller/rhythm_controller";
+import { ProbabilitiesController } from "../controller/probabilities_controller";
+import { FillsController } from "../controller/fills_controller";
+import { ChordController } from "../controller/chord_controller";
+import { MelodyController } from "../controller/melody_controller";
+import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
+import { MelodyVectorController } from "../controller/melody_vector_controller";
+import { blank16x16Row } from "../helpers/utils";
+import { RampSequenceController } from "../controller/ramp_sequence_controller";
 
 
 export type DeviceConfig = {

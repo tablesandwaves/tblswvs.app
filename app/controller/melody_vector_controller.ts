@@ -1,5 +1,5 @@
 import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 
 
 export class MelodyVectorController extends ApplicationController {

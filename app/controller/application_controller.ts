@@ -1,4 +1,4 @@
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 import { blank8x8Row } from "../helpers/utils";
 
 

@@ -1,6 +1,6 @@
 import { note } from "tblswvs";
 import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 import { detect } from "@tonaljs/chord-detect";
 
 export class ChordController extends ApplicationController {

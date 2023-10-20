@@ -1,6 +1,6 @@
 import { Key, Scale } from "tblswvs";
 import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 import { notes } from "../helpers/utils";
 
 

@@ -1,5 +1,5 @@
 import { Melody, note } from "tblswvs";
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
 
 

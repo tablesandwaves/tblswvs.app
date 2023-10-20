@@ -1,4 +1,4 @@
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
 import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
 import { RhythmStep } from "../model/ableton/track";

@@ -5,7 +5,7 @@ const OscReceiver = require("osc-receiver");
 
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
-import { MonomeGrid } from "./grid/monome_grid";
+import { MonomeGrid } from "./monome_grid";
 import { AbletonLive } from "./ableton/live";
 import { note } from "tblswvs";
 import { AbletonTrack } from "./ableton/track";

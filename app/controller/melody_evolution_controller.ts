@@ -1,5 +1,5 @@
 import { ApplicationController, GridConfig, GridKeyPress, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
-import { MonomeGrid } from "../model/grid/monome_grid";
+import { MonomeGrid } from "../model/monome_grid";
 
 
 export class MelodyEvolutionController extends ApplicationController {
