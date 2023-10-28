@@ -6,28 +6,12 @@ export const surroundRhythm = (sourceRhythm: RhythmStep[]): RhythmStep[] => {
     return {state: 0, probability: 1, fillRepeats: 0};
   });
 
-  let firstOnGateEncountered = false;
-  let currentGateOn          = false;
-
-  sourceRhythm.forEach((step, i) => {
+  sourceRhythm.forEach((step, i, steps) => {
     if (step.state == 1) {
-      if (!firstOnGateEncountered && sourceRhythm.at(i - 1).state == 0) {
-        surroundingRhythm.at(i - 1).state = 1;
-      }
-
-      firstOnGateEncountered = true;
-      currentGateOn          = true;
-    } else {
-      currentGateOn = false;
+      if (steps.at(i - 1).state == 0) surroundingRhythm.at(i - 1).state = 1;
+      if (steps.at((i + 1) % steps.length).state == 0) surroundingRhythm.at((i + 1) % steps.length).state = 1;
     }
-
-    if (!currentGateOn && firstOnGateEncountered) surroundingRhythm[i].state = 1;
   });
-
-  // Edge case: the last RhythmStep in source rhythm is on
-  if (sourceRhythm[sourceRhythm.length - 1].state == 1 && sourceRhythm[0].state == 0) {
-    surroundingRhythm[0].state = 1;
-  }
 
   return surroundingRhythm;
 }
