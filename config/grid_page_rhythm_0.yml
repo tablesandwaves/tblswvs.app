@@ -17,7 +17,7 @@ rows:
     group: pulse-rate
     type: radio
     index: 5
-    xStart: 0
+    xStart: 8
     xLength: 4
     mapping: updatePulse
     values:
@@ -31,7 +31,7 @@ rows:
     group: note-length
     type: radio
     index: 6
-    xStart: 0
+    xStart: 8
     xLength: 8
     mapping: updateNoteLength
     values:

@@ -52,7 +52,7 @@ export class RhythmController extends ApplicationController {
 
   updateNoteLength(gridPage: RhythmController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-    gridPage.toggleRadioButton(0, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
+    gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -61,7 +61,7 @@ export class RhythmController extends ApplicationController {
 
   updatePulse(gridPage: RhythmController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
-    gridPage.toggleRadioButton(0, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+    gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -88,8 +88,8 @@ export class RhythmController extends ApplicationController {
 
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
-    this.toggleRadioButton(0, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-    this.toggleRadioButton(0, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
+    this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+    this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
   }
 
 

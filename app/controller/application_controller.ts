@@ -160,6 +160,13 @@ export class ApplicationController {
   }
 
 
+  updateGridRowMeter(startIndex: number, rowIndex: number, selectedIndex: number) {
+    let row = blank8x8Row.slice();
+    for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
+    this.grid.levelRow(startIndex, rowIndex, row);
+  }
+
+
   // Call the sub-class's refresh function to update the grid's button matrix.
   toggleShiftState() {
     this.refresh();
