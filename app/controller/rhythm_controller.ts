@@ -15,6 +15,7 @@ export class RhythmController extends ApplicationController {
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("updatePulse", this.updatePulse);
     this.functionMap.set("updateRhythmAlgorithm", this.updateRhythmAlgorithm);
+    this.functionMap.set("updateRelatedRhythmTrack", this.updateRelatedRhythmTrack);
   }
 
 
@@ -55,6 +56,20 @@ export class RhythmController extends ApplicationController {
     const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm = algorithm;
     gridPage.grid.levelRow(0, 6, gridPage.getRhythmAlgorithmRow());
+  }
+
+
+  updateRelatedRhythmTrack(gridPage: RhythmController, press: GridKeyPress) {
+    const currentTrackIndex = gridPage.grid.sequencer.daw.activeTrack;
+    const currentRelatedTrack = gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex;
+    if (press.x == currentRelatedTrack || press.x == currentTrackIndex) {
+      gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex = undefined;
+    } else {
+      gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex = press.x;
+    }
+
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.grid.levelRow(0, 5, gridPage.getRhythmRelatedTrackRow());
   }
 
 
@@ -99,6 +114,7 @@ export class RhythmController extends ApplicationController {
     this.grid.levelRow(8, 0, row.slice(8, 16));
 
     // Parameter rows
+    this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
     this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
@@ -116,5 +132,13 @@ export class RhythmController extends ApplicationController {
     const algorithmRow = new Array(8).fill(0);
     algorithmRow[rhythmAlgorithms[this.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm]] = 10;
     return algorithmRow;
+  }
+
+
+  getRhythmRelatedTrackRow() {
+    const relatedTrackRow = new Array(8).fill(0);
+    if (this.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex != undefined)
+      relatedTrackRow[this.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex] = 10;
+    return relatedTrackRow;
   }
 }

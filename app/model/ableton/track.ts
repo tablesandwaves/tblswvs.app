@@ -174,14 +174,10 @@ export class AbletonTrack {
   set relatedRhythmTrackIndex(relatedTrackIndex: number|undefined) {
     this.#relatedRhythmTrackIndex = relatedTrackIndex;
 
-    if (this.#relatedRhythmTrackIndex == undefined) {
-      for (let i = 0; i < this.rhythm.length; i++) {
-        this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
+    if (this.#relatedRhythmTrackIndex != undefined) {
+      if (this.rhythmAlgorithm == "surround") {
+        this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
       }
-    }
-
-    if (this.#relatedRhythmTrackIndex != undefined && this.rhythmAlgorithm == "surround") {
-      this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
     }
   }
 
@@ -410,6 +406,7 @@ export class AbletonTrack {
 
 
   updateGuiPianoRoll() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send(
       "piano-roll-notes",
       this.currentAbletonNotes.map(n => n.toPianoRollNote()),
