@@ -63,7 +63,7 @@ export class Sequencer {
   transport(step: number) {
     // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
     const trackStep = Math.floor(step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
-    this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().beatLength, step);
+    this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().rhythmStepLength, step);
 
     const measure = Math.floor(step / 16) + 1;
     this.gui.webContents.send("transport-beat", measure);

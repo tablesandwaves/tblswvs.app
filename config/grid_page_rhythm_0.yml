@@ -10,7 +10,7 @@ rows:
     xStart: 0
     xLength: 16
     mapping: updateRhythm
-    shiftMapping: updateBeatLength
+    shiftMapping: updateStepLength
   -
     name: Pulse Rate
     description: Set the current track's pulse rate between 16n and 2n
@@ -29,7 +29,7 @@ rows:
     name: Note Length
     description: Set the length of sequencer notes
     group: note-length
-    type: radio
+    type: meter
     index: 6
     xStart: 8
     xLength: 8

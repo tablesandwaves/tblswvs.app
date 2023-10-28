@@ -43,7 +43,7 @@ export class AbletonTrack {
   fillDuration: string = "8nd";
   noteLength: string = "16n";
   pulseRate: string = "16n";
-  beatLength: number = 16;
+  rhythmStepLength: number = 16;
 
   algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
@@ -161,14 +161,14 @@ export class AbletonTrack {
           noteMap         = new Map<number,AbletonNote[]>(),
           sourceNotes     = this.#getSourceNotes(),
           sourceRhythm    = this.daw.mutating && this.randomizing ? this.#randomRhythm() : this.rhythm,
-          beatLength      = this.daw.mutating && this.randomizing ? sourceRhythm.length : this.beatLength;
+          stepLength      = this.daw.mutating && this.randomizing ? sourceRhythm.length : this.rhythmStepLength;
 
     let nextNotes: note[];
 
     for (let step = 0, noteIndex = 0, measure = -1; step < CLIP_16N_COUNT; step += pulseRateMap[this.pulseRate].size) {
-      if (step % this.beatLength == 0) measure++;
+      if (step % this.rhythmStepLength == 0) measure++;
 
-      const rhythmStep = sourceRhythm[(step / pulseRateMap[this.pulseRate].size) % beatLength];
+      const rhythmStep = sourceRhythm[(step / pulseRateMap[this.pulseRate].size) % stepLength];
       if (rhythmStep.state == 0) continue;
 
       nextNotes = sourceNotes[noteIndex % sourceNotes.length];
@@ -420,7 +420,7 @@ export class AbletonTrack {
 
 
   updateGuiTrackRhythm() {
-    this.daw.sequencer.gui.webContents.send("track-rhythm", this.rhythm, this.beatLength);
+    this.daw.sequencer.gui.webContents.send("track-rhythm", this.rhythm, this.rhythmStepLength);
   }
 
 

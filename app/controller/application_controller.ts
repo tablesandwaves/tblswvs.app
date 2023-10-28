@@ -143,7 +143,7 @@ export class ApplicationController {
     this.grid.sequencer.gui.webContents.send(
       "track-rhythm",
       this.grid.sequencer.daw.getActiveTrack().rhythm,
-      this.grid.sequencer.daw.getActiveTrack().beatLength
+      this.grid.sequencer.daw.getActiveTrack().rhythmStepLength
     );
   }
 

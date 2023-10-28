@@ -12,7 +12,7 @@ export class RhythmController extends ApplicationController {
     super(config, grid);
     this.functionMap.set("updateRhythm", this.updateRhythm);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
-    this.functionMap.set("updateBeatLength", this.updateBeatLength);
+    this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("updatePulse", this.updatePulse);
   }
 
@@ -22,8 +22,8 @@ export class RhythmController extends ApplicationController {
   }
 
 
-  updateBeatLength(gridPage: RhythmController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().beatLength = press.x + 1;
+  updateStepLength(gridPage: RhythmController, press: GridKeyPress) {
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
@@ -77,8 +77,8 @@ export class RhythmController extends ApplicationController {
   setGridRhythmDisplay(highlightIndex?: number) {
     let row;
     if (this.grid.shiftKey) {
-      const beatLength = this.grid.sequencer.daw.getActiveTrack().beatLength;
-      row = [...new Array(beatLength).fill(5), ...new Array(16 - beatLength).fill(0)];
+      const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
+      row = [...new Array(stepLength).fill(5), ...new Array(16 - stepLength).fill(0)];
     } else {
       row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
         return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;

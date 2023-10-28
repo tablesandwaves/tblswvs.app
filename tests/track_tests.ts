@@ -65,10 +65,10 @@ describe("AbletonTrack", () => {
 
   describe("generating Ableton notes for a track", () => {
     describe("with a beat length of 12 16th notes", () => {
-      track.beatLength  = 12;
-      track.rhythm      = new Array(12).fill({...{state: 0, probability: 1, fillRepeats: 0}});
-      track.rhythm[0]   = {state: 1, probability: 1, fillRepeats: 0};
-      track.outputNotes = [
+      track.rhythmStepLength = 12;
+      track.rhythm           = new Array(12).fill({...{state: 0, probability: 1, fillRepeats: 0}});
+      track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
+      track.outputNotes      = [
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
         [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
@@ -99,7 +99,7 @@ describe("AbletonTrack", () => {
   });
 
   describe("when generating rhythmic fills", () => {
-    track.beatLength       = 16;
+    track.rhythmStepLength = 16;
     track.outputNotes      = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
     track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 3};
@@ -134,12 +134,12 @@ describe("AbletonTrack", () => {
 
 
   describe("truncating note durations for overlapping notes", () => {
-    track.beatLength  = 16;
-    track.noteLength  = "8n";
-    track.rhythm      = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
-    track.rhythm[0]   = {state: 1, probability: 1, fillRepeats: 0};
-    track.rhythm[1]   = {state: 1, probability: 1, fillRepeats: 0};
-    track.rhythm[4]   = {state: 1, probability: 1, fillRepeats: 0};
+    track.rhythmStepLength = 16;
+    track.noteLength       = "8n";
+    track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
+    track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
+    track.rhythm[1]        = {state: 1, probability: 1, fillRepeats: 0};
+    track.rhythm[4]        = {state: 1, probability: 1, fillRepeats: 0};
 
     describe("when successive overlapping notes share the same pitch", () => {
       track.outputNotes = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
