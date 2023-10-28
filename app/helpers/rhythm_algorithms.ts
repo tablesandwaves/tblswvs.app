@@ -11,7 +11,10 @@ export const surroundRhythm = (sourceRhythm: RhythmStep[]): RhythmStep[] => {
 
   sourceRhythm.forEach((step, i) => {
     if (step.state == 1) {
-      if (!firstOnGateEncountered) surroundingRhythm.at(i - 1).state = 1;
+      if (!firstOnGateEncountered && sourceRhythm.at(i - 1).state == 0) {
+        surroundingRhythm.at(i - 1).state = 1;
+      }
+
       firstOnGateEncountered = true;
       currentGateOn          = true;
     } else {

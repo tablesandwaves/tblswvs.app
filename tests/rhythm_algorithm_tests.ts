@@ -49,4 +49,52 @@ describe("the Surround algorithm", () => {
     it("has a gate at step length - 2 for the 'before' gate", () => expect(surroundingRhythm[1].state).to.eq(1));
     it("has no overlapping gate at position step length - 1", () => expect(surroundingRhythm[2].state).to.eq(0));
   });
+
+
+  describe("a source rhythm with with no on gates", () => {
+    const sourceRhythm: RhythmStep[] = [
+      {state: 0, probability: 1, fillRepeats: 0},
+      {state: 0, probability: 1, fillRepeats: 0},
+      {state: 0, probability: 1, fillRepeats: 0}
+    ];
+    const surroundingRhythm = surroundRhythm(sourceRhythm);
+
+    it("has a surround rhythm with no surrounding gates", () => {
+      expect(surroundingRhythm.map(step => step.state)).to.have.ordered.members([0, 0, 0]);
+    });
+  });
+
+
+  describe("a source rhythm with with only on gates", () => {
+    const sourceRhythm: RhythmStep[] = [
+      {state: 1, probability: 1, fillRepeats: 0},
+      {state: 1, probability: 1, fillRepeats: 0},
+      {state: 1, probability: 1, fillRepeats: 0}
+    ];
+    const surroundingRhythm = surroundRhythm(sourceRhythm);
+
+    it("has a surround rhythm with no surrounding gates", () => {
+      expect(surroundingRhythm.map(step => step.state)).to.have.ordered.members([0, 0, 0]);
+    });
+  });
+
+
+  describe("a 1 step source rhythm with with no off gates", () => {
+    const sourceRhythm: RhythmStep[] = [
+      {state: 0, probability: 1, fillRepeats: 0}
+    ];
+    const surroundingRhythm = surroundRhythm(sourceRhythm);
+
+    it("has a surround rhythm with no surrounding gates", () => expect(surroundingRhythm[0].state).to.eq(0));
+  });
+
+
+  describe("a 1 step source rhythm with with an on gates", () => {
+    const sourceRhythm: RhythmStep[] = [
+      {state: 1, probability: 1, fillRepeats: 0}
+    ];
+    const surroundingRhythm = surroundRhythm(sourceRhythm);
+
+    it("has a surround rhythm with no surrounding gates", () => expect(surroundingRhythm[0].state).to.eq(0));
+  });
 });
