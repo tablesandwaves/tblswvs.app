@@ -11,6 +11,65 @@ const track     = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
 
 
 describe("AbletonTrack", () => {
+  describe("rhythm algorithms", () => {
+    describe("setting the rhythm algorithm to surround then setting the related track", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+
+      perc.rhythm[1].state = 1;
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackIndex = 3;
+
+      it("generates the surrounding track's rhythm", () => {
+        expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+          1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+
+    describe("unsetting the related rhythm track for a surround rhythm algorithm", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+
+      perc.rhythm[1].state = 1;
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackIndex = 3;
+      expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      hihat.relatedRhythmTrackIndex = undefined;
+
+      it("resets the track's rhythm to an empty rhythm", () => {
+        expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+
+    describe("setting the rhythm algorithm to manual after it was another algorithm", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+
+      perc.rhythm[1].state = 1;
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackIndex = 3;
+      expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      hihat.rhythmAlgorithm = "manual";
+
+      it("leaves the last rhythm intact", () => {
+        expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+          1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+  });
+
+
   describe("melodic evolution properties exhibit mutual exclusivity", () => {
     describe("setting a mutating track to randomizing", () => {
       const daw   = new AbletonLive(sequencer);

@@ -5,6 +5,7 @@ import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note"
 import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 import { RampSequence } from "./ramp_sequence";
+import { surroundRhythm } from "../../helpers/rhythm_algorithms";
 
 
 export type TrackConfig = {
@@ -31,6 +32,13 @@ const fillVelocities: Record<number,number[]> = {
 }
 
 
+export const rhythmAlgorithms: Record<string, number> = {
+  "manual":   0,
+  "surround": 1,
+  "undefined": -1
+}
+
+
 const CLIP_16N_COUNT = 128;
 
 
@@ -44,6 +52,8 @@ export class AbletonTrack {
   noteLength: string = "16n";
   pulseRate: string = "16n";
   rhythmStepLength: number = 16;
+  rhythmAlgorithm: string = "manual";
+  #relatedRhythmTrackIndex: (number|undefined) = undefined;
 
   algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
@@ -152,6 +162,26 @@ export class AbletonTrack {
       this.#soloing = false;
       const index = this.daw.soloists.indexOf(this.dawIndex);
       if (index !== -1) this.daw.soloists.splice(index, 1);
+    }
+  }
+
+
+  get relatedRhythmTrackIndex() {
+    return this.#relatedRhythmTrackIndex;
+  }
+
+
+  set relatedRhythmTrackIndex(relatedTrackIndex: number|undefined) {
+    this.#relatedRhythmTrackIndex = relatedTrackIndex;
+
+    if (this.#relatedRhythmTrackIndex == undefined) {
+      for (let i = 0; i < this.rhythm.length; i++) {
+        this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
+      }
+    }
+
+    if (this.#relatedRhythmTrackIndex != undefined && this.rhythmAlgorithm == "surround") {
+      this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
     }
   }
 

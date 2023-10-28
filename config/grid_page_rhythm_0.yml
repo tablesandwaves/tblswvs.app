@@ -12,6 +12,24 @@ rows:
     mapping: updateRhythm
     shiftMapping: updateStepLength
   -
+    name: Rhythm Algorithms
+    description: Set the current rhythm algorithm
+    group: rhythm-algorithm
+    type: radio
+    index: 6
+    xStart: 0
+    xLength: 8
+    mapping: updateRhythmAlgorithm
+    values:
+      - manual
+      - surround
+      - undefined
+      - undefined
+      - undefined
+      - undefined
+      - undefined
+      - undefined
+  -
     name: Pulse Rate
     description: Set the current track's pulse rate between 16n and 2n
     group: pulse-rate

@@ -1,7 +1,7 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
 import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
-import { RhythmStep } from "../model/ableton/track";
+import { RhythmStep, rhythmAlgorithms } from "../model/ableton/track";
 
 
 export class RhythmController extends ApplicationController {
@@ -14,6 +14,7 @@ export class RhythmController extends ApplicationController {
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("updatePulse", this.updatePulse);
+    this.functionMap.set("updateRhythmAlgorithm", this.updateRhythmAlgorithm);
   }
 
 
@@ -47,6 +48,13 @@ export class RhythmController extends ApplicationController {
       track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
       track.fillDuration = "8nd";
     }
+  }
+
+
+  updateRhythmAlgorithm(gridPage: RhythmController, press: GridKeyPress) {
+    const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm = algorithm;
+    gridPage.grid.levelRow(0, 6, gridPage.getRhythmAlgorithmRow());
   }
 
 
@@ -86,8 +94,12 @@ export class RhythmController extends ApplicationController {
     }
     if (highlightIndex != undefined) row[highlightIndex] = 15;
 
+    // Transport row
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
+
+    // Parameter rows
+    this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
     this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
   }
@@ -97,5 +109,12 @@ export class RhythmController extends ApplicationController {
     return this.grid.sequencer.daw.getActiveTrack().rhythm.reduce((total, step) => {
       return total + step.state;
     }, 0) == 0;
+  }
+
+
+  getRhythmAlgorithmRow() {
+    const algorithmRow = new Array(8).fill(0);
+    algorithmRow[rhythmAlgorithms[this.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm]] = 10;
+    return algorithmRow;
   }
 }
