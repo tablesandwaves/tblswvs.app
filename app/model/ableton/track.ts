@@ -52,7 +52,7 @@ export class AbletonTrack {
   noteLength: string = "16n";
   pulseRate: string = "16n";
   rhythmStepLength: number = 16;
-  rhythmAlgorithm: string = "manual";
+  #rhythmAlgorithm: string = "manual";
   #relatedRhythmTrackIndex: (number|undefined) = undefined;
 
   algorithm: string = "simple";
@@ -178,6 +178,21 @@ export class AbletonTrack {
       if (this.rhythmAlgorithm == "surround") {
         this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
       }
+    }
+  }
+
+
+  get rhythmAlgorithm() {
+    return this.#rhythmAlgorithm;
+  }
+
+
+  set rhythmAlgorithm(algorithm: string) {
+    this.#rhythmAlgorithm = algorithm;
+
+    // This is duplicative with setting the related rhythm track index, consider extracting.
+    if (this.#rhythmAlgorithm == "surround" && this.#relatedRhythmTrackIndex != undefined) {
+      this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
     }
   }
 

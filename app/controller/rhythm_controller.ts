@@ -55,12 +55,14 @@ export class RhythmController extends ApplicationController {
   updateRhythmAlgorithm(gridPage: RhythmController, press: GridKeyPress) {
     const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm = algorithm;
+
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.grid.levelRow(0, 6, gridPage.getRhythmAlgorithmRow());
   }
 
 
   updateRelatedRhythmTrack(gridPage: RhythmController, press: GridKeyPress) {
-    const currentTrackIndex = gridPage.grid.sequencer.daw.activeTrack;
+    const currentTrackIndex   = gridPage.grid.sequencer.daw.activeTrack;
     const currentRelatedTrack = gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex;
     if (press.x == currentRelatedTrack || press.x == currentTrackIndex) {
       gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex = undefined;
