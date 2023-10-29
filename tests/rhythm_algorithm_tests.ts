@@ -1,16 +1,7 @@
 import { expect } from "chai";
+import { rhythmStepsForPattern, patternForRhythmSteps } from "./test_helpers";
 import { RhythmStep } from "../app/model/ableton/track";
 import { surroundRhythm } from "../app/helpers/rhythm_algorithms";
-
-
-const rhythmStepsForPattern = (pattern: (0|1)[]): RhythmStep[] => {
-  return pattern.map(state => {
-    return {state: state, probability: 1, fillRepeats: 0}
-  });
-}
-
-
-const patternForRhythmSteps = (rhythmSteps: RhythmStep[]): number[] => rhythmSteps.map(rhythmStep => rhythmStep.state);
 
 
 describe("the Surround algorithm", () => {

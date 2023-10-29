@@ -98,20 +98,11 @@ export class RhythmController extends ApplicationController {
 
 
   setGridRhythmDisplay(highlightIndex?: number) {
-    let row;
-    if (this.grid.shiftKey) {
-      const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
-      row = [...new Array(stepLength).fill(5), ...new Array(16 - stepLength).fill(0)];
-    } else {
-      row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i) => {
-        return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
-      });
-    }
-    if (highlightIndex != undefined) row[highlightIndex] = 15;
-
     // Transport row
-    this.grid.levelRow(0, 0, row.slice(0, 8));
-    this.grid.levelRow(8, 0, row.slice(8, 16));
+    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
+    if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
+    this.grid.levelRow(0, 0, transportRow.slice(0, 8));
+    this.grid.levelRow(8, 0, transportRow.slice(8, 16));
 
     // Parameter rows
     this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
@@ -125,6 +116,19 @@ export class RhythmController extends ApplicationController {
     return this.grid.sequencer.daw.getActiveTrack().rhythm.reduce((total, step) => {
       return total + step.state;
     }, 0) == 0;
+  }
+
+
+  getRhythmStepLengthRow() {
+    const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
+    return [...new Array(stepLength).fill(5), ...new Array(16 - stepLength).fill(0)];
+  }
+
+
+  getRhythmGatesRow() {
+    return this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep) => {
+      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
+    });
   }
 
 

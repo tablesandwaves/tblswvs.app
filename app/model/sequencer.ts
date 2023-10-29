@@ -82,6 +82,8 @@ export class Sequencer {
 
 
   setNotesInLive(track: AbletonTrack) {
+    if (this.testing) return;
+
     if (track.createNewClip) {
       track.currentClip = (track.currentClip + 1) % 4;
       this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/create`, 32);

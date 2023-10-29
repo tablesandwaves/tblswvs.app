@@ -41,9 +41,9 @@ describe("AbletonTrack", () => {
       ]);
       hihat.relatedRhythmTrackIndex = undefined;
 
-      it("resets the track's rhythm to an empty rhythm", () => {
+      it("leaves the track's rhythm as the surrouned rhythm for editing", () => {
         expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
-          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
     });
