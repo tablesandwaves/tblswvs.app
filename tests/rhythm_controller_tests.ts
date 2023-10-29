@@ -107,4 +107,74 @@ describe("RhythmController", () => {
       ]);
     });
   });
+
+  describe("Editing steps in the transport row", () => {
+    describe("when the manual algorithm is selected and gate buttons are pressed", () => {
+      const sequencer = new Sequencer(testing);
+      sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+      const track      = sequencer.daw.getActiveTrack();
+      const controller = sequencer.grid.activePage as RhythmController;
+
+      // Select the manual algorithm, confirm the track rhythm and transport row are empty
+      sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+      expect(track.rhythmAlgorithm).to.eq("manual");
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      // Then add a gate
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+      it("updates the track's rhythm", () => {
+        const pattern = patternForRhythmSteps(track.rhythm);
+        expect(pattern).to.have.ordered.members([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("updates the grid transport row", () => {
+        expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+
+    describe("when a non-manual algorithm is selected and gate buttons are pressed", () => {
+      const sequencer = new Sequencer(testing);
+      sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+      const track      = sequencer.daw.getActiveTrack();
+      const controller = sequencer.grid.activePage as RhythmController;
+
+      // Select the surround algorithm, confirm the track rhythm and transport row are empty
+      sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+      expect(track.rhythmAlgorithm).to.eq("surround");
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      // Then attempt to add a gate
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+
+      it("does not update the track's rhythm", () => {
+        const pattern = patternForRhythmSteps(track.rhythm);
+        expect(pattern).to.have.ordered.members([
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("does not update the grid transport row", () => {
+        expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+  });
 });

@@ -140,6 +140,8 @@ export class ApplicationController {
 
 
   updateGuiRhythmDisplay() {
+    if (this.grid.sequencer.testing) return;
+
     this.grid.sequencer.gui.webContents.send(
       "track-rhythm",
       this.grid.sequencer.daw.getActiveTrack().rhythm,
@@ -149,6 +151,8 @@ export class ApplicationController {
 
 
   updateGuiRhythmTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    if (this.grid.sequencer.testing) return;
+
     this.grid.sequencer.gui.webContents.send("transport", highlightIndex, pianoRollHighlightIndex);
   }
 
