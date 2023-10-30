@@ -64,12 +64,13 @@ export class RhythmController extends ApplicationController {
 
 
   updateRelatedRhythmTrack(gridPage: RhythmController, press: GridKeyPress) {
-    const currentTrackIndex   = gridPage.grid.sequencer.daw.activeTrack;
-    const currentRelatedTrack = gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex;
-    if (press.x == currentRelatedTrack || press.x == currentTrackIndex) {
-      gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex = undefined;
+    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+    const pressedRelatedTrack = gridPage.grid.sequencer.daw.tracks[press.x];
+
+    if (pressedRelatedTrack.relatedRhythmTrackDawIndex ==  track.dawIndex || pressedRelatedTrack.dawIndex == track.dawIndex) {
+      track.relatedRhythmTrackDawIndex = undefined;
     } else {
-      gridPage.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex = press.x;
+      track.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;
     }
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -145,8 +146,16 @@ export class RhythmController extends ApplicationController {
 
   getRhythmRelatedTrackRow() {
     const relatedTrackRow = new Array(8).fill(0);
-    if (this.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex != undefined)
-      relatedTrackRow[this.grid.sequencer.daw.getActiveTrack().relatedRhythmTrackIndex] = 10;
+
+    const track = this.grid.sequencer.daw.getActiveTrack();
+    if (track.relatedRhythmTrackDawIndex != undefined) {
+      const trackIndex = this.grid.sequencer.daw.tracks.reduce((trackIndex, t, i) => {
+        if (t.dawIndex == track.relatedRhythmTrackDawIndex) trackIndex = i;
+        return trackIndex;
+      }, -1);
+
+      if (trackIndex != -1) relatedTrackRow[trackIndex] = 10;
+    }
     return relatedTrackRow;
   }
 }

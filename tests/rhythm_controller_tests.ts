@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
-import { AbletonLive } from "../app/model/ableton/live";
 import { RhythmController } from "../app/controller/rhythm_controller";
 import { patternForRhythmSteps } from "./test_helpers";
 
@@ -41,7 +40,7 @@ describe("RhythmController", () => {
     // Select the related track index
     sequencer.grid.keyPress({y: 5, x: 2, s: 1});
 
-    it("updates the track's related rhythm track", () => expect(track.relatedRhythmTrackIndex).to.eq(2));
+    it("updates the track's related rhythm track", () => expect(track.relatedRhythmTrackDawIndex).to.eq(track.daw.tracks[2].dawIndex));
 
     it("updates the grid related track row", () => {
       expect(controller.getRhythmRelatedTrackRow()).to.have.ordered.members([0, 0, 10, 0,  0, 0, 0, 0]);

@@ -2,28 +2,59 @@ import { expect } from "chai";
 import { AbletonTrack } from "../app/model/ableton/track";
 import { Sequencer } from "../app/model/sequencer";
 import { AbletonLive } from "../app/model/ableton/live";
+import { patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing   = true;
 const sequencer = new Sequencer(testing);
 const daw       = new AbletonLive(sequencer);
-const track     = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
 
 
 describe("AbletonTrack", () => {
+  describe("a new instance", () => {
+    const track = daw.getActiveTrack();
+  });
+
   describe("rhythm algorithms", () => {
     describe("setting the rhythm algorithm to surround then setting the related track", () => {
       const daw   = new AbletonLive(sequencer);
       const perc  = daw.tracks[3];
       const hihat = daw.tracks[2];
 
-      perc.rhythm[1].state = 1;
+      perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       hihat.rhythmAlgorithm = "surround";
-      hihat.relatedRhythmTrackIndex = 3;
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
 
       it("generates the surrounding track's rhythm", () => {
-        expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+        expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
           1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+
+    describe("updating the subject track observed by a dependent track", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+
+      // Set the first state
+      perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+
+      expect(patternForRhythmSteps(perc.rhythm)).to.have.ordered.members([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      // Change the subject to a new state
+      perc.rhythm = rhythmStepsForPattern([0, 1, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+
+      it("causes the dependent track to be updated", () => {
+        expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
+          1, 0, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
     });
@@ -33,13 +64,13 @@ describe("AbletonTrack", () => {
       const perc  = daw.tracks[3];
       const hihat = daw.tracks[2];
 
-      perc.rhythm[1].state = 1;
+      perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       hihat.rhythmAlgorithm = "surround";
-      hihat.relatedRhythmTrackIndex = 3;
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
       expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
         1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
-      hihat.relatedRhythmTrackIndex = undefined;
+      hihat.relatedRhythmTrackDawIndex = undefined;
 
       it("leaves the track's rhythm as the surrouned rhythm for editing", () => {
         expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
@@ -53,9 +84,9 @@ describe("AbletonTrack", () => {
       const perc  = daw.tracks[3];
       const hihat = daw.tracks[2];
 
-      perc.rhythm[1].state = 1;
+      perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       hihat.rhythmAlgorithm = "surround";
-      hihat.relatedRhythmTrackIndex = 3;
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
       expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
         1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
@@ -73,7 +104,7 @@ describe("AbletonTrack", () => {
   describe("melodic evolution properties exhibit mutual exclusivity", () => {
     describe("setting a mutating track to randomizing", () => {
       const daw   = new AbletonLive(sequencer);
-      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
+      const track = daw.getActiveTrack();
 
       track.mutating    = true;
       track.randomizing = true;
@@ -85,7 +116,7 @@ describe("AbletonTrack", () => {
 
     describe("setting a randomizing track to mutating", () => {
       const daw   = new AbletonLive(sequencer);
-      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
+      const track = daw.getActiveTrack();
 
       track.randomizing = true;
       track.mutating    = true;
@@ -97,7 +128,7 @@ describe("AbletonTrack", () => {
 
     describe("setting a randomizing track to soloing", () => {
       const daw   = new AbletonLive(sequencer);
-      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
+      const track = daw.getActiveTrack();
 
       track.randomizing = true;
       track.soloing     = true;
@@ -110,7 +141,7 @@ describe("AbletonTrack", () => {
 
     describe("setting a soloing track to randomizing", () => {
       const daw   = new AbletonLive(sequencer);
-      const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 0});
+      const track = daw.getActiveTrack();
 
       track.soloing     = true;
       track.randomizing = true;
@@ -123,7 +154,9 @@ describe("AbletonTrack", () => {
 
 
   describe("generating Ableton notes for a track", () => {
+    const track = daw.getActiveTrack();
     describe("with a beat length of 12 16th notes", () => {
+
       track.rhythmStepLength = 12;
       track.rhythm           = new Array(12).fill({...{state: 0, probability: 1, fillRepeats: 0}});
       track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
@@ -158,6 +191,7 @@ describe("AbletonTrack", () => {
   });
 
   describe("when generating rhythmic fills", () => {
+    const track = daw.getActiveTrack();
     track.rhythmStepLength = 16;
     track.outputNotes      = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
@@ -193,6 +227,7 @@ describe("AbletonTrack", () => {
 
 
   describe("truncating note durations for overlapping notes", () => {
+    const track = daw.getActiveTrack();
     track.rhythmStepLength = 16;
     track.noteLength       = "8n";
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});

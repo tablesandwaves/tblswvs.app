@@ -45,7 +45,7 @@ const CLIP_16N_COUNT = 128;
 export class AbletonTrack {
   name: string;
 
-  rhythm: RhythmStep[] = new Array(16);
+  #rhythm: RhythmStep[] = new Array(16);
   defaultProbability: number = 1;
   fillMeasures: (0|1)[] = [0, 0, 0, 0, 0, 0, 0, 0];
   fillDuration: string = "8nd";
@@ -53,7 +53,7 @@ export class AbletonTrack {
   pulseRate: string = "16n";
   rhythmStepLength: number = 16;
   #rhythmAlgorithm: string = "manual";
-  #relatedRhythmTrackIndex: (number|undefined) = undefined;
+  #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
 
   algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
@@ -104,6 +104,25 @@ export class AbletonTrack {
 
     this.rampSequence0 = new RampSequence();
     this.rampSequence1 = new RampSequence();
+  }
+
+
+  get rhythm() {
+    return this.#rhythm;
+  }
+
+
+  set rhythm(rhythmSteps: RhythmStep[]) {
+    this.#rhythm = rhythmSteps;
+    this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
+  }
+
+
+  notify(dawIndex: number, notification: string) {
+    if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm") {
+      const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
+      this.#rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
+    }
   }
 
 
@@ -166,17 +185,18 @@ export class AbletonTrack {
   }
 
 
-  get relatedRhythmTrackIndex() {
-    return this.#relatedRhythmTrackIndex;
+  get relatedRhythmTrackDawIndex() {
+    return this.#relatedRhythmTrackDawIndex;
   }
 
 
-  set relatedRhythmTrackIndex(relatedTrackIndex: number|undefined) {
-    this.#relatedRhythmTrackIndex = relatedTrackIndex;
+  set relatedRhythmTrackDawIndex(relatedTrackDawIndex: number|undefined) {
+    this.#relatedRhythmTrackDawIndex = relatedTrackDawIndex;
 
-    if (this.#relatedRhythmTrackIndex != undefined) {
+    if (this.#relatedRhythmTrackDawIndex != undefined) {
       if (this.rhythmAlgorithm == "surround") {
-        this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
+        const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
+        this.rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
       }
     }
   }
@@ -191,8 +211,9 @@ export class AbletonTrack {
     this.#rhythmAlgorithm = algorithm;
 
     // This is duplicative with setting the related rhythm track index, consider extracting.
-    if (this.#rhythmAlgorithm == "surround" && this.#relatedRhythmTrackIndex != undefined) {
-      this.rhythm = surroundRhythm(this.daw.tracks[this.#relatedRhythmTrackIndex].rhythm);
+    if (this.#rhythmAlgorithm == "surround" && this.#relatedRhythmTrackDawIndex != undefined) {
+      const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
+      this.rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
     }
   }
 
