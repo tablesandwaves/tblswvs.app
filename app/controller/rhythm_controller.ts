@@ -36,11 +36,12 @@ export class RhythmController extends ApplicationController {
     const track = gridPage.grid.sequencer.daw.getActiveTrack();
     if (track.rhythmAlgorithm != "manual") return;
 
-    const stepState                   = 1 - track.rhythm[press.x].state;
-    track.rhythm[press.x].state       = stepState;
-    track.rhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
-
-    if (stepState == 0) track.rhythm[press.x].fillRepeats = 0;
+    const stepState     = 1 - track.rhythm[press.x].state;
+    const updatedRhythm = track.rhythm.map(step => {return {...step}});
+    updatedRhythm[press.x].state = stepState;
+    updatedRhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
+    if (stepState == 0) updatedRhythm[press.x].fillRepeats = 0;
+    track.rhythm = updatedRhythm;
 
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();

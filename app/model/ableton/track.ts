@@ -122,6 +122,7 @@ export class AbletonTrack {
     if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm") {
       const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
       this.#rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
+      this.daw.updateTrackNotes(this);
     }
   }
 
