@@ -89,9 +89,6 @@ describe("AbletonTrack", () => {
       perc.pulseRate = "8n";
       hihat.rhythmAlgorithm = "surround";
       hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
-      expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
-        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
 
       it("updates the surround track's pulse rate", () => {
         expect(hihat.pulseRate).to.eq("8n");
@@ -107,13 +104,97 @@ describe("AbletonTrack", () => {
       perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       hihat.rhythmAlgorithm = "surround";
       hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
-      expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
-        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
       perc.pulseRate = "8n";
 
       it("updates the surrounding track's pulse rate", () => {
         expect(hihat.pulseRate).to.eq("8n");
+      });
+    });
+
+    describe("a surrounding track's rhythm", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.pulseRate).to.eq("16n");
+
+      perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      hihat.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+
+      it("cannot be updated through itself", () => {
+        expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
+          1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+
+    describe("a surrounding track's pulse rate", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.pulseRate).to.eq("16n");
+
+      perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      perc.pulseRate = "8n";
+      hihat.pulseRate = "4n";
+
+      it("cannot be updated through itself", () => {
+        expect(hihat.pulseRate).to.eq("8n");
+      });
+    });
+
+    describe("when a track is set to surround another, the dependent track will inherit the rhythm step length", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.rhythmStepLength).to.eq(16);
+
+      perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      perc.rhythmStepLength = 8;
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+
+      it("updates the surround track's rhythm step length", () => {
+        expect(hihat.rhythmStepLength).to.eq(8);
+      });
+    });
+
+    describe("when a surrounding track's subject track has its rhythm step length updated", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.rhythmStepLength).to.eq(16);
+
+      perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      perc.rhythmStepLength = 8;
+
+      it("updates the surrounding track's rhythm step length", () => {
+        expect(hihat.rhythmStepLength).to.eq(8);
+      });
+    });
+
+    describe("a surrounding track's rhythm step length", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.rhythmStepLength).to.eq(16);
+
+      perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      perc.rhythmStepLength = 8;
+      hihat.rhythmStepLength = 12;
+
+      it("cannot be updated through itself", () => {
+        expect(hihat.rhythmStepLength).to.eq(8);
       });
     });
 
@@ -129,6 +210,10 @@ describe("AbletonTrack", () => {
         1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
       hihat.rhythmAlgorithm = "manual";
+
+      it("unsets its related rhythm track index", () => {
+        expect(hihat.relatedRhythmTrackDawIndex).to.be.undefined;
+      });
 
       it("leaves the last rhythm intact", () => {
         expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
