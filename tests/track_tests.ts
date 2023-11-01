@@ -79,6 +79,44 @@ describe("AbletonTrack", () => {
       });
     });
 
+    describe("when a track is set to surround another, the dependent track will inherit the pulse rate", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.pulseRate).to.eq("16n");
+
+      perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      perc.pulseRate = "8n";
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      it("updates the surround track's pulse rate", () => {
+        expect(hihat.pulseRate).to.eq("8n");
+      });
+    });
+
+    describe("when a surrounding track's subject track has its pulse rate updated", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.pulseRate).to.eq("16n");
+
+      perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      expect(hihat.rhythm.map(step => step.state)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      perc.pulseRate = "8n";
+
+      it("updates the surrounding track's pulse rate", () => {
+        expect(hihat.pulseRate).to.eq("8n");
+      });
+    });
+
     describe("setting the rhythm algorithm to manual after it was another algorithm", () => {
       const daw   = new AbletonLive(sequencer);
       const perc  = daw.tracks[3];

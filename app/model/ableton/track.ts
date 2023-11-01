@@ -50,7 +50,7 @@ export class AbletonTrack {
   fillMeasures: (0|1)[] = [0, 0, 0, 0, 0, 0, 0, 0];
   fillDuration: string = "8nd";
   noteLength: string = "16n";
-  pulseRate: string = "16n";
+  #pulseRate: string = "16n";
   rhythmStepLength: number = 16;
   #rhythmAlgorithm: string = "manual";
   #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
@@ -118,10 +118,22 @@ export class AbletonTrack {
   }
 
 
+  get pulseRate() {
+    return this.#pulseRate;
+  }
+
+
+  set pulseRate(pulseRate: string) {
+    this.#pulseRate = pulseRate;
+    this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
+  }
+
+
   notify(dawIndex: number, notification: string) {
     if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm") {
       const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
       this.#rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
+      this.#pulseRate = this.daw.tracks[trackIndex].pulseRate;
       this.daw.updateTrackNotes(this);
     }
   }
@@ -197,6 +209,7 @@ export class AbletonTrack {
     if (this.#relatedRhythmTrackDawIndex != undefined) {
       if (this.rhythmAlgorithm == "surround") {
         const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
+        this.pulseRate = this.daw.tracks[trackIndex].pulseRate;
         this.rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
       }
     }
