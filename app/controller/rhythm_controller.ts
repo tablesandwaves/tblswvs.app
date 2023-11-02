@@ -38,15 +38,17 @@ export class RhythmController extends ApplicationController {
 
     const stepState     = 1 - track.rhythm[press.x].state;
     const updatedRhythm = track.rhythm.map(step => {return {...step}});
-    updatedRhythm[press.x].state = stepState;
+
+    updatedRhythm[press.x].state       = stepState;
     updatedRhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
+
     if (stepState == 0) updatedRhythm[press.x].fillRepeats = 0;
     track.rhythm = updatedRhythm;
 
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
-
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
 
     if (gridPage.#rhythmIsBlank()) {
       track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -61,6 +63,7 @@ export class RhythmController extends ApplicationController {
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
+    gridPage.updateGuiRhythmDisplay();
   }
 
 
@@ -76,6 +79,7 @@ export class RhythmController extends ApplicationController {
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
+    gridPage.updateGuiRhythmDisplay();
   }
 
 

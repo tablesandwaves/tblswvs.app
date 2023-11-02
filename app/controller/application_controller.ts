@@ -141,12 +141,7 @@ export class ApplicationController {
 
   updateGuiRhythmDisplay() {
     if (this.grid.sequencer.testing) return;
-
-    this.grid.sequencer.gui.webContents.send(
-      "track-rhythm",
-      this.grid.sequencer.daw.getActiveTrack().rhythm,
-      this.grid.sequencer.daw.getActiveTrack().rhythmStepLength
-    );
+    this.grid.sequencer.daw.getActiveTrack().updateGuiTrackRhythm();
   }
 
 

@@ -3,7 +3,6 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("stepSequencer", {
   transport: (callback: any) => ipcRenderer.on("transport", callback),
-  transportBeat: (callback: any) => ipcRenderer.on("transport-beat", callback)
 });
 
 

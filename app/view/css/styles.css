@@ -114,16 +114,25 @@ div#top-row div#clip-details div.indicator {
 div#top-row div#step-sequencer,
 div#top-row div#step-sequencer div#sequencer-steps,
 div#top-row div#step-sequencer div#sequencer-fills,
-div#top-row div#step-sequencer div#note-length {
+div#top-row div#step-sequencer div#rhythm-params {
   display: block;
   width: 800px;
 }
 
 
-div#top-row div#step-sequencer div#note-length {
+div#top-row div#step-sequencer div#rhythm-params {
+  margin: 10px 0 2px;
   padding-left: 5px;
   padding-right: 5px;
+  font-size: .9em;
 }
+
+
+div#rhythm-params div#pulse { width: 85px; }
+div#rhythm-params div#note-length { width: 130px; }
+div#rhythm-params div#fills-duration { width: 135px; }
+div#rhythm-params div#fill-measures { width: 230px; }
+div#rhythm-params div#algorithm { width: 210px; text-align: right; }
 
 
 div.indicator {
@@ -421,44 +430,7 @@ div#pianoroll-transport div.step.current {
 }
 
 
-div#note-length ul {
-  padding: 0;
-  margin: 0 0 1em 0;
-}
-
-
-div#note-length ul li {
-  list-style: none;
-  position: relative;
-  float: left;
-  /* margin-left: 5px; */
-  padding: 5px 0;
-  font-size: .9em;
-}
-
-
-div#note-length ul li:nth-child(1) { width: 85px; }
-div#note-length ul li:nth-child(2) { width: 135px; }
-div#note-length ul li:nth-child(3) { width: 135px; }
-div#note-length ul li#fills { width: 240px; }
-div#note-length ul li#measure {
-  width: 180px;
-  margin: auto 5px auto 0;
-  text-align: right;
-}
-
-
-li#measure .parameter {
-  display: inline-block;
-  width: 20px;
-  padding: 1px 3px;
-  border-radius: 3px;
-  background-color: #222;
-  color: #fff;
-}
-
-
-div#note-length ul li span,
+div#rhythm-params span,
 div#track-notes div span,
 div#global-params p span {
   font-family: 'Courier New', Courier, monospace;

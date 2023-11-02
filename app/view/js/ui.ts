@@ -26,7 +26,6 @@ window.documentation.setNoteData((event: any, _noteData: any[]) => noteData = _n
 
 
 window.stepSequencer.transport((event: any, currentStep: number, currentPianoRollStep: number) => updateTransport(currentStep, currentPianoRollStep));
-window.stepSequencer.transportBeat((event: any, beat: string) => updateText("#current-beat", beat));
 
 
 window.parameters.activateTrackNav((event: any, trackName: string) => {
@@ -46,14 +45,11 @@ window.parameters.updateTrackNotes((event: any, type: string, notes: string) => 
   updateText("#note-type", type);
   updateText("#input-notes", notes);
 });
-window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#note-length span.notes", noteLength));
-window.parameters.updatePulseRate((event: any, pulse: string) => updateText("#note-length span.pulse", pulse));
-window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#note-length span.fills", fillsDuration));
-window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#note-length span.fill-measures", fillMeasures));
-window.parameters.updateSuperMeasure((event: any, superMeasure: string) => {
-  updateText("#super-measure", superMeasure);
-  updatePianoRollTransport(parseInt(superMeasure) * 16);
-});
+window.parameters.updateNoteLength((event: any, noteLength: string) => updateText("#rhythm-params #note-length span", noteLength));
+window.parameters.updatePulseRate((event: any, pulse: string) => updateText("#rhythm-params #pulse span", pulse));
+window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#rhythm-params #fills-duration span", fillsDuration));
+window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#rhythm-params #fill-measures span", fillMeasures));
+window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updatePianoRollTransport(parseInt(superMeasure) * 16));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("div#current-clip span", clipIndex));
 
@@ -125,7 +121,7 @@ const toggleIndicator = (selector: string, state: boolean) => {
 }
 
 
-window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number) => {
+window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string) => {
   rhythm.forEach((step, i: number) => {
     if (i < stepLength)
       document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("active");
@@ -142,6 +138,10 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: numbe
       document.querySelector(`#sequencer-fills .step-${i} span`).textContent = step.fillRepeats == 0 ? "" : step.fillRepeats;
     }
   });
+
+  let algorithm = rhythmAlgorithm;
+  if (relatedTrackName) algorithm += "/" + relatedTrackName;
+  document.querySelector("#rhythm-params #algorithm span").textContent = algorithm;
 });
 
 

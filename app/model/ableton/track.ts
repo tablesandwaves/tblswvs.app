@@ -522,7 +522,17 @@ export class AbletonTrack {
 
 
   updateGuiTrackRhythm() {
-    this.daw.sequencer.gui.webContents.send("track-rhythm", this.rhythm, this.rhythmStepLength);
+    const relatedTrackName = this.#relatedRhythmTrackDawIndex == undefined ?
+                             undefined :
+                             this.daw.tracks[this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex)].name;
+
+    this.daw.sequencer.gui.webContents.send(
+      "track-rhythm",
+      this.#rhythm,
+      this.#rhythmStepLength,
+      this.#rhythmAlgorithm,
+      relatedTrackName
+    );
   }
 
 
