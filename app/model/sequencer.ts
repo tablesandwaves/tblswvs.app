@@ -68,6 +68,11 @@ export class Sequencer {
     const measure = Math.floor(step / 16) + 1;
     this.gui.webContents.send("transport-beat", measure);
 
+    // If on the first beat of the last measure, fire any mutating clips
+    if (step == (this.superMeasure * 16) - 16) {
+      this.#fireEvolvingTrackClips();
+    }
+
     // If on the last beat of the last measure of a super measure, update mutations that may be active.
     if (step == (this.superMeasure * 16) - 4) {
       // Update randomizing and mutating tracks.
@@ -228,7 +233,6 @@ export class Sequencer {
       this.daw.tracks.forEach(track => {
         if (track.randomizing || track.mutating) {
           track.evolve();
-          this.emitter.emit(`/tracks/${track.dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
         }
       });
     }
@@ -242,6 +246,17 @@ export class Sequencer {
       });
       this.daw.stagedClipChangeTracks = new Array();
     }
+  }
+
+
+  #fireEvolvingTrackClips() {
+    if (!this.daw.mutating) return;
+
+    this.daw.tracks.forEach(track => {
+      if (track.randomizing || track.mutating) {
+        this.emitter.emit(`/tracks/${track.dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
+      }
+    });
   }
 
 
