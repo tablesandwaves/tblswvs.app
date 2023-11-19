@@ -7,6 +7,8 @@ live_tracks:
         name: Kick Flared Out
       -
         name: Kick Synth Melt
+      -
+        name: 8Op8
   -
     name: Snare
     dawIndex: 2

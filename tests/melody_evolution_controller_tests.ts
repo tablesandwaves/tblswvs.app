@@ -15,7 +15,7 @@ describe("MelodyEvolutionController", () => {
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
-    it("sets the active page to a ramp sequence page", () => expect(evolutionPage).to.be.instanceOf(MelodyEvolutionController));
+    it("sets the active page to a melody evolution page", () => expect(evolutionPage).to.be.instanceOf(MelodyEvolutionController));
 
     it("has no active mutations", () => {
       expect(sequencer.daw.mutations.filter(m => m.active).length).to.eq(0)

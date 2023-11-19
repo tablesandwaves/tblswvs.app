@@ -313,6 +313,7 @@ describe("AbletonTrack", () => {
     });
   });
 
+
   describe("when generating rhythmic fills", () => {
     const track = daw.getActiveTrack();
     track.rhythmStepLength = 16;
