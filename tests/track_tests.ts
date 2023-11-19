@@ -279,10 +279,10 @@ describe("AbletonTrack", () => {
 
   describe("generating output notes", () => {
     it("should convert a melodic array to a two dimentional array (for polyphony)", () => {
-      daw.getActiveTrack().setMelody([
+      daw.getActiveTrack().inputMelody = [
         {octave: 3, note: "C", midi: 60},
         {octave: 3, note: "D", midi: 62}
-      ]);
+      ];
 
       const expected = [
         [{octave: 3, note: "C", midi: 60}],
@@ -313,17 +313,18 @@ describe("AbletonTrack", () => {
       track.rhythmStepLength = 12;
       track.rhythm           = new Array(12).fill({...{state: 0, probability: 1, fillRepeats: 0}});
       track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
-      track.setMelody([
+      track.inputMelody = [
         { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
         { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
         { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
-      ]);
+      ];
       track.updateCurrentAbletonNotes();
       let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
         if (a.clipPosition > b.clipPosition) return 1;
         if (a.clipPosition < b.clipPosition) return -1;
         return 0;
       });
+      console.log(abletonNotes);
 
       it("should the have correct number of notes for the maximum super measure of 8", () => {
         expect(abletonNotes.length).to.eq(11);
@@ -347,7 +348,7 @@ describe("AbletonTrack", () => {
   describe("when generating rhythmic fills", () => {
     const track = daw.getActiveTrack();
     track.rhythmStepLength = 16;
-    track.setMelody([{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]);
+    track.inputMelody      = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
     track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 3};
     track.fillMeasures[1]  = 1;
@@ -390,7 +391,7 @@ describe("AbletonTrack", () => {
     track.rhythm[4]        = {state: 1, probability: 1, fillRepeats: 0};
 
     describe("when successive overlapping notes share the same pitch", () => {
-      track.setMelody([{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]);
+      track.inputMelody = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
       track.updateCurrentAbletonNotes();
 
       const abletonNotes = track.currentAbletonNotes.sort((a, b) => {
@@ -417,11 +418,11 @@ describe("AbletonTrack", () => {
     });
 
     describe("when successive overlapping notes do not share the same pitch", () => {
-      track.setMelody([
+      track.inputMelody = [
         { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
         { octave: 3, note: 'D', midi: 62, scaleDegree: 1 },
         { octave: 3, note: 'C', midi: 60, scaleDegree: 1 }
-      ]);
+      ];
       track.updateCurrentAbletonNotes();
 
       it("does not truncate earlier notes", () => {

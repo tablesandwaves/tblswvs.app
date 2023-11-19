@@ -201,7 +201,7 @@ describe("MelodyEvolutionController", () => {
       { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
       { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
     ];
-    sequencer.daw.tracks[1].setMelody(melodyNotes);
+    sequencer.daw.tracks[1].inputMelody = melodyNotes;
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -237,7 +237,7 @@ describe("MelodyEvolutionController", () => {
       { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
       { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
     ];
-    sequencer.daw.tracks[1].setMelody(melodyNotes);
+    sequencer.daw.tracks[1].inputMelody = melodyNotes;
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});

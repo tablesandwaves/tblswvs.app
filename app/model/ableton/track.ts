@@ -59,7 +59,7 @@ export class AbletonTrack {
   // Are the output notes a melody or chord progression?
   notesAreMelody = true;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
-  inputMelody: note[]   = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
+  #inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
   // Using a 2-dimensional array to accommodate polyphony.
   #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
@@ -122,21 +122,52 @@ export class AbletonTrack {
 
   /**
    * The output notes array should be accessible with a getter, but it should be set via the
-   * separate melody and chord progression setter methods.
+   * separate input melody setter or the chord progression setter.
    */
   get outputNotes() {
     return this.#outputNotes;
   }
 
 
-  setMelody(melodyNotes: note[]) {
-    this.#outputNotes = melodyNotes.map(note => {
-      return note.note == "rest" ? [undefined] : [note];
-    });
+  get inputMelody() {
+    return this.#inputMelody;
+  }
+
+
+  set inputMelody(inputNotes: note[]) {
+    this.notesAreMelody = true;
+
+    this.#inputMelody = inputNotes;
+    let notes: note[] = new Array();
+
+    if (this.algorithm == "simple") {
+      notes = this.#inputMelody;
+    } else {
+      const melody = new Melody(this.inputMelody, this.daw.sequencer.key);
+
+      switch (this.algorithm) {
+        case "self_replicate":
+          notes = melody.selfReplicate(63).notes;
+          break;
+        case "counted":
+          notes = melody.counted().notes;
+          break;
+        case "zig_zag":
+          notes = melody.zigZag().notes;
+          break;
+      }
+    }
+
+    if (notes.length > 0) {
+      this.#outputNotes = notes.map(note => {
+        return note.note == "rest" ? [undefined] : [note];
+      });
+    }
   }
 
 
   setChordProgression(chordNotes: note[][]) {
+    this.notesAreMelody = false;
     this.#outputNotes = chordNotes;
   }
 

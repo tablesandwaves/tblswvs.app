@@ -25,26 +25,8 @@ export class MelodyController extends ApplicationController {
     // input notes are recorded.
     if (gridPage.grid.sequencer.queuedMelody.length == 0) return;
 
-    gridPage.grid.sequencer.daw.getActiveTrack().notesAreMelody = true;
     gridPage.grid.sequencer.daw.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody;
-
-    let notes: note[] = new Array();
-    switch (gridPage.matrix[press.y][press.x].value) {
-      case "simple":
-        notes = gridPage.grid.sequencer.queuedMelody;
-        break;
-      case "self_replicate":
-        notes = gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).notes;
-        break;
-      case "counted":
-        notes = gridPage.getCurrentScaleDegreeMelody().counted().notes;
-        break;
-      case "zig_zag":
-        notes = gridPage.getCurrentScaleDegreeMelody().zigZag().notes;
-        break;
-    }
-    if (notes.length > 0) gridPage.grid.sequencer.daw.getActiveTrack().setMelody(notes);
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
