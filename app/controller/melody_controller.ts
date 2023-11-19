@@ -29,20 +29,22 @@ export class MelodyController extends ApplicationController {
     gridPage.grid.sequencer.daw.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody;
 
+    let notes: note[] = new Array();
     switch (gridPage.matrix[press.y][press.x].value) {
       case "simple":
-        gridPage.grid.sequencer.daw.getActiveTrack().outputNotes = gridPage.grid.sequencer.queuedMelody.map(n => [n]);
+        notes = gridPage.grid.sequencer.queuedMelody;
         break;
       case "self_replicate":
-        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).notes);
+        notes = gridPage.getCurrentScaleDegreeMelody().selfReplicate(63).notes;
         break;
       case "counted":
-        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().counted().notes);
+        notes = gridPage.getCurrentScaleDegreeMelody().counted().notes;
         break;
       case "zig_zag":
-        gridPage.setCurrentTrackNotes(gridPage.getCurrentScaleDegreeMelody().zigZag().notes);
+        notes = gridPage.getCurrentScaleDegreeMelody().zigZag().notes;
         break;
     }
+    if (notes.length > 0) gridPage.grid.sequencer.daw.getActiveTrack().setMelody(notes);
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
@@ -61,13 +63,6 @@ export class MelodyController extends ApplicationController {
     const activeTrack = this.grid.sequencer.daw.getActiveTrack();
     this.grid.levelSet(15, 2, (activeTrack.createNewClip      ? 10 : 0));
     this.grid.levelSet(15, 3, (activeTrack.vectorShiftsActive ? 10 : 0));
-  }
-
-
-  setCurrentTrackNotes(outputMelody: note[]) {
-    this.grid.sequencer.daw.getActiveTrack().outputNotes = outputMelody.map(note => {
-      return note.note == "rest" ? [undefined] : [note];
-    });
   }
 
 

@@ -196,12 +196,12 @@ describe("MelodyEvolutionController", () => {
 
   describe("setting tracks to mutating", () => {
     const sequencer = new Sequencer(testing);
-    const outputNotes = [
-      [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
-      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
-      [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
+    const melodyNotes = [
+      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+      { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
+      { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
     ];
-    sequencer.daw.tracks[1].outputNotes = outputNotes;
+    sequencer.daw.tracks[1].setMelody(melodyNotes);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -225,19 +225,19 @@ describe("MelodyEvolutionController", () => {
     });
 
     it("sets a track's current mutation to its flattened output notes", () => {
-      expect(sequencer.daw.tracks[1].currentMutation).to.have.ordered.members(outputNotes.flat());
+      expect(sequencer.daw.tracks[1].currentMutation).to.have.ordered.members(melodyNotes);
     });
   });
 
 
   describe("setting tracks to soloing", () => {
     const sequencer = new Sequencer(testing);
-    const outputNotes = [
-      [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
-      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
-      [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
+    const melodyNotes = [
+      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+      { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
+      { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
     ];
-    sequencer.daw.tracks[1].outputNotes = outputNotes;
+    sequencer.daw.tracks[1].setMelody(melodyNotes);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -259,7 +259,7 @@ describe("MelodyEvolutionController", () => {
     });
 
     it("sets the DAW's current mutation to the first soloist's flattened output notes", () => {
-      expect(sequencer.daw.currentSoloistMelody).to.have.ordered.members(outputNotes.flat());
+      expect(sequencer.daw.currentSoloistMelody).to.have.ordered.members(melodyNotes);
     });
   });
 

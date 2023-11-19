@@ -3,6 +3,7 @@ import { AbletonTrack } from "../app/model/ableton/track";
 import { Sequencer } from "../app/model/sequencer";
 import { AbletonLive } from "../app/model/ableton/live";
 import { patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { note } from "tblswvs";
 
 
 const testing   = true;
@@ -276,6 +277,35 @@ describe("AbletonTrack", () => {
   });
 
 
+  describe("generating output notes", () => {
+    it("should convert a melodic array to a two dimentional array (for polyphony)", () => {
+      daw.getActiveTrack().setMelody([
+        {octave: 3, note: "C", midi: 60},
+        {octave: 3, note: "D", midi: 62}
+      ]);
+
+      const expected = [
+        [{octave: 3, note: "C", midi: 60}],
+        [{octave: 3, note: "D", midi: 62}]
+      ];
+      expect(daw.getActiveTrack().outputNotes).to.deep.eq(expected);
+    });
+
+    it("should set chord progression notes as is in their 2D form", () => {
+      daw.getActiveTrack().setChordProgression([
+        [{octave: 3, note: "C", midi: 60},  {octave: 3, note: "G", midi: 67}],
+        [{octave: 3, note: "C", midi: 60},  {octave: 3, note: "Eb", midi: 63}],
+      ]);
+
+      const expected = [
+        [{octave: 3, note: "C", midi: 60},  {octave: 3, note: "G", midi: 67}],
+        [{octave: 3, note: "C", midi: 60},  {octave: 3, note: "Eb", midi: 63}],
+      ];
+      expect(daw.getActiveTrack().outputNotes).to.deep.eq(expected);
+    });
+  });
+
+
   describe("generating Ableton notes for a track", () => {
     const track = daw.getActiveTrack();
     describe("with a beat length of 12 16th notes", () => {
@@ -283,11 +313,11 @@ describe("AbletonTrack", () => {
       track.rhythmStepLength = 12;
       track.rhythm           = new Array(12).fill({...{state: 0, probability: 1, fillRepeats: 0}});
       track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
-      track.outputNotes      = [
-        [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
-        [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
-        [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
-      ];
+      track.setMelody([
+        { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+        { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
+        { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
+      ]);
       track.updateCurrentAbletonNotes();
       let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
         if (a.clipPosition > b.clipPosition) return 1;
@@ -317,7 +347,7 @@ describe("AbletonTrack", () => {
   describe("when generating rhythmic fills", () => {
     const track = daw.getActiveTrack();
     track.rhythmStepLength = 16;
-    track.outputNotes      = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
+    track.setMelody([{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]);
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
     track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 3};
     track.fillMeasures[1]  = 1;
@@ -360,7 +390,7 @@ describe("AbletonTrack", () => {
     track.rhythm[4]        = {state: 1, probability: 1, fillRepeats: 0};
 
     describe("when successive overlapping notes share the same pitch", () => {
-      track.outputNotes = [ [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }] ];
+      track.setMelody([{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]);
       track.updateCurrentAbletonNotes();
 
       const abletonNotes = track.currentAbletonNotes.sort((a, b) => {
@@ -387,11 +417,11 @@ describe("AbletonTrack", () => {
     });
 
     describe("when successive overlapping notes do not share the same pitch", () => {
-      track.outputNotes = [
-        [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
-        [{ octave: 3, note: 'D', midi: 62, scaleDegree: 1 }],
-        [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]
-      ];
+      track.setMelody([
+        { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+        { octave: 3, note: 'D', midi: 62, scaleDegree: 1 },
+        { octave: 3, note: 'C', midi: 60, scaleDegree: 1 }
+      ]);
       track.updateCurrentAbletonNotes();
 
       it("does not truncate earlier notes", () => {

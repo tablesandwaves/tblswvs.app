@@ -62,7 +62,7 @@ export class AbletonTrack {
   inputMelody: note[]   = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
   // Using a 2-dimensional array to accommodate polyphony.
-  outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
+  #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
   currentAbletonNotes: AbletonNote[] = new Array();
 
@@ -117,6 +117,27 @@ export class AbletonTrack {
       this.#rhythm = rhythmSteps;
       this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
     }
+  }
+
+
+  /**
+   * The output notes array should be accessible with a getter, but it should be set via the
+   * separate melody and chord progression setter methods.
+   */
+  get outputNotes() {
+    return this.#outputNotes;
+  }
+
+
+  setMelody(melodyNotes: note[]) {
+    this.#outputNotes = melodyNotes.map(note => {
+      return note.note == "rest" ? [undefined] : [note];
+    });
+  }
+
+
+  setChordProgression(chordNotes: note[][]) {
+    this.#outputNotes = chordNotes;
   }
 
 
@@ -334,7 +355,7 @@ export class AbletonTrack {
       return this.daw.currentSoloistMelody.map(n => [n]);
     }
 
-    return this.outputNotes;
+    return this.#outputNotes;
   }
 
 
@@ -408,7 +429,7 @@ export class AbletonTrack {
 
     for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
       // Start with a unique list of sorted notes
-      let sortedNotes = this.outputNotes.flat().filter(unique).sort((a, b) => a.midi - b.midi);
+      let sortedNotes = this.#outputNotes.flat().filter(unique).sort((a, b) => a.midi - b.midi);
       let tunedRandomNoteIndices = new Array();
 
       // Choose a note (by index) at random
