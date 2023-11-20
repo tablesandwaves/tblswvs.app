@@ -111,7 +111,6 @@ describe("the Surround algorithm", () => {
       const sourceRhythm = rhythmStepsForPattern([1, 0, 0,  1, 0, 0,  1, 0, 0, 0,  1, 0,  1, 0, 0, 0]);
       const surroundingRhythm = surroundRhythm(sourceRhythm);
 
-      // console.log(patternForRhythmSteps(surroundingRhythm).join(" "))
       expect(patternForRhythmSteps(surroundingRhythm)).to.have.ordered.members([
         0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1
       ]);
