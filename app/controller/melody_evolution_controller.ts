@@ -64,8 +64,17 @@ export class MelodyEvolutionController extends ApplicationController {
 
   toggleMutations(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.mutating = !gridPage.grid.sequencer.daw.mutating;
-    // Flag for resetting all tracks to their current clips at the next super measure boundary
-    if (!gridPage.grid.sequencer.daw.mutating) gridPage.grid.sequencer.daw.stopMutationQueued = true;
+
+    if (!gridPage.grid.sequencer.daw.mutating) {
+      // Flag for resetting all tracks to their current clips at the next super measure boundary
+      gridPage.grid.sequencer.daw.stopMutationQueued = true;
+    } else {
+      // Reset all mutating tracks' current mutation melodies
+      gridPage.grid.sequencer.daw.tracks.forEach(track => {
+        if (track.mutating) track.currentMutation = track.outputNotes.flat();
+      });
+    }
+
     gridPage.setGridMutationsButton();
   }
 
@@ -81,12 +90,6 @@ export class MelodyEvolutionController extends ApplicationController {
   toggleMutatingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.mutating = !track.mutating;
-
-    // Seed the initial mutating melody
-    if (track.mutating) {
-      track.currentMutation = track.outputNotes.flat();
-    }
-
     gridPage.refresh();
   }
 
