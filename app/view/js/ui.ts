@@ -538,16 +538,16 @@ const updatePianoRollTransport = (numSteps: number) => {
 }
 
 
-const displayRhythmCircle = (numSteps: number) => {
+const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
   const canvas = <HTMLCanvasElement> document.querySelector("#rhythm-circle canvas");
   const context = canvas.getContext("2d");
 
-  const centerX       = 80;
-  const centerY       = 80;
-  const radius        = 75;
+  const centerX       = 60;
+  const centerY       = 60;
+  const radius        = 55;
   const startAngle    = 0;
   const endAngle      = 2 * Math.PI;
-  const gatePointSize = 4;
+  const gatePointSize = 3;
 
   context.beginPath();
   context.strokeStyle = "#555";
@@ -562,9 +562,25 @@ const displayRhythmCircle = (numSteps: number) => {
     const y = centerY + radius * Math.sin(((angle * i) - 90) * Math.PI/180) * distance;
 
     context.beginPath();
-    context.fillStyle = i % 2 == 0 ? "#117733" : "#555";
+    context.fillStyle = onGates.includes(i) ? "#117733" : "#555";
     context.arc(x, y, gatePointSize, 0, 2 * Math.PI);
     context.fill();
+  }
+
+  context.strokeStyle = "#117733";
+
+  if (onGates.length > 0) {
+    const firstGateX = centerX + radius * Math.cos(((angle * onGates[0]) - 90) * Math.PI/180) * distance;
+    const firstGateY = centerY + radius * Math.sin(((angle * onGates[0]) - 90) * Math.PI/180) * distance;
+    context.moveTo(firstGateX, firstGateY);
+
+    for (let i = 1; i <= onGates.length; i++) {
+      // context.beginPath();
+      const destGateX = centerX + radius * Math.cos(((angle * onGates[i % onGates.length]) - 90) * Math.PI/180) * distance;
+      const destGateY = centerY + radius * Math.sin(((angle * onGates[i % onGates.length]) - 90) * Math.PI/180) * distance;
+      context.lineTo(destGateX, destGateY);
+    }
+    context.stroke();
   }
 }
 

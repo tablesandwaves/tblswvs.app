@@ -86,7 +86,7 @@ div#top-row div#rhythm-circle {
 
 div#top-row div#rhythm-circle {
   margin: 4px 16px 4px 0;
-  height: 150px;
+  height: 120px;
 }
 
 
@@ -120,6 +120,11 @@ div#top-row div#step-sequencer div#sequencer-fills,
 div#top-row div#step-sequencer div#rhythm-params {
   display: block;
   width: 800px;
+}
+
+
+div#top-row div#step-sequencer {
+  margin-top: 10px;
 }
 
 
