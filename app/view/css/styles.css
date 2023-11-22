@@ -85,7 +85,17 @@ div#top-row div#rhythm-circle {
 
 
 div#top-row div#rhythm-circle {
+  margin: 4px 16px 4px 0;
   height: 150px;
+}
+
+
+div#top-row div#rhythm-circle canvas {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 
@@ -101,12 +111,6 @@ div#top-row div#app-name h1 {
   padding-left: 22px;
   padding-right: 22px;
   font-size: 2em;
-  /* text-align: center; */
-}
-
-
-div#top-row div#rhythm-circle {
-  margin: 1.5em 16px auto 0;
 }
 
 

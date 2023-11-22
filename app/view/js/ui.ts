@@ -538,7 +538,39 @@ const updatePianoRollTransport = (numSteps: number) => {
 }
 
 
+const displayRhythmCircle = (numSteps: number) => {
+  const canvas = <HTMLCanvasElement> document.querySelector("#rhythm-circle canvas");
+  const context = canvas.getContext("2d");
+
+  const centerX       = 80;
+  const centerY       = 80;
+  const radius        = 75;
+  const startAngle    = 0;
+  const endAngle      = 2 * Math.PI;
+  const gatePointSize = 4;
+
+  context.beginPath();
+  context.strokeStyle = "#555";
+  context.arc(centerX, centerY, radius, startAngle, endAngle);
+  context.stroke();
+
+  const angle = 360 / numSteps;
+  const distance = 1;
+
+  for (let i = 0; i < numSteps; i++) {
+    const x = centerX + radius * Math.cos(((angle * i) - 90) * Math.PI/180) * distance;
+    const y = centerY + radius * Math.sin(((angle * i) - 90) * Math.PI/180) * distance;
+
+    context.beginPath();
+    context.fillStyle = i % 2 == 0 ? "#117733" : "#555";
+    context.arc(x, y, gatePointSize, 0, 2 * Math.PI);
+    context.fill();
+  }
+}
+
+
 const ready = () => {
+  displayRhythmCircle(16);
   updatePianoRollTransport(64);
   setupGridMatrix();
   document.getElementById("docs").addEventListener("click", toggleDocumentation);
