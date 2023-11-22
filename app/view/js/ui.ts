@@ -139,6 +139,14 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: numbe
     }
   });
 
+  displayRhythmCircle(
+    stepLength,
+    rhythm.reduce((onGates, step, i) => {
+      if (step.state == 1 && i < stepLength) onGates.push(i);
+      return onGates;
+    }, [])
+  );
+
   let algorithm = rhythmAlgorithm;
   if (relatedTrackName) algorithm += "/" + relatedTrackName;
   document.querySelector("#rhythm-params #algorithm span").textContent = algorithm;
@@ -539,9 +547,20 @@ const updatePianoRollTransport = (numSteps: number) => {
 
 
 const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
-  const canvas = <HTMLCanvasElement> document.querySelector("#rhythm-circle canvas");
-  const context = canvas.getContext("2d");
+  const rhythmCircleWrapper = document.getElementById("rhythm-circle");
+  const currentCanvas = document.getElementById("rtm-circ");
+  if (currentCanvas != undefined) rhythmCircleWrapper.removeChild(currentCanvas);
 
+  const canvasWidth  = 120;
+  const canvasHeight = 120;
+
+  const newCanvas = document.createElement("canvas");
+  newCanvas.setAttribute("id", "rtm-circ");
+  newCanvas.setAttribute("width", "" + canvasWidth);
+  newCanvas.setAttribute("height", "" + canvasHeight);
+  rhythmCircleWrapper.appendChild(newCanvas);
+
+  const context       = newCanvas.getContext("2d");
   const centerX       = 60;
   const centerY       = 60;
   const radius        = 55;
