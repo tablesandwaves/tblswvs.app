@@ -78,9 +78,14 @@ div.row {
 
 
 div#top-row div#app-name,
-div#top-row div#clip-details {
+div#top-row div#rhythm-circle {
   display: block;
   width: 256px;
+}
+
+
+div#top-row div#rhythm-circle {
+  height: 150px;
 }
 
 
@@ -100,14 +105,8 @@ div#top-row div#app-name h1 {
 }
 
 
-div#top-row div#clip-details {
+div#top-row div#rhythm-circle {
   margin: 1.5em 16px auto 0;
-}
-
-div#top-row div#clip-details div.indicator {
-  width: 90%;
-  margin-right: 10%;
-  margin-bottom: 5px;
 }
 
 
@@ -461,12 +460,6 @@ div#global-params p span {
 }
 
 
-div#clip-details div#current-clip span {
-  border: none;
-  background-color: #000;
-}
-
-
 div#documentation ul#page-list {
   padding: 0;
   margin: 0 0 1em 0;
@@ -553,7 +546,9 @@ div#documentation div#page-overview {
 
 
 div#melodic-states div#melodic-vector-active,
-div#melodic-states div#randomizer-active {
+div#melodic-states div#randomizer-active,
+div#melodic-states div#current-clip,
+div#melodic-states div#create-clip {
   width: 200px;
   position: relative;
   margin: 0 0 5px;
@@ -561,6 +556,12 @@ div#melodic-states div#randomizer-active {
   border: none;
   background-color: #000;
   text-align: right;
+}
+
+
+div#melodic-states div#current-clip span {
+  border: none;
+  background-color: #000;
 }
 
 
