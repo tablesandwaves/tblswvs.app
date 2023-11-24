@@ -21,6 +21,18 @@ div.nav {
 }
 
 
+div.nav div#app-name {
+  width: 100%;
+}
+
+
+div.nav div#app-name h1 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+
 div.nav ul {
   margin: 3em 0 0 0;
   padding-left: 0;
@@ -77,40 +89,24 @@ div.row {
 }
 
 
-div#top-row div#app-name,
-div#top-row div#rhythm-circle {
+div#top-row div#track-rhythm-circle,
+div#top-row div#full-rhythm-circle,
+div#top-row div#harmonic-rhythm-circle {
   display: block;
-  width: 256px;
-}
-
-
-div#top-row div#rhythm-circle {
-  margin: 4px 16px 4px 0;
+  width: 144px;
+  margin: 4px 0;
   height: 120px;
 }
 
 
-div#top-row div#rhythm-circle canvas {
+div#top-row div#track-rhythm-circle canvas,
+div#top-row div#full-rhythm-circle canvas,
+div#top-row div#harmonic-rhythm-circle canvas {
   padding-left: 0;
   padding-right: 0;
   margin-left: auto;
   margin-right: auto;
   display: block;
-}
-
-
-div#top-row div#app-name {
-  margin-left: 16px;
-}
-
-
-div#top-row div#app-name h1 {
-  position: relative;
-  float: left;
-  width: 212px;
-  padding-left: 22px;
-  padding-right: 22px;
-  font-size: 2em;
 }
 
 

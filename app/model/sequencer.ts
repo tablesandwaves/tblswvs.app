@@ -93,7 +93,7 @@ export class Sequencer {
       track.currentClip = (track.currentClip + 1) % 4;
       this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/create`, 32);
       // Redundant for existing tracks, but need to set the loop end for newly created clip
-      setTimeout(() => this.setSuperMeasure(), 100);
+      setTimeout(() => this.updateSuperMeasure(), 100);
       this.daw.stagedClipChangeTracks.push(track.dawIndex);
 
       track.createNewClip = false;
@@ -171,7 +171,7 @@ export class Sequencer {
   }
 
 
-  setSuperMeasure() {
+  updateSuperMeasure() {
     if (this.testing) return;
     try {
       this.emitter.emit(`/set/super_measure`, this.superMeasure);

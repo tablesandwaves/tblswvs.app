@@ -121,7 +121,7 @@ const toggleIndicator = (selector: string, state: boolean) => {
 }
 
 
-window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string) => {
+window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
   rhythm.forEach((step, i: number) => {
     if (i < stepLength)
       document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("active");
@@ -139,13 +139,9 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: numbe
     }
   });
 
-  displayRhythmCircle(
-    stepLength,
-    rhythm.reduce((onGates, step, i) => {
-      if (step.state == 1 && i < stepLength) onGates.push(i);
-      return onGates;
-    }, [])
-  );
+  displayRhythmCircle(rhythm.slice(0, stepLength).map(step => step.state), "track-rhythm-circle");
+  displayRhythmCircle(rhythmSectionRhythm, "full-rhythm-circle");
+  displayRhythmCircle(harmonicSectionRhythm, "harmonic-rhythm-circle");
 
   let algorithm = rhythmAlgorithm;
   if (relatedTrackName) algorithm += "/" + relatedTrackName;
@@ -546,8 +542,8 @@ const updatePianoRollTransport = (numSteps: number) => {
 }
 
 
-const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
-  const rhythmCircleWrapper = document.getElementById("rhythm-circle");
+const displayRhythmCircle = (rhythm: (0|1)[] = [], circleId: string) => {
+  const rhythmCircleWrapper = document.getElementById(circleId);
   const currentCanvas = rhythmCircleWrapper.querySelector("canvas");
   if (currentCanvas != undefined) rhythmCircleWrapper.removeChild(currentCanvas);
 
@@ -565,26 +561,32 @@ const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
   const radius        = 55;
   const startAngle    = 0;
   const endAngle      = 2 * Math.PI;
-  const gatePointSize = 3;
+  const gatePointSize = circleId == "track-rhythm-circle" ? 3 : 1;
+  const font          = "bold 48px Helvetica";
 
   context.beginPath();
   context.strokeStyle = "#555";
   context.arc(centerX, centerY, radius, startAngle, endAngle);
   context.stroke();
 
-  const singleStepAngle = 360 / numSteps;
+  const singleStepAngle = 360 / rhythm.length;
 
-  for (let i = 0; i < numSteps; i++) {
+  for (let i = 0; i < rhythm.length; i++) {
     const x = centerX + radius * Math.cos(((singleStepAngle * i) - 90) * Math.PI/180);
     const y = centerY + radius * Math.sin(((singleStepAngle * i) - 90) * Math.PI/180);
 
     context.beginPath();
-    context.fillStyle = onGates.includes(i) ? "#117733" : "#555";
+    context.fillStyle = rhythm[i] == 1 ? "#117733" : "#555";
     context.arc(x, y, gatePointSize, 0, 2 * Math.PI);
     context.fill();
   }
 
   context.strokeStyle = "#117733";
+
+  const onGates = rhythm.reduce((onGates, step, i) => {
+    if (step == 1) onGates.push(i);
+    return onGates;
+  }, new Array());
 
   if (onGates.length > 0) {
     const firstGateX = centerX + radius * Math.cos(((singleStepAngle * onGates[0]) - 90) * Math.PI/180);
@@ -598,11 +600,18 @@ const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
     }
     context.stroke();
   }
+
+  context.font = font;
+  context.textAlign = "center";
+  context.fillText(rhythm.length + "", centerX, centerY + 16);
 }
 
 
 const ready = () => {
-  displayRhythmCircle(16);
+  displayRhythmCircle(new Array(16).fill(0), "track-rhythm-circle");
+  displayRhythmCircle(new Array(16).fill(0), "full-rhythm-circle");
+  displayRhythmCircle(new Array(16).fill(0), "harmonic-rhythm-circle");
+
   updatePianoRollTransport(64);
   setupGridMatrix();
   document.getElementById("docs").addEventListener("click", toggleDocumentation);

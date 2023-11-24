@@ -5,6 +5,7 @@ import { note } from "tblswvs";
 import { AbletonNote } from "./note";
 import { AbletonTrack, TrackConfig } from "./track";
 import { Sequencer } from "../sequencer";
+import { gcd, lcm } from "../../helpers/utils";
 
 
 export class AbletonLive {
@@ -58,6 +59,43 @@ export class AbletonLive {
 
   getActiveTrack(): AbletonTrack {
     return this.tracks[this.activeTrack];
+  }
+
+
+  rhythmSectionRhythm() {
+    return this.combinedRhythm([0, 1, 2, 3]);
+  }
+
+
+  harmonicSectionRhythm() {
+    return this.combinedRhythm([4, 5, 6]);
+  }
+
+
+  combinedRhythm(trackIndices: number[]) {
+    const trackStepCounts = trackIndices.map(trackIndex => this.tracks[trackIndex].rhythmStepLength);
+    let combinedTracksStepCount = trackStepCounts[0];
+    trackStepCounts.slice(1).forEach(num => combinedTracksStepCount = lcm(combinedTracksStepCount, num));
+
+    const superMeasureSteps    = this.sequencer.superMeasure * 16;
+    const combinedRhythmLength = gcd(combinedTracksStepCount, superMeasureSteps) == combinedTracksStepCount ?
+                                 combinedTracksStepCount :
+                                 lcm(combinedTracksStepCount, superMeasureSteps) == superMeasureSteps ? combinedTracksStepCount : superMeasureSteps;
+
+    let rhythm = new Array(combinedRhythmLength).fill(0);
+
+    // For each rhythm track...
+    for (let i = 0; i < trackIndices.length; i++) {
+      // For each step in the combined rhythm
+      for (let step = 0; step < combinedRhythmLength; step++) {
+        // If the current track step is on, turn on the combined rhythm step (may already be on, that's OK)
+        if (this.tracks[trackIndices[i]].rhythm[step % this.tracks[trackIndices[i]].rhythmStepLength].state == 1) {
+          rhythm[step] = 1;
+        }
+      }
+    }
+
+    return rhythm;
   }
 
 

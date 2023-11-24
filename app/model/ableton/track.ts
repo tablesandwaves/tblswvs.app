@@ -583,7 +583,9 @@ export class AbletonTrack {
       this.#rhythm,
       this.#rhythmStepLength,
       this.#rhythmAlgorithm,
-      relatedTrackName
+      relatedTrackName,
+      this.daw.rhythmSectionRhythm(),
+      this.daw.harmonicSectionRhythm()
     );
   }
 

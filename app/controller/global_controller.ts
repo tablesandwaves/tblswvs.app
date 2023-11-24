@@ -34,7 +34,7 @@ export class GlobalController extends ApplicationController {
 
   updateSuperMeasure(gridPage: GlobalController, press: GridKeyPress) {
     gridPage.grid.sequencer.superMeasure = press.x + 1;
-    gridPage.grid.sequencer.setSuperMeasure();
+    gridPage.grid.sequencer.updateSuperMeasure();
 
     gridPage.#setGridSuperMeasureDisplay();
     gridPage.#setGuiSuperMeasureDisplay();

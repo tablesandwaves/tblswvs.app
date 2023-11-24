@@ -10,6 +10,9 @@
 <body>
 
 <div class="nav">
+  <div id="app-name" class="wrapper">
+    <h1>tblswvs</h1>
+  </div>
   <ul>
     <li class="selected">Kick</li>
     <li>Snare</li>
@@ -25,8 +28,8 @@
 <div id="main">
   <div id="app">
     <div id="top-row" class="wrapper">
-      <div id="app-name" class="wrapper">
-        <h1>tblswvs</h1>
+      <div id="track-rhythm-circle" class="wrapper">
+        <canvas width="120" height="120"></canvas>
       </div>
       <div id="step-sequencer" class="wrapper">
         <div id="rhythm-params" class="wrapper">
@@ -73,8 +76,11 @@
           <div class="active wrapper step-15"><span></span></div>
         </div>
       </div>
-      <div id="rhythm-circle" class="wrapper">
-        <canvas id="rtm-circ" width="120" height="120"></canvas>
+      <div id="full-rhythm-circle" class="wrapper">
+        <canvas width="120" height="120"></canvas>
+      </div>
+      <div id="harmonic-rhythm-circle" class="wrapper">
+        <canvas width="120" height="120"></canvas>
       </div>
     </div>
     <div id="track-notes" class="wrapper">
