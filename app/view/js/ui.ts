@@ -548,14 +548,13 @@ const updatePianoRollTransport = (numSteps: number) => {
 
 const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
   const rhythmCircleWrapper = document.getElementById("rhythm-circle");
-  const currentCanvas = document.getElementById("rtm-circ");
+  const currentCanvas = rhythmCircleWrapper.querySelector("canvas");
   if (currentCanvas != undefined) rhythmCircleWrapper.removeChild(currentCanvas);
 
   const canvasWidth  = 120;
   const canvasHeight = 120;
 
   const newCanvas = document.createElement("canvas");
-  newCanvas.setAttribute("id", "rtm-circ");
   newCanvas.setAttribute("width", "" + canvasWidth);
   newCanvas.setAttribute("height", "" + canvasHeight);
   rhythmCircleWrapper.appendChild(newCanvas);
@@ -573,12 +572,11 @@ const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
   context.arc(centerX, centerY, radius, startAngle, endAngle);
   context.stroke();
 
-  const angle = 360 / numSteps;
-  const distance = 1;
+  const singleStepAngle = 360 / numSteps;
 
   for (let i = 0; i < numSteps; i++) {
-    const x = centerX + radius * Math.cos(((angle * i) - 90) * Math.PI/180) * distance;
-    const y = centerY + radius * Math.sin(((angle * i) - 90) * Math.PI/180) * distance;
+    const x = centerX + radius * Math.cos(((singleStepAngle * i) - 90) * Math.PI/180);
+    const y = centerY + radius * Math.sin(((singleStepAngle * i) - 90) * Math.PI/180);
 
     context.beginPath();
     context.fillStyle = onGates.includes(i) ? "#117733" : "#555";
@@ -589,14 +587,13 @@ const displayRhythmCircle = (numSteps: number, onGates: number[] = []) => {
   context.strokeStyle = "#117733";
 
   if (onGates.length > 0) {
-    const firstGateX = centerX + radius * Math.cos(((angle * onGates[0]) - 90) * Math.PI/180) * distance;
-    const firstGateY = centerY + radius * Math.sin(((angle * onGates[0]) - 90) * Math.PI/180) * distance;
+    const firstGateX = centerX + radius * Math.cos(((singleStepAngle * onGates[0]) - 90) * Math.PI/180);
+    const firstGateY = centerY + radius * Math.sin(((singleStepAngle * onGates[0]) - 90) * Math.PI/180);
     context.moveTo(firstGateX, firstGateY);
 
     for (let i = 1; i <= onGates.length; i++) {
-      // context.beginPath();
-      const destGateX = centerX + radius * Math.cos(((angle * onGates[i % onGates.length]) - 90) * Math.PI/180) * distance;
-      const destGateY = centerY + radius * Math.sin(((angle * onGates[i % onGates.length]) - 90) * Math.PI/180) * distance;
+      const destGateX = centerX + radius * Math.cos(((singleStepAngle * onGates[i % onGates.length]) - 90) * Math.PI/180);
+      const destGateY = centerY + radius * Math.sin(((singleStepAngle * onGates[i % onGates.length]) - 90) * Math.PI/180);
       context.lineTo(destGateX, destGateY);
     }
     context.stroke();
