@@ -76,5 +76,18 @@ describe("AbletonLive", () => {
         1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
+
+    it("takes into account a track's pulse rate", () => {
+      const sequencer = new Sequencer(testing);
+      sequencer.superMeasure = 2;
+      const daw = new AbletonLive(sequencer);
+      daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 1]);
+      daw.tracks[0].pulseRate = "8n";
+
+      expect(daw.rhythmSectionRhythm()).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 1, 0
+      ]);
+    });
   });
 });

@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "js-yaml";
 import { note } from "tblswvs";
-import { AbletonNote } from "./note";
+import { AbletonNote, pulseRateMap } from "./note";
 import { AbletonTrack, TrackConfig } from "./track";
 import { Sequencer } from "../sequencer";
 import { gcd, lcm } from "../../helpers/utils";
@@ -73,7 +73,7 @@ export class AbletonLive {
 
 
   combinedRhythm(trackIndices: number[]) {
-    const trackStepCounts = trackIndices.map(trackIndex => this.tracks[trackIndex].rhythmStepLength);
+    const trackStepCounts = trackIndices.map(trackIndex => this.tracks[trackIndex].rhythmStepLength * pulseRateMap[this.tracks[trackIndex].pulseRate].size);
     let combinedTracksStepCount = trackStepCounts[0];
     trackStepCounts.slice(1).forEach(num => combinedTracksStepCount = lcm(combinedTracksStepCount, num));
 
@@ -86,10 +86,13 @@ export class AbletonLive {
 
     // For each rhythm track...
     for (let i = 0; i < trackIndices.length; i++) {
-      // For each step in the combined rhythm
-      for (let step = 0; step < combinedRhythmLength; step++) {
+      const track     = this.tracks[trackIndices[i]];
+      const pulseSize = pulseRateMap[track.pulseRate].size;
+
+      // For each step in the combined rhythm, stepping at the current track's pulse rate
+      for (let step = 0; step < combinedRhythmLength; step += pulseSize) {
         // If the current track step is on, turn on the combined rhythm step (may already be on, that's OK)
-        if (this.tracks[trackIndices[i]].rhythm[step % this.tracks[trackIndices[i]].rhythmStepLength].state == 1) {
+        if (track.rhythm[(step / pulseSize) % track.rhythmStepLength].state == 1) {
           rhythm[step] = 1;
         }
       }
