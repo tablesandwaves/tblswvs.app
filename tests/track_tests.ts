@@ -17,6 +17,29 @@ describe("AbletonTrack", () => {
   });
 
   describe("rhythm algorithms", () => {
+    describe("setting the rhythm algorithm to acceleration", () => {
+      const sequencer = new Sequencer(testing);
+      const daw       = new AbletonLive(sequencer);
+      const track     = daw.getActiveTrack();
+
+      track.rhythm           = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      track.rhythmAlgorithm  = "accelerating";
+      track.updateCurrentAbletonNotes();
+      let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
+        if (a.clipPosition > b.clipPosition) return 1;
+        if (a.clipPosition < b.clipPosition) return -1;
+        return 0;
+      });
+
+      it("has an accelerating beat positions", () => {
+        const actual = abletonNotes.slice(0, 10).map(note => note.clipPosition)
+        expect(actual).to.have.ordered.members([
+          0, 0.614, 1.167, 1.664, 2.112, 2.515, 2.878, 3.204, 3.498, 3.762
+        ]);
+      })
+    });
+
+
     describe("setting the rhythm algorithm to surround then setting the related track", () => {
       const daw   = new AbletonLive(sequencer);
       const perc  = daw.tracks[3];

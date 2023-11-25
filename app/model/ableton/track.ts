@@ -5,7 +5,7 @@ import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note"
 import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 import { RampSequence } from "./ramp_sequence";
-import { surroundRhythm } from "../../helpers/rhythm_algorithms";
+import { surroundRhythm, acceleratingBeatPositions } from "../../helpers/rhythm_algorithms";
 
 
 export type TrackConfig = {
@@ -338,8 +338,15 @@ export class AbletonTrack {
           noteMap.set(nextNote.midi, []);
         }
 
-        // Add the current note with or without fills
-        if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
+        if (this.rhythmAlgorithm == "accelerating") {
+
+          const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 }
+          acceleratingBeatPositions(4).forEach(clipPosition => {
+            noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, acceleratingRhythmStep, clipPosition + (step * 0.25), defaultDuration));
+          });
+
+        } else if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
+          // Add the current note with fills
           const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
           for (let j = 0; j <= rhythmStep.fillRepeats; j++) {
             noteMap.get(nextNote.midi).push(
@@ -349,6 +356,7 @@ export class AbletonTrack {
             );
           }
         } else {
+          // Add the current note
           noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25, defaultDuration));
         }
       });
