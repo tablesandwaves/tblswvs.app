@@ -38,6 +38,7 @@ export class GlobalController extends ApplicationController {
 
     gridPage.#setGridSuperMeasureDisplay();
     gridPage.#setGuiSuperMeasureDisplay();
+    gridPage.updateGuiRhythmDisplay();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
   }
