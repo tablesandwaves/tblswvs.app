@@ -8,6 +8,58 @@ const testing = true;
 
 
 describe("RhythmController", () => {
+  describe("setting a basic rhythm", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the rhythm page
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+    expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+
+    it("sets the rhythm on the last key up", () => {
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+
+
+    describe("adding notes to an existing rhythm", () => {
+      const sequencer = new Sequencer(testing);
+
+      // Select the rhythm page
+      sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+      const track = sequencer.daw.getActiveTrack();
+
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      it("does not delete the existing notes", () => {
+        sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+        sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
+  });
+
+
   describe("setting the rhythm algorithm", () => {
     const sequencer = new Sequencer(testing);
 
@@ -161,8 +213,9 @@ describe("RhythmController", () => {
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
 
-      // Then add a gate
+      // Then add a gate, with the change queuing on the press and applying on the release
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
       it("updates the track's rhythm", () => {
         const pattern = patternForRhythmSteps(track.rhythm);

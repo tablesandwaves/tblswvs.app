@@ -5,7 +5,10 @@ import { RhythmStep, rhythmAlgorithms } from "../model/ableton/track";
 
 
 export class RhythmController extends ApplicationController {
-  type = "Rhythm";
+  type                        = "Rhythm";
+  keyReleaseFunctionality     = true;
+  keyPressCount               = 0;
+  activeGates: GridKeyPress[] = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -25,79 +28,100 @@ export class RhythmController extends ApplicationController {
 
 
   updateStepLength(gridPage: RhythmController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.setGridRhythmDisplay();
-    gridPage.updateGuiRhythmDisplay();
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.setGridRhythmDisplay();
+      gridPage.updateGuiRhythmDisplay();
+    }
   }
 
 
   updateRhythm(gridPage: RhythmController, press: GridKeyPress) {
-    const track = gridPage.grid.sequencer.daw.getActiveTrack();
-    if (track.rhythmAlgorithm != "manual") return;
+    // As they are pressed, add gates to the active gates array for storing until the last key press is released.
+    if (press.s == 1) {
+      gridPage.keyPressCount++;
+      gridPage.activeGates.push(press);
+    } else {
+      gridPage.keyPressCount--;
 
-    const stepState     = 1 - track.rhythm[press.x].state;
-    const updatedRhythm = track.rhythm.map(step => {return {...step}});
+      if (gridPage.keyPressCount == 0) {
+        const track = gridPage.grid.sequencer.daw.getActiveTrack();
+        if (track.rhythmAlgorithm != "manual") return;
 
-    updatedRhythm[press.x].state       = stepState;
-    updatedRhythm[press.x].probability = gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability;
+        const updatedRhythm = track.rhythm.map(step => {return {...step}});
+        gridPage.activeGates.forEach(queuedKeyPress => {
+          const stepState                             = 1 - track.rhythm[queuedKeyPress.x].state;
+          updatedRhythm[queuedKeyPress.x].state       = stepState;
+          updatedRhythm[queuedKeyPress.x].probability = track.defaultProbability;
+          if (stepState == 0) updatedRhythm[press.x].fillRepeats = 0;
+        });
+        track.rhythm = updatedRhythm;
+        gridPage.activeGates = new Array();
 
-    if (stepState == 0) updatedRhythm[press.x].fillRepeats = 0;
-    track.rhythm = updatedRhythm;
+        gridPage.grid.sequencer.daw.updateActiveTrackNotes();
 
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+        gridPage.setGridRhythmDisplay();
+        gridPage.updateGuiRhythmDisplay();
 
-    gridPage.setGridRhythmDisplay();
-    gridPage.updateGuiRhythmDisplay();
-
-    if (gridPage.#rhythmIsBlank()) {
-      track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
-      track.fillDuration = "8nd";
+        if (gridPage.#rhythmIsBlank()) {
+          track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
+          track.fillDuration = "8nd";
+        }
+      }
     }
   }
 
 
   updateRhythmAlgorithm(gridPage: RhythmController, press: GridKeyPress) {
-    const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm = algorithm;
+    if (press.s == 1) {
+      const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
+      gridPage.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm = algorithm;
 
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.setGridRhythmDisplay();
-    gridPage.updateGuiRhythmDisplay();
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.setGridRhythmDisplay();
+      gridPage.updateGuiRhythmDisplay();
+    }
   }
 
 
   updateRelatedRhythmTrack(gridPage: RhythmController, press: GridKeyPress) {
-    const track = gridPage.grid.sequencer.daw.getActiveTrack();
-    const pressedRelatedTrack = gridPage.grid.sequencer.daw.tracks[press.x];
+    if (press.s == 1) {
+      const track = gridPage.grid.sequencer.daw.getActiveTrack();
+      const pressedRelatedTrack = gridPage.grid.sequencer.daw.tracks[press.x];
 
-    if (pressedRelatedTrack.relatedRhythmTrackDawIndex ==  track.dawIndex || pressedRelatedTrack.dawIndex == track.dawIndex) {
-      track.relatedRhythmTrackDawIndex = undefined;
-    } else {
-      track.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;
+      if (pressedRelatedTrack.relatedRhythmTrackDawIndex ==  track.dawIndex || pressedRelatedTrack.dawIndex == track.dawIndex) {
+        track.relatedRhythmTrackDawIndex = undefined;
+      } else {
+        track.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;
+      }
+
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.setGridRhythmDisplay();
+      gridPage.updateGuiRhythmDisplay();
     }
-
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.setGridRhythmDisplay();
-    gridPage.updateGuiRhythmDisplay();
   }
 
 
   updateNoteLength(gridPage: RhythmController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-    gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
+      gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
 
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    }
   }
 
 
   updatePulse(gridPage: RhythmController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
-    gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
+      gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
 
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    }
   }
 
 
