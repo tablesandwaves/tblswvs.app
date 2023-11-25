@@ -602,6 +602,7 @@ const displayRhythmCircle = (rhythm: (0|1)[] = [], circleId: string) => {
   }, new Array());
 
   if (onGates.length > 0) {
+    // Generate the rhythmic circle's rim
     const firstGateX = centerX + radius * Math.cos(((singleStepAngle * onGates[0]) - 90) * Math.PI/180);
     const firstGateY = centerY + radius * Math.sin(((singleStepAngle * onGates[0]) - 90) * Math.PI/180);
     context.moveTo(firstGateX, firstGateY);
@@ -611,11 +612,21 @@ const displayRhythmCircle = (rhythm: (0|1)[] = [], circleId: string) => {
       const destGateY = centerY + radius * Math.sin(((singleStepAngle * onGates[i % onGates.length]) - 90) * Math.PI/180);
       context.lineTo(destGateX, destGateY);
     }
+
+    // Generate the rhythmic circle's spokes
+    for (let i = 0; i < onGates.length; i++) {
+      context.moveTo(centerX, centerY);
+      const destGateX = centerX + radius * Math.cos(((singleStepAngle * onGates[i]) - 90) * Math.PI/180);
+      const destGateY = centerY + radius * Math.sin(((singleStepAngle * onGates[i]) - 90) * Math.PI/180);
+      context.lineTo(destGateX, destGateY);
+    }
+
     context.stroke();
   }
 
   context.font = font;
   context.textAlign = "center";
+  context.fillStyle = "#777";
   context.fillText(rhythm.length + "", centerX, centerY + 16);
 }
 
