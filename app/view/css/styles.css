@@ -99,6 +99,11 @@ div#top-row div#harmonic-rhythm-circle {
 }
 
 
+div#top-row div#track-rhythm-circle {
+  margin-left: 56px;
+}
+
+
 div#top-row div#track-rhythm-circle canvas,
 div#top-row div#full-rhythm-circle canvas,
 div#top-row div#harmonic-rhythm-circle canvas {

@@ -543,6 +543,19 @@ const updatePianoRollTransport = (numSteps: number) => {
 
 
 const displayRhythmCircle = (rhythm: (0|1)[] = [], circleId: string) => {
+  let highlightColor = "#555";
+  switch(circleId) {
+    case "track-rhythm-circle":
+      highlightColor = "#173";
+      break;
+    case "full-rhythm-circle":
+      highlightColor = "#48c";
+      break;
+    case "harmonic-rhythm-circle":
+      highlightColor = "#c7e";
+      break;
+  }
+
   const rhythmCircleWrapper = document.getElementById(circleId);
   const currentCanvas = rhythmCircleWrapper.querySelector("canvas");
   if (currentCanvas != undefined) rhythmCircleWrapper.removeChild(currentCanvas);
@@ -576,12 +589,12 @@ const displayRhythmCircle = (rhythm: (0|1)[] = [], circleId: string) => {
     const y = centerY + radius * Math.sin(((singleStepAngle * i) - 90) * Math.PI/180);
 
     context.beginPath();
-    context.fillStyle = rhythm[i] == 1 ? "#117733" : "#555";
+    context.fillStyle = rhythm[i] == 1 ? highlightColor : "#555";
     context.arc(x, y, gatePointSize, 0, 2 * Math.PI);
     context.fill();
   }
 
-  context.strokeStyle = "#117733";
+  context.strokeStyle = highlightColor;
 
   const onGates = rhythm.reduce((onGates, step, i) => {
     if (step == 1) onGates.push(i);
