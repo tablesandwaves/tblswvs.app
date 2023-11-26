@@ -55,6 +55,7 @@ export class AbletonTrack {
   #rhythmStepLength: number = 16;
   #rhythmAlgorithm: string = "manual";
   #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
+  acceleratingGateCount = 10;
 
   algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
@@ -319,6 +320,8 @@ export class AbletonTrack {
 
     let nextNotes: note[];
 
+    const rhythmIndicesAndOffsets = this.#rhythmIndicesAndOffsets();
+
     for (let step = 0, noteIndex = 0, measure = -1; step < CLIP_16N_COUNT; step += pulseRateMap[this.pulseRate].size) {
       if (step % this.rhythmStepLength == 0) measure++;
 
@@ -335,15 +338,16 @@ export class AbletonTrack {
         // Process shifts
         nextNote = this.#shiftNote(noteIndex, nextNote);
 
-        if (!noteMap.has(nextNote.midi)) {
-          noteMap.set(nextNote.midi, []);
-        }
+        if (!noteMap.has(nextNote.midi)) noteMap.set(nextNote.midi, []);
 
         if (this.rhythmAlgorithm == "accelerating") {
 
-          const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 }
-          acceleratingBeatPositions(4).forEach(clipPosition => {
-            noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, acceleratingRhythmStep, clipPosition + (step * 0.25), defaultDuration));
+          const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 };
+          const spreadAmount = rhythmIndicesAndOffsets[step % stepLength] * 0.25;
+          const offset = (step % stepLength) * 0.25;
+          acceleratingBeatPositions(this.acceleratingGateCount, spreadAmount, offset).forEach(gatePosition => {
+            const clipPosition = gatePosition + (step * 0.25);
+            noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, acceleratingRhythmStep, clipPosition, defaultDuration));
           });
 
         } else if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
@@ -376,6 +380,20 @@ export class AbletonTrack {
     }
 
     this.currentAbletonNotes = [...noteMap.values()].flat();
+  }
+
+
+  #rhythmIndicesAndOffsets() {
+    return this.rhythm.reduce((beatDivisions, step, i) => {
+      if (step.state == 1) beatDivisions.push(i);
+      return beatDivisions;
+    }, new Array()).map((index, i, arr) => {
+      const nextStep = i + 1 == arr.length ? this.rhythm.length : arr[i + 1];
+      return [index, nextStep - index];
+    }).reduce((beatIndexLengthMap: Record<number,number>, [index, length]) => {
+      beatIndexLengthMap[index] = length;
+      return beatIndexLengthMap;
+    }, {});
   }
 
 

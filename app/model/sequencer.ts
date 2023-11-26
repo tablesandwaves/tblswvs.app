@@ -106,10 +106,21 @@ export class Sequencer {
                       track.currentClip;
     track.updateCurrentAbletonNotes();
     try {
-      this.emitter.emit(
-        `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
-        ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
-      );
+      for (let barIndex = 0; barIndex < 8; barIndex++) {
+        setTimeout(() => {
+          this.emitter.emit(
+            `/tracks/${track.dawIndex}/clips/${clipIndex}/bars/${barIndex}/notes`,
+            ...track.currentAbletonNotes.filter(note => {
+              return note.clipPosition >= barIndex * 4 && note.clipPosition < (barIndex * 4) + 4;
+            }).flatMap(note => note.toOscAddedNote())
+          );
+        }, 25 * barIndex);
+      }
+
+      // this.emitter.emit(
+      //   `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
+      //   ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
+      // );
     } catch (e) {
       console.error(e.name, e.message, "while sending notes to Live:");
       console.error("input notes:", track.currentAbletonNotes);

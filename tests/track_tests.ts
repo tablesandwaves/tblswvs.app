@@ -22,19 +22,37 @@ describe("AbletonTrack", () => {
       const daw       = new AbletonLive(sequencer);
       const track     = daw.getActiveTrack();
 
-      track.rhythm           = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-      track.rhythmAlgorithm  = "accelerating";
-      track.updateCurrentAbletonNotes();
-      let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
-        if (a.clipPosition > b.clipPosition) return 1;
-        if (a.clipPosition < b.clipPosition) return -1;
-        return 0;
-      });
+      it("generates accelerating beat positions", () => {
+        track.rhythm           = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+        track.rhythmAlgorithm  = "accelerating";
+        track.updateCurrentAbletonNotes();
+        let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
+          if (a.clipPosition > b.clipPosition) return 1;
+          if (a.clipPosition < b.clipPosition) return -1;
+          return 0;
+        });
 
-      it("has an accelerating beat positions", () => {
-        const actual = abletonNotes.slice(0, 10).map(note => note.clipPosition)
+        const actual = abletonNotes.slice(0, 10).map(note => (Math.round((note.clipPosition + Number.EPSILON) * 1000) / 1000));
         expect(actual).to.have.ordered.members([
           0, 0.614, 1.167, 1.664, 2.112, 2.515, 2.878, 3.204, 3.498, 3.762
+        ]);
+      });
+
+      it("generates accelerating beat positions that matches the gate pattern", () => {
+        track.rhythm           = rhythmStepsForPattern([1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0]);
+        track.rhythmAlgorithm  = "accelerating";
+        track.updateCurrentAbletonNotes();
+        let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
+          if (a.clipPosition > b.clipPosition) return 1;
+          if (a.clipPosition < b.clipPosition) return -1;
+          return 0;
+        });
+
+        const actual = abletonNotes.slice(0, 30).map(note => (Math.round((note.clipPosition + Number.EPSILON) * 1000) / 1000));
+        expect(actual).to.have.ordered.members([
+          0, 0.154, 0.292, 0.416, 0.528, 0.629, 0.72, 0.802, 0.875, 0.941,
+          1, 1.307, 1.583, 1.832, 2.056, 2.257, 2.438, 2.601, 2.748, 2.88,
+          3, 3.154, 3.292, 3.416, 3.528, 3.629, 3.72, 3.802, 3.875, 3.941
         ]);
       })
     });
