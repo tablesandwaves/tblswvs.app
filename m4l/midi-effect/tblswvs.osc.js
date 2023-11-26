@@ -2,7 +2,7 @@ outlets = 3;
 
 
 var selectTrackPattern  = /\/tracks\/(\d+)/;
-var notesPattern        = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
+var notesByBarPattern   = /\/tracks\/(\d+)\/clips\/(\d+)\/bars\/(\d+)\/notes/;
 var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
 var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
 var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
@@ -14,17 +14,18 @@ var activeTrackClips = [-1, 0, 0, 0, 0, 0, 0, 0];
 
 function osc_message() {
   var a = arrayfromargs(arguments);
-  // post("Received: " + a[0] + "\n");
+  // outlet(1, "OSC Message 1: " + a[0]);
 
   var selectTrackMatch = a[0].match(selectTrackPattern);
   if (selectTrackMatch) {
     selectTrack(selectTrackMatch[1]);
   }
 
-  var notesMatch = a[0].match(notesPattern);
-  if (notesMatch) {
-    var response = syncClipNotes(notesMatch[1], notesMatch[2], a.slice(1));
-    outlet(0, notesMatch[0], response);
+  var notesByBarMatch = a[0].match(notesByBarPattern);
+  if (notesByBarMatch) {
+    outlet(1, "notesByBarMatch", notesByBarMatch[1]);
+    var response = syncClipBarNotes(notesByBarMatch[1], notesByBarMatch[2], notesByBarMatch[3], a.slice(1));
+    outlet(1, notesByBarMatch[0], response);
   }
 
   var fireMatch = a[0].match(clipFirePattern);
@@ -91,8 +92,8 @@ function stopTrackClips(trackIndex) {
  * @param {Array} newNotes the set of notes that should represent the clip's state
  * @returns "Success" or "Failed" if the note count after this function runs matches the note count of newNotes
  */
-function syncClipNotes(trackIndex, clipIndex, newNotes) {
-  var currentNotes = getClipNotes(trackIndex, clipIndex);
+function syncClipBarNotes(trackIndex, clipIndex, barIndex, newNotes) {
+  var currentNotes = getClipBarNotes(trackIndex, clipIndex, barIndex);
 
   var removedNoteIds = new Array();
   var addedNotes     = new Array();
@@ -103,7 +104,8 @@ function syncClipNotes(trackIndex, clipIndex, newNotes) {
   for (var i = 0; i < newNotes.length; i += 5)
     newNoteIdentifiers.push(
       newNotes[i] + "::" +
-      newNotes[i + 1] + "::" +
+      (Math.round((newNotes[i + 1] + Number.EPSILON) * 1000) / 1000) + "::" +
+      // newNotes[i + 1] + "::" +
       newNotes[i + 2] + "::" +
       newNotes[i + 3] + "::" +
       newNotes[i + 4]
@@ -112,7 +114,8 @@ function syncClipNotes(trackIndex, clipIndex, newNotes) {
   for (var i = 0; i < currentNotes.notes.length; i++)
     currentNoteIdentifiers.push(
       currentNotes.notes[i].pitch + "::" +
-      currentNotes.notes[i].start_time + "::" +
+      (Math.round((currentNotes.notes[i].start_time + Number.EPSILON) * 1000) / 1000) + "::" +
+      // currentNotes.notes[i].start_time + "::" +
       currentNotes.notes[i].duration + "::" +
       currentNotes.notes[i].velocity + "::" +
       currentNotes.notes[i].probability
@@ -148,8 +151,9 @@ function syncClipNotes(trackIndex, clipIndex, newNotes) {
   removeClipNotes(trackIndex, clipIndex, removedNoteIds);
   addClipNotes(trackIndex, clipIndex, addedNotes);
 
-  currentNotes = getClipNotes(trackIndex, clipIndex);
-  return (currentNotes.notes.length == newNotes.length / 5) ? "Success" : "Failed";
+  currentNotes = getClipBarNotes(trackIndex, clipIndex, barIndex);
+  var failureMessage = "New Notes: " + (newNotes.length / 5) + "; Notes After Update: " + currentNotes.notes.length;
+  return (currentNotes.notes.length == newNotes.length / 5) ? "Success" : failureMessage;
 }
 
 
@@ -179,9 +183,10 @@ function addClipNotes(trackIndex, clipIndex, oscNoteData) {
 }
 
 
-function getClipNotes(trackIndex, clipIndex) {
+function getClipBarNotes(trackIndex, clipIndex, barIndex) {
   var path = "live_set tracks " + trackIndex + " clip_slots " + clipIndex + " clip";
-  return JSON.parse(new LiveAPI(path).call("get_notes_extended", 0, 127, 0.0, 33.0));
+  var firstBeatInBar = parseFloat(barIndex) * 4;
+  return JSON.parse(new LiveAPI(path).call("get_notes_extended", 0, 127, firstBeatInBar, firstBeatInBar + 4));
 }
 
 
