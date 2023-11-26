@@ -17,7 +17,7 @@ export const surroundRhythm = (sourceRhythm: RhythmStep[]): RhythmStep[] => {
 }
 
 
-const ACCELERATING_BEAT_COUNT = 10;
+const ACCELERATING_BEAT_COUNT = 16;
 
 export const acceleratingRange = [...new Array(ACCELERATING_BEAT_COUNT)].map((_, i) => i).map(i => 0.9 ** i);
 

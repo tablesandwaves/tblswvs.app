@@ -35,6 +35,7 @@ const fillVelocities: Record<number,number[]> = {
 export const rhythmAlgorithms: Record<string, number> = {
   "manual":   0,
   "surround": 1,
+  "accelerating": 2,
   "undefined": -1
 }
 
