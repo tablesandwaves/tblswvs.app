@@ -12,6 +12,15 @@ rows:
     mapping: updateRhythm
     shiftMapping: updateStepLength
   -
+    name: Rhythm Parameter Row
+    description: Set parameter values for the current algorithm
+    type: mixed
+    index: 4
+    xStart: 0
+    xLength: 16
+    mapping: updateRhythmParameter
+    shiftMapping: updateAlternateRhythmParameter
+  -
     name: Rhythm Algorithms
     description: Set the current rhythm algorithm
     group: rhythm-algorithm

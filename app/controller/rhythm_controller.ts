@@ -19,6 +19,8 @@ export class RhythmController extends ApplicationController {
     this.functionMap.set("updatePulse", this.updatePulse);
     this.functionMap.set("updateRhythmAlgorithm", this.updateRhythmAlgorithm);
     this.functionMap.set("updateRelatedRhythmTrack", this.updateRelatedRhythmTrack);
+    this.functionMap.set("updateRhythmParameter", this.updateRhythmParameter);
+    this.functionMap.set("updateAlternateRhythmParameter", this.updateAlternateRhythmParameter);
   }
 
 
@@ -125,6 +127,27 @@ export class RhythmController extends ApplicationController {
   }
 
 
+  updateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {
+    if (press.s == 1) {
+      const track = gridPage.grid.sequencer.daw.getActiveTrack();
+
+      if (track.rhythmAlgorithm == "accelerating") {
+        track.acceleratingGateCount = press.x + 1;
+      }
+
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.grid.levelRow(0, 4, gridPage.getGridParameterRow().slice(0, 8));
+      gridPage.grid.levelRow(8, 4, gridPage.getGridParameterRow().slice(8, 16));
+    }
+  }
+
+
+  // Placeholder
+  updateAlternateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {
+
+  }
+
+
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     this.setGridRhythmDisplay(highlightIndex);
     this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
@@ -139,6 +162,8 @@ export class RhythmController extends ApplicationController {
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));
 
     // Parameter rows
+    this.grid.levelRow(0, 4, this.getGridParameterRow().slice(0, 8));
+    this.grid.levelRow(8, 4, this.getGridParameterRow().slice(8, 16));
     this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
     this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
@@ -186,5 +211,18 @@ export class RhythmController extends ApplicationController {
       if (trackIndex != -1) relatedTrackRow[trackIndex] = 10;
     }
     return relatedTrackRow;
+  }
+
+  getGridParameterRow() {
+    const track = this.grid.sequencer.daw.getActiveTrack();
+    const parameterRow = new Array(16).fill(0);
+
+    if (track.rhythmAlgorithm == "accelerating") {
+      for (let i = 0; i < track.acceleratingGateCount; i++) {
+        parameterRow[i] = 10;
+      }
+    }
+
+    return parameterRow;
   }
 }

@@ -80,6 +80,54 @@ describe("RhythmController", () => {
   });
 
 
+  describe("setting the accelerating algorithm", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the rhythm page,
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    // then add a step,
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    // then set the algorithm to accelerating,
+    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
+    // then set the accelerating gate count to 8.
+    sequencer.grid.keyPress({y: 4, x: 7, s: 1});
+
+    const controller = sequencer.grid.activePage as RhythmController;
+    const track = sequencer.daw.getActiveTrack();
+    track.updateCurrentAbletonNotes();
+
+    it("sets the active track's algorithm", () => expect(track.rhythmAlgorithm).to.eq("accelerating"));
+    it("has a default accelerating gate count", () => expect(track.acceleratingGateCount).to.eq(8));
+
+    it("leaves the track's rhythm pattern in place", () => {
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+
+    it("generates an array of Ableton notes equal to the accelerating gate count times the max super measure", () => {
+      expect(track.currentAbletonNotes.length).to.eq(64);
+    });
+
+    it("updates the grid algorithm row", () => {
+      expect(controller.getRhythmAlgorithmRow()).to.have.ordered.members([0, 0, 10, 0,  0, 0, 0, 0]);
+    });
+
+    it("has a grid rhythm row that corresponds to the rhythm steps", () => {
+      expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+        10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+
+    it("has a grid parameter row equal to the accelerating gate count", () => {
+      expect(controller.getGridParameterRow()).to.have.ordered.members([
+        10, 10, 10, 10,  10, 10, 10, 10,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+  });
+
+
   describe("setting the related rhythm track", () => {
     const sequencer = new Sequencer(testing);
 
