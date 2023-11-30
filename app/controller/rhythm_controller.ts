@@ -31,10 +31,7 @@ export class RhythmController extends ApplicationController {
 
   updateStepLength(gridPage: RhythmController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.setGridRhythmDisplay();
-      gridPage.updateGuiRhythmDisplay();
+      super.updateStepLength(gridPage, press);
     }
   }
 
@@ -66,7 +63,7 @@ export class RhythmController extends ApplicationController {
         gridPage.setGridRhythmDisplay();
         gridPage.updateGuiRhythmDisplay();
 
-        if (gridPage.#rhythmIsBlank()) {
+        if (gridPage.rhythmIsBlank()) {
           track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
           track.fillDuration = "8nd";
         }
@@ -156,10 +153,7 @@ export class RhythmController extends ApplicationController {
 
   setGridRhythmDisplay(highlightIndex?: number) {
     // Transport row
-    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
-    if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
-    this.grid.levelRow(0, 0, transportRow.slice(0, 8));
-    this.grid.levelRow(8, 0, transportRow.slice(8, 16));
+    super.setGridRhythmDisplay(highlightIndex);
 
     // Parameter rows
     this.grid.levelRow(0, 4, this.getGridParameterRow().slice(0, 8));
@@ -168,26 +162,6 @@ export class RhythmController extends ApplicationController {
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
     this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
-  }
-
-
-  #rhythmIsBlank() {
-    return this.grid.sequencer.daw.getActiveTrack().rhythm.reduce((total, step) => {
-      return total + step.state;
-    }, 0) == 0;
-  }
-
-
-  getRhythmStepLengthRow() {
-    const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
-    return [...new Array(stepLength).fill(5), ...new Array(16 - stepLength).fill(0)];
-  }
-
-
-  getRhythmGatesRow() {
-    return this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep) => {
-      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
-    });
   }
 
 

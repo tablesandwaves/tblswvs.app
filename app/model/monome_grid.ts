@@ -15,6 +15,7 @@ import { MelodyEvolutionController } from "../controller/melody_evolution_contro
 import { MelodyVectorController } from "../controller/melody_vector_controller";
 import { blank16x16Row } from "../helpers/utils";
 import { RampSequenceController } from "../controller/ramp_sequence_controller";
+import { DrumPadController } from "../controller/drum_pad_controller";
 
 
 export type DeviceConfig = {
@@ -32,7 +33,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 
 const pageTypeMap: Record<string, string[]> = {
-  "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
+  "Rhythm":       ["Rhythm", "Probabilities", "Fills", "DrumPad"],
   "Chords":       ["Chords"],
   "Melody":       ["Melody", "Mutation", "MelodyVector"],
   "RampSequence": ["RampSequence"],
@@ -188,6 +189,12 @@ export class MonomeGrid {
       case "Fills":
         // Do not reset page index to 0, this is page 3/index 2 of the Rhythm page group.
         this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 7;
+        break;
+      case "DrumPad":
+        // Do not reset page index to 0, this is page 4/index 3 of the Rhythm page group.
+        this.activePage = new DrumPadController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;

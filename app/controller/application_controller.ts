@@ -1,5 +1,6 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x8Row } from "../helpers/utils";
+import { RhythmStep } from "../model/ableton/track";
 
 
 export type GridKeyPress = {
@@ -130,6 +131,43 @@ export class ApplicationController {
       gridPage.grid.levelSet(press.x, press.y, (track.createNewClip ? 10 : 0));
       track.updateGuiCreateNewClip();
     }
+  }
+
+
+  setGridRhythmDisplay(highlightIndex?: number) {
+    // Transport row
+    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
+    if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
+    this.grid.levelRow(0, 0, transportRow.slice(0, 8));
+    this.grid.levelRow(8, 0, transportRow.slice(8, 16));
+  }
+
+
+  getRhythmStepLengthRow() {
+    const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
+    return [...new Array(stepLength).fill(5), ...new Array(16 - stepLength).fill(0)];
+  }
+
+
+  getRhythmGatesRow() {
+    return this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep) => {
+      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
+    });
+  }
+
+
+  updateStepLength(gridPage: ApplicationController, press: GridKeyPress) {
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.setGridRhythmDisplay();
+    gridPage.updateGuiRhythmDisplay();
+  }
+
+
+  rhythmIsBlank() {
+    return this.grid.sequencer.daw.getActiveTrack().rhythm.reduce((total, step) => {
+      return total + step.state;
+    }, 0) == 0;
   }
 
 
