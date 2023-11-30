@@ -2,6 +2,7 @@ import * as path from "path";
 
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
+const easymidi    = require("easymidi");
 
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
@@ -18,6 +19,7 @@ export class Sequencer {
 
   emitter: any;
   receiver: any;
+  midiOut: any;
   grid: MonomeGrid;
   daw: AbletonLive;
   ticks: number = 0;
@@ -51,6 +53,8 @@ export class Sequencer {
     this.grid = new MonomeGrid(this, testing);
     this.daw  = new AbletonLive(this);
     this.key  = new Key(60, Scale.Minor);
+
+    this.midiOut = new easymidi.Output("tblswvs.app", true);
   }
 
 

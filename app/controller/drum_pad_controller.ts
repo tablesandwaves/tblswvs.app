@@ -26,7 +26,21 @@ export class DrumPadController extends ApplicationController {
 
 
   triggerDrumPad(gridPage: DrumPadController, press: GridKeyPress) {
+    if (gridPage.notePlayingActive) {
+      gridPage.grid.sequencer.midiOut.send("noteon", {
+        note: gridPage.matrix[press.y][press.x].value,
+        velocity: 64,
+        channel: 4
+      });
 
+      setTimeout(() => {
+        gridPage.grid.sequencer.midiOut.send("noteoff", {
+          note: gridPage.matrix[press.y][press.x].value,
+          velocity: 64,
+          channel: 4
+        });
+      }, 100);
+    }
   }
 
 
