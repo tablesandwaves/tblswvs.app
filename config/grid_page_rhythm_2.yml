@@ -1,5 +1,5 @@
 name: Fills
-description: Fills are accessed on Rhythm page 2. Set per step fills for each rhythmic gate.
+description: Fills are accessed on Rhythm page 3. Set per step fills for each rhythmic gate.
 matrices:
   -
     name: Set Step Fill
