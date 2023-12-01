@@ -1,6 +1,5 @@
 import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { RhythmStep } from "../model/ableton/track";
 
 
 export class DrumPadController extends ApplicationController {
@@ -30,14 +29,14 @@ export class DrumPadController extends ApplicationController {
       gridPage.grid.sequencer.midiOut.send("noteon", {
         note: gridPage.matrix[press.y][press.x].value,
         velocity: 64,
-        channel: 4
+        channel: gridPage.grid.sequencer.daw.getActiveTrack().dawIndex
       });
 
       setTimeout(() => {
         gridPage.grid.sequencer.midiOut.send("noteoff", {
           note: gridPage.matrix[press.y][press.x].value,
           velocity: 64,
-          channel: 4
+          channel: gridPage.grid.sequencer.daw.getActiveTrack().dawIndex
         });
       }, 100);
     }
