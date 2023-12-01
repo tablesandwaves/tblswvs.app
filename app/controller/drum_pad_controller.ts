@@ -97,4 +97,10 @@ export class DrumPadController extends ApplicationController {
     this.grid.levelSet(0, 6, this.notePlayingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     this.grid.levelSet(1, 6, this.noteRecordingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
+
+
+  displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    this.setGridRhythmDisplay(highlightIndex);
+    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+  }
 }
