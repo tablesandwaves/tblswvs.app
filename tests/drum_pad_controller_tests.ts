@@ -11,26 +11,30 @@ describe("DrumPadController", () => {
   describe("Selecting the initial drum controller page", () => {
     const sequencer = new Sequencer(testing);
 
-    // Select the melody page, then paginate over to the right 3 sub-pages
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    const evolutionPage = sequencer.grid.activePage as DrumPadController;
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
 
-    it("sets the active page to a melody evolution page", () => expect(evolutionPage).to.be.instanceOf(DrumPadController));
+    // Select the rhythm page, then paginate over to the right 3 sub-pages
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    const activePage = sequencer.grid.activePage as DrumPadController;
+
+    it("sets the active page to a melody evolution page", () => expect(activePage).to.be.instanceOf(DrumPadController));
   });
 
 
   describe("activating a pad for a rhythm step", () => {
     const sequencer = new Sequencer(testing);
-    const track = sequencer.daw.getActiveTrack();
 
-    // Select the melody page, then paginate over to the right 3 sub-pages
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page, then paginate over to the right 3 sub-pages
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
     // Turn on note recording/editing
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
@@ -55,13 +59,14 @@ describe("DrumPadController", () => {
 
   describe("deactivating a rhythm step", () => {
     const sequencer = new Sequencer(testing);
-    const track = sequencer.daw.getActiveTrack();
 
-    // Select the melody page, then paginate over to the right 3 sub-pages
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page, then paginate over to the right 3 sub-pages
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
     // Turn on note recording/editing
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
@@ -96,13 +101,14 @@ describe("DrumPadController", () => {
 
   describe("deactivating a rhythm step when note editing is not on", () => {
     const sequencer = new Sequencer(testing);
-    const track = sequencer.daw.getActiveTrack();
 
-    // Select the melody page, then paginate over to the right 3 sub-pages
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page, then paginate over to the right 3 sub-pages
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
     // Toggle note recording/editing on
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
@@ -140,13 +146,14 @@ describe("DrumPadController", () => {
 
   describe("activating steps and then changing the step length", () => {
     const sequencer = new Sequencer(testing);
-    const track = sequencer.daw.getActiveTrack();
 
-    // Select the melody page, then paginate over to the right 3 sub-pages
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page, then paginate over to the right 3 sub-pages
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
     // Turn on note recording/editing
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});

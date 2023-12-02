@@ -33,7 +33,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 
 const pageTypeMap: Record<string, string[]> = {
-  "Rhythm":       ["Rhythm", "Probabilities", "Fills", "DrumPad"],
+  "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
   "Chords":       ["Chords"],
   "Melody":       ["Melody", "Mutation", "MelodyVector"],
   "RampSequence": ["RampSequence"],
@@ -163,6 +163,11 @@ export class MonomeGrid {
   #setActiveTrack(press: GridKeyPress) {
     this.sequencer.daw.activeTrack = press.x;
 
+    const activeChainType = this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type;
+    if ((this.activePage && this.activePage instanceof RhythmController  && activeChainType == "drum rack") ||
+        (this.activePage && this.activePage instanceof DrumPadController && activeChainType != "drum rack")) {
+      this.#setActiveGridPage(this.activePage.type);
+    }
     if (this.activePage) this.activePage.refresh();
 
     this.#selectGlobalGridKey(0, 6, press.x);
@@ -176,7 +181,10 @@ export class MonomeGrid {
     switch(pageType) {
       case "Rhythm":
         this.pageIndex = 0;
-        this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
+        if (this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type == "drum rack")
+          this.activePage = new DrumPadController(this.#loadConfig(`grid_page_rhythm_3.yml`) as GridConfig, this);
+        else
+          this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;
@@ -189,12 +197,6 @@ export class MonomeGrid {
       case "Fills":
         // Do not reset page index to 0, this is page 3/index 2 of the Rhythm page group.
         this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 7;
-        break;
-      case "DrumPad":
-        // Do not reset page index to 0, this is page 4/index 3 of the Rhythm page group.
-        this.activePage = new DrumPadController(this.#loadConfig(`grid_page_rhythm_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         break;

@@ -585,6 +585,8 @@ export class AbletonTrack {
 
 
   updateGui() {
+    if (this.daw.sequencer.gui == undefined) return;
+
     this.updateGuiTrackNav();
     this.updateGuiVectorDisplay();
     this.updateGuiTrackRhythm();
