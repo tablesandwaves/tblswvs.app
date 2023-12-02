@@ -41,7 +41,7 @@ rows:
     index: 0
     xStart: 0
     xLength: 16
-    mapping: updateRhythm
+    mapping: selectGate
     shiftMapping: updateStepLength
   -
     name: Toggle Note Playing

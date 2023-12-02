@@ -1,7 +1,7 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
 import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
-import { RhythmStep, rhythmAlgorithms } from "../model/ableton/track";
+import { rhythmAlgorithms } from "../model/ableton/track";
 
 
 export class RhythmController extends ApplicationController {

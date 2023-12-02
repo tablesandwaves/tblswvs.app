@@ -57,9 +57,11 @@ export class AbletonTrack {
   #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
   acceleratingGateCount = 10;
 
+  // noteType: ("melody"|"chords"|"drum rack") = "melody";
   algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
-  notesAreMelody = true;
+  // notesAreMelody = true;
+  polyphonicVoiceMode = false;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
   #inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
@@ -67,6 +69,9 @@ export class AbletonTrack {
   #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
   currentAbletonNotes: AbletonNote[] = new Array();
+
+  // When in drum rack mode, do not use an independent rhythm/melody phasing model
+  #drumRackSequence: note[] = new Array(16).fill(undefined);
 
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
@@ -137,7 +142,8 @@ export class AbletonTrack {
 
 
   set inputMelody(inputNotes: note[]) {
-    this.notesAreMelody = true;
+    this.polyphonicVoiceMode = false;
+    // this.noteType = "melody";
 
     this.#inputMelody = inputNotes;
     let notes: note[] = new Array();
@@ -169,8 +175,27 @@ export class AbletonTrack {
 
 
   setChordProgression(chordNotes: note[][]) {
-    this.notesAreMelody = false;
+    this.polyphonicVoiceMode = true;
+    // this.noteType = "chords";
     this.#outputNotes = chordNotes;
+  }
+
+
+  setDrumPadStep(rhythmStepIndex: number, inputNote: note|undefined) {
+    // this.noteType = "drum rack";
+    this.polyphonicVoiceMode = true;
+    this.#drumRackSequence[rhythmStepIndex] = inputNote;
+    const inputMelody = new Array();
+    this.#drumRackSequence.forEach((step, i) => {
+      if (step != undefined) {
+        inputMelody.push(step);
+        this.#rhythm[i].state = 1;
+      } else {
+        this.#rhythm[i].state = 0;
+      }
+    });
+
+    this.inputMelody = inputMelody;
   }
 
 
@@ -659,7 +684,7 @@ export class AbletonTrack {
 
 
   updateGuiTrackNotes() {
-    this.notesAreMelody ? this.setGuiMelody() : this.setGuiChordProgression();
+    this.polyphonicVoiceMode ? this.setGuiChordProgression() : this.setGuiMelody();
   }
 
 
