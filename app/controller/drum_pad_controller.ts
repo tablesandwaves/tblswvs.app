@@ -61,7 +61,6 @@ export class DrumPadController extends ApplicationController {
 
   selectGate(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
-      // gridPage.keyPressCount++;
       gridPage.heldGate = press.x;
       // Will stay true while note recording is active unless a drum pad is pressed before the gate is released
       if (gridPage.noteRecordingActive) gridPage.disableGate = true;
@@ -79,7 +78,9 @@ export class DrumPadController extends ApplicationController {
 
 
   updateStepLength(gridPage: DrumPadController, press: GridKeyPress) {
-    if (press.s == 1) super.updateStepLength(gridPage, press);
+    if (press.s == 1) {
+      super.updateStepLength(gridPage, press, true);
+    }
   }
 
 

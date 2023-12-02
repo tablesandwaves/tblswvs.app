@@ -135,7 +135,7 @@ export class MonomeGrid {
 
   setShiftState(press: GridKeyPress) {
     this.shiftKey = !this.shiftKey;
-    this.device.levelSet(press.x, press.y, (this.shiftKey ? 10 : 0));
+    if (!this.testing) this.device.levelSet(press.x, press.y, (this.shiftKey ? 10 : 0));
     this.activePage.toggleShiftState();
   }
 

@@ -156,8 +156,9 @@ export class ApplicationController {
   }
 
 
-  updateStepLength(gridPage: ApplicationController, press: GridKeyPress) {
+  updateStepLength(gridPage: ApplicationController, press: GridKeyPress, updateDrumPadMelody = false) {
     gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
+    if (updateDrumPadMelody) gridPage.grid.sequencer.daw.getActiveTrack().updateDrumPadInputMelody();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();

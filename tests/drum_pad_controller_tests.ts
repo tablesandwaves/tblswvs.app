@@ -136,4 +136,48 @@ describe("DrumPadController", () => {
       expect(track.inputMelody.length).to.eq(1);
     });
   });
+
+
+  describe("activating steps and then changing the step length", () => {
+    const sequencer = new Sequencer(testing);
+    const track = sequencer.daw.getActiveTrack();
+
+    // Select the melody page, then paginate over to the right 3 sub-pages
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+
+    // Turn on note recording/editing
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+
+    // Press and hold a gate, then select a drum pad
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 0, x: 12, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 12, s: 0});
+
+    expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+    ]);
+    expect(track.inputMelody.length).to.eq(2);
+
+    // Shorten the track rhythm step length
+    sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 11, s: 1});
+
+    it("updates the track rhythm step length", () => expect(track.rhythmStepLength).to.eq(12));
+
+    it("does not update the track rhythm", () => {
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+      ]);
+    });
+
+    it("updates the track input melody so it does not include notes/pads beyond the step length", () => {
+      expect(track.inputMelody.length).to.eq(1);
+    });
+  });
 });

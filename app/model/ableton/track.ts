@@ -185,8 +185,14 @@ export class AbletonTrack {
     // this.noteType = "drum rack";
     this.polyphonicVoiceMode = true;
     this.#drumRackSequence[rhythmStepIndex] = inputNote;
+    this.updateDrumPadInputMelody();
+  }
+
+
+  updateDrumPadInputMelody() {
     const inputMelody = new Array();
-    this.#drumRackSequence.forEach((step, i) => {
+
+    this.#drumRackSequence.slice(0, this.#rhythmStepLength).forEach((step, i) => {
       if (step != undefined) {
         inputMelody.push(step);
         this.#rhythm[i].state = 1;
