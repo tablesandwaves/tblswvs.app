@@ -10,6 +10,7 @@ export class DrumPadController extends ApplicationController {
   noteRecordingActive     = false;
   keyReleaseFunctionality = true;
   heldGate:    number = undefined;
+  disableGate: boolean = false;
   // heldDrumPad: number = undefined;
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -34,6 +35,7 @@ export class DrumPadController extends ApplicationController {
         track.setDrumPadStep(gridPage.heldGate, noteData[gridPage.matrix[press.y][press.x].value]);
 
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+        gridPage.disableGate = false;
         gridPage.setGridDrumPadDisplay();
         gridPage.updateGuiRhythmDisplay();
       }
@@ -61,8 +63,17 @@ export class DrumPadController extends ApplicationController {
     if (press.s == 1) {
       // gridPage.keyPressCount++;
       gridPage.heldGate = press.x;
+      // Will stay true while note recording is active unless a drum pad is pressed before the gate is released
+      if (gridPage.noteRecordingActive) gridPage.disableGate = true;
     } else {
       gridPage.heldGate = undefined;
+      if (gridPage.noteRecordingActive && gridPage.disableGate) {
+        gridPage.grid.sequencer.daw.getActiveTrack().setDrumPadStep(press.x, undefined);
+        gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+        gridPage.setGridDrumPadDisplay();
+        gridPage.updateGuiRhythmDisplay();
+      }
+      gridPage.disableGate = false;
     }
   }
 
