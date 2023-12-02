@@ -2,6 +2,7 @@ outlets = 3;
 
 
 var selectTrackPattern  = /\/tracks\/(\d+)/;
+var trackChainPattern   = /\/tracks\/(\d+)\/chains\/(\d+)/;
 var notesByBarPattern   = /\/tracks\/(\d+)\/clips\/(\d+)\/bars\/(\d+)\/notes/;
 var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
 var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
@@ -34,10 +35,23 @@ function osc_message() {
     activeTrackClips[fireMatch[1]] = fireMatch[2];
   }
 
+  var stopClipMatch = a[0].match(stopAllClipsPattern);
+  if (stopClipMatch) {
+    stopTrackClips(stopClipMatch[1]);
+    activeTrackClips[stopClipMatch[1]] = -1;
+    outlet(0, stopClipMatch[0], "Stopped");
+    outlet(1, stopClipMatch[0], "Stopped");
+  }
+
   var rampSeqMatch = a[0].match(rampSeqPattern);
   if (rampSeqMatch) {
     var rampSequenceData = [parseInt(rampSeqMatch[2])].concat(a.slice(1));
     messnamed("rampseq_" + rampSeqMatch[1], rampSequenceData);
+  }
+
+  var trackChainMatch = a[0].match(trackChainPattern);
+  if (trackChainMatch) {
+    updateTrackChain(trackChainMatch[1], trackChainMatch[2]);
   }
 
   var newClipMatch = a[0].match(newClipPattern);
@@ -55,13 +69,21 @@ function osc_message() {
     }
     outlet(2, parseInt(a[1]) * 16);
   }
+}
 
-  var stopClipMatch = a[0].match(stopAllClipsPattern);
-  if (stopClipMatch) {
-    stopTrackClips(stopClipMatch[1]);
-    activeTrackClips[stopClipMatch[1]] = -1;
-    outlet(0, stopClipMatch[0], "Stopped");
-    outlet(1, stopClipMatch[0], "Stopped");
+
+function updateTrackChain(trackIndex, chainIndex) {
+  var chainIds = new LiveAPI("live_set tracks " + trackIndex + " devices 0").get("chains");
+
+  for (var i = 0, chainIdx = 0; i < chainIds.length; i += 2, chainIdx++) {
+    var chain = new LiveAPI(chainIds[i] + " " + chainIds[i + 1]);
+    var rootChainDeviceParameterIds = new LiveAPI(chain.get("devices")).get("parameters");
+    for (var j = 0; j < rootChainDeviceParameterIds.length; j += 2) {
+      var param = new LiveAPI(rootChainDeviceParameterIds[j] + " " + rootChainDeviceParameterIds[j + 1]);
+      if (param.get("name") == "Device On") {
+        param.set("value", chainIndex == chainIdx ? 1 : 0);
+      }
+    }
   }
 }
 
