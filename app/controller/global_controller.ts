@@ -70,9 +70,11 @@ export class GlobalController extends ApplicationController {
 
   setTrackChain(gridPage: GlobalController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.y];
-    track.activeChain = press.x;
-    track.updateGuiChains();
-    gridPage.setGridChainRow(track.dawIndex - 1);
+    if (track.chains.length > press.x) {
+      track.activeChain = press.x;
+      if (press.y == gridPage.grid.sequencer.daw.activeTrack) track.updateGuiChains();
+      gridPage.setGridChainRow(track.dawIndex - 1);
+    }
   }
 
 
