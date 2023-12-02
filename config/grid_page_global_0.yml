@@ -1,12 +1,12 @@
 name: Global
-description: Manage global properties like the super measure length, scale and tonic.
+description: Manage global properties like track active chains, super measure length, scale and tonic.
 rows:
   -
     name: Super Measure Length
     description: Set the super measure length between 1 and 8 measures
     group: super-measure
     index: 0
-    xStart: 0
+    xStart: 8
     xLength: 8
     type: meter
     mapping: updateSuperMeasure
@@ -21,15 +21,67 @@ rows:
       - 8
 matrices:
   -
-    name: Scale/Tonic
-    description: Set the global scale or tonic; tonic is set when the shift key is on
+    name: Track Chains
+    description: Set the active chain for each track
+    group: track-chains
+    type: row-radio
+    rowStart: 0
+    rowEnd: 6
+    columnStart: 0
+    columnEnd: 7
+    mapping: setTrackChain
+  -
+    name: Tonic
+    description: Set the global tonic
     group: scale-tonic
     type: radio
-    rowStart: 0
-    rowEnd: 2
+    rowStart: 1
+    rowEnd: 3
+    columnStart: 8
+    columnEnd: 11
+    mapping: setTonic
+    rowValues:
+      -
+        - 0
+        - 1
+        - 2
+        - 3
+      -
+        - 4
+        - 5
+        - 6
+        - 7
+      -
+        - 8
+        - 9
+        - 10
+        - 11
+    rowDisplayValues:
+      -
+        - C
+        - C#
+        - D
+        - D#
+      -
+        - E
+        - F
+        - F#
+        - G
+      -
+        - G#
+        - A
+        - A#
+        - B
+  -
+    name: Scale
+    description: Set the global scale
+    group: scale
+    type: radio
+    rowStart: 1
+    rowEnd: 3
     columnStart: 12
     columnEnd: 15
-    mapping: setScaleOrTonic
+    mapping: setScale
     rowValues:
       -
         - Major
@@ -46,35 +98,3 @@ matrices:
         - WholeTone
         - GS
         - Chromatic
-    rowShiftValues:
-      -
-        - 0
-        - 1
-        - 2
-        - 3
-      -
-        - 4
-        - 5
-        - 6
-        - 7
-      -
-        - 8
-        - 9
-        - 10
-        - 11
-    rowShiftDisplayValues:
-      -
-        - C
-        - C#
-        - D
-        - D#
-      -
-        - E
-        - F
-        - F#
-        - G
-      -
-        - G#
-        - A
-        - A#
-        - B

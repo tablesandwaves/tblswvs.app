@@ -28,12 +28,14 @@ export class GlobalController extends ApplicationController {
     super(config, grid);
 
     this.functionMap.set("updateSuperMeasure", this.updateSuperMeasure);
-    this.functionMap.set("setScaleOrTonic", this.setScaleOrTonic);
+    this.functionMap.set("setTrackChain", this.setTrackChain);
+    this.functionMap.set("setScale", this.setScale);
+    this.functionMap.set("setTonic", this.setTonic);
   }
 
 
   updateSuperMeasure(gridPage: GlobalController, press: GridKeyPress) {
-    gridPage.grid.sequencer.superMeasure = press.x + 1;
+    gridPage.grid.sequencer.superMeasure = press.x + 1 - 8;
     gridPage.grid.sequencer.updateSuperMeasure();
 
     gridPage.#setGridSuperMeasureDisplay();
@@ -46,14 +48,15 @@ export class GlobalController extends ApplicationController {
 
   refresh(): void {
     this.#setGridSuperMeasureDisplay();
-    this.#setGridScaleOrTonicDisplay();
+    this.setGridScaleDisplay();
+    this.setGridTonicDisplay();
   }
 
 
   #setGridSuperMeasureDisplay() {
     const superMeasure    = this.grid.sequencer.superMeasure;
     const superMeasureRow = [...new Array(superMeasure).fill(10), ...new Array(8 - superMeasure).fill(0)];
-    this.grid.levelRow(0, 0, superMeasureRow);
+    this.grid.levelRow(8, 0, superMeasureRow);
   }
 
 
@@ -62,34 +65,47 @@ export class GlobalController extends ApplicationController {
   }
 
 
-  setScaleOrTonic(gridPage: GlobalController, press: GridKeyPress) {
-    let tonic: number, scale: Scale;
-    if (gridPage.grid.shiftKey) {
-      tonic = gridPage.matrix[press.y][press.x].shiftValue + 60;
-      scale = configuredScales[gridPage.grid.sequencer.key.scaleName].scale;
-    } else {
-      tonic = gridPage.grid.sequencer.key.midiTonic + 60;
-      scale = configuredScales[gridPage.matrix[press.y][press.x].value].scale;
-    }
+  setTrackChain(gridPage: GlobalController, press: GridKeyPress) {
+
+  }
+
+
+  setScale(gridPage: GlobalController, press: GridKeyPress) {
+    const tonic = gridPage.grid.sequencer.key.midiTonic + 60;
+    const scale = configuredScales[gridPage.matrix[press.y][press.x].value].scale;
     gridPage.grid.sequencer.key = new Key(tonic, scale);
-    gridPage.#setGridScaleOrTonicDisplay()
+    gridPage.setGridScaleDisplay();
     gridPage.grid.sequencer.gui.webContents.send("set-scale", `${notes[tonic % 12]} ${gridPage.grid.sequencer.key.scaleName}`);
   }
 
 
-  #setGridScaleOrTonicDisplay() {
-    let position: number;
-    if (this.grid.shiftKey) {
-      position = this.grid.sequencer.key.midiTonic % 12;
-    } else {
-      position = configuredScales[this.grid.sequencer.key.scaleName].index;
-    }
+  setTonic(gridPage: GlobalController, press: GridKeyPress) {
+    const tonic = gridPage.matrix[press.y][press.x].value + 60;
+    const scale = configuredScales[gridPage.grid.sequencer.key.scaleName].scale;
+    gridPage.grid.sequencer.key = new Key(tonic, scale);
+    gridPage.setGridTonicDisplay();
+    gridPage.grid.sequencer.gui.webContents.send("set-scale", `${notes[tonic % 12]} ${gridPage.grid.sequencer.key.scaleName}`);
+  }
 
-    const yPos = Math.floor(position / 4);
+
+  setGridTonicDisplay() {
+    const position = this.grid.sequencer.key.midiTonic % 12;
+    const yPos = Math.floor(position / 4) + 1;
     const xPos = position % 4;
 
-    for (let i = 0, y = 0; y < 3; y++)
+    for (let i = 1, y = 1; y < 4; y++)
       for (let x = 0; x < 4; x++, i++)
-        this.grid.levelSet(x + 12, y, (x == xPos && y == yPos ? 10 : 0));
+        this.grid.levelSet(x + 8, y, (x == xPos && y == yPos ? 10 : 1));
+  }
+
+
+  setGridScaleDisplay() {
+    const position = configuredScales[this.grid.sequencer.key.scaleName].index;
+    const yPos = Math.floor(position / 4) + 1;
+    const xPos = position % 4;
+
+    for (let i = 1, y = 1; y < 4; y++)
+      for (let x = 0; x < 4; x++, i++)
+        this.grid.levelSet(x + 12, y, (x == xPos && y == yPos ? 10 : 1));
   }
 }
