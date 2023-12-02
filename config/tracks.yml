@@ -5,66 +5,104 @@ live_tracks:
     chains:
       -
         name: Kick Flared Out
+        type: sampler
       -
         name: Kick Synth Melt
+        type: sampler
       -
         name: 8Op8
+        type: synth
   -
     name: Snare
     dawIndex: 2
     chains:
       -
         name: Snare DMX
+        type: sampler
       -
         name: Safari Slaps 3
+        type: sampler
       -
         name: Clap 808
+        type: sampler
   -
     name: HiHat
     dawIndex: 3
     chains:
       -
         name: Hihat 909 Closed
+        type: sampler
       -
         name: Hihat Open Tokyo 1 Distorted
+        type: sampler
   -
     name: Perc
     dawIndex: 4
     chains:
       -
         name: E-Perc BittyBot
+        type: sampler
       -
         name: Reverb Kick & Perc Choked Kit
+        type: drum rack
+        pads:
+          - Boom Reverb Kick
+          - E-Perc Vocoder
+          - Scatty Perc
+          - FX Perc LoFill Tribe Token
+          - E-Perc Low EDM
+          - Glitch Perc 120
+          - E-Perc Techno
+          - FX Perc LoFill Distort Snake
+          - E-Perc Sound Objects Ambient Knock
+          - E-Perc Scrape Shake
+          - Perc Blop Token
+          - Perc Broken Token 1
+          - E-Perc Record Pullback
+          - Perc Wood FX
+          - Perc Asia Calls
+          - Weird Percussion 100 BPM
   -
     name: Bass
     dawIndex: 5
     chains:
       -
         name: Simple Bass
+        type: synth
       -
         name: cnstrct.acid-bass
+        type: synth
       -
         name: cnstrct.reese-bass
+        type: synth
       -
         name: cnstrct.synth-bass
+        type: synth
       -
         name: FM Four Pluck
+        type: synth
   -
     name: Keys
     dawIndex: 6
     chains:
       -
         name: A/B Pad
+        type: synth
       -
         name: FM Depth/Reverb Mod
+        type: synth
       -
         name: OSC Juno
+        type: synth
       -
         name: Glacial Tolerance
+        type: synth
       -
         name: Sad Broken Drift
+        type: synth
       -
         name: Basic FM
+        type: synth
   -
     name: Hydra
     dawIndex: 7

@@ -64,13 +64,13 @@ window.parameters.updateMutations((event: any, mutations: string) => {
 });
 
 
-window.parameters.updateTrackChains((event: any, chains: any[]) => {
+window.parameters.updateTrackChains((event: any, chains: any[], activeChainIndex: number) => {
   const chainList = document.querySelector("#chains ol");
   chainList.querySelectorAll("li").forEach(item => item.remove());
 
-  chains.forEach(chain => {
+  chains.forEach((chain, i) => {
     const item = document.createElement("li");
-    if (chain.active) item.classList.add("on");
+    if (i == activeChainIndex) item.classList.add("on");
     item.textContent = chain.name;
     chainList.appendChild(item);
   });

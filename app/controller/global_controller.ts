@@ -50,6 +50,9 @@ export class GlobalController extends ApplicationController {
     this.#setGridSuperMeasureDisplay();
     this.setGridScaleDisplay();
     this.setGridTonicDisplay();
+
+    for (let i = 0; i < 6; i++)
+      this.setGridChainRow(i);
   }
 
 
@@ -66,7 +69,10 @@ export class GlobalController extends ApplicationController {
 
 
   setTrackChain(gridPage: GlobalController, press: GridKeyPress) {
-
+    const track = gridPage.grid.sequencer.daw.tracks[press.y];
+    track.activeChain = press.x;
+    track.updateGuiChains();
+    gridPage.setGridChainRow(track.dawIndex - 1);
   }
 
 
@@ -107,5 +113,13 @@ export class GlobalController extends ApplicationController {
     for (let i = 1, y = 1; y < 4; y++)
       for (let x = 0; x < 4; x++, i++)
         this.grid.levelSet(x + 12, y, (x == xPos && y == yPos ? 10 : 1));
+  }
+
+
+  setGridChainRow(trackIndex: number) {
+    const track = this.grid.sequencer.daw.tracks[trackIndex];
+    const row = new Array(8).fill(0);
+    row[track.activeChain] = 10;
+    this.grid.levelRow(0, trackIndex, row);
   }
 }

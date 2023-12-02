@@ -1,14 +1,16 @@
 export type ChainConfig = {
-  name: string
+  name: string,
+  type: string
 }
 
 
 export class AbletonChain {
   name: string;
-  active: boolean = false;
+  type: string;
 
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(config: ChainConfig) {
+    this.name = config.name;
+    this.type = config.type;
   }
 }

@@ -44,7 +44,6 @@ export class Sequencer {
       this.receiver = new OscReceiver();
       this.receiver.bind(33334, "localhost");
       this.receiver.on("/live/clips", (tIdx: number, cIdx: number) => this.#syncLiveTrackClip(tIdx, cIdx));
-      this.receiver.on("/live/chains", (tIdx: number, chIdx: number, active: number) => this.#syncLiveTrackChain(tIdx, chIdx, active));
       this.receiver.on("/live/transport", (step: number) => this.transport(step));
 
       // For debugging: all messages are logged.
@@ -186,6 +185,17 @@ export class Sequencer {
   }
 
 
+  setTrackChain(track: AbletonTrack) {
+    if (this.testing) return;
+    try {
+      this.emitter.emit(`/tracks/${track.dawIndex}/chains/${track.activeChain}`);
+    } catch (e) {
+      console.error(e.name, e.message, "while updating the active chain in Live:");
+      console.error("trackIndex", track.dawIndex);
+    }
+  }
+
+
   updateSuperMeasure() {
     if (this.testing) return;
     try {
@@ -207,17 +217,6 @@ export class Sequencer {
       track.currentClip = clipIndex == -2 ? -1 : clipIndex;
       if (this.daw.getActiveTrack().dawIndex == trackIndex) {
         track.updateGuiCurrentClip();
-      }
-    }
-  }
-
-
-  #syncLiveTrackChain(trackIndex: number, chainIndex: number, active: number) {
-    const track = this.daw.tracks.find(t => t.dawIndex == trackIndex);
-    if (track && track.chains.length > chainIndex) {
-      track.chains[chainIndex].active = active == 1;
-      if (this.daw.getActiveTrack().dawIndex == trackIndex) {
-        track.updateGuiChains();
       }
     }
   }

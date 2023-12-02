@@ -92,6 +92,7 @@ export class AbletonTrack {
   #soloing:     boolean = false;
 
   chains: AbletonChain[] = new Array();
+  #activeChain: number = 0;
 
 
   constructor(daw: AbletonLive, config: TrackConfig) {
@@ -100,7 +101,7 @@ export class AbletonTrack {
     this.dawIndex = config.dawIndex;
 
     if (config.chains) {
-      this.chains = config.chains.map(c => new AbletonChain(c.name));
+      this.chains = config.chains.map(c => new AbletonChain(c));
     }
 
     for (let i = 0; i < this.rhythm.length; i++) {
@@ -111,6 +112,17 @@ export class AbletonTrack {
 
     this.rampSequence0 = new RampSequence();
     this.rampSequence1 = new RampSequence();
+  }
+
+
+  get activeChain() {
+    return this.#activeChain;
+  }
+
+
+  set activeChain(chainIndex: number) {
+    this.#activeChain = chainIndex;
+    this.daw.sequencer.setTrackChain(this);
   }
 
 
@@ -617,7 +629,7 @@ export class AbletonTrack {
 
 
   updateGuiChains() {
-    this.daw.sequencer.gui.webContents.send("update-track-chains", this.chains);
+    this.daw.sequencer.gui.webContents.send("update-track-chains", this.chains, this.activeChain);
   }
 
 
