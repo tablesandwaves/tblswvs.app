@@ -72,7 +72,10 @@ export class GlobalController extends ApplicationController {
     const track = gridPage.grid.sequencer.daw.tracks[press.y];
     if (track.chains.length > press.x) {
       track.activeChain = press.x;
-      if (press.y == gridPage.grid.sequencer.daw.activeTrack) track.updateGuiChains();
+      if (press.y == gridPage.grid.sequencer.daw.activeTrack) {
+        track.updateGuiChains();
+        track.updateGuiPianoRoll();
+      }
       gridPage.setGridChainRow(track.dawIndex - 1);
     }
   }
