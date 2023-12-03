@@ -606,12 +606,22 @@ export class AbletonTrack {
 
   updateGuiPianoRoll() {
     if (this.daw.sequencer.gui == undefined) return;
-    this.daw.sequencer.gui.webContents.send(
-      "piano-roll-notes",
-      this.currentAbletonNotes.map(n => n.toPianoRollNote()),
-      this.daw.sequencer.key.midiTonic,
-      this.daw.sequencer.superMeasure
-    );
+
+    if (this.chains[this.activeChain].type == "drum rack") {
+      this.daw.sequencer.gui.webContents.send(
+        "drum-rack-notes",
+        this.currentAbletonNotes.map(n => n.toPianoRollNote()),
+        this.chains[this.activeChain].pads,
+        this.daw.sequencer.superMeasure
+      )
+    } else {
+      this.daw.sequencer.gui.webContents.send(
+        "piano-roll-notes",
+        this.currentAbletonNotes.map(n => n.toPianoRollNote()),
+        this.daw.sequencer.key.midiTonic,
+        this.daw.sequencer.superMeasure
+      );
+    }
   }
 
 

@@ -25,7 +25,8 @@ contextBridge.exposeInMainWorld("parameters", {
   updateMelodyVector: (callback: any) => ipcRenderer.on("update-melody-vector", callback),
   updateTrackChains: (callback: any) => ipcRenderer.on("update-track-chains", callback),
   updateRampSequence: (callback: any) => ipcRenderer.on("update-ramp-sequence", callback),
-  setPianoRollNotes: (callback: any) => ipcRenderer.on("piano-roll-notes", callback)
+  setPianoRollNotes: (callback: any) => ipcRenderer.on("piano-roll-notes", callback),
+  setDrumRackNotes: (callback: any) => ipcRenderer.on("drum-rack-notes", callback)
 });
 
 

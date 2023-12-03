@@ -1,5 +1,7 @@
 let previousStep = 15;
 let previousPianoRollStep = 63;
+let pianoRollWidth = 1280;
+let pianoRollLeftMargin = 48;
 
 let pageDocumentation: any = {};
 let activeDocumentationPage: any = {};
@@ -220,6 +222,81 @@ window.parameters.updateRampSequence((event: any, rampSequence: number[], superM
 });
 
 
+window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[], superMeasureLength: number) => {
+  const lowPadMidiNote = 36;
+  const noteSpan = [...new Array(pads.length)].map((_, i) => i + lowPadMidiNote);
+  const canvasWidth = 1312;
+  const canvasHeight = 300;
+
+  const pianoRollWrapper = document.getElementById("piano-roll");
+  const currentCanvas = document.getElementById("pianoroll");
+  if (currentCanvas != undefined) pianoRollWrapper.removeChild(currentCanvas);
+
+  const newCanvas = document.createElement("canvas");
+  newCanvas.setAttribute("id", "pianoroll");
+  newCanvas.setAttribute("width", "" + canvasWidth);
+  newCanvas.setAttribute("height", "" + canvasHeight);
+  pianoRollWrapper.appendChild(newCanvas);
+
+  const context = newCanvas.getContext("2d");
+
+  const pianoRollMargin = {top: 0, right: 0, bottom: 0, left: 64};
+  pianoRollWidth        = canvasWidth - pianoRollMargin.left;
+  pianoRollLeftMargin   = 1344 - pianoRollWidth - 16;
+  const keyHeight       = canvasHeight / noteSpan.length;
+
+  context.font = "12px sans-serif";
+  context.fillStyle = "#cccccc";
+  pads.reverse().forEach((padLabel, i) => {
+    const xPos = 0;
+    const yPos = (i * keyHeight) + keyHeight - ((keyHeight - 12) / 2);
+    context.fillText(padLabel, xPos, yPos);
+  });
+
+  context.strokeStyle = "#ffffff";
+  context.lineWidth = 0.25;
+
+  noteSpan.reverse().forEach((midiNoteNumber, i) => {
+    context.fillStyle = i % 2 == 0 ? "#222" : "#111";
+    context.fillRect(pianoRollMargin.left, i * keyHeight, pianoRollWidth, keyHeight);
+
+    context.beginPath();
+    context.moveTo(pianoRollMargin.left, (i * keyHeight) + keyHeight);
+    context.lineTo(pianoRollMargin.left + pianoRollWidth, (i * keyHeight) + keyHeight);
+    context.stroke();
+  });
+
+  let stepWidth = pianoRollWidth / (superMeasureLength * 16);
+  for (let i = 0; i <= superMeasureLength * 16; i++) {
+    const xPos = (i * stepWidth) + pianoRollMargin.left;
+
+    context.beginPath();
+    context.strokeStyle = "#ffffff";
+    context.lineWidth   = i % 16 == 0 ? 1 : i % 4 == 0 ? 0.5 : 0.25;
+
+    context.moveTo(xPos, 0);
+    context.lineTo(xPos, canvasHeight);
+    context.stroke();
+  }
+
+  notes.forEach(note => {
+    const xPos = ((note[1] / 0.25) * stepWidth) + pianoRollMargin.left;
+    const yPos = (lowPadMidiNote + pads.length - 1 - note[0]) * keyHeight;
+    const dur  = (note[2] / 0.25) * stepWidth;
+    context.fillStyle = "#117733";
+    context.fillRect(xPos, yPos, dur, keyHeight);
+    context.strokeStyle = "#5be88a";
+
+    context.beginPath();
+    context.moveTo(xPos + dur, yPos);
+    context.lineTo(xPos + dur, yPos + keyHeight);
+    context.stroke();
+  });
+
+  updatePianoRollTransport(superMeasureLength * 16);
+});
+
+
 window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: number, superMeasureLength: number) => {
   let low: number, high: number;
   if (notes.length == 0) {
@@ -253,7 +330,8 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
   const ctx = newCanvas.getContext("2d");
 
   const pianoRollMargin = {top: 0, right: 0, bottom: 0, left: 32};
-  const pianoRollWidth  = canvasWidth - pianoRollMargin.left;
+  pianoRollWidth        = canvasWidth - pianoRollMargin.left;
+  pianoRollLeftMargin   = 1344 - pianoRollWidth - 16;
   const keyHeight       = canvasHeight / noteSpan.length;
 
   ctx.strokeStyle = "#ffffff";
@@ -316,6 +394,8 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
       ctx.fillText(noteData[note].note + noteData[note].octave, 0, yPos);
     }
   });
+
+  updatePianoRollTransport(superMeasureLength * 16);
 });
 
 
@@ -530,13 +610,15 @@ const resetRelatedButtons = () => {
 
 
 const updatePianoRollTransport = (numSteps: number) => {
-  const pianoRollTransport = document.querySelector("#pianoroll-transport");
+  const pianoRollTransport = <HTMLDivElement> document.querySelector("div#pianoroll-transport");
+  pianoRollTransport.style.width = pianoRollWidth + "px";
+  pianoRollTransport.style.marginLeft = pianoRollLeftMargin + "px";
   document.querySelectorAll("#pianoroll-transport .step").forEach(e => pianoRollTransport.removeChild(e));
   for (let i = 0; i < numSteps; i++) {
     const step = document.createElement("div");
     step.classList.add("step");
     step.setAttribute("id", `pianoroll-step-${i}`);
-    step.style.width = (1280 / numSteps) + "px";
+    step.style.width = (pianoRollWidth / numSteps) + "px";
     pianoRollTransport.appendChild(step);
   }
 }

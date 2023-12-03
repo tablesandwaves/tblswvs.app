@@ -46,22 +46,22 @@ live_tracks:
         name: Reverb Kick & Perc Choked Kit
         type: drum rack
         pads:
-          - Boom Reverb Kick
-          - E-Perc Vocoder
+          - Boom Kick
+          - Vocoder Perc
           - Scatty Perc
-          - FX Perc LoFill Tribe Token
-          - E-Perc Low EDM
-          - Glitch Perc 120
-          - E-Perc Techno
-          - FX Perc LoFill Distort Snake
-          - E-Perc Sound Objects Ambient Knock
-          - E-Perc Scrape Shake
-          - Perc Blop Token
-          - Perc Broken Token 1
-          - E-Perc Record Pullback
-          - Perc Wood FX
-          - Perc Asia Calls
-          - Weird Percussion 100 BPM
+          - LF Tribe Token
+          - Low EDM Perc
+          - Gltch Prc 120
+          - Techno Perc
+          - LF Dstrt Snk
+          - Ambient Knock
+          - Scrape Shake
+          - Blop Token
+          - Broken Token 1
+          - Record Pullback
+          - Wood FX
+          - Asia Calls
+          - Weird Prc 100
   -
     name: Bass
     dawIndex: 5

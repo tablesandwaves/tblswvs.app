@@ -68,9 +68,6 @@ export class Sequencer {
     const trackStep = Math.floor(step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
     this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().rhythmStepLength, step);
 
-    const measure = Math.floor(step / 16) + 1;
-    this.gui.webContents.send("transport-beat", measure);
-
     // If on the first beat of the last measure, fire any mutating clips
     if (step == (this.superMeasure * 16) - 16) {
       this.#fireEvolvingTrackClips();
