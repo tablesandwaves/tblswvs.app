@@ -106,3 +106,7 @@ live_tracks:
   -
     name: Hydra
     dawIndex: 7
+    chains:
+      -
+        name: Hydrasynth
+        type: hardware
