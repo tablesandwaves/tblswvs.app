@@ -179,7 +179,7 @@ export class AbletonTrack {
     }
 
     if (notes.length > 0) {
-      this.#outputNotes = notes.map(note => {
+      this.#outputNotes = notes.filter(note => note).map(note => {
         return note.note == "rest" ? [undefined] : [note];
       });
     }
