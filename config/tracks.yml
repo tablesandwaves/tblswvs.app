@@ -103,6 +103,9 @@ live_tracks:
       -
         name: Basic FM
         type: synth
+      -
+        name: Grain Scanner
+        type: synth
   -
     name: Hydra
     dawIndex: 7
