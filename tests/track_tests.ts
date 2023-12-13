@@ -488,9 +488,9 @@ describe("AbletonTrack", () => {
       });
 
       it("should update the input melody", () => {
-        expect(track.inputMelody[0].octave).to.eq(1);
-        expect(track.inputMelody[0].note).to.eq("C");
-        expect(track.inputMelody[0].midi).to.eq(36);
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("C");
+        expect(track.outputNotes[0][0].midi).to.eq(36);
       });
     });
 
@@ -507,12 +507,12 @@ describe("AbletonTrack", () => {
       });
 
       it("should update the input melody", () => {
-        expect(track.inputMelody[0].octave).to.eq(1);
-        expect(track.inputMelody[0].note).to.eq("C");
-        expect(track.inputMelody[0].midi).to.eq(36);
-        expect(track.inputMelody[1].octave).to.eq(1);
-        expect(track.inputMelody[1].note).to.eq("Eb");
-        expect(track.inputMelody[1].midi).to.eq(39);
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("C");
+        expect(track.outputNotes[0][0].midi).to.eq(36);
+        expect(track.outputNotes[1][0].octave).to.eq(1);
+        expect(track.outputNotes[1][0].note).to.eq("Eb");
+        expect(track.outputNotes[1][0].midi).to.eq(39);
       });
     });
 
@@ -530,9 +530,9 @@ describe("AbletonTrack", () => {
       });
 
       it("should update the input melody", () => {
-        expect(track.inputMelody[0].octave).to.eq(1);
-        expect(track.inputMelody[0].note).to.eq("Eb");
-        expect(track.inputMelody[0].midi).to.eq(39);
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("Eb");
+        expect(track.outputNotes[0][0].midi).to.eq(39);
       });
     });
   });
