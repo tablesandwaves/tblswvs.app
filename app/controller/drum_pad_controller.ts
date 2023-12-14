@@ -11,6 +11,7 @@ export class DrumPadController extends ApplicationController {
   keyReleaseFunctionality = true;
   heldGate:    number = undefined;
   disableGate: boolean = false;
+  activeDrumPads: GridKeyPress[] = new Array();
   // heldDrumPad: number = undefined;
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -30,16 +31,6 @@ export class DrumPadController extends ApplicationController {
 
   triggerDrumPad(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
-      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined) {
-        const track = gridPage.grid.sequencer.daw.getActiveTrack();
-        track.setDrumPadStep(gridPage.heldGate, [noteData[gridPage.matrix[press.y][press.x].value]]);
-
-        gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-        gridPage.disableGate = false;
-        gridPage.setGridDrumPadDisplay();
-        gridPage.updateGuiRhythmDisplay();
-      }
-
       if (gridPage.notePlayingActive) {
         gridPage.grid.sequencer.midiOut.send("noteon", {
           note: gridPage.matrix[press.y][press.x].value,
@@ -54,6 +45,25 @@ export class DrumPadController extends ApplicationController {
             channel: gridPage.grid.sequencer.daw.getActiveTrack().dawIndex
           });
         }, 100);
+      }
+
+      if (gridPage.noteRecordingActive) {
+        gridPage.activeDrumPads.push(press);
+      }
+    } else {
+      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined) {
+        const track = gridPage.grid.sequencer.daw.getActiveTrack();
+
+        gridPage.activeDrumPads.forEach(press => {
+          track.setDrumPadStep(gridPage.heldGate, gridPage.activeDrumPads.map(press => noteData[gridPage.matrix[press.y][press.x].value]));
+
+          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+          gridPage.disableGate = false;
+          gridPage.setGridDrumPadDisplay();
+          gridPage.updateGuiRhythmDisplay();
+        });
+
+        gridPage.activeDrumPads = new Array();
       }
     }
   }

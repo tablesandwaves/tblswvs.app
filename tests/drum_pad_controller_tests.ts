@@ -16,7 +16,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 
-    // Select the rhythm page, then paginate over to the right 3 sub-pages
+    // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     const activePage = sequencer.grid.activePage as DrumPadController;
@@ -33,7 +33,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 
-    // Select the rhythm page, then paginate over to the right 3 sub-pages
+    // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
@@ -42,6 +42,7 @@ describe("DrumPadController", () => {
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     it("updates the track rhythm", () => {
@@ -57,6 +58,46 @@ describe("DrumPadController", () => {
     });
   });
 
+
+  describe("activating multiple pads for a rhythm step", () => {
+    const sequencer = new Sequencer(testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    // Turn on note recording/editing
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+
+    // Press and hold a gate, then select 2 drum pads
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 5, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 2, s: 0});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+    it("updates the track rhythm", () => {
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+
+    it("updates the track's input melody", () => {
+      expect(track.outputNotes[0][0].octave).to.eq(1);
+      expect(track.outputNotes[0][0].note).to.eq("C");
+      expect(track.outputNotes[0][0].midi).to.eq(36);
+      expect(track.outputNotes[0][1].octave).to.eq(1);
+      expect(track.outputNotes[0][1].note).to.eq("D");
+      expect(track.outputNotes[0][1].midi).to.eq(38);
+    });
+  });
+
+
   describe("deactivating a rhythm step", () => {
     const sequencer = new Sequencer(testing);
 
@@ -65,7 +106,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 
-    // Select the rhythm page, then paginate over to the right 3 sub-pages
+    // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
@@ -74,6 +115,7 @@ describe("DrumPadController", () => {
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
@@ -107,7 +149,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 
-    // Select the rhythm page, then paginate over to the right 3 sub-pages
+    // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Toggle note recording/editing on
@@ -116,6 +158,7 @@ describe("DrumPadController", () => {
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
@@ -152,7 +195,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 
-    // Select the rhythm page, then paginate over to the right 3 sub-pages
+    // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
@@ -161,9 +204,11 @@ describe("DrumPadController", () => {
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 12, s: 1});
     sequencer.grid.keyPress({y: 5, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 1, s: 0});
     sequencer.grid.keyPress({y: 0, x: 12, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([

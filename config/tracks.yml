@@ -62,6 +62,17 @@ live_tracks:
           - Wood FX
           - Asia Calls
           - Weird Prc 100
+      -
+        name: Digital Drums
+        type: drum rack
+        pads:
+          - Kick Acid House RK
+          - Snare Mkit
+          - HiHat Closed
+          - Tokyo Perc
+          - FM Glass Perc
+          - Digital Hi Perc
+          - Digital Lo Perc
   -
     name: Bass
     dawIndex: 5
@@ -95,7 +106,7 @@ live_tracks:
         name: OSC Juno
         type: synth
       -
-        name: Glacial Tolerance
+        name: Drift
         type: synth
       -
         name: Sad Broken Drift
