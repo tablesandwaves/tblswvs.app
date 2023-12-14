@@ -51,9 +51,9 @@ describe("DrumPadController", () => {
     });
 
     it("updates the track's input melody", () => {
-      expect(track.inputMelody[0].octave).to.eq(1);
-      expect(track.inputMelody[0].note).to.eq("C");
-      expect(track.inputMelody[0].midi).to.eq(36);
+      expect(track.outputNotes[0][0].octave).to.eq(1);
+      expect(track.outputNotes[0][0].note).to.eq("C");
+      expect(track.outputNotes[0][0].midi).to.eq(36);
     });
   });
 
@@ -79,9 +79,9 @@ describe("DrumPadController", () => {
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
-    expect(track.inputMelody[0].octave).to.eq(1);
-    expect(track.inputMelody[0].note).to.eq("C");
-    expect(track.inputMelody[0].midi).to.eq(36);
+    expect(track.outputNotes[0][0].octave).to.eq(1);
+    expect(track.outputNotes[0][0].note).to.eq("C");
+    expect(track.outputNotes[0][0].midi).to.eq(36);
 
     // Turn the active gate off by pressing the button while gate editing is on without pressing a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -94,7 +94,7 @@ describe("DrumPadController", () => {
     });
 
     it("updates the track's input melody", () => {
-      expect(track.inputMelody.length).to.eq(0);
+      expect(track.outputNotes.length).to.eq(0);
     });
   });
 
@@ -121,9 +121,9 @@ describe("DrumPadController", () => {
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
-    expect(track.inputMelody[0].octave).to.eq(1);
-    expect(track.inputMelody[0].note).to.eq("C");
-    expect(track.inputMelody[0].midi).to.eq(36);
+    expect(track.outputNotes[0][0].octave).to.eq(1);
+    expect(track.outputNotes[0][0].note).to.eq("C");
+    expect(track.outputNotes[0][0].midi).to.eq(36);
 
     // Toggle note recording/editing off
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
@@ -169,7 +169,7 @@ describe("DrumPadController", () => {
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
     ]);
-    expect(track.inputMelody.length).to.eq(2);
+    expect(track.outputNotes.length).to.eq(2);
 
     // Shorten the track rhythm step length
     sequencer.grid.keyPress({y: 7, x: 13, s: 1});
@@ -184,7 +184,7 @@ describe("DrumPadController", () => {
     });
 
     it("updates the track input melody so it does not include notes/pads beyond the step length", () => {
-      expect(track.inputMelody.length).to.eq(1);
+      expect(track.outputNotes.length).to.eq(1);
     });
   });
 });

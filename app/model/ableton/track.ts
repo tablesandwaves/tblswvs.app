@@ -71,7 +71,7 @@ export class AbletonTrack {
   currentAbletonNotes: AbletonNote[] = new Array();
 
   // When in drum rack mode, do not use an independent rhythm/melody phasing model
-  #drumRackSequence: note[] = new Array(16).fill(undefined);
+  #drumRackSequence: note[][] = new Array(16).fill(undefined);
 
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
@@ -193,27 +193,25 @@ export class AbletonTrack {
   }
 
 
-  setDrumPadStep(rhythmStepIndex: number, inputNote: note|undefined) {
+  setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
     // this.noteType = "drum rack";
     this.polyphonicVoiceMode = true;
-    this.#drumRackSequence[rhythmStepIndex] = inputNote;
+    this.#drumRackSequence[rhythmStepIndex] = inputNotes;
     this.updateDrumPadInputMelody();
   }
 
 
   updateDrumPadInputMelody() {
-    const inputMelody = new Array();
-
     this.#drumRackSequence.slice(0, this.#rhythmStepLength).forEach((step, i) => {
       if (step != undefined) {
-        inputMelody.push(step);
         this.#rhythm[i].state = 1;
       } else {
         this.#rhythm[i].state = 0;
       }
     });
 
-    this.inputMelody = inputMelody;
+    // Output notes is a compacted version of the drum rack sequence.
+    this.#outputNotes = this.#drumRackSequence.slice(0, this.#rhythmStepLength).filter(noteArray => noteArray);
   }
 
 

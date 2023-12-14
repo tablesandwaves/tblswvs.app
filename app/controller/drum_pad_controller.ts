@@ -32,7 +32,7 @@ export class DrumPadController extends ApplicationController {
     if (press.s == 1) {
       if (gridPage.noteRecordingActive && gridPage.heldGate != undefined) {
         const track = gridPage.grid.sequencer.daw.getActiveTrack();
-        track.setDrumPadStep(gridPage.heldGate, noteData[gridPage.matrix[press.y][press.x].value]);
+        track.setDrumPadStep(gridPage.heldGate, [noteData[gridPage.matrix[press.y][press.x].value]]);
 
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
         gridPage.disableGate = false;
