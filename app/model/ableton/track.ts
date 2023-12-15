@@ -193,6 +193,11 @@ export class AbletonTrack {
   }
 
 
+  get drumRackSequence() {
+    return this.#drumRackSequence;
+  }
+
+
   setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
     // this.noteType = "drum rack";
     this.polyphonicVoiceMode = true;

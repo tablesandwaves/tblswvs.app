@@ -3,6 +3,12 @@ import { blank8x8Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
 
 
+export type xyCoordinate = {
+  x: number,
+  y: number,
+}
+
+
 export type GridKeyPress = {
   x: number,
   y: number,

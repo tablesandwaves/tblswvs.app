@@ -1,6 +1,26 @@
 import { noteData } from "tblswvs";
-import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, xyCoordinate, ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
+
+
+const drumPadMatrix: Record<number, xyCoordinate> = {
+  36: {x: 0, y: 5},
+  37: {x: 1, y: 5},
+  38: {x: 2, y: 5},
+  39: {x: 3, y: 5},
+  40: {x: 0, y: 4},
+  41: {x: 1, y: 4},
+  42: {x: 2, y: 4},
+  43: {x: 3, y: 4},
+  44: {x: 0, y: 3},
+  45: {x: 1, y: 3},
+  46: {x: 2, y: 3},
+  47: {x: 3, y: 3},
+  48: {x: 0, y: 2},
+  49: {x: 1, y: 2},
+  50: {x: 2, y: 2},
+  51: {x: 3, y: 2}
+}
 
 
 export class DrumPadController extends ApplicationController {
@@ -12,6 +32,7 @@ export class DrumPadController extends ApplicationController {
   heldGate:    number = undefined;
   disableGate: boolean = false;
   activeDrumPads: GridKeyPress[] = new Array();
+  previousCoordinates: xyCoordinate[] = new Array();
   // heldDrumPad: number = undefined;
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -21,6 +42,28 @@ export class DrumPadController extends ApplicationController {
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("toggleNotePlaying", this.toggleNotePlaying);
     this.functionMap.set("toggleNoteRecording", this.toggleNoteRecording);
+  }
+
+
+  setGridRhythmDisplay(highlightIndex?: number) {
+    // Display the transport row
+    super.setGridRhythmDisplay(highlightIndex);
+
+    // Reset any drum pads brightened from the previous sequencer step
+    this.previousCoordinates.forEach(coordinate => {
+      this.grid.levelSet(coordinate.x, coordinate.y, 1);
+    });
+    this.previousCoordinates = new Array();
+
+    // Brighten any drum pads that have hits for the current step
+    const step = this.grid.sequencer.daw.getActiveTrack().drumRackSequence[highlightIndex % this.grid.sequencer.daw.getActiveTrack().rhythmStepLength];
+    if (step) {
+      step.forEach(note => {
+        const coordinate = drumPadMatrix[note.midi];
+        this.grid.levelSet(coordinate.x, coordinate.y, 10);
+        this.previousCoordinates.push(coordinate);
+      });
+    }
   }
 
 
