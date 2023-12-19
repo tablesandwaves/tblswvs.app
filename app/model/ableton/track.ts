@@ -622,7 +622,8 @@ export class AbletonTrack {
         "piano-roll-notes",
         this.currentAbletonNotes.map(n => n.toPianoRollNote()),
         this.daw.sequencer.key.midiTonic,
-        this.daw.sequencer.superMeasure
+        this.daw.sequencer.superMeasure,
+        this.daw.getActiveTrack().rhythmStepLength
       );
     }
   }

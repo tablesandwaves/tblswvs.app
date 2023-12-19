@@ -297,7 +297,7 @@ window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[
 });
 
 
-window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: number, superMeasureLength: number) => {
+window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: number, superMeasureLength: number, rhythmStepLength: number) => {
   let low: number, high: number;
   if (notes.length == 0) {
     low  = 60;
@@ -353,7 +353,7 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
 
     ctx.beginPath();
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth   = i % 16 == 0 ? 1 : i % 4 == 0 ? 0.5 : 0.25;
+    ctx.lineWidth   = i % rhythmStepLength == 0 ? 1 : i % 4 == 0 ? 0.5 : 0.25;
 
     ctx.moveTo(xPos, 0);
     ctx.lineTo(xPos, canvasHeight);
