@@ -61,3 +61,35 @@ rows:
     xStart: 1
     xLength: 1
     mapping: toggleNoteRecording
+  -
+    name: Pulse Rate
+    description: Set the current track's pulse rate between 16n and 2n
+    group: pulse-rate
+    type: radio
+    index: 5
+    xStart: 8
+    xLength: 4
+    mapping: updatePulse
+    values:
+      - 16n
+      - 8n
+      - 4n
+      - 2n
+  -
+    name: Note Length
+    description: Set the length of sequencer notes
+    group: note-length
+    type: meter
+    index: 6
+    xStart: 8
+    xLength: 8
+    mapping: updateNoteLength
+    values:
+      - 16n
+      - 8n
+      - 8nd
+      - 4n
+      - 4nd
+      - 2n
+      - 2nd
+      - 1n

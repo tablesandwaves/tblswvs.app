@@ -1,6 +1,6 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
-import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
+// import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
 import { rhythmAlgorithms } from "../model/ableton/track";
 
 
@@ -102,26 +102,26 @@ export class RhythmController extends ApplicationController {
   }
 
 
-  updateNoteLength(gridPage: RhythmController, press: GridKeyPress) {
-    if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-      gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
+  // updateNoteLength(gridPage: RhythmController, press: GridKeyPress) {
+  //   if (press.s == 1) {
+  //     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
+  //     gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
+  //     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
 
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    }
-  }
+  //     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+  //   }
+  // }
 
 
-  updatePulse(gridPage: RhythmController, press: GridKeyPress) {
-    if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
-      gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
+  // updatePulse(gridPage: RhythmController, press: GridKeyPress) {
+  //   if (press.s == 1) {
+  //     gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
+  //     gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+  //     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
 
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    }
-  }
+  //     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+  //   }
+  // }
 
 
   updateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {
@@ -160,8 +160,6 @@ export class RhythmController extends ApplicationController {
     this.grid.levelRow(8, 4, this.getGridParameterRow().slice(8, 16));
     this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
-    this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-    this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
   }
 
 

@@ -1,6 +1,7 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x8Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
+import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
 
 
 export type xyCoordinate = {
@@ -146,6 +147,10 @@ export class ApplicationController {
     if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
     this.grid.levelRow(0, 0, transportRow.slice(0, 8));
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));
+
+    // Shared parameter rows
+    this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+    this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
   }
 
 
@@ -168,6 +173,28 @@ export class ApplicationController {
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
+  }
+
+
+  updateNoteLength(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
+      gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
+
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    }
+  }
+
+
+  updatePulse(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
+      gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
+
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    }
   }
 
 
