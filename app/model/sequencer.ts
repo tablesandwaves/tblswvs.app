@@ -14,6 +14,32 @@ import { pulseRateMap } from "./ableton/note";
 import { INACTIVE_BRIGHTNESS } from "../controller/application_controller";
 
 
+export type BeatVoice = {
+  track: string,
+  hits: number[],
+  velocities: number[]
+}
+
+
+export type Beat = {
+  group: string,
+  name: string,
+  length: number,
+  voices: BeatVoice[]
+}
+
+
+export type BeatGroup = {
+  name: string,
+  beats: Record<string, Beat>
+}
+
+
+export type BeatSet = {
+  groups: Record<string, BeatGroup>
+}
+
+
 export class Sequencer {
   static CONFIG_DIRECTORY: string = path.resolve(__dirname, "../../config");
 
@@ -29,6 +55,7 @@ export class Sequencer {
   queuedMelody: note[] = new Array();
   queuedChordProgression: note[][] = new Array();
   testing: boolean;
+  beatPatterns: BeatSet;
 
 
   constructor(testing: boolean = false) {
@@ -54,6 +81,11 @@ export class Sequencer {
     this.key  = new Key(60, Scale.Minor);
 
     this.midiOut = new easymidi.Output("tblswvs.app", true);
+  }
+
+
+  setBeatPatterns(beatPatterns: BeatSet) {
+    this.beatPatterns = beatPatterns;
   }
 
 

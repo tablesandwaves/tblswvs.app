@@ -98,3 +98,19 @@ matrices:
         - WholeTone
         - GS
         - Chromatic
+  -
+    name: Beats
+    description: Predefined beat patterns for multiple tracks
+    gropu: beats
+    type: radio
+    rowStart: 4
+    rowEnd: 6
+    columnStart: 8
+    columnEnd: 15
+    mapping: setBeat
+    rowValues:
+      -
+        - electro/base
+        - electro/base_with_hats
+        - electro/siberian_nights
+        - electro/new_wave
