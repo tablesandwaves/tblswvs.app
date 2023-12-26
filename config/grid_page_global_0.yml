@@ -104,9 +104,9 @@ matrices:
     gropu: beats
     type: radio
     rowStart: 4
-    rowEnd: 6
+    rowEnd: 4
     columnStart: 8
-    columnEnd: 15
+    columnEnd: 11
     mapping: setBeat
     rowValues:
       -
