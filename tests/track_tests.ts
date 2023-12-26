@@ -433,7 +433,7 @@ describe("AbletonTrack", () => {
 
 
   describe("truncating note durations for overlapping notes", () => {
-    const track = daw.getActiveTrack();
+    const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
     track.rhythmStepLength = 16;
     track.noteLength       = "8n";
     track.rhythm           = new Array(16).fill({...{state: 0, probability: 1, fillRepeats: 0}});
