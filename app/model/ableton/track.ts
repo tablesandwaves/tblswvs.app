@@ -19,6 +19,7 @@ export type RhythmStep = {
   state: number;
   probability: number;
   fillRepeats: number;
+  velocity?: number;
 };
 
 
@@ -464,11 +465,12 @@ export class AbletonTrack {
 
 
   #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, duration: number, velocity?: number): AbletonNote {
+    const _velocity = velocity ? velocity : (rhythmStep.velocity ? rhythmStep.velocity : 64);
     return new AbletonNote(
       note.midi,
       clipPosition,
       duration,
-      velocity ? velocity : 64,
+      _velocity,
       (this.randomizing && this.daw.mutating ? 1 : rhythmStep.probability)
     )
   }

@@ -13,6 +13,18 @@ const daw       = new AbletonLive(sequencer);
 describe("AbletonTrack", () => {
   describe("a new instance", () => {
     const track = daw.getActiveTrack();
+
+    it("can set rhythm steps with default velocities", () => {
+      track.rhythm = new Array(16).fill({...{state: 1, probability: 0, fillRepeats: 0}});
+      track.updateCurrentAbletonNotes();
+      expect(track.currentAbletonNotes[0].velocity).to.eq(64);
+    });
+
+    it("can set rhythm steps with specific velocities", () => {
+      track.rhythm = new Array(16).fill({...{state: 1, probability: 0, fillRepeats: 0, velocity: 100}});
+      track.updateCurrentAbletonNotes();
+      expect(track.currentAbletonNotes[0].velocity).to.eq(100);
+    });
   });
 
   describe("rhythm algorithms", () => {
