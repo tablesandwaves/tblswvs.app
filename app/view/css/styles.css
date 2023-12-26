@@ -260,7 +260,8 @@ h2 {
 div#melody,
 div#chord-progression,
 div#evolution,
-div#current-scale {
+div#current-scale,
+div#current-beat {
   width: 800px;
 }
 

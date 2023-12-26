@@ -56,6 +56,7 @@ export class Sequencer {
   queuedChordProgression: note[][] = new Array();
   testing: boolean;
   beatPatterns: BeatSet;
+  activeBeatPattern: Beat = undefined;
 
 
   constructor(testing: boolean = false) {

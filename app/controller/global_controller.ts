@@ -104,9 +104,14 @@ export class GlobalController extends ApplicationController {
     const [groupCode, beatCode] = gridPage.matrix[press.y][press.x].value.split("/");
     const beat = gridPage.grid.sequencer.beatPatterns.groups[groupCode].beats[beatCode];
 
+    gridPage.grid.sequencer.activeBeatPattern = beat;
+    gridPage.grid.sequencer.gui.webContents.send("set-beat", beat.name);
+
     beat.voices.forEach(voice => {
       const track = gridPage.grid.sequencer.daw.tracks.find(t => t.name == voice.track);
       track.rhythmStepLength = beat.length;
+      track.rhythmAlgorithm  = gridPage.matrix[press.y][press.x].value;
+      console.log(track.rhythmAlgorithm)
 
       const rhythmSteps = new Array(beat.length).fill(undefined).map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined}));
       voice.hits.forEach((hit, i) => {

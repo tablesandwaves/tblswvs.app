@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld("parameters", {
   activateTrackNav: (callback: any) => ipcRenderer.on("track-nav", callback),
   setRhythmDisplay: (callback: any) => ipcRenderer.on("track-rhythm", callback),
   updateScale: (callback: any) => ipcRenderer.on("set-scale", callback),
+  updateBeat: (callback: any) => ipcRenderer.on("set-beat", callback),
   updateSuperMeasure: (callback: any) => ipcRenderer.on("update-super-measure", callback),
   updateQueuedMelody: (callback: any) => ipcRenderer.on("update-melody", callback),
   updateQueuedProgression: (callback: any) => ipcRenderer.on("update-progression", callback),

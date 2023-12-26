@@ -41,6 +41,7 @@ window.parameters.activateTrackNav((event: any, trackName: string) => {
 
 
 window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
+window.parameters.updateBeat((event: any, name: string) => updateText("#current-beat span", name));
 window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#melody p span", melody));
 window.parameters.updateQueuedProgression((event: any, progression: string) => updateText("#chord-progression p span", progression));
 window.parameters.updateTrackNotes((event: any, type: string, notes: string) => {
@@ -125,6 +126,9 @@ const toggleIndicator = (selector: string, state: boolean) => {
 
 window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
   rhythm.forEach((step, i: number) => {
+    // TODO
+    if (i > 15) return;
+
     if (i < stepLength)
       document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("active");
     else
