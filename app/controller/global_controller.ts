@@ -118,6 +118,7 @@ export class GlobalController extends ApplicationController {
     });
 
     gridPage.updateGuiRhythmDisplay();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
   }
 
 
