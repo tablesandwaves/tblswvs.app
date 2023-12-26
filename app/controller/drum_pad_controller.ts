@@ -29,7 +29,8 @@ export class DrumPadController extends ApplicationController {
   notePlayingActive       = false;
   noteRecordingActive     = false;
   keyReleaseFunctionality = true;
-  heldGate:    number = undefined;
+  heldGate:     number = undefined;
+  heldDrumPads: number = 0;
   disableGate: boolean = false;
   activeDrumPads: GridKeyPress[] = new Array();
   previousCoordinates: xyCoordinate[] = new Array();
@@ -76,6 +77,7 @@ export class DrumPadController extends ApplicationController {
 
   triggerDrumPad(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
+      gridPage.heldDrumPads++;
       if (gridPage.notePlayingActive) {
         gridPage.grid.sequencer.midiOut.send("noteon", {
           note: gridPage.matrix[press.y][press.x].value,
@@ -96,7 +98,8 @@ export class DrumPadController extends ApplicationController {
         gridPage.activeDrumPads.push(press);
       }
     } else {
-      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined) {
+      gridPage.heldDrumPads--;
+      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0) {
         const track = gridPage.grid.sequencer.daw.getActiveTrack();
 
         gridPage.activeDrumPads.forEach(press => {

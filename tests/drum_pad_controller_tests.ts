@@ -76,8 +76,8 @@ describe("DrumPadController", () => {
     // Press and hold a gate, then select 2 drum pads
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 5, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
     sequencer.grid.keyPress({y: 5, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
     sequencer.grid.keyPress({y: 5, x: 2, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
