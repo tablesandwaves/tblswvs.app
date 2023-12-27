@@ -14,19 +14,15 @@ export class ProbabilitiesController extends ApplicationController {
 
 
   updateProbability(gridPage: ProbabilitiesController, press: GridKeyPress) {
+    const stepIndex = press.x + (gridPage.grid.shiftKey ? 16 : 0);
+
     // Only edit probabilities for steps that are active
-    if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].state == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().rhythm[press.x].probability = gridPage.matrix[press.y][press.x].value;
+    if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[stepIndex].state == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().rhythm[stepIndex].probability = gridPage.matrix[press.y][press.x].value;
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.setGridProbabilitiesDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
-  }
-
-
-  updateTrackProbability(gridPage: ProbabilitiesController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
-    gridPage.setGridProbabilitiesDisplay();
   }
 
 
@@ -36,11 +32,10 @@ export class ProbabilitiesController extends ApplicationController {
 
 
   setGridProbabilitiesDisplay(highlightIndex?: number) {
-    let row;
     const [rhythmStart, rhythmEnd] = this.grid.shiftKey ? [16, 32] : [0, 16];
 
     for (let y = 0; y < 7; y++) {
-      row = this.grid.sequencer.daw.getActiveTrack().rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
+      const row = this.grid.sequencer.daw.getActiveTrack().rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
         return (step.state == 1 && this.matrix[y][x].value <= step.probability) ? 10 : 0;
       });
 
