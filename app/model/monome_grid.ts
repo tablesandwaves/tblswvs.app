@@ -182,7 +182,7 @@ export class MonomeGrid {
       case "Rhythm":
         this.pageIndex = 0;
         if (this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type == "drum rack")
-          this.activePage = new DrumPadController(this.#loadConfig(`grid_page_rhythm_3.yml`) as GridConfig, this);
+          this.activePage = new DrumPadController(this.#loadConfig(`grid_page_drumpad.yml`) as GridConfig, this);
         else
           this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_0.yml`) as GridConfig, this);
         updated = true;
