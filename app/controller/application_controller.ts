@@ -151,9 +151,9 @@ export class ApplicationController {
     this.grid.levelRow(8, 1, transportRow.slice(24, 32));
 
     // Shared parameter rows
-    this.updateGridRowMeter(8, 4, (this.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
-    this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-    this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
+    this.toggleRadioButton(8, 4, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+    this.updateGridRowMeter(8, 5, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
+    this.updateGridRowMeter(8, 6, (this.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
   }
 
 
@@ -182,7 +182,7 @@ export class ApplicationController {
   updateDefaultProbability(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
-      gridPage.updateGridRowMeter(8, 4, (gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
+      gridPage.updateGridRowMeter(8, 6, (gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
     }
   }
 
@@ -190,7 +190,7 @@ export class ApplicationController {
   updateNoteLength(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-      gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
+      gridPage.updateGridRowMeter(8, 5, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
       gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -201,7 +201,7 @@ export class ApplicationController {
   updatePulse(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
-      gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
+      gridPage.toggleRadioButton(8, 4, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
       gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
