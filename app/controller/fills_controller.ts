@@ -1,7 +1,6 @@
 import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { RhythmStep } from "../model/ableton/track";
-import { fillLengthMap } from "../model/ableton/note";
 
 
 export class FillsController extends ApplicationController {
@@ -11,8 +10,6 @@ export class FillsController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
     this.functionMap.set("setFillRepeats", this.setFillRepeats);
-    this.functionMap.set("toggleFillMeasure", this.toggleFillMeasure);
-    this.functionMap.set("setFillDuration", this.setFillDuration);
     this.functionMap.set("clearFillRepeats", this.clearFillRepeats);
   }
 
@@ -43,38 +40,11 @@ export class FillsController extends ApplicationController {
   }
 
 
-  toggleFillMeasure(gridPage: FillsController, press: GridKeyPress) {
-    const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
-    gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.setGridFillsDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillMeasures();
-  }
-
-
-  setFillDuration(gridPage: FillsController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].shiftValue;
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.setGridFillsDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillsDuration();
-  }
-
   setGridFillsDisplay() {
     let row;
 
     if (this.grid.shiftKey) {
-      // Set the measures on which the fills should play
-      row = this.grid.sequencer.daw.getActiveTrack().fillMeasures.map((m: number) => m == 1 ? 10 : 0);
-      this.grid.levelRow(0, 6, row);
 
-      // Set the fill duration meter buttons
-      row = new Array(8).fill(0);
-      for (let x = 0; x < 8; x++) {
-        if (x <= fillLengthMap[this.grid.sequencer.daw.getActiveTrack().fillDuration].index) {
-          row[x] = 10;
-        }
-      }
-      this.grid.levelRow(8, 6, row);
     } else {
       // Display the current rhythm on row 7
       row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, i: any) => {

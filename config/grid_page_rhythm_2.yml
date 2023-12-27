@@ -28,39 +28,3 @@ rows:
     xStart: 0
     xLength: 16
     mapping: clearFillRepeats
-  -
-    shiftName: Toggle Fills for Measure
-    shiftDescription: The sub-measures of the super measure on which the fill will happen.
-    shiftGroup: fill-measures
-    shiftType: toggle
-    index: 6
-    xStart: 0
-    xLength: 8
-    shiftMapping: toggleFillMeasure
-    shiftDisplayValues:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-  -
-    shiftName: Fill Duration
-    shiftDescription: The length of time in which to spread a rhythmic fill.
-    shiftGroup: fill-duration
-    shiftType: meter
-    index: 6
-    xStart: 8
-    xLength: 8
-    shiftMapping: setFillDuration
-    shiftValues:
-      - 16n
-      - 16nd
-      - 8n
-      - 8nd
-      - 4n
-      - 4nd
-      - 2n
-      - 2nd

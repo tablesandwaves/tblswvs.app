@@ -39,6 +39,8 @@ export class DrumPadController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
     this.functionMap.set("selectGate", this.selectGate);
+    this.functionMap.set("toggleFillMeasure", this.toggleFillMeasure);
+    this.functionMap.set("setFillDuration", this.setFillDuration);
     this.functionMap.set("triggerDrumPad", this.triggerDrumPad);
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("toggleNotePlaying", this.toggleNotePlaying);

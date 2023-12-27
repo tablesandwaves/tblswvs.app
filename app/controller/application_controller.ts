@@ -1,7 +1,7 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x8Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
-import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
+import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
 
 
 export type xyCoordinate = {
@@ -151,6 +151,7 @@ export class ApplicationController {
     this.grid.levelRow(8, 1, transportRow.slice(24, 32));
 
     // Shared parameter rows
+    this.setGridFillParametersDisplay();
     this.toggleRadioButton(8, 4, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     this.updateGridRowMeter(8, 5, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
     this.updateGridRowMeter(8, 6, (this.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
@@ -176,6 +177,37 @@ export class ApplicationController {
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
+  }
+
+
+  toggleFillMeasure(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 1) {
+      const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
+      gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.setGridFillParametersDisplay();
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillMeasures();
+    }
+  }
+
+
+  setFillDuration(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].value;
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.setGridFillParametersDisplay();
+      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillsDuration();
+    }
+  }
+
+
+  setGridFillParametersDisplay() {
+    // Set the measures on which the fills should play
+    const row = this.grid.sequencer.daw.getActiveTrack().fillMeasures.map((m: number) => m == 1 ? 10 : 0);
+    this.grid.levelRow(0, 2, row);
+
+    // Set the fill duration meter buttons
+    this.updateGridRowMeter(8, 2, fillLengthMap[this.grid.sequencer.daw.getActiveTrack().fillDuration].index);
   }
 
 
