@@ -4,22 +4,22 @@ import { MonomeGrid } from "../model/monome_grid";
 
 
 const drumPadMatrix: Record<number, xyCoordinate> = {
-  36: {x: 0, y: 5},
-  37: {x: 1, y: 5},
-  38: {x: 2, y: 5},
-  39: {x: 3, y: 5},
-  40: {x: 0, y: 4},
-  41: {x: 1, y: 4},
-  42: {x: 2, y: 4},
-  43: {x: 3, y: 4},
-  44: {x: 0, y: 3},
-  45: {x: 1, y: 3},
-  46: {x: 2, y: 3},
-  47: {x: 3, y: 3},
-  48: {x: 0, y: 2},
-  49: {x: 1, y: 2},
-  50: {x: 2, y: 2},
-  51: {x: 3, y: 2}
+  36: {x: 0, y: 6},
+  37: {x: 1, y: 6},
+  38: {x: 2, y: 6},
+  39: {x: 3, y: 6},
+  40: {x: 0, y: 5},
+  41: {x: 1, y: 5},
+  42: {x: 2, y: 5},
+  43: {x: 3, y: 5},
+  44: {x: 0, y: 4},
+  45: {x: 1, y: 4},
+  46: {x: 2, y: 4},
+  47: {x: 3, y: 4},
+  48: {x: 0, y: 3},
+  49: {x: 1, y: 3},
+  50: {x: 2, y: 3},
+  51: {x: 3, y: 3}
 }
 
 
@@ -34,7 +34,7 @@ export class DrumPadController extends ApplicationController {
   disableGate: boolean = false;
   activeDrumPads: GridKeyPress[] = new Array();
   previousCoordinates: xyCoordinate[] = new Array();
-  // heldDrumPad: number = undefined;
+
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
@@ -165,13 +165,13 @@ export class DrumPadController extends ApplicationController {
     super.setGridRhythmDisplay(highlightIndex);
 
     // Drum Pads
-    for (let y = 2; y <= 5; y++)
+    for (let y = 3; y <= 6; y++)
       for (let x = 0; x < 4; x++)
         this.grid.levelSet(x, y, 1);
 
     // Drum Pad Controls
-    this.grid.levelSet(0, 6, this.notePlayingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
-    this.grid.levelSet(1, 6, this.noteRecordingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+    this.grid.levelSet(4, 3, this.notePlayingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+    this.grid.levelSet(4, 4, this.noteRecordingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 
