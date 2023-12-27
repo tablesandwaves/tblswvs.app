@@ -50,10 +50,11 @@ export class RhythmController extends ApplicationController {
 
         const updatedRhythm = track.rhythm.map(step => {return {...step}});
         gridPage.activeGates.forEach(queuedKeyPress => {
-          const stepState                             = 1 - track.rhythm[queuedKeyPress.x].state;
-          updatedRhythm[queuedKeyPress.x].state       = stepState;
-          updatedRhythm[queuedKeyPress.x].probability = track.defaultProbability;
-          if (stepState == 0) updatedRhythm[press.x].fillRepeats = 0;
+          const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
+          const stepState                      = 1 - track.rhythm[stepIndex].state;
+          updatedRhythm[stepIndex].state       = stepState;
+          updatedRhythm[stepIndex].probability = track.defaultProbability;
+          if (stepState == 0) updatedRhythm[stepIndex].fillRepeats = 0;
         });
         track.rhythm = updatedRhythm;
         gridPage.activeGates = new Array();
@@ -100,28 +101,6 @@ export class RhythmController extends ApplicationController {
       gridPage.updateGuiRhythmDisplay();
     }
   }
-
-
-  // updateNoteLength(gridPage: RhythmController, press: GridKeyPress) {
-  //   if (press.s == 1) {
-  //     gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-  //     gridPage.updateGridRowMeter(8, 6, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
-  //     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
-
-  //     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-  //   }
-  // }
-
-
-  // updatePulse(gridPage: RhythmController, press: GridKeyPress) {
-  //   if (press.s == 1) {
-  //     gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
-  //     gridPage.toggleRadioButton(8, 5, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-  //     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
-
-  //     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-  //   }
-  // }
 
 
   updateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {

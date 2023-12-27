@@ -18,17 +18,20 @@ describe("RhythmController", () => {
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 0, x: 4, s: 1});
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
 
     it("sets the rhythm on the last key up", () => {
       sequencer.grid.keyPress({y: 0, x: 0, s: 0});
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
       sequencer.grid.keyPress({y: 0, x: 4, s: 0});
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
@@ -43,17 +46,20 @@ describe("RhythmController", () => {
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
       sequencer.grid.keyPress({y: 0, x: 0, s: 0});
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
 
       it("does not delete the existing notes", () => {
         sequencer.grid.keyPress({y: 0, x: 4, s: 1});
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
         sequencer.grid.keyPress({y: 0, x: 4, s: 0});
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
     });
@@ -102,12 +108,13 @@ describe("RhythmController", () => {
 
     it("leaves the track's rhythm pattern in place", () => {
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
     it("generates an array of Ableton notes equal to the accelerating gate count times the max super measure", () => {
-      expect(track.currentAbletonNotes.length).to.eq(64);
+      expect(track.currentAbletonNotes.length).to.eq(32);
     });
 
     it("updates the grid algorithm row", () => {
@@ -116,7 +123,8 @@ describe("RhythmController", () => {
 
     it("has a grid rhythm row that corresponds to the rhythm steps", () => {
       expect(controller.getRhythmGatesRow()).to.have.ordered.members([
-        10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
@@ -166,13 +174,15 @@ describe("RhythmController", () => {
     it("updates the surround track's rhythm", () => {
       const pattern = patternForRhythmSteps(surroundTrack.rhythm);
       expect(pattern).to.have.ordered.members([
-        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
     it("updates the grid transport row", () => {
       expect(controller.getRhythmGatesRow()).to.have.ordered.members([
-        10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
   });
@@ -196,13 +206,15 @@ describe("RhythmController", () => {
     it("updates the surround track's rhythm", () => {
       const pattern = patternForRhythmSteps(surroundTrack.rhythm);
       expect(pattern).to.have.ordered.members([
-        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
     it("updates the grid transport row", () => {
       expect(controller.getRhythmGatesRow()).to.have.ordered.members([
-        10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
   });
@@ -255,9 +267,11 @@ describe("RhythmController", () => {
       sequencer.grid.keyPress({y: 6, x: 0, s: 1});
       expect(track.rhythmAlgorithm).to.eq("manual");
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
       expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
 
@@ -268,13 +282,15 @@ describe("RhythmController", () => {
       it("updates the track's rhythm", () => {
         const pattern = patternForRhythmSteps(track.rhythm);
         expect(pattern).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 
       it("updates the grid transport row", () => {
         expect(controller.getRhythmGatesRow()).to.have.ordered.members([
-          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
     });
@@ -290,9 +306,11 @@ describe("RhythmController", () => {
       sequencer.grid.keyPress({y: 6, x: 1, s: 1});
       expect(track.rhythmAlgorithm).to.eq("surround");
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
       expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
 
@@ -302,12 +320,14 @@ describe("RhythmController", () => {
       it("does not update the track's rhythm", () => {
         const pattern = patternForRhythmSteps(track.rhythm);
         expect(pattern).to.have.ordered.members([
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 
       it("does not update the grid transport row", () => {
         expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });

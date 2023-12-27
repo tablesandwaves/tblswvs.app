@@ -111,9 +111,8 @@ export class GlobalController extends ApplicationController {
       const track = gridPage.grid.sequencer.daw.tracks.find(t => t.name == voice.track);
       track.rhythmStepLength = beat.length;
       track.rhythmAlgorithm  = gridPage.matrix[press.y][press.x].value;
-      console.log(track.rhythmAlgorithm)
 
-      const rhythmSteps = new Array(beat.length).fill(undefined).map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined}));
+      const rhythmSteps = new Array(32).fill(undefined).map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined}));
       voice.hits.forEach((hit, i) => {
         rhythmSteps[hit].state = 1;
         rhythmSteps[hit].velocity = voice.velocities[i];

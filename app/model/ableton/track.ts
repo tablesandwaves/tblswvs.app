@@ -47,13 +47,13 @@ const CLIP_16N_COUNT = 128;
 export class AbletonTrack {
   name: string;
 
-  #rhythm: RhythmStep[] = new Array(16);
+  #rhythm: RhythmStep[] = new Array(32);
   defaultProbability: number = 1;
   fillMeasures: (0|1)[] = [0, 0, 0, 0, 0, 0, 0, 0];
   fillDuration: string = "8nd";
   noteLength: string = "16n";
   #pulseRate: string = "16n";
-  #rhythmStepLength: number = 16;
+  #rhythmStepLength: number = 32;
   #rhythmAlgorithm: string = "manual";
   #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
   acceleratingGateCount = 10;
@@ -390,7 +390,7 @@ export class AbletonTrack {
         if (this.rhythmAlgorithm == "accelerating") {
 
           const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 };
-          const spreadAmount = rhythmIndicesAndOffsets[step % stepLength] * 0.25;
+          const spreadAmount = (rhythmIndicesAndOffsets[step % stepLength] * 0.25) / (32 / this.#rhythmStepLength);
           const offset = (step % stepLength) * 0.25;
           acceleratingBeatPositions(this.acceleratingGateCount, spreadAmount, offset).forEach(gatePosition => {
             const clipPosition = gatePosition + (step * 0.25);
@@ -431,7 +431,7 @@ export class AbletonTrack {
 
 
   #rhythmIndicesAndOffsets() {
-    return this.rhythm.reduce((beatDivisions, step, i) => {
+    return this.rhythm.slice(0, this.#rhythmStepLength).reduce((beatDivisions, step, i) => {
       if (step.state == 1) beatDivisions.push(i);
       return beatDivisions;
     }, new Array()).map((index, i, arr) => {

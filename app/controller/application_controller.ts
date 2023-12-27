@@ -142,11 +142,13 @@ export class ApplicationController {
 
 
   setGridRhythmDisplay(highlightIndex?: number) {
-    // Transport row
+    // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
     const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
     if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
     this.grid.levelRow(0, 0, transportRow.slice(0, 8));
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));
+    this.grid.levelRow(0, 1, transportRow.slice(16, 24));
+    this.grid.levelRow(8, 1, transportRow.slice(24, 32));
 
     // Shared parameter rows
     this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
@@ -156,7 +158,7 @@ export class ApplicationController {
 
   getRhythmStepLengthRow() {
     const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
-    return [...new Array(stepLength).fill(5), ...new Array(16 - stepLength).fill(0)];
+    return [...new Array(stepLength).fill(5), ...new Array(32 - stepLength).fill(0)];
   }
 
 
@@ -168,7 +170,7 @@ export class ApplicationController {
 
 
   updateStepLength(gridPage: ApplicationController, press: GridKeyPress, updateDrumPadMelody = false) {
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + 1;
+    gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + (16 * press.y) + 1;
     if (updateDrumPadMelody) gridPage.grid.sequencer.daw.getActiveTrack().updateDrumPadInputMelody();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();

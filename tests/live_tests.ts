@@ -12,36 +12,56 @@ describe("AbletonLive", () => {
   describe("when computing the combined rhythm section rhythm", () => {
     it("generates rhythm for tracks that have the same step length", () => {
       const daw = new AbletonLive(sequencer);
-      daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-      daw.tracks[1].rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      daw.tracks[0].rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      daw.tracks[1].rhythm = rhythmStepsForPattern([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
 
       expect(daw.rhythmSectionRhythm()).to.have.ordered.members([
-        1, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
-    it("generates a rhythm for tracks that without the same step length that is a divisor of the super measure", () => {
+    it("generates a rhythm for tracks without the same step length that is a divisor of the super measure", () => {
       const daw = new AbletonLive(sequencer);
-      daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-      daw.tracks[1].rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      daw.tracks[0].rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      daw.tracks[1].rhythm = rhythmStepsForPattern([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
       daw.tracks[1].rhythmStepLength = 8;
 
       expect(daw.rhythmSectionRhythm()).to.have.ordered.members([
-        1, 1, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0
+        1, 1, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0
       ]);
     });
 
     it("generates a rhythm for tracks that without the same step length that is NOT a divisor of the super measure", () => {
       const daw = new AbletonLive(sequencer);
-      daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-      daw.tracks[1].rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      daw.tracks[0].rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      daw.tracks[1].rhythm = rhythmStepsForPattern([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
       daw.tracks[1].rhythmStepLength = 12;
 
       expect(daw.rhythmSectionRhythm()).to.have.ordered.members([
         1, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0,
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,
         1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        1, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 0
       ]);
     });
 

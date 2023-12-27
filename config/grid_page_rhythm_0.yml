@@ -1,16 +1,18 @@
 name: Rhythm
 description: Manage the sequencer rhythm steps for the active track. Turn steps on and manage sequence step lengths.
-rows:
+matrices:
   -
     name: Rhythm Pattern / Step Length
     description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
     group: rhythm-pattern
     type: toggle / meter
-    index: 0
-    xStart: 0
-    xLength: 16
+    rowStart: 0
+    rowEnd: 1
+    columnStart: 0
+    columnEnd: 15
     mapping: updateRhythm
     shiftMapping: updateStepLength
+rows:
   -
     name: Rhythm Parameter Row
     description: Set parameter values for the current algorithm

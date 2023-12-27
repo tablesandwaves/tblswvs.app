@@ -47,7 +47,8 @@ describe("DrumPadController", () => {
 
     it("updates the track rhythm", () => {
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
@@ -83,7 +84,8 @@ describe("DrumPadController", () => {
 
     it("updates the track rhythm", () => {
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
@@ -119,7 +121,8 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
     expect(track.outputNotes[0][0].octave).to.eq(1);
     expect(track.outputNotes[0][0].note).to.eq("C");
@@ -131,6 +134,7 @@ describe("DrumPadController", () => {
 
     it("updates the track rhythm", () => {
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
@@ -162,7 +166,8 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
     expect(track.outputNotes[0][0].octave).to.eq(1);
     expect(track.outputNotes[0][0].note).to.eq("C");
@@ -177,7 +182,8 @@ describe("DrumPadController", () => {
 
     it("does not update the track rhythm", () => {
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 
@@ -212,7 +218,8 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 0, x: 12, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
     expect(track.outputNotes.length).to.eq(2);
 
@@ -224,7 +231,8 @@ describe("DrumPadController", () => {
 
     it("does not update the track rhythm", () => {
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
 

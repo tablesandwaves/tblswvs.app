@@ -2,6 +2,17 @@ name: Drum Pad
 description: The drum pad is accessed on rhythm page 4. Maps to an Ableton Drum Rack.
 matrices:
   -
+    name: Rhythm Pattern / Step Length
+    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    group: rhythm-pattern
+    type: toggle / meter
+    rowStart: 0
+    rowEnd: 1
+    columnStart: 0
+    columnEnd: 15
+    mapping: selectGate
+    shiftMapping: updateStepLength
+  -
     name: Drum Pads
     description: Each button corresponds to a drum rack voice.
     group: drum-pad
@@ -33,16 +44,6 @@ matrices:
         - 38
         - 39
 rows:
-  -
-    name: Rhythm Pattern / Step Length
-    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
-    group: rhythm-pattern
-    type: toggle / meter
-    index: 0
-    xStart: 0
-    xLength: 16
-    mapping: selectGate
-    shiftMapping: updateStepLength
   -
     name: Toggle Note Playing
     description: When enabled, when the pad buttons are pressed, the note will be played in Live

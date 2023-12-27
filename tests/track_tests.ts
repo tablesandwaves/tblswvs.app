@@ -32,9 +32,13 @@ describe("AbletonTrack", () => {
       const sequencer = new Sequencer(testing);
       const daw       = new AbletonLive(sequencer);
       const track     = daw.getActiveTrack();
+      track.rhythmStepLength = 16;
 
       it("generates accelerating beat positions", () => {
-        track.rhythm           = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+        track.rhythm = rhythmStepsForPattern([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
         track.rhythmAlgorithm  = "accelerating";
         track.updateCurrentAbletonNotes();
         let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
@@ -50,7 +54,11 @@ describe("AbletonTrack", () => {
       });
 
       it("generates accelerating beat positions that matches the gate pattern", () => {
-        track.rhythm           = rhythmStepsForPattern([1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0]);
+        track.rhythmStepLength = 32;
+        track.rhythm           = rhythmStepsForPattern([
+          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
+          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+        ]);
         track.rhythmAlgorithm  = "accelerating";
         track.updateCurrentAbletonNotes();
         let abletonNotes = track.currentAbletonNotes.sort((a, b) => {
@@ -206,7 +214,7 @@ describe("AbletonTrack", () => {
       const daw   = new AbletonLive(sequencer);
       const perc  = daw.tracks[3];
       const hihat = daw.tracks[2];
-      expect(hihat.rhythmStepLength).to.eq(16);
+      expect(hihat.rhythmStepLength).to.eq(32);
 
       perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       perc.rhythmStepLength = 8;
@@ -222,7 +230,7 @@ describe("AbletonTrack", () => {
       const daw   = new AbletonLive(sequencer);
       const perc  = daw.tracks[3];
       const hihat = daw.tracks[2];
-      expect(hihat.rhythmStepLength).to.eq(16);
+      expect(hihat.rhythmStepLength).to.eq(32);
 
       perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       hihat.rhythmAlgorithm = "surround";
@@ -238,7 +246,7 @@ describe("AbletonTrack", () => {
       const daw   = new AbletonLive(sequencer);
       const perc  = daw.tracks[3];
       const hihat = daw.tracks[2];
-      expect(hihat.rhythmStepLength).to.eq(16);
+      expect(hihat.rhythmStepLength).to.eq(32);
 
       perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
       hihat.rhythmAlgorithm = "surround";
@@ -495,7 +503,8 @@ describe("AbletonTrack", () => {
 
       it("should update the rhythm", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 
@@ -513,7 +522,8 @@ describe("AbletonTrack", () => {
 
       it("should update the rhythm", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 
@@ -535,7 +545,8 @@ describe("AbletonTrack", () => {
 
       it("should update the rhythm", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 
@@ -558,7 +569,8 @@ describe("AbletonTrack", () => {
 
       it("should update the rhythm", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0
+          0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 
@@ -577,7 +589,8 @@ describe("AbletonTrack", () => {
 
       it("should update the rhythm", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
 

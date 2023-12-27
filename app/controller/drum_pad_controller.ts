@@ -118,14 +118,15 @@ export class DrumPadController extends ApplicationController {
 
 
   selectGate(gridPage: DrumPadController, press: GridKeyPress) {
+    const stepIndex = press.x + (16 * press.y);
     if (press.s == 1) {
-      gridPage.heldGate = press.x;
+      gridPage.heldGate = stepIndex;
       // Will stay true while note recording is active unless a drum pad is pressed before the gate is released
       if (gridPage.noteRecordingActive) gridPage.disableGate = true;
     } else {
       gridPage.heldGate = undefined;
       if (gridPage.noteRecordingActive && gridPage.disableGate) {
-        gridPage.grid.sequencer.daw.getActiveTrack().setDrumPadStep(press.x, undefined);
+        gridPage.grid.sequencer.daw.getActiveTrack().setDrumPadStep(stepIndex, undefined);
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
         gridPage.setGridDrumPadDisplay();
         gridPage.updateGuiRhythmDisplay();
