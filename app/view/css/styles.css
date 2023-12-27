@@ -94,7 +94,7 @@ div#top-row div#full-rhythm-circle,
 div#top-row div#harmonic-rhythm-circle {
   display: block;
   width: 144px;
-  margin: 4px 0;
+  margin: 45px 0 4px;
   height: 120px;
 }
 
@@ -137,11 +137,16 @@ div#top-row div#step-sequencer div#rhythm-params {
 }
 
 
-div#rhythm-params div#pulse { width: 85px; }
-div#rhythm-params div#note-length { width: 130px; }
-div#rhythm-params div#fills-duration { width: 135px; }
-div#rhythm-params div#fill-measures { width: 230px; }
-div#rhythm-params div#algorithm { width: 210px; text-align: right; }
+div#rhythm-params div#pulse { width: 80px; }
+div#rhythm-params div#note-length { width: 123px; }
+div#rhythm-params div#fills-duration { width: 127px; }
+div#rhythm-params div#fill-measures { width: 235px; }
+div#rhythm-params div#algorithm {
+  width: 225px;
+  text-align: right;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
 
 div.indicator {
@@ -292,7 +297,7 @@ div#global-params div#evolution {
 div#global-params div#evolution div#randomizing-tracks,
 div#global-params div#evolution div#mutating-tracks,
 div#global-params div#evolution div#soloing-tracks {
-  margin: 10px auto;
+  margin: 2px auto;
 }
 
 
@@ -407,7 +412,7 @@ div#sequencer-steps div span.prob000 { height: 0px; }
 div#sequencer-fills div {
   width: 42px;
   height: 1em;
-  margin: 4px;
+  margin: 0 4px;
 }
 
 

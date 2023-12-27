@@ -126,9 +126,6 @@ const toggleIndicator = (selector: string, state: boolean) => {
 
 window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
   rhythm.forEach((step, i: number) => {
-    // TODO
-    if (i > 15) return;
-
     if (i < stepLength)
       document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("active");
     else
