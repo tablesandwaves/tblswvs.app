@@ -15,6 +15,10 @@ groups:
             track: Snare
             hits:       [4,  12, 20, 28]
             velocities: [80, 90, 80, 95]
+          -
+            track: HiHat
+            hits:       []
+            velocities: []
       base_with_hats:
         name: Electro w/ Hats
         length: 32
