@@ -51,6 +51,8 @@ export class RhythmController extends ApplicationController {
         const track = gridPage.grid.sequencer.daw.getActiveTrack();
         if (track.rhythmAlgorithm == "surround") return;
 
+        track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
+
         const updatedRhythm = track.rhythm.map(step => {return {...step}});
         gridPage.activeGates.forEach(queuedKeyPress => {
           const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
