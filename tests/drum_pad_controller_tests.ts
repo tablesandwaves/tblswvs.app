@@ -37,12 +37,12 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     it("updates the track rhythm", () => {
@@ -72,14 +72,14 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
     // Press and hold a gate, then select 2 drum pads
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 2, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
-    sequencer.grid.keyPress({y: 5, x: 2, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 2, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     it("updates the track rhythm", () => {
@@ -112,12 +112,12 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
@@ -157,12 +157,12 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Toggle note recording/editing on
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
@@ -174,7 +174,7 @@ describe("DrumPadController", () => {
     expect(track.outputNotes[0][0].midi).to.eq(36);
 
     // Toggle note recording/editing off
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
     // Turn the active gate off by pressing the button while gate editing is on without pressing a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -205,16 +205,16 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     // Turn on note recording/editing
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
     // Press and hold a gate, then select a drum pad
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 12, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 1, s: 1});
-    sequencer.grid.keyPress({y: 5, x: 1, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 0});
     sequencer.grid.keyPress({y: 0, x: 12, s: 0});
 
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
