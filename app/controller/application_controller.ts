@@ -151,6 +151,7 @@ export class ApplicationController {
     this.grid.levelRow(8, 1, transportRow.slice(24, 32));
 
     // Shared parameter rows
+    this.updateGridRowMeter(8, 4, (this.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
     this.toggleRadioButton(8, 5, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
     this.updateGridRowMeter(8, 6, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
   }
@@ -175,6 +176,14 @@ export class ApplicationController {
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
+  }
+
+
+  updateDefaultProbability(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
+      gridPage.updateGridRowMeter(8, 4, (gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
+    }
   }
 
 

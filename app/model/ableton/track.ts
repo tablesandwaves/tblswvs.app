@@ -214,6 +214,7 @@ export class AbletonTrack {
       } else {
         this.#rhythm[i].state = 0;
       }
+      this.#rhythm[i].probability = this.defaultProbability;
     });
 
     // Output notes is a compacted version of the drum rack sequence.

@@ -10,7 +10,6 @@ export class ProbabilitiesController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
     this.functionMap.set("updateProbability", this.updateProbability);
-    this.functionMap.set("updateTrackProbability", this.updateTrackProbability);
   }
 
 
@@ -37,19 +36,16 @@ export class ProbabilitiesController extends ApplicationController {
 
 
   setGridProbabilitiesDisplay(highlightIndex?: number) {
-    if (this.grid.shiftKey) {
-      for (let y = 0; y < 7; y++) {
-        this.grid.levelSet(0, y, this.matrix[y][0].value <= this.grid.sequencer.daw.getActiveTrack().defaultProbability ? 10 : 0);
-      }
-    } else {
-      let row;
-      for (let y = 0; y < 7; y++) {
-        row = this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep, x) => {
-          return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.probability) ? 10 : 0;
-        });
-        this.grid.levelRow(0, y, row.slice(0, 8));
-        this.grid.levelRow(8, y, row.slice(8, 16));
-      }
+    let row;
+    const [rhythmStart, rhythmEnd] = this.grid.shiftKey ? [16, 32] : [0, 16];
+
+    for (let y = 0; y < 7; y++) {
+      row = this.grid.sequencer.daw.getActiveTrack().rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
+        return (step.state == 1 && this.matrix[y][x].value <= step.probability) ? 10 : 0;
+      });
+
+      this.grid.levelRow(0, y, row.slice(0, 8));
+      this.grid.levelRow(8, y, row.slice(8, 16));
     }
   }
 }

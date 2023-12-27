@@ -14,6 +14,7 @@ export class RhythmController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
     this.functionMap.set("updateRhythm", this.updateRhythm);
+    this.functionMap.set("updateDefaultProbability", this.updateDefaultProbability);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("updatePulse", this.updatePulse);
@@ -135,8 +136,8 @@ export class RhythmController extends ApplicationController {
     super.setGridRhythmDisplay(highlightIndex);
 
     // Parameter rows
-    this.grid.levelRow(0, 4, this.getGridParameterRow().slice(0, 8));
-    this.grid.levelRow(8, 4, this.getGridParameterRow().slice(8, 16));
+    this.grid.levelRow(0, 2, this.getGridParameterRow().slice(0, 8));
+    this.grid.levelRow(8, 2, this.getGridParameterRow().slice(8, 16));
     this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
   }

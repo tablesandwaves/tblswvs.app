@@ -63,6 +63,24 @@ rows:
     xLength: 1
     mapping: toggleNoteRecording
   -
+    name: Default Probability
+    description: Set the current track's default gate probability
+    group: default-prob
+    type: meter
+    index: 4
+    xStart: 8
+    xLength: 8
+    mapping: updateDefaultProbability
+    values:
+      - 0.125
+      - 0.25
+      - 0.375
+      - 0.5
+      - 0.625
+      - 0.75
+      - 0.875
+      - 1
+  -
     name: Pulse Rate
     description: Set the current track's pulse rate between 16n and 2n
     group: pulse-rate
