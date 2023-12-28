@@ -114,3 +114,13 @@ matrices:
         - electro/base_with_hats
         - electro/siberian_nights
         - electro/new_wave
+      -
+        - hip_hop/base
+        - hip_hop/hip_hop_4
+        - hip_hop/hip_hop_7
+        - hip_hop/hip_hop_8
+      -
+        - hip_hop/funky_drummer
+        - hip_hop/amen_break
+        - hip_hop/funky_president
+        - hip_hop/levee
