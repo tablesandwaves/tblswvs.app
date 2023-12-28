@@ -25,7 +25,8 @@ export type Beat = {
   group: string,
   name: string,
   length: number,
-  voices: BeatVoice[]
+  voices: BeatVoice[],
+  button_xy: number[]
 }
 
 

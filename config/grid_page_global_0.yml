@@ -106,7 +106,7 @@ matrices:
     rowStart: 4
     rowEnd: 6
     columnStart: 8
-    columnEnd: 11
+    columnEnd: 15
     mapping: setBeat
     rowValues:
       -
@@ -114,13 +114,25 @@ matrices:
         - electro/base_with_hats
         - electro/siberian_nights
         - electro/new_wave
+        - techno/base
+        - techno/house
+        - techno/footwork
+        - techno/dubstep
       -
         - hip_hop/base
         - hip_hop/hip_hop_4
         - hip_hop/hip_hop_7
         - hip_hop/hip_hop_8
+        - undefined
+        - undefined
+        - undefined
+        - undefined
       -
         - hip_hop/funky_drummer
         - hip_hop/amen_break
         - hip_hop/funky_president
         - hip_hop/levee
+        - undefined
+        - undefined
+        - undefined
+        - undefined

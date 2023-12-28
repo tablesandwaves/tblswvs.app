@@ -1,7 +1,7 @@
 import { Key, Scale } from "tblswvs";
 import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { notes } from "../helpers/utils";
+import { notes, blank8x1Row } from "../helpers/utils";
 
 
 const configuredScales: Record<string, {scale: Scale, index: number}> = {
@@ -51,6 +51,7 @@ export class GlobalController extends ApplicationController {
     this.#setGridSuperMeasureDisplay();
     this.setGridScaleDisplay();
     this.setGridTonicDisplay();
+    this.setGridBeatPatternDisplay();
 
     for (let i = 0; i < 6; i++)
       this.setGridChainRow(i);
@@ -101,8 +102,11 @@ export class GlobalController extends ApplicationController {
 
 
   setBeat(gridPage: GlobalController, press: GridKeyPress) {
+    if (gridPage.matrix[press.y][press.x].value == "undefined") return;
+
     const [groupCode, beatCode] = gridPage.matrix[press.y][press.x].value.split("/");
     const beat = gridPage.grid.sequencer.beatPatterns.groups[groupCode].beats[beatCode];
+    beat.button_xy = [press.x - 8, press.y];
 
     gridPage.grid.sequencer.activeBeatPattern = beat;
     gridPage.grid.sequencer.gui.webContents.send("set-beat", beat.name);
@@ -121,8 +125,21 @@ export class GlobalController extends ApplicationController {
       gridPage.grid.sequencer.daw.updateTrackNotes(track);
     });
 
+    gridPage.setGridBeatPatternDisplay();
     gridPage.updateGuiRhythmDisplay();
     gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
+  }
+
+
+  setGridBeatPatternDisplay() {
+    if (this.grid.sequencer.activeBeatPattern) {
+      for (let y = 4; y <= 6; y++) {
+        let row = blank8x1Row.slice();
+        if (this.grid.sequencer.activeBeatPattern.button_xy[1] == y)
+          row[this.grid.sequencer.activeBeatPattern.button_xy[0]] = 10;
+        this.grid.levelRow(8, y, row);
+      }
+    }
   }
 
 

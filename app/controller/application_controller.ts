@@ -1,5 +1,5 @@
 import { MonomeGrid } from "../model/monome_grid";
-import { blank8x8Row } from "../helpers/utils";
+import { blank8x1Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
 
@@ -268,14 +268,14 @@ export class ApplicationController {
 
 
   toggleRadioButton(startIndex: number, rowIndex: number, selectedIndex: number) {
-    let row = blank8x8Row.slice();
+    let row = blank8x1Row.slice();
     row[selectedIndex] = 10;
     this.grid.levelRow(startIndex, rowIndex, row);
   }
 
 
   updateGridRowMeter(startIndex: number, rowIndex: number, selectedIndex: number) {
-    let row = blank8x8Row.slice();
+    let row = blank8x1Row.slice();
     for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
     this.grid.levelRow(startIndex, rowIndex, row);
   }

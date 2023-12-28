@@ -67,10 +67,73 @@ groups:
             track: HiHat
             hits:       [0,   1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15]
             velocities: [80, 44, 44, 70, 44, 44, 80, 44, 44, 44, 70, 30, 80, 30, 30, 30]
+  techno:
+    name: Techno
+    beats:
+      base:
+        name: 4 to the Floor
+        length: 16
+        voices:
           -
-            track: Perc
+            track: Kick
+            hits:       [0,    4,  8, 12]
+            velocities: [100, 70, 70, 75]
+          -
+            track: Snare
+            hits:       []
+            velocities: []
+          -
+            track: HiHat
+            hits:       []
+            velocities: []
+      house:
+        name: House
+        length: 16
+        voices:
+          -
+            track: Kick
+            hits:       [0,    4,  8, 12]
+            velocities: [100, 70, 70, 75]
+          -
+            track: Snare
             hits:       [4,  12]
-            velocities: [80, 90]
+            velocities: [80, 80]
+          -
+            track: HiHat
+            hits:       [2,   6, 10, 14]
+            velocities: [30, 50, 40, 40]
+      footwork:
+        name: Footwork
+        length: 32
+        voices:
+          -
+            track: Kick
+            hits:       [0,    3,  6,  8, 11, 14,  16, 19, 22, 24, 27, 30]
+            velocities: [100, 50, 50, 60, 80, 50, 100, 50, 50, 60, 80, 50]
+          -
+            track: Snare
+            hits:       [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+            velocities: [60, 40, 10, 20, 60, 70, 60, 50, 40, 70, 75, 60, 20, 10, 10, 30, 40, 20, 10, 10, 10, 10, 30, 50, 70, 90, 60, 40, 50, 50, 20, 35]
+          -
+            track: HiHat
+            hits:       [2,  10, 18, 22, 23, 26,  30]
+            velocities: [30, 40, 30, 40, 50, 90, 100]
+      dubstep:
+        name: Dubstep
+        length: 32
+        voices:
+          -
+            track: Kick
+            hits:       [0,   10,  16, 19, 22, 26]
+            velocities: [100, 70, 100, 50, 50, 60]
+          -
+            track: Snare
+            hits:       [8,  24]
+            velocities: [80, 80]
+          -
+            track: HiHat
+            hits:       [1,   2,  4,  6, 11, 13, 14, 17, 18, 20, 22, 27, 29, 30]
+            velocities: [30, 30, 40, 50, 30, 30, 40, 50, 30, 30, 40, 50, 30, 30]
   hip_hop:
     name: Hip Hop
     beats:
