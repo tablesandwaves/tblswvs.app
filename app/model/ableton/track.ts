@@ -58,10 +58,8 @@ export class AbletonTrack {
   #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
   acceleratingGateCount = 10;
 
-  // noteType: ("melody"|"chords"|"drum rack") = "melody";
   algorithm: string = "simple";
   // Are the output notes a melody or chord progression?
-  // notesAreMelody = true;
   polyphonicVoiceMode = false;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
   #inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
@@ -156,7 +154,6 @@ export class AbletonTrack {
 
   set inputMelody(inputNotes: note[]) {
     this.polyphonicVoiceMode = false;
-    // this.noteType = "melody";
 
     this.#inputMelody = inputNotes;
     let notes: note[] = new Array();
@@ -189,7 +186,6 @@ export class AbletonTrack {
 
   setChordProgression(chordNotes: note[][]) {
     this.polyphonicVoiceMode = true;
-    // this.noteType = "chords";
     this.#outputNotes = chordNotes;
   }
 
@@ -200,7 +196,6 @@ export class AbletonTrack {
 
 
   setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
-    // this.noteType = "drum rack";
     this.polyphonicVoiceMode = true;
     this.#drumRackSequence[rhythmStepIndex] = inputNotes;
     this.updateDrumPadInputMelody();
@@ -214,7 +209,6 @@ export class AbletonTrack {
       } else {
         this.#rhythm[i].state = 0;
       }
-      this.#rhythm[i].probability = this.defaultProbability;
     });
 
     // Output notes is a compacted version of the drum rack sequence.
