@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { MelodyEvolutionController } from "../app/controller/melody_evolution_controller";
-import { rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing   = true;
@@ -9,7 +9,7 @@ const testing   = true;
 
 describe("MelodyEvolutionController", () => {
   describe("Selecting the initial blank melody evolution page", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -56,7 +56,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("setting tracks to randomizing", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -82,7 +82,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("setting a previously mutating track to randomizing", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -120,7 +120,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("setting a previously randomizing track to mutating", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -158,7 +158,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("setting a previously soloing track to mutating", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -196,7 +196,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("setting tracks to mutating", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
     const melodyNotes = [
       { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
       { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
@@ -228,7 +228,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("setting tracks to soloing", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
     const melodyNotes = [
       { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
       { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
@@ -261,7 +261,7 @@ describe("MelodyEvolutionController", () => {
   });
 
   describe("enabling the mutations to start", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -277,7 +277,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("turning mutations on for a second time", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.daw.tracks[5].inputMelody = [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }];
     sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
@@ -319,7 +319,7 @@ describe("MelodyEvolutionController", () => {
 
 
   describe("disabling mutations", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the melody page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});

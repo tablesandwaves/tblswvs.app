@@ -2,11 +2,11 @@ import { expect } from "chai";
 import { AbletonTrack } from "../app/model/ableton/track";
 import { Sequencer } from "../app/model/sequencer";
 import { AbletonLive } from "../app/model/ableton/live";
-import { patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing   = true;
-const sequencer = new Sequencer(testing);
+const sequencer = new Sequencer(configDirectory, testing);
 const daw       = new AbletonLive(sequencer);
 
 
@@ -29,7 +29,7 @@ describe("AbletonTrack", () => {
 
   describe("rhythm algorithms", () => {
     describe("setting the rhythm algorithm to acceleration", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
       const daw       = new AbletonLive(sequencer);
       const track     = daw.getActiveTrack();
       track.rhythmStepLength = 16;

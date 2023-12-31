@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { DrumPadController } from "../app/controller/drum_pad_controller";
-import { patternForRhythmSteps } from "./test_helpers";
+import { configDirectory, patternForRhythmSteps } from "./test_helpers";
 
 
 const testing   = true;
@@ -9,7 +9,7 @@ const testing   = true;
 
 describe("DrumPadController", () => {
   describe("Selecting the initial drum controller page", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
@@ -26,7 +26,7 @@ describe("DrumPadController", () => {
 
 
   describe("activating a pad for a rhythm step", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
@@ -61,7 +61,7 @@ describe("DrumPadController", () => {
 
 
   describe("activating multiple pads for a rhythm step", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
@@ -101,7 +101,7 @@ describe("DrumPadController", () => {
 
 
   describe("deactivating a rhythm step", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
@@ -146,7 +146,7 @@ describe("DrumPadController", () => {
 
 
   describe("deactivating a rhythm step when note editing is not on", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
@@ -194,7 +194,7 @@ describe("DrumPadController", () => {
 
 
   describe("activating steps and then changing the step length", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});

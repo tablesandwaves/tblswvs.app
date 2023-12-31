@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { RhythmController } from "../app/controller/rhythm_controller";
-import { patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing = true;
@@ -9,7 +9,7 @@ const testing = true;
 
 describe("RhythmController", () => {
   describe("setting a basic rhythm", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -37,7 +37,7 @@ describe("RhythmController", () => {
 
 
     describe("adding notes to an existing rhythm", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
 
       // Select the rhythm page
       sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -67,7 +67,7 @@ describe("RhythmController", () => {
 
 
   describe("setting the rhythm algorithm", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -87,7 +87,7 @@ describe("RhythmController", () => {
 
 
   describe("setting the accelerating algorithm", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page,
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -137,7 +137,7 @@ describe("RhythmController", () => {
 
 
   describe("setting the related rhythm track", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -156,7 +156,7 @@ describe("RhythmController", () => {
   });
 
   describe("setting the surround rhythm and then a related rhythm track", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     const sourceTrack   = sequencer.daw.tracks[1];
@@ -188,7 +188,7 @@ describe("RhythmController", () => {
   });
 
   describe("setting a related rhythm track and then the surround rhythm", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     const sourceTrack   = sequencer.daw.tracks[1];
@@ -220,7 +220,7 @@ describe("RhythmController", () => {
   });
 
   describe("updating a subject track that has a dependent track", () => {
-    const sequencer = new Sequencer(testing);
+    const sequencer = new Sequencer(configDirectory, testing);
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
     const sourceTrack   = sequencer.daw.tracks[1];
@@ -257,7 +257,7 @@ describe("RhythmController", () => {
 
   describe("Editing steps in the transport row", () => {
     describe("when the manual algorithm is selected and gate buttons are pressed", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
       sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
       const track      = sequencer.daw.getActiveTrack();
@@ -296,7 +296,7 @@ describe("RhythmController", () => {
     });
 
     describe("when a non-manual algorithm is selected and gate buttons are pressed", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
       sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
       const track      = sequencer.daw.getActiveTrack();

@@ -6,7 +6,8 @@ import { noteData } from "tblswvs";
 import { BeatSet, Sequencer } from "./app/model/sequencer";
 
 
-const sequencer = new Sequencer();
+const configDirectory = process.env.NODE_ENV && process.env.NODE_ENV === "production" ? process.resourcesPath : path.join(__dirname, "config");
+const sequencer       = new Sequencer(configDirectory);
 
 
 const createWindow = () => {
@@ -35,14 +36,13 @@ app.whenReady().then(() => {
     // The grid and UI need a moment to be fully ready. Wait half a second, then simulate a key press
     // to set the grid to the track 1, rhythm page.
     setTimeout(() => {
-      const configDirectory = "./config";
-      fs.readdir(configDirectory, (err, files) => {
+      fs.readdir(sequencer.configDirectory, (err, files) => {
         files.forEach(filename => {
           if (filename.startsWith("grid_page_")) {
-            const configuration = yaml.load(fs.readFileSync( path.resolve(configDirectory, filename), "utf8" ));
+            const configuration = yaml.load(fs.readFileSync( path.resolve(sequencer.configDirectory, filename), "utf8" ));
             sequencer.gui.webContents.send("documentation-page", configuration);
           } else if (filename.startsWith("patterns_beats")) {
-            const beatPatterns = yaml.load(fs.readFileSync( path.resolve(configDirectory, filename), "utf8" ));
+            const beatPatterns = yaml.load(fs.readFileSync( path.resolve(sequencer.configDirectory, filename), "utf8" ));
             sequencer.setBeatPatterns(beatPatterns as BeatSet);
           }
         });

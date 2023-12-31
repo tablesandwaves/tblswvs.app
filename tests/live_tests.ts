@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { AbletonLive } from "../app/model/ableton/live";
 import { Sequencer } from "../app/model/sequencer";
-import { rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing   = true;
-const sequencer = new Sequencer(testing);
+const sequencer = new Sequencer(configDirectory, testing);
 
 
 describe("AbletonLive", () => {
@@ -66,7 +66,7 @@ describe("AbletonLive", () => {
     });
 
     it("generates a rhythm for tracks that without the same step length that is a divisor of an uncommon super measure", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
       sequencer.superMeasure = 3;
       const daw = new AbletonLive(sequencer);
       daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
@@ -83,7 +83,7 @@ describe("AbletonLive", () => {
     });
 
     it("generates a rhythm when all tracks have a shortented step length that is a divisor of an uncommon super measure", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
       sequencer.superMeasure = 3;
       const daw = new AbletonLive(sequencer);
       daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
@@ -98,7 +98,7 @@ describe("AbletonLive", () => {
     });
 
     it("takes into account a track's pulse rate", () => {
-      const sequencer = new Sequencer(testing);
+      const sequencer = new Sequencer(configDirectory, testing);
       sequencer.superMeasure = 2;
       const daw = new AbletonLive(sequencer);
       daw.tracks[0].rhythm = rhythmStepsForPattern([1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 1]);

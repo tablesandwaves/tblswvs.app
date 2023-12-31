@@ -42,8 +42,7 @@ export type BeatSet = {
 
 
 export class Sequencer {
-  static CONFIG_DIRECTORY: string = path.resolve(__dirname, "../../config");
-
+  configDirectory: string;
   emitter: any;
   receiver: any;
   midiOut: any;
@@ -60,7 +59,7 @@ export class Sequencer {
   activeBeatPattern: Beat = undefined;
 
 
-  constructor(testing: boolean = false) {
+  constructor(configDirectory: string, testing: boolean = false) {
     this.testing = testing;
 
     if (!this.testing) {
@@ -78,6 +77,7 @@ export class Sequencer {
       // For debugging: all messages are logged.
       // this.receiver.on("message", this.#processLiveMessages);
     }
+    this.configDirectory = configDirectory;
     this.grid = new MonomeGrid(this, testing);
     this.daw  = new AbletonLive(this);
     this.key  = new Key(60, Scale.Minor);

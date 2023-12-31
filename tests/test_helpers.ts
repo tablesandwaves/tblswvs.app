@@ -1,4 +1,8 @@
+import * as path from "path";
 import { RhythmStep } from "../app/model/ableton/track";
+
+
+export const configDirectory = path.join(__dirname, "..", "config");
 
 
 export const rhythmStepsForPattern = (pattern: (0|1)[]): RhythmStep[] => {
