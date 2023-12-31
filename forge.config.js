@@ -4,6 +4,7 @@ const fs   = require("fs");
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: "./images/tblswvs",
     extraResource: [
       "./dist/config/grid_page_chord_0.yml",
       "./dist/config/grid_page_drumpad.yml",
