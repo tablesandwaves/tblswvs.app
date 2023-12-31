@@ -34,4 +34,5 @@ contextBridge.exposeInMainWorld("parameters", {
 contextBridge.exposeInMainWorld("documentation", {
   pageDocumentation: (callback: any) => ipcRenderer.on("documentation-page", callback),
   setNoteData: (callback: any) => ipcRenderer.on("note-data", callback),
+  displayResourcesPath: (callback: any) => ipcRenderer.on("resources-path", callback)
 });

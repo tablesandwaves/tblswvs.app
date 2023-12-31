@@ -20,7 +20,7 @@ const createWindow = () => {
   });
 
   sequencer.gui = mainWindow;
-  mainWindow.loadFile("app/view/index.html");
+  mainWindow.loadFile(path.join(path.join(__dirname), "app", "view", "index.html"));
   // mainWindow.webContents.openDevTools();
 
   mainWindow.on("closed", () => {
@@ -48,6 +48,8 @@ app.whenReady().then(() => {
         });
       });
 
+      // For debugging build paths
+      // sequencer.gui.webContents.send("resources-path", sequencer.configDirectory);
       sequencer.gui.webContents.send("note-data", noteData);
       sequencer.grid.keyPress({x: 0, y: 7, s: 1});
       sequencer.grid.keyPress({x: 7, y: 7, s: 1});

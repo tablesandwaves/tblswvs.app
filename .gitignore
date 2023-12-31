@@ -6,3 +6,5 @@ tests/mocks/serializations/
 package-lock.json
 .DS_Store
 .vscode
+
+out/

@@ -26,6 +26,11 @@ window.documentation.pageDocumentation((event: any, page: any) => {
 
 window.documentation.setNoteData((event: any, _noteData: any[]) => noteData = _noteData);
 
+window.documentation.displayResourcesPath((event: any, path: string) => {
+  console.log(path)
+  updateText("#resources-path", path);
+});
+
 
 window.stepSequencer.transport((event: any, currentStep: number, currentPianoRollStep: number) => updateTransport(currentStep, currentPianoRollStep));
 
