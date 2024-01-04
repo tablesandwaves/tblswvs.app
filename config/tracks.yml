@@ -73,6 +73,9 @@ live_tracks:
           - FM Glass Perc
           - Digital Hi Perc
           - Digital Lo Perc
+      -
+        name: Click Vinyl
+        type: sampler
   -
     name: Bass
     dawIndex: 5
@@ -92,6 +95,9 @@ live_tracks:
       -
         name: FM Four Pluck
         type: synth
+      -
+        name: DS Bass
+        type: synth
   -
     name: Keys
     dawIndex: 6
@@ -109,7 +115,7 @@ live_tracks:
         name: Drift
         type: synth
       -
-        name: Sad Broken Drift
+        name: Han's Solo
         type: synth
       -
         name: Basic FM
