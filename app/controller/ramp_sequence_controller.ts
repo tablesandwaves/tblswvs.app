@@ -130,18 +130,20 @@ export class RampSequenceController extends ApplicationController {
 
 
   updateSubdivision(gridPage: RampSequenceController, press: GridKeyPress) {
-    if (press.s == 1) {
-      const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
-      rampSequence.updateSubdivisionLength(gridPage.activeSegment.startIndex, press.x - gridPage.activeSegment.startIndex + 1);
+    if (!gridPage.activeSegment || press.s != 1) return;
 
-      gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
-      gridPage.setGridSubdivisionDisplay();
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
-    }
+    const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+    rampSequence.updateSubdivisionLength(gridPage.activeSegment.startIndex, press.x - gridPage.activeSegment.startIndex + 1);
+
+    gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+    gridPage.setGridSubdivisionDisplay();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
   }
 
 
   updateRange(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (!gridPage.activeSegment) return;
+
     // Button press
     if (press.s == 1) {
 
