@@ -261,7 +261,7 @@ export class ApplicationController {
 
 
   updateGuiRhythmTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    if (this.grid.sequencer.testing) return;
+    if (this.grid.sequencer.testing || !this.grid.sequencer.gui.webContents) return;
 
     this.grid.sequencer.gui.webContents.send("transport", highlightIndex, pianoRollHighlightIndex);
   }
