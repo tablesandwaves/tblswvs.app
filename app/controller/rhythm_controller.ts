@@ -117,8 +117,8 @@ export class RhythmController extends ApplicationController {
       }
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.grid.levelRow(0, 4, gridPage.getGridParameterRow().slice(0, 8));
-      gridPage.grid.levelRow(8, 4, gridPage.getGridParameterRow().slice(8, 16));
+      gridPage.grid.levelRow(0, 3, gridPage.getGridParameterRow().slice(0, 8));
+      gridPage.grid.levelRow(8, 3, gridPage.getGridParameterRow().slice(8, 16));
     }
   }
 

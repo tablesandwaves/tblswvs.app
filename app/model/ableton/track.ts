@@ -334,7 +334,7 @@ export class AbletonTrack {
   set rhythmAlgorithm(algorithm: string) {
     this.#rhythmAlgorithm = algorithm;
 
-    if (this.#rhythmAlgorithm == "manual") {
+    if (this.#rhythmAlgorithm == "manual" || this.#rhythmAlgorithm == "accelerating") {
       this.#relatedRhythmTrackDawIndex = undefined;
     }
 

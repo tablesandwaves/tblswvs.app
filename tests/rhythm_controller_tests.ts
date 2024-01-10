@@ -155,6 +155,7 @@ describe("RhythmController", () => {
     });
   });
 
+
   describe("setting the surround rhythm and then a related rhythm track", () => {
     const sequencer = new Sequencer(configDirectory, testing);
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -187,6 +188,7 @@ describe("RhythmController", () => {
     });
   });
 
+
   describe("setting a related rhythm track and then the surround rhythm", () => {
     const sequencer = new Sequencer(configDirectory, testing);
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -218,6 +220,7 @@ describe("RhythmController", () => {
       ]);
     });
   });
+
 
   describe("updating a subject track that has a dependent track", () => {
     const sequencer = new Sequencer(configDirectory, testing);
@@ -254,6 +257,7 @@ describe("RhythmController", () => {
       ]);
     });
   });
+
 
   describe("Editing steps in the transport row", () => {
     describe("when the manual algorithm is selected and gate buttons are pressed", () => {
@@ -294,6 +298,7 @@ describe("RhythmController", () => {
         ]);
       });
     });
+
 
     describe("when a non-manual algorithm is selected and gate buttons are pressed", () => {
       const sequencer = new Sequencer(configDirectory, testing);
