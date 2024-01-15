@@ -385,8 +385,9 @@ export class AbletonTrack {
         if (this.rhythmAlgorithm == "accelerating") {
 
           const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 };
-          const spreadAmount = (rhythmIndicesAndOffsets[step % stepLength] * 0.25) / (32 / this.#rhythmStepLength);
-          const offset = (step % stepLength) * 0.25;
+          const spreadAmount           = (rhythmIndicesAndOffsets[step % stepLength] * 0.25);
+          const offset                 = (step % stepLength) * 0.25;
+
           acceleratingBeatPositions(this.acceleratingGateCount, spreadAmount, offset).forEach(gatePosition => {
             const clipPosition = gatePosition + (step * 0.25);
             noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, acceleratingRhythmStep, clipPosition, defaultDuration));
@@ -430,7 +431,7 @@ export class AbletonTrack {
       if (step.state == 1) beatDivisions.push(i);
       return beatDivisions;
     }, new Array()).map((index, i, arr) => {
-      const nextStep = i + 1 == arr.length ? this.rhythm.length : arr[i + 1];
+      const nextStep = i + 1 == arr.length ? this.#rhythmStepLength : arr[i + 1];
       return [index, nextStep - index];
     }).reduce((beatIndexLengthMap: Record<number,number>, [index, length]) => {
       beatIndexLengthMap[index] = length;

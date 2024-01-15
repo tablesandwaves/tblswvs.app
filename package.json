@@ -1,6 +1,6 @@
 {
   "name": "tblswvs",
-  "version": "0.20.1",
+  "version": "0.20.2",
   "description": "An experimental controller for electronic music.",
   "main": "dist/main.js",
   "scripts": {
