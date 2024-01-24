@@ -243,11 +243,8 @@ export class AbletonTrack {
 
 
   notify(dawIndex: number, notification: string) {
-    if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm") {
-      const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
-      this.#rhythm = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
-      this.#pulseRate = this.daw.tracks[trackIndex].pulseRate;
-      this.#rhythmStepLength = this.daw.tracks[trackIndex].rhythmStepLength;
+    if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm" && this.#rhythmAlgorithm == "surround") {
+      this.#generateSurroundRhythm();
       this.daw.updateTrackNotes(this);
     }
   }
@@ -346,10 +343,25 @@ export class AbletonTrack {
 
   #generateSurroundRhythm() {
     const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
+    const relatedRhythmTrack = this.daw.tracks[trackIndex];
 
-    this.#rhythmStepLength = this.daw.tracks[trackIndex].rhythmStepLength;
-    this.#pulseRate        = this.daw.tracks[trackIndex].pulseRate;
-    this.#rhythm           = surroundRhythm(this.daw.tracks[trackIndex].rhythm);
+    this.#rhythmStepLength = relatedRhythmTrack.rhythmStepLength;
+    this.#pulseRate        = relatedRhythmTrack.pulseRate;
+
+    this.#rhythm.splice( 0,
+      relatedRhythmTrack.rhythmStepLength,
+      ...surroundRhythm(relatedRhythmTrack.rhythm.slice(0, relatedRhythmTrack.rhythmStepLength))
+    );
+
+    if (this.#rhythmStepLength < 32) {
+      this.#rhythm.splice(
+        32 - this.#rhythmStepLength,
+        32 - this.#rhythmStepLength,
+        ...[...new Array(32 - this.#rhythmStepLength)].map(() => {
+          return {state: 0, probability: 1, fillRepeats: 0};
+        })
+      );
+    }
   }
 
 

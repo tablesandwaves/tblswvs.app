@@ -189,6 +189,64 @@ describe("RhythmController", () => {
   });
 
 
+  describe("a surround rhythm for a track with a shortened length", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    const surroundTrack = sequencer.daw.getActiveTrack();
+    const sourceTrack   = sequencer.daw.tracks[1];
+    sourceTrack.rhythmStepLength = 16;
+
+    // Set the source track rhythm, then add gate/step to the surround track to confirm it is removed
+    sourceTrack.rhythm[0].state = 1;
+    surroundTrack.rhythm[16].state = 1;
+
+    // Select the surround algorithm and the related track
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 1, s: 1});
+    expect(surroundTrack.rhythmAlgorithm).to.eq("surround");
+
+    it("has a surrounding track that wraps correctly (according to the source track length)", () => {
+      const pattern = patternForRhythmSteps(surroundTrack.rhythm);
+      expect(pattern).to.have.ordered.members([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 1,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+  });
+
+
+  describe("changing a surround rhythm's source track's length", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    const surroundTrack = sequencer.daw.getActiveTrack();
+    const sourceTrack   = sequencer.daw.tracks[1];
+
+    // Set the source track rhythm, then add gate/step to the surround track to confirm it is removed
+    sourceTrack.rhythm[0].state = 1;
+
+    // Select the surround algorithm and the related track
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 1, s: 1});
+    expect( patternForRhythmSteps(surroundTrack.rhythm) ).to.have.ordered.members([
+      0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 1
+    ]);
+
+    // After the surround rhythm has already been set, update the source track's step length
+    sourceTrack.rhythmStepLength = 16;
+
+    it("the surrounding track updates so it wraps to match the source track length", () => {
+      const pattern = patternForRhythmSteps(surroundTrack.rhythm);
+      expect(pattern).to.have.ordered.members([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 1,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+  });
+
+
   describe("setting a related rhythm track and then the surround rhythm", () => {
     const sequencer = new Sequencer(configDirectory, testing);
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
