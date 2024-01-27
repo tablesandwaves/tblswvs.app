@@ -511,7 +511,8 @@ export class AbletonTrack {
   evolveMelody(tradingVoices = false) {
     let   mutatedMelody   = new Array();
     const activeMutations = this.daw.mutations.filter(m => m.active == 1).map(m => m.function);
-    const gatesPerMeasure = this.rhythm.reduce((a, b) => a + b.state, 0);
+    let   gatesPerMeasure = this.rhythm.reduce((a, b) => a + b.state, 0);
+          gatesPerMeasure = gatesPerMeasure == 0 ? 1 : gatesPerMeasure;
 
     let mutationSource = tradingVoices ? this.daw.currentSoloistMelody : this.currentMutation;
 
