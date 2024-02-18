@@ -362,6 +362,8 @@ describe("RhythmController", () => {
       sequencer.grid.keyPress({y: 5, x: 9, s: 1});
       sequencer.grid.keyPress({y: 0, x: 4, s: 0});
 
+      track.updateCurrentAbletonNotes();
+
       it("leaves the track's gate rhythm unchanged", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
           1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
@@ -375,6 +377,14 @@ describe("RhythmController", () => {
 
       it("updates the second gate's note length", () => {
         expect(track.rhythm[4].noteLength).to.be.eq("8n");
+      });
+
+      it("leave the first gate's note length unchanged in the track's Ableton notes", () => {
+        expect(track.currentAbletonNotes[0].duration).to.eq(0.25);
+      });
+
+      it("updates the second gate's note length in the track's Ableton notes", () => {
+        expect(track.currentAbletonNotes[1].duration).to.eq(0.5);
       });
     });
 
