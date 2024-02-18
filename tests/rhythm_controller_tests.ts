@@ -397,6 +397,33 @@ describe("RhythmController", () => {
     });
 
 
+    describe("removing a gate with a custom note length", () => {
+      const [sequencer, track, controller] = getRhythmControllerMocks();
+
+      // Then add two gates, one of which will be changed
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+
+      // Then update the second gate to have a custom note length
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 5, x: 9, s: 1});
+      sequencer.grid.keyPress({y: 5, x: 9, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+
+      expect(track.rhythm[4].noteLength).to.be.eq("8n");
+
+      // Then remove the second gate
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+
+      it("resets the gate's custom length in the track's rhythm", () => {
+        expect(track.rhythm[4].noteLength).to.be.undefined;
+      });
+    });
+
+
     describe("when a non-manual algorithm is selected and gate buttons are pressed", () => {
       const sequencer = new Sequencer(configDirectory, testing);
       sequencer.grid.keyPress({y: 7, x: 7, s: 1});

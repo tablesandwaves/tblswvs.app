@@ -103,7 +103,10 @@ export class RhythmController extends ApplicationController {
             const stepState                      = 1 - track.rhythm[stepIndex].state;
             updatedRhythm[stepIndex].state       = stepState;
             updatedRhythm[stepIndex].probability = track.defaultProbability;
-            if (stepState == 0) updatedRhythm[stepIndex].fillRepeats = 0;
+            if (stepState == 0) {
+              updatedRhythm[stepIndex].fillRepeats = 0;
+              updatedRhythm[stepIndex].noteLength  = undefined;
+            }
           });
           track.rhythm = updatedRhythm;
           gridPage.activeGates = new Array();
