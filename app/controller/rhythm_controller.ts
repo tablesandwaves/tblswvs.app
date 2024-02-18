@@ -9,6 +9,7 @@ export class RhythmController extends ApplicationController {
   keyReleaseFunctionality     = true;
   keyPressCount               = 0;
   activeGates: GridKeyPress[] = new Array();
+  customNoteLength: "16n"|"8n"|"8nd"|"4n"|"4nd"|"2n"|"2nd"|"1n" = undefined;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -39,6 +40,27 @@ export class RhythmController extends ApplicationController {
   }
 
 
+  updateNoteLength(gridPage: RhythmController, press: GridKeyPress): void {
+    if (press.s != 1) return;
+
+    if (gridPage.activeGates.length > 0) {
+
+      const track = gridPage.grid.sequencer.daw.getActiveTrack();
+      gridPage.activeGates.forEach(queuedKeyPress => {
+        const stepIndex = queuedKeyPress.x + (16 * queuedKeyPress.y);
+        track.rhythm[stepIndex].noteLength = gridPage.matrix[press.y][press.x].value;
+      });
+      gridPage.activeGates = new Array();
+
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      if (!gridPage.grid.sequencer.testing) track.updateGuiNoteLength();
+
+    } else {
+      super.updateNoteLength(gridPage, press);
+    }
+  }
+
+
   updateRhythm(gridPage: RhythmController, press: GridKeyPress) {
     // As they are pressed, add gates to the active gates array for storing until the last key press is released.
     if (press.s == 1) {
@@ -49,7 +71,9 @@ export class RhythmController extends ApplicationController {
 
       if (gridPage.keyPressCount == 0) {
         const track = gridPage.grid.sequencer.daw.getActiveTrack();
-        if (track.rhythmAlgorithm == "surround") return;
+
+        // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
+        if (track.rhythmAlgorithm == "surround" || gridPage.activeGates.length == 0) return;
 
         track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
 

@@ -18,7 +18,7 @@ export const pulseRateMap: Record<string, noteLength> = {
 
 /**
  * noteLength.size is a multiplier of quarter notes
- * noteLength.index is the index in row 7 on the grid
+ * noteLength.index is the index in row 6 on the grid
  */
 export const noteLengthMap: Record<string, noteLength> = {
   "16n": {size: 0.25, index: 0},

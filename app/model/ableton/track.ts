@@ -20,6 +20,7 @@ export type RhythmStep = {
   probability: number;
   fillRepeats: number;
   velocity?: number;
+  noteLength?: "16n"|"8n"|"8nd"|"4n"|"4nd"|"2n"|"2nd"|"1n";
 };
 
 

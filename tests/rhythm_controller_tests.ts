@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { RhythmController } from "../app/controller/rhythm_controller";
-import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern,getRhythmControllerMocks } from "./test_helpers";
 
 
 const testing = true;
@@ -319,23 +319,7 @@ describe("RhythmController", () => {
 
   describe("Editing steps in the transport row", () => {
     describe("when the manual algorithm is selected and gate buttons are pressed", () => {
-      const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-
-      const track      = sequencer.daw.getActiveTrack();
-      const controller = sequencer.grid.activePage as RhythmController;
-
-      // Select the manual algorithm, confirm the track rhythm and transport row are empty
-      sequencer.grid.keyPress({y: 6, x: 0, s: 1});
-      expect(track.rhythmAlgorithm).to.eq("manual");
-      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
-      expect(controller.getRhythmGatesRow()).to.have.ordered.members([
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
+      const [sequencer, track, controller] = getRhythmControllerMocks();
 
       // Then add a gate, with the change queuing on the press and applying on the release
       sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -354,6 +338,43 @@ describe("RhythmController", () => {
           10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
+      });
+    });
+
+
+    describe("editing the note length for a single step", () => {
+      const [sequencer, track, controller] = getRhythmControllerMocks();
+
+      // Then add two gates, one of which will be changed
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      // Then update the second gate to have a custom note length
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 5, x: 9, s: 0});
+      sequencer.grid.keyPress({y: 5, x: 9, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+
+      it("leaves the track's gate rhythm unchanged", () => {
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("leaves the first gate's note length unchanged (undefined - will use track default)", () => {
+        expect(track.rhythm[0].noteLength).to.be.undefined;
+      });
+
+      it("updates the second gate's note length", () => {
+        expect(track.rhythm[4].noteLength).to.be.eq("8n");
       });
     });
 

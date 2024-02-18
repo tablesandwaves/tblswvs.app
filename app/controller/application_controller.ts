@@ -221,11 +221,14 @@ export class ApplicationController {
 
   updateNoteLength(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().noteLength = gridPage.matrix[press.y][press.x].value;
-      gridPage.updateGridRowMeter(8, 5, noteLengthMap[gridPage.grid.sequencer.daw.getActiveTrack().noteLength].index);
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiNoteLength();
+      const track = gridPage.grid.sequencer.daw.getActiveTrack();
+
+      track.noteLength = gridPage.matrix[press.y][press.x].value;
+      gridPage.updateGridRowMeter(8, 5, noteLengthMap[track.noteLength].index);
+      track.updateGuiNoteLength();
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      if (!gridPage.grid.sequencer.testing) track.updateGuiNoteLength();
     }
   }
 
