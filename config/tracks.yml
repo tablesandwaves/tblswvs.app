@@ -96,7 +96,7 @@ live_tracks:
         name: FM Four Pluck
         type: synth
       -
-        name: DS Bass
+        name: Chorus Chord Bass
         type: synth
   -
     name: Keys
@@ -112,7 +112,7 @@ live_tracks:
         name: OSC Juno
         type: synth
       -
-        name: Drift
+        name: Arp Tube
         type: synth
       -
         name: Han's Solo
