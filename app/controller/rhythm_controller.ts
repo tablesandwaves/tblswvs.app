@@ -1,6 +1,7 @@
+import { blank8x1Row } from "../helpers/utils";
 import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
-// import { noteLengthMap, pulseRateMap } from "../model/ableton/note";
+import { noteLengthMap } from "../model/ableton/note";
 import { rhythmAlgorithms } from "../model/ableton/track";
 
 
@@ -50,14 +51,34 @@ export class RhythmController extends ApplicationController {
         const stepIndex = queuedKeyPress.x + (16 * queuedKeyPress.y);
         track.rhythm[stepIndex].noteLength = gridPage.matrix[press.y][press.x].value;
       });
-      gridPage.activeGates = new Array();
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.grid.levelRow(8, 5, gridPage.getNoteLengthRow());
+      gridPage.activeGates = new Array();
+
       if (!gridPage.grid.sequencer.testing) track.updateGuiNoteLength();
 
     } else {
       super.updateNoteLength(gridPage, press);
     }
+  }
+
+
+  getNoteLengthRow() {
+    const track = this.grid.sequencer.daw.getActiveTrack();
+    let selectedIndex;
+    if (this.activeGates.length > 0) {
+      const lastGateKeyPress = this.activeGates.at(-1);
+      const stepIndex        = lastGateKeyPress.x + (16 * lastGateKeyPress.y);
+      const noteLength       = track.rhythm[stepIndex].noteLength ? track.rhythm[stepIndex].noteLength : track.noteLength;
+
+      selectedIndex = noteLengthMap[noteLength].index;
+    } else {
+      selectedIndex = noteLengthMap[track.noteLength].index;
+    }
+    let row = blank8x1Row.slice();
+    for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
+    return row;
   }
 
 
@@ -73,32 +94,34 @@ export class RhythmController extends ApplicationController {
         const track = gridPage.grid.sequencer.daw.getActiveTrack();
 
         // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
-        if (track.rhythmAlgorithm == "surround" || gridPage.activeGates.length == 0) return;
+        if (track.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
+          track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
 
-        track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
+          const updatedRhythm = track.rhythm.map(step => {return {...step}});
+          gridPage.activeGates.forEach(queuedKeyPress => {
+            const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
+            const stepState                      = 1 - track.rhythm[stepIndex].state;
+            updatedRhythm[stepIndex].state       = stepState;
+            updatedRhythm[stepIndex].probability = track.defaultProbability;
+            if (stepState == 0) updatedRhythm[stepIndex].fillRepeats = 0;
+          });
+          track.rhythm = updatedRhythm;
+          gridPage.activeGates = new Array();
 
-        const updatedRhythm = track.rhythm.map(step => {return {...step}});
-        gridPage.activeGates.forEach(queuedKeyPress => {
-          const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
-          const stepState                      = 1 - track.rhythm[stepIndex].state;
-          updatedRhythm[stepIndex].state       = stepState;
-          updatedRhythm[stepIndex].probability = track.defaultProbability;
-          if (stepState == 0) updatedRhythm[stepIndex].fillRepeats = 0;
-        });
-        track.rhythm = updatedRhythm;
-        gridPage.activeGates = new Array();
+          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
 
-        gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+          gridPage.setGridRhythmDisplay();
+          gridPage.updateGuiRhythmDisplay();
 
-        gridPage.setGridRhythmDisplay();
-        gridPage.updateGuiRhythmDisplay();
-
-        if (gridPage.rhythmIsBlank()) {
-          track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
-          track.fillDuration = "8nd";
+          if (gridPage.rhythmIsBlank()) {
+            track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
+            track.fillDuration = "8nd";
+          }
         }
       }
     }
+    // While holding down the button for a gate update the grid display to show its note length.
+    gridPage.grid.levelRow(8, 5, gridPage.getNoteLengthRow());
   }
 
 

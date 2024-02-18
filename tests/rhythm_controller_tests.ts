@@ -358,8 +358,8 @@ describe("RhythmController", () => {
 
       // Then update the second gate to have a custom note length
       sequencer.grid.keyPress({y: 0, x: 4, s: 1});
-      sequencer.grid.keyPress({y: 5, x: 9, s: 0});
       sequencer.grid.keyPress({y: 5, x: 9, s: 1});
+      sequencer.grid.keyPress({y: 5, x: 9, s: 0});
       sequencer.grid.keyPress({y: 0, x: 4, s: 0});
 
       track.updateCurrentAbletonNotes();
@@ -385,6 +385,14 @@ describe("RhythmController", () => {
 
       it("updates the second gate's note length in the track's Ableton notes", () => {
         expect(track.currentAbletonNotes[1].duration).to.eq(0.5);
+      });
+
+      it("displays the active gate's note length in the grid note length row while pressed, then resets", () => {
+        expect(controller.getNoteLengthRow()).to.have.ordered.members([10, 0, 0, 0,  0, 0, 0, 0]);
+        sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+        expect(controller.getNoteLengthRow()).to.have.ordered.members([10, 10, 0, 0,  0, 0, 0, 0]);
+        sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+        expect(controller.getNoteLengthRow()).to.have.ordered.members([10, 0, 0, 0,  0, 0, 0, 0]);
       });
     });
 
