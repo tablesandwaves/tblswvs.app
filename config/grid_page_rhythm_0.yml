@@ -101,7 +101,7 @@ rows:
       - 2n
   -
     name: Note Length
-    description: Set the length of sequencer notes
+    description: Set the length of sequencer notes for the current track; when gates are also pressed, will update note lengths only for the selected gates
     group: note-length
     type: meter
     index: 5
