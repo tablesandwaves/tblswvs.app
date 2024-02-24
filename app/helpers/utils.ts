@@ -23,3 +23,16 @@ export const lcm = (a: number, b: number): number => {
 
   return Math.abs(a) * (Math.abs(b) / gcd(a, b));
 }
+
+
+export const debounce = (callback: Function, wait: number) => {
+  let timeoutId: NodeJS.Timeout = null;
+
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  }
+}
