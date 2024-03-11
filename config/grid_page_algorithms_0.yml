@@ -1,0 +1,16 @@
+name: Ramps
+description: Generate ramp sequences for the active track.
+rows:
+  -
+    name: Algorithms
+    description: select the current algorithm
+    group: algorithms
+    type: radio
+    index: 6
+    xStart: 0
+    xLength: 16
+    mapping: setAlgorithm
+    values:
+      - simple
+      - shift_reg
+      - inf_series
