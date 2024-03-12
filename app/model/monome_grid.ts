@@ -17,6 +17,8 @@ import { blank16x16Row } from "../helpers/utils";
 import { RampSequenceController } from "../controller/ramp_sequence_controller";
 import { DrumPadController } from "../controller/drum_pad_controller";
 import { AlgorithmController } from "../controller/algorithm_controller";
+import { ShiftRegisterController } from "../controller/shift_register_controller";
+import { InfinitySeriesController } from "../controller/infinity_series_controller";
 
 
 export type DeviceConfig = {
@@ -34,12 +36,12 @@ const globalKeyPageTypeMap: Record<number, string> = {
 }
 
 
-const pageTypeMap: Record<string, string[]> = {
+export const pageTypeMap: Record<string, string[]> = {
   "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
   "Chords":       ["Chords"],
   "Melody":       ["Melody", "Mutation", "MelodyVector"],
   "RampSequence": ["RampSequence"],
-  "Algorithm":    ["Algorithm"],
+  "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries"],
   "Global":       ["Global"]
 }
 
@@ -104,7 +106,7 @@ export class MonomeGrid {
       if (press.x <= 6 && press.s == 1) {
         this.#setActiveTrack(press);
       } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
-        this.#setActiveGridPage(globalKeyPageTypeMap[press.x]);
+        this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {
         this.setShiftState(press);
       } else if (press.x == 14 && press.s == 1) {
@@ -123,7 +125,7 @@ export class MonomeGrid {
   decrementPage() {
     if (this.pageIndex > 0) {
       this.pageIndex--;
-      this.#setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
+      this.setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
     }
   }
 
@@ -131,7 +133,7 @@ export class MonomeGrid {
   incrementPage() {
     if (this.pageIndex < pageTypeMap[this.activePage.type].length - 1) {
       this.pageIndex++;
-      this.#setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
+      this.setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
     }
   }
 
@@ -169,7 +171,7 @@ export class MonomeGrid {
     const activeChainType = this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type;
     if ((this.activePage && this.activePage instanceof RhythmController  && activeChainType == "drum rack") ||
         (this.activePage && this.activePage instanceof DrumPadController && activeChainType != "drum rack")) {
-      this.#setActiveGridPage(this.activePage.type);
+      this.setActiveGridPage(this.activePage.type);
     }
     if (this.activePage) this.activePage.refresh();
 
@@ -179,7 +181,7 @@ export class MonomeGrid {
   }
 
 
-  #setActiveGridPage(pageType: string) {
+  setActiveGridPage(pageType: string) {
     let updated = false, globalKeyIndex;
     switch(pageType) {
       case "Rhythm":
@@ -236,6 +238,18 @@ export class MonomeGrid {
       case "Algorithm":
         this.pageIndex = 0;
         this.activePage = new AlgorithmController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 11;
+        break;
+      case "ShiftRegister":
+        this.pageIndex = 1;
+        this.activePage = new ShiftRegisterController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 11;
+        break;
+      case "InfinitySeries":
+        this.pageIndex = 2;
+        this.activePage = new InfinitySeriesController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 11;
         break;

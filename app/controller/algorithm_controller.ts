@@ -1,5 +1,5 @@
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
-import { MonomeGrid } from "../model/monome_grid";
+import { MonomeGrid, pageTypeMap } from "../model/monome_grid";
 
 
 const algorithmButtonMap: Record<string, number> = {
@@ -26,7 +26,8 @@ export class AlgorithmController extends ApplicationController {
 
   setAlgorithm(gridPage: AlgorithmController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().algorithm = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.levelRow(0, 6, gridPage.getGridAlgorithmRow());
+    gridPage.grid.pageIndex = press.x;
+    gridPage.grid.setActiveGridPage(pageTypeMap[gridPage.type][gridPage.grid.pageIndex]);
   }
 
 

@@ -1,5 +1,5 @@
 import { detect } from "@tonaljs/chord-detect";
-import { Melody, Mutation, note, unique } from "tblswvs";
+import { Melody, Mutation, ShiftRegister, note, unique } from "tblswvs";
 import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note";
 import { AbletonLive } from "./live";
@@ -60,6 +60,8 @@ export class AbletonTrack {
   acceleratingGateCount = 10;
 
   algorithm: string = "simple";
+  shiftRegister: ShiftRegister;
+
   // Are the output notes a melody or chord progression?
   polyphonicVoiceMode = false;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
@@ -112,6 +114,8 @@ export class AbletonTrack {
 
     this.rampSequence0 = new RampSequence();
     this.rampSequence1 = new RampSequence();
+
+    this.shiftRegister = new ShiftRegister();
   }
 
 

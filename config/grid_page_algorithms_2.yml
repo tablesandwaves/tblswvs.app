@@ -1,5 +1,5 @@
-name: Algorithms
-description: Edit the track algorithms
+name: Infinity Series Algorithm
+description: Configure the infinity series algorithm
 rows:
   -
     name: Algorithms

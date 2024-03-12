@@ -1,0 +1,34 @@
+name: Shift Register Algorithm
+description: Configure the shift register algorithm
+rows:
+  -
+    name: Algorithms
+    description: select the current algorithm
+    group: shift-reg-length
+    type: meter
+    index: 2
+    xStart: 0
+    xLength: 8
+    mapping: setShiftRegisterLength
+    values:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+  -
+    name: Algorithms
+    description: select the current algorithm
+    group: algorithms
+    type: radio
+    index: 6
+    xStart: 0
+    xLength: 16
+    mapping: setAlgorithm
+    values:
+      - simple
+      - shift_reg
+      - inf_series
