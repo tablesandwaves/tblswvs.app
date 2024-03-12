@@ -15,4 +15,9 @@ export class InfinitySeriesController extends AlgorithmController {
   refresh() {
     super.setGlobalAlgorithmControls();
   }
+
+
+  advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
+
+  }
 }

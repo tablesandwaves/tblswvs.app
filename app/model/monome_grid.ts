@@ -16,7 +16,7 @@ import { MelodyVectorController } from "../controller/melody_vector_controller";
 import { blank16x16Row } from "../helpers/utils";
 import { RampSequenceController } from "../controller/ramp_sequence_controller";
 import { DrumPadController } from "../controller/drum_pad_controller";
-import { AlgorithmController } from "../controller/algorithm_controller";
+import { AlgorithmController, algorithmButtonMap } from "../controller/algorithm_controller";
 import { ShiftRegisterController } from "../controller/shift_register_controller";
 import { InfinitySeriesController } from "../controller/infinity_series_controller";
 
@@ -105,6 +105,12 @@ export class MonomeGrid {
 
       if (press.x <= 6 && press.s == 1) {
         this.#setActiveTrack(press);
+      } else if (press.s == 1 && press.x == 11) {
+        const algorithmIndex = algorithmButtonMap[this.sequencer.daw.getActiveTrack().algorithm];
+        if (algorithmIndex)
+          this.setActiveGridPage(pageTypeMap["Algorithm"][algorithmIndex]);
+        else
+          this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
         this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {

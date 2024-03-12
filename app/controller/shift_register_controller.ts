@@ -20,6 +20,13 @@ export class ShiftRegisterController extends AlgorithmController {
   }
 
 
+  advance(gridPage: ShiftRegisterController, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+    const stepCount = track.rhythm.reduce((count, step) => count + step.state, 0);
+    const shiftRegisterSequence = [...new Array(stepCount)].map(_ => track.shiftRegister.step());
+  }
+
+
   setShiftRegisterLength(gridPage: ShiftRegisterController, press: GridKeyPress) {
 
   }

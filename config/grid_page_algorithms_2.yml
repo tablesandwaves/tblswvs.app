@@ -14,3 +14,12 @@ rows:
       - simple
       - shift_reg
       - inf_series
+  -
+    name: Advance
+    description: advance the current algorithm 1 iteration
+    group: advance
+    type: momentary
+    index: 6
+    xStart: 15
+    xLength: 1
+    mapping: advance
