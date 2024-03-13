@@ -2,23 +2,23 @@ name: Shift Register Algorithm
 description: Configure the shift register algorithm
 rows:
   -
-    name: Algorithms
-    description: select the current algorithm
+    name: Length
+    description: set the shift register length
     group: shift-reg-length
     type: meter
     index: 2
     xStart: 0
-    xLength: 8
+    xLength: 4
     mapping: setShiftRegisterLength
-    values:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
+  -
+    name: Octave Range
+    description: set the shift register output octave range
+    group: shift-reg-octave-range
+    type: range
+    index: 2
+    xStart: 8
+    xLength: 8
+    mapping: setOctaveRange
   -
     name: Algorithms
     description: select the current algorithm
