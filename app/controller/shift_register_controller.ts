@@ -1,6 +1,7 @@
 import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { AlgorithmController } from "./algorithm_controller";
 import { MonomeGrid } from "../model/monome_grid";
+import { scaleToRange } from "../helpers/utils";
 
 
 export class ShiftRegisterController extends AlgorithmController {
@@ -28,12 +29,14 @@ export class ShiftRegisterController extends AlgorithmController {
 
 
   setShiftRegisterLength(gridPage: ShiftRegisterController, press: GridKeyPress) {
-
+    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+    track.shiftRegister.length = press.x + 1;
+    gridPage.grid.levelRow(0, 2, gridPage.shiftRegisterLengthRow());
   }
 
 
   setGridShiftRegisterDisplay() {
-    this.grid.levelRow(0, 3, this.shiftRegisterLengthRow());
+    this.grid.levelRow(0, 2, this.shiftRegisterLengthRow());
   }
 
 

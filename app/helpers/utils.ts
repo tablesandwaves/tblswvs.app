@@ -36,3 +36,16 @@ export const debounce = (callback: Function, wait: number) => {
     }, wait);
   }
 }
+
+
+/**
+ * Scale a number from its normal low-to-high range to a new low-to-high range (e.g., mapping 0-127 to 0-1 or vice versa)
+ *
+ * @param num number to scale
+ * @param inputRange low/high range for the input number
+ * @param outputRange low/high range to map the input number to
+ * @returns number scaled to output range
+ */
+export const scaleToRange = ( num: number, inputRange: number[], outputRange: number[] ) => {
+  return (num - inputRange[0]) * (outputRange[1] - outputRange[0]) / (inputRange[1] - inputRange[0]) + outputRange[0];
+}
