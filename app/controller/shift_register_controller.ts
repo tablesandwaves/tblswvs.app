@@ -4,6 +4,9 @@ import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row, scaleToRange } from "../helpers/utils";
 
 
+const OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
+
+
 export class ShiftRegisterController extends AlgorithmController {
   type                        = "Algorithm";
   keyReleaseFunctionality     = true;
@@ -28,9 +31,31 @@ export class ShiftRegisterController extends AlgorithmController {
   advance(gridPage: ShiftRegisterController, press: GridKeyPress) {
     if (press.s == 0) return;
 
-    const track = gridPage.grid.sequencer.daw.getActiveTrack();
-    const stepCount = track.rhythm.reduce((count, step) => count + step.state, 0);
+    const track                 = gridPage.grid.sequencer.daw.getActiveTrack();
+    const stepCount             = track.rhythm.reduce((count, step) => count + step.state, 0);
     const shiftRegisterSequence = [...new Array(stepCount)].map(_ => track.shiftRegister.step());
+
+    const scaleDegrees     = gridPage.grid.sequencer.key.scaleNotes.map((_, j) => j + 1);
+    const scaleDegreeRange = track.shiftRegisterOctaveRange.reduce((accum, octaveRange, i) => {
+      if (octaveRange == 1) {
+        let offset = OCTAVE_RANGE_OFFSETS[i] * scaleDegrees.length;
+        if (offset >= 0) offset++;
+        for (let degree = offset; degree < offset + scaleDegrees.length; degree++) {
+          accum.push(degree);
+        }
+      }
+      return accum;
+    }, new Array());
+
+    const melody = shiftRegisterSequence.map(step => {
+      const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
+      const scaleDeg      = scaleDegreeRange[scaleDegIndex];
+      return gridPage.grid.sequencer.key.degree(scaleDeg);
+    });
+
+    console.log(scaleDegreeRange)
+    console.log(shiftRegisterSequence)
+    console.log(melody)
   }
 
 
@@ -53,7 +78,7 @@ export class ShiftRegisterController extends AlgorithmController {
       if (gridPage.keyPressCount == 0) {
         const track = gridPage.grid.sequencer.daw.getActiveTrack();
 
-        const octaveRangeIndices = gridPage.activeGates.map(press => press.x % 8).sort();
+        const octaveRangeIndices = gridPage.activeGates.map(press => press.x % 8).sort((a, b) => a - b);
         [0, 1, 2, 3].forEach(i => {
           if (i >= octaveRangeIndices.at(0) && i <= octaveRangeIndices.at(-1)) {
             track.shiftRegisterOctaveRange[i] = 1;
