@@ -31,8 +31,11 @@ export class ShiftRegisterController extends AlgorithmController {
   advance(gridPage: ShiftRegisterController, press: GridKeyPress) {
     if (press.s == 0) return;
 
-    const track                 = gridPage.grid.sequencer.daw.getActiveTrack();
-    const stepCount             = track.rhythm.reduce((count, step) => count + step.state, 0);
+    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+
+    let stepCount = 0;
+    for (let i = 0; i < gridPage.grid.sequencer.superMeasure * 16; i++)
+      stepCount += track.rhythm[i % track.rhythmStepLength].state;
     const shiftRegisterSequence = [...new Array(stepCount)].map(_ => track.shiftRegister.step());
 
     const scaleDegrees     = gridPage.grid.sequencer.key.scaleNotes.map((_, j) => j + 1);
@@ -47,15 +50,14 @@ export class ShiftRegisterController extends AlgorithmController {
       return accum;
     }, new Array());
 
-    const melody = shiftRegisterSequence.map(step => {
+    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = shiftRegisterSequence.map(step => {
       const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
       const scaleDeg      = scaleDegreeRange[scaleDegIndex];
       return gridPage.grid.sequencer.key.degree(scaleDeg);
     });
 
-    console.log(scaleDegreeRange)
-    console.log(shiftRegisterSequence)
-    console.log(melody)
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
   }
 
 

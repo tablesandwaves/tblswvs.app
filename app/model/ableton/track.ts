@@ -164,7 +164,7 @@ export class AbletonTrack {
     this.#inputMelody = inputNotes;
     let notes: note[] = new Array();
 
-    if (this.algorithm == "simple") {
+    if (this.algorithm == "simple" || this.algorithm == "shift_reg") {
       notes = this.#inputMelody;
     } else {
       const melody = new Melody(this.inputMelody, this.daw.sequencer.key);

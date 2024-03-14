@@ -8,7 +8,7 @@ rows:
     type: meter
     index: 2
     xStart: 0
-    xLength: 4
+    xLength: 8
     mapping: setShiftRegisterLength
   -
     name: Octave Range
@@ -17,7 +17,7 @@ rows:
     type: range
     index: 2
     xStart: 8
-    xLength: 8
+    xLength: 4
     mapping: setOctaveRange
   -
     name: Algorithms
