@@ -18,6 +18,7 @@ export class ShiftRegisterController extends AlgorithmController {
     super(config, grid);
 
     this.functionMap.set("setShiftRegisterLength", this.setShiftRegisterLength);
+    this.functionMap.set("setShiftRegisterChance", this.setShiftRegisterChance);
     this.functionMap.set("setOctaveRange", this.setOctaveRange);
   }
 
@@ -70,6 +71,15 @@ export class ShiftRegisterController extends AlgorithmController {
   }
 
 
+  setShiftRegisterChance(gridPage: ShiftRegisterController, press: GridKeyPress) {
+    if (press.s == 0) return;
+
+    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+    track.shiftRegister.chance = (press.x + 1) / 8;
+    gridPage.grid.levelRow(0, 3, gridPage.getShiftRegisterChanceRow());
+  }
+
+
   setOctaveRange(gridPage: ShiftRegisterController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.keyPressCount++;
@@ -99,6 +109,7 @@ export class ShiftRegisterController extends AlgorithmController {
   setGridShiftRegisterDisplay() {
     this.grid.levelRow(0, 2, this.getShiftRegisterLengthRow());
     this.grid.levelRow(8, 2, this.getShiftRegisterRangeRow());
+    this.grid.levelRow(0, 3, this.getShiftRegisterChanceRow());
   }
 
 
@@ -107,6 +118,14 @@ export class ShiftRegisterController extends AlgorithmController {
     return new Array(track.shiftRegister.length)
                 .fill(ACTIVE_BRIGHTNESS)
                 .concat(new Array(8 - track.shiftRegister.length).fill(INACTIVE_BRIGHTNESS));
+  }
+
+
+  getShiftRegisterChanceRow() {
+    const track = this.grid.sequencer.daw.getActiveTrack();
+    return new Array(track.shiftRegister.chance * 8)
+                .fill(ACTIVE_BRIGHTNESS)
+                .concat(new Array(8 - (track.shiftRegister.chance * 8)).fill(INACTIVE_BRIGHTNESS));
   }
 
 

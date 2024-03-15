@@ -20,6 +20,15 @@ rows:
     xLength: 4
     mapping: setOctaveRange
   -
+    name: Chance
+    description: set the shift register chance
+    group: shift-reg-chance
+    type: meter
+    index: 3
+    xStart: 0
+    xLength: 8
+    mapping: setShiftRegisterChance
+  -
     name: Algorithms
     description: select the current algorithm
     group: algorithms
