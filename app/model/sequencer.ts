@@ -140,27 +140,16 @@ export class Sequencer {
                       track.currentClip;
     track.updateCurrentAbletonNotes();
     try {
-      for (let barIndex = 0; barIndex < 8; barIndex++) {
-        setTimeout(() => {
-          this.emitter.emit(
-            `/tracks/${track.dawIndex}/clips/${clipIndex}/bars/${barIndex}/notes`,
-            ...track.currentAbletonNotes.filter(note => {
-              return note.clipPosition >= barIndex * 4 && note.clipPosition < (barIndex * 4) + 4;
-            }).flatMap(note => note.toOscAddedNote())
-          );
-        }, 25 * barIndex);
-      }
-
-      // this.emitter.emit(
-      //   `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
-      //   ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
-      // );
+      this.emitter.emit(
+        `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
+        ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
+      );
     } catch (e) {
-      console.error(e.name, e.message, "while sending notes to Live:");
+      console.error(e.name, e.message, `while sending ${track.name} notes to Live:`);
+      console.error("algorithm:", track.algorithm);
       console.error("input notes:", track.currentAbletonNotes);
       console.error("OSC mapped notes", ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote()));
-      console.error("trackIndex", track.dawIndex, "mutating", track.mutating);
-      console.error("trackIndex", track.dawIndex, "randomizing", track.randomizing);
+      console.error("trackIndex", track.dawIndex, "mutating", track.mutating, "randomizing", track.randomizing);
       console.error("Current track mutation", track.currentMutation);
     }
   }
