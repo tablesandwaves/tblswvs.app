@@ -2,6 +2,7 @@ import { GridConfig, GridKeyPress } from "./application_controller";
 import { AlgorithmController } from "./algorithm_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
+import { Melody, noteData } from "tblswvs";
 
 
 export class InfinitySeriesController extends AlgorithmController {
@@ -38,12 +39,14 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
-
+    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = [];
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
   }
 
 
   setGridInfinitySeriesDisplay() {
-    this.getSeedRangeRows().forEach((row, i) => this.grid.levelRow(0, i, row));
+    this.getSeedRangeRows().forEach((row, i) => this.grid.levelRow(0, i + 2, row));
   }
 
 

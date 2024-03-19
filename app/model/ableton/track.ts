@@ -1,5 +1,5 @@
 import { detect } from "@tonaljs/chord-detect";
-import { Melody, Mutation, ShiftRegister, note, unique } from "tblswvs";
+import { Melody, Mutation, ShiftRegister, note, noteData, unique } from "tblswvs";
 import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note";
 import { AbletonLive } from "./live";
@@ -174,6 +174,9 @@ export class AbletonTrack {
         case "self_replicate":
           notes = melody.selfReplicate(63).notes;
           break;
+        case "inf_series":
+          notes = this.#getInfinitySeries();
+          break;
         case "counted":
           notes = melody.counted().notes;
           break;
@@ -188,6 +191,24 @@ export class AbletonTrack {
         return note.note == "rest" ? [undefined] : [note];
       });
     }
+  }
+
+
+  #getInfinitySeries() {
+    const notes: note[] = new Array();
+
+    this.infinitySeriesSeeds.forEach(seed => {
+      if (seed == 0) return;
+
+      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length;
+      notes.push(
+        ...Melody.infinitySeries([0, seed], stepCount).map(step => {
+          return noteData[step + this.daw.sequencer.key.midiTonic + 60];
+        })
+      );
+    });
+
+    return notes;
   }
 
 
