@@ -62,6 +62,7 @@ export class AbletonTrack {
   algorithm: string = "simple";
   shiftRegister: ShiftRegister;
   shiftRegisterOctaveRange: number[] = [0, 1, 1, 0];
+  infinitySeriesSeeds: number[] = [0, 0, 0, 0];
 
   // Are the output notes a melody or chord progression?
   polyphonicVoiceMode = false;

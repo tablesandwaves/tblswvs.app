@@ -1,5 +1,16 @@
 name: Infinity Series Algorithm
 description: Configure the infinity series algorithm
+matrices:
+  -
+    name: Seeds
+    description: Four rows of infinity series seeds
+    group: infinity-seeds
+    type: row-meters
+    rowStart: 2
+    rowEnd: 5
+    columnStart: 0
+    columnEnd: 7
+    mapping: addSeedRange
 rows:
   -
     name: Algorithms
