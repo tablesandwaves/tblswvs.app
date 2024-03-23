@@ -178,6 +178,9 @@ export class MonomeGrid {
     if ((this.activePage && this.activePage instanceof RhythmController  && activeChainType == "drum rack") ||
         (this.activePage && this.activePage instanceof DrumPadController && activeChainType != "drum rack")) {
       this.setActiveGridPage(this.activePage.type);
+    } else if (this.activePage && this.activePage instanceof AlgorithmController) {
+      this.pageIndex = algorithmButtonMap[this.sequencer.daw.getActiveTrack().algorithm];
+      this.setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
     }
     if (this.activePage) this.activePage.refresh();
 
