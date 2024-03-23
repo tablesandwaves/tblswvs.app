@@ -776,7 +776,7 @@ export class AbletonTrack {
     this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
       "chords",
-      this.daw.sequencer.queuedChordProgression.flatMap(chordNotes => {
+      this.#outputNotes.flatMap(chordNotes => {
         let chord = chordNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(chordNotes.map(n => n.note))[0];
         chord += namedChord == undefined ? "" : " (" + namedChord + ")";
