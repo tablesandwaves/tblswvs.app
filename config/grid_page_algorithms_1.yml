@@ -47,7 +47,7 @@ rows:
     type: radio
     index: 6
     xStart: 0
-    xLength: 16
+    xLength: 3
     mapping: setAlgorithm
     values:
       - simple

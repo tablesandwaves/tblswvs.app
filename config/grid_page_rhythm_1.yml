@@ -1,5 +1,5 @@
 name: Probabilities
-description: Probabilities are accessed on Rhythm page 2. Set per step probabilities for each rhythmic gate.
+description: Probabilities are accessed on Rhythm page 2. Set per step probabilities for each rhythmic gate. Seq steps 1-16 are set by default; when shift key is activated, edits steps 17-32.
 matrices:
   -
     name: Step Probability
