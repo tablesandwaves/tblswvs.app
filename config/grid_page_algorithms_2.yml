@@ -24,6 +24,15 @@ matrices:
     mapping: addSeedRange
 rows:
   -
+    name: Rhythm Repetitions
+    description: Set the number of times thru the gate pattern before switching to the next seed
+    group: rhythm-repetition
+    type: meter
+    index: 2
+    xStart: 8
+    xLength: 8
+    mapping: setRhythmRepetitions
+  -
     name: Algorithms
     description: select the current algorithm
     group: algorithms

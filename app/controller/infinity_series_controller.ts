@@ -1,8 +1,7 @@
-import { GridConfig, GridKeyPress } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { AlgorithmController } from "./algorithm_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
-import { Melody, noteData } from "tblswvs";
 
 
 export class InfinitySeriesController extends AlgorithmController {
@@ -13,6 +12,7 @@ export class InfinitySeriesController extends AlgorithmController {
     super(config, grid);
 
     this.functionMap.set("addSeedRange", this.addSeedRange);
+    this.functionMap.set("setRhythmRepetitions", this.setRhythmRepetitions);
   }
 
 
@@ -38,6 +38,13 @@ export class InfinitySeriesController extends AlgorithmController {
   }
 
 
+  setRhythmRepetitions(gridPage: InfinitySeriesController, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.getActiveTrack();
+    track.infinitySeriesRhythmRepetitions = press.x - 7;
+    gridPage.grid.levelRow(8, 2, gridPage.getInfinitySeriesRepetitionsRow());
+  }
+
+
   advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = [];
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -47,13 +54,20 @@ export class InfinitySeriesController extends AlgorithmController {
 
   setGridInfinitySeriesDisplay() {
     this.getSeedRangeRows().forEach((row, i) => this.grid.levelRow(0, i + 2, row));
+    this.grid.levelRow(8, 2, this.getInfinitySeriesRepetitionsRow());
+  }
+
+
+  getInfinitySeriesRepetitionsRow() {
+    const track = this.grid.sequencer.daw.getActiveTrack();
+    return blank8x1Row.map((_, i) => i < track.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 
   getSeedRangeRows() {
     const track = this.grid.sequencer.daw.getActiveTrack();
     return track.infinitySeriesSeeds.map(seed => {
-      return blank8x1Row.slice().map((_, i) => seed >= (i + 1) ? 10 : 0);
+      return blank8x1Row.slice().map((_, i) => seed >= (i + 1) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     });
   }
 }

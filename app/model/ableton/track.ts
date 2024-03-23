@@ -63,6 +63,7 @@ export class AbletonTrack {
   shiftRegister: ShiftRegister;
   shiftRegisterOctaveRange: number[] = [0, 1, 1, 0];
   infinitySeriesSeeds: number[] = [0, 0, 0, 0];
+  infinitySeriesRhythmRepetitions: number = 1;
 
   // Are the output notes a melody or chord progression?
   polyphonicVoiceMode = false;
@@ -200,7 +201,7 @@ export class AbletonTrack {
     this.infinitySeriesSeeds.forEach(seed => {
       if (seed == 0) return;
 
-      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length;
+      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length * this.infinitySeriesRhythmRepetitions;
       notes.push(
         ...Melody.infinitySeries([0, seed], stepCount).map(step => {
           return noteData[step + this.daw.sequencer.key.midiTonic + 60];
