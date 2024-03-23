@@ -5,6 +5,7 @@ import { RhythmStep } from "../model/ableton/track";
 
 export class FillsController extends ApplicationController {
   type = "Rhythm";
+  keyReleaseFunctionality = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {

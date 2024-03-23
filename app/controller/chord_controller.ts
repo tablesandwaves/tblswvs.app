@@ -7,7 +7,6 @@ export class ChordController extends ApplicationController {
   type = "Chords";
 
   recordingInputChord     = false;
-  keyReleaseFunctionality = true;
   keyPressCount           = 0;
   chordNotes: note[]      = new Array();
 

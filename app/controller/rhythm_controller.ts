@@ -7,20 +7,15 @@ import { rhythmAlgorithms } from "../model/ableton/track";
 
 export class RhythmController extends ApplicationController {
   type                        = "Rhythm";
-  keyReleaseFunctionality     = true;
-  keyPressCount               = 0;
-  activeGates: GridKeyPress[] = new Array();
   customNoteLength: "16n"|"8n"|"8nd"|"4n"|"4nd"|"2n"|"2nd"|"1n" = undefined;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
-    this.functionMap.set("updateRhythm", this.updateRhythm);
     this.functionMap.set("updateDefaultProbability", this.updateDefaultProbability);
     this.functionMap.set("toggleFillMeasure", this.toggleFillMeasure);
     this.functionMap.set("setFillDuration", this.setFillDuration);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
-    this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("updatePulse", this.updatePulse);
     this.functionMap.set("updateRhythmAlgorithm", this.updateRhythmAlgorithm);
     this.functionMap.set("updateRelatedRhythmTrack", this.updateRelatedRhythmTrack);
@@ -64,65 +59,8 @@ export class RhythmController extends ApplicationController {
   }
 
 
-  getNoteLengthRow() {
-    const track = this.grid.sequencer.daw.getActiveTrack();
-    let selectedIndex;
-    if (this.activeGates.length > 0) {
-      const lastGateKeyPress = this.activeGates.at(-1);
-      const stepIndex        = lastGateKeyPress.x + (16 * lastGateKeyPress.y);
-      const noteLength       = track.rhythm[stepIndex].noteLength ? track.rhythm[stepIndex].noteLength : track.noteLength;
-
-      selectedIndex = noteLengthMap[noteLength].index;
-    } else {
-      selectedIndex = noteLengthMap[track.noteLength].index;
-    }
-    let row = blank8x1Row.slice();
-    for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
-    return row;
-  }
-
-
   updateRhythm(gridPage: RhythmController, press: GridKeyPress) {
-    // As they are pressed, add gates to the active gates array for storing until the last key press is released.
-    if (press.s == 1) {
-      gridPage.keyPressCount++;
-      gridPage.activeGates.push(press);
-    } else {
-      gridPage.keyPressCount--;
-
-      if (gridPage.keyPressCount == 0) {
-        const track = gridPage.grid.sequencer.daw.getActiveTrack();
-
-        // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
-        if (track.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
-          track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
-
-          const updatedRhythm = track.rhythm.map(step => {return {...step}});
-          gridPage.activeGates.forEach(queuedKeyPress => {
-            const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
-            const stepState                      = 1 - track.rhythm[stepIndex].state;
-            updatedRhythm[stepIndex].state       = stepState;
-            updatedRhythm[stepIndex].probability = track.defaultProbability;
-            if (stepState == 0) {
-              updatedRhythm[stepIndex].fillRepeats = 0;
-              updatedRhythm[stepIndex].noteLength  = undefined;
-            }
-          });
-          track.rhythm = updatedRhythm;
-          gridPage.activeGates = new Array();
-
-          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-
-          gridPage.setGridRhythmDisplay();
-          gridPage.updateGuiRhythmDisplay();
-
-          if (gridPage.rhythmIsBlank()) {
-            track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
-            track.fillDuration = "8nd";
-          }
-        }
-      }
-    }
+    super.updateRhythm(gridPage, press);
     // While holding down the button for a gate update the grid display to show its note length.
     gridPage.grid.levelRow(8, 5, gridPage.getNoteLengthRow());
   }

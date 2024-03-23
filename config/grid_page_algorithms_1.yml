@@ -1,5 +1,17 @@
 name: Shift Register Algorithm
 description: Configure the shift register algorithm
+matrices:
+  -
+    name: Rhythm Pattern / Step Length
+    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    group: rhythm-pattern
+    type: toggle / meter
+    rowStart: 0
+    rowEnd: 1
+    columnStart: 0
+    columnEnd: 15
+    mapping: updateRhythm
+    shiftMapping: updateStepLength
 rows:
   -
     name: Length

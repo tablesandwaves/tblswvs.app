@@ -22,6 +22,7 @@ const configuredScales: Record<string, {scale: Scale, index: number}> = {
 
 export class GlobalController extends ApplicationController {
   type = "Global";
+  keyReleaseFunctionality = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {

@@ -22,6 +22,24 @@ export class AlgorithmController extends ApplicationController {
 
   refresh() {
     this.setGlobalAlgorithmControls();
+    this.setGridRhythmDisplay();
+  }
+
+
+  displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    this.setGridRhythmDisplay(highlightIndex);
+    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+  }
+
+
+  setGridRhythmDisplay(highlightIndex?: number) {
+    // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
+    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
+    if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
+    this.grid.levelRow(0, 0, transportRow.slice(0, 8));
+    this.grid.levelRow(8, 0, transportRow.slice(8, 16));
+    this.grid.levelRow(0, 1, transportRow.slice(16, 24));
+    this.grid.levelRow(8, 1, transportRow.slice(24, 32));
   }
 
 

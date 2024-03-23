@@ -26,9 +26,8 @@ const drumPadMatrix: Record<number, xyCoordinate> = {
 export class DrumPadController extends ApplicationController {
   type = "Rhythm";
 
-  notePlayingActive       = false;
-  noteRecordingActive     = false;
-  keyReleaseFunctionality = true;
+  notePlayingActive    = false;
+  noteRecordingActive  = false;
   heldGate:     number = undefined;
   heldDrumPads: number = 0;
   disableGate: boolean = false;

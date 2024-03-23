@@ -55,8 +55,10 @@ export class ApplicationController {
   grid: MonomeGrid;
   matrix: GridButton[][] = new Array(8);
   functionMap: Map<string, Function> = new Map();
-  // Overridden on ChordPage where events happen when released.
-  keyReleaseFunctionality: boolean = false;
+  // Overridden on pages where events happen when pressed.
+  keyReleaseFunctionality: boolean = true;
+  keyPressCount                    = 0;
+  activeGates: GridKeyPress[]      = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -106,6 +108,9 @@ export class ApplicationController {
         }
       });
     }
+
+    this.functionMap.set("updateRhythm", this.updateRhythm);
+    this.functionMap.set("updateStepLength", this.updateStepLength);
   }
 
 
@@ -168,6 +173,68 @@ export class ApplicationController {
     return this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep) => {
       return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
     });
+  }
+
+
+  updateRhythm(gridPage: ApplicationController, press: GridKeyPress) {
+    // As they are pressed, add gates to the active gates array for storing until the last key press is released.
+    if (press.s == 1) {
+      gridPage.keyPressCount++;
+      gridPage.activeGates.push(press);
+    } else {
+      gridPage.keyPressCount--;
+
+      if (gridPage.keyPressCount == 0) {
+        const track = gridPage.grid.sequencer.daw.getActiveTrack();
+
+        // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
+        if (track.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
+          track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
+
+          const updatedRhythm = track.rhythm.map(step => {return {...step}});
+          gridPage.activeGates.forEach(queuedKeyPress => {
+            const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
+            const stepState                      = 1 - track.rhythm[stepIndex].state;
+            updatedRhythm[stepIndex].state       = stepState;
+            updatedRhythm[stepIndex].probability = track.defaultProbability;
+            if (stepState == 0) {
+              updatedRhythm[stepIndex].fillRepeats = 0;
+              updatedRhythm[stepIndex].noteLength  = undefined;
+            }
+          });
+          track.rhythm = updatedRhythm;
+          gridPage.activeGates = new Array();
+
+          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+
+          gridPage.setGridRhythmDisplay();
+          gridPage.updateGuiRhythmDisplay();
+
+          if (gridPage.rhythmIsBlank()) {
+            track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
+            track.fillDuration = "8nd";
+          }
+        }
+      }
+    }
+  }
+
+
+  getNoteLengthRow() {
+    const track = this.grid.sequencer.daw.getActiveTrack();
+    let selectedIndex;
+    if (this.activeGates.length > 0) {
+      const lastGateKeyPress = this.activeGates.at(-1);
+      const stepIndex        = lastGateKeyPress.x + (16 * lastGateKeyPress.y);
+      const noteLength       = track.rhythm[stepIndex].noteLength ? track.rhythm[stepIndex].noteLength : track.noteLength;
+
+      selectedIndex = noteLengthMap[noteLength].index;
+    } else {
+      selectedIndex = noteLengthMap[track.noteLength].index;
+    }
+    let row = blank8x1Row.slice();
+    for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
+    return row;
   }
 
 

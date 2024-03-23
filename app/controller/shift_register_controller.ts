@@ -9,7 +9,6 @@ const OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
 
 export class ShiftRegisterController extends AlgorithmController {
   type                        = "Algorithm";
-  keyReleaseFunctionality     = true;
   keyPressCount               = 0;
   activeGates: GridKeyPress[] = new Array();
 
@@ -24,7 +23,7 @@ export class ShiftRegisterController extends AlgorithmController {
 
 
   refresh() {
-    super.setGlobalAlgorithmControls();
+    super.refresh();
     this.setGridShiftRegisterDisplay();
   }
 

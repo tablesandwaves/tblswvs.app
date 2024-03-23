@@ -6,6 +6,7 @@ import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping
 export class MelodyController extends ApplicationController {
   type = "Melody";
   recordingInputMelody: boolean = false;
+  keyReleaseFunctionality = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {

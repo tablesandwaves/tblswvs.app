@@ -16,6 +16,7 @@ const debouncedFlush = debounce(flush, 500);
 
 export class ProbabilitiesController extends ApplicationController {
   type = "Rhythm";
+  keyReleaseFunctionality = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {

@@ -4,6 +4,7 @@ import { MonomeGrid } from "../model/monome_grid";
 
 export class MelodyVectorController extends ApplicationController {
   type = "Melody";
+  keyReleaseFunctionality = false;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {

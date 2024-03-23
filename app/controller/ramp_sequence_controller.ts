@@ -20,7 +20,6 @@ export class RampSequenceController extends ApplicationController {
 
   inactiveDivisionBrightness = 3;
   activeDivisionBrightness   = 12;
-  keyReleaseFunctionality    = true;
   keyPressCount              = 0;
 
   activeSegment: RampSegment;
