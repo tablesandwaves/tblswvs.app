@@ -84,6 +84,9 @@ live_tracks:
         name: Simple Bass
         type: synth
       -
+        name: Basic FM
+        type: synth
+      -
         name: cnstrct.acid-bass
         type: synth
       -
@@ -106,9 +109,6 @@ live_tracks:
         name: A/B Pad
         type: synth
       -
-        name: FM Depth/Reverb Mod
-        type: synth
-      -
         name: OSC Juno
         type: synth
       -
@@ -118,10 +118,13 @@ live_tracks:
         name: Han's Solo
         type: synth
       -
-        name: Basic FM
+        name: Faded Keys Dark
         type: synth
       -
-        name: Grain Scanner
+        name: Faded Keys Bright Swells
+        type: synth
+      -
+        name: Slow Burn
         type: synth
   -
     name: Hydra
