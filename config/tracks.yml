@@ -40,9 +40,6 @@ live_tracks:
     dawIndex: 4
     chains:
       -
-        name: E-Perc BittyBot
-        type: sampler
-      -
         name: Reverb Kick & Perc Choked Kit
         type: drum rack
         pads:
@@ -63,7 +60,7 @@ live_tracks:
           - Asia Calls
           - Weird Prc 100
       -
-        name: Digital Drums
+        name: Glitch & Roar
         type: drum rack
         pads:
           - Kick Acid House RK
@@ -73,6 +70,9 @@ live_tracks:
           - FM Glass Perc
           - Digital Hi Perc
           - Digital Lo Perc
+      -
+        name: E-Perc BittyBot
+        type: sampler
       -
         name: Click Vinyl
         type: sampler
