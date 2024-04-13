@@ -114,6 +114,11 @@ export class ApplicationController {
   }
 
 
+  get activeTrack() {
+    return this.grid.sequencer.daw.getActiveTrack();
+  }
+
+
   // Should be overridden by any subclasses extending GridPage
   refresh(): void {}
 
@@ -138,10 +143,9 @@ export class ApplicationController {
   toggleNewClipCreation(gridPage: ApplicationController, press: GridKeyPress) {
     // Necessary to check for press=1 for the chord page.
     if (press.s == 1) {
-      const track = gridPage.grid.sequencer.daw.getActiveTrack();
-      track.createNewClip = !track.createNewClip;
-      gridPage.grid.levelSet(press.x, press.y, (track.createNewClip ? 10 : 0));
-      track.updateGuiCreateNewClip();
+      gridPage.activeTrack.createNewClip = !gridPage.activeTrack.createNewClip;
+      gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.createNewClip ? 10 : 0));
+      gridPage.activeTrack.updateGuiCreateNewClip();
     }
   }
 
@@ -157,20 +161,20 @@ export class ApplicationController {
 
     // Shared parameter rows
     this.setGridFillParametersDisplay();
-    this.toggleRadioButton(8, 4, pulseRateMap[this.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-    this.updateGridRowMeter(8, 5, noteLengthMap[this.grid.sequencer.daw.getActiveTrack().noteLength].index);
-    this.updateGridRowMeter(8, 6, (this.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
+    this.toggleRadioButton(8, 4, pulseRateMap[this.activeTrack.pulseRate].index);
+    this.updateGridRowMeter(8, 5, noteLengthMap[this.activeTrack.noteLength].index);
+    this.updateGridRowMeter(8, 6, (this.activeTrack.defaultProbability / 0.125) - 1);
   }
 
 
   getRhythmStepLengthRow() {
-    const stepLength = this.grid.sequencer.daw.getActiveTrack().rhythmStepLength;
+    const stepLength = this.activeTrack.rhythmStepLength;
     return [...new Array(stepLength).fill(5), ...new Array(32 - stepLength).fill(0)];
   }
 
 
   getRhythmGatesRow() {
-    return this.grid.sequencer.daw.getActiveTrack().rhythm.map((rhythmStep: RhythmStep) => {
+    return this.activeTrack.rhythm.map((rhythmStep: RhythmStep) => {
       return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
     });
   }
@@ -185,24 +189,22 @@ export class ApplicationController {
       gridPage.keyPressCount--;
 
       if (gridPage.keyPressCount == 0) {
-        const track = gridPage.grid.sequencer.daw.getActiveTrack();
-
         // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
-        if (track.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
-          track.rhythmAlgorithm = track.rhythmAlgorithm == "accelerating" ? track.rhythmAlgorithm : "manual";
+        if (gridPage.activeTrack.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
+          gridPage.activeTrack.rhythmAlgorithm = gridPage.activeTrack.rhythmAlgorithm == "accelerating" ? gridPage.activeTrack.rhythmAlgorithm : "manual";
 
-          const updatedRhythm = track.rhythm.map(step => {return {...step}});
+          const updatedRhythm = gridPage.activeTrack.rhythm.map(step => {return {...step}});
           gridPage.activeGates.forEach(queuedKeyPress => {
             const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
-            const stepState                      = 1 - track.rhythm[stepIndex].state;
+            const stepState                      = 1 - gridPage.activeTrack.rhythm[stepIndex].state;
             updatedRhythm[stepIndex].state       = stepState;
-            updatedRhythm[stepIndex].probability = track.defaultProbability;
+            updatedRhythm[stepIndex].probability = gridPage.activeTrack.defaultProbability;
             if (stepState == 0) {
               updatedRhythm[stepIndex].fillRepeats = 0;
               updatedRhythm[stepIndex].noteLength  = undefined;
             }
           });
-          track.rhythm = updatedRhythm;
+          gridPage.activeTrack.rhythm = updatedRhythm;
           gridPage.activeGates = new Array();
 
           gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -211,8 +213,8 @@ export class ApplicationController {
           gridPage.updateGuiRhythmDisplay();
 
           if (gridPage.rhythmIsBlank()) {
-            track.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
-            track.fillDuration = "8nd";
+            gridPage.activeTrack.fillMeasures = [0, 0, 0, 0, 0, 0, 0, 0];
+            gridPage.activeTrack.fillDuration = "8nd";
           }
         }
       }
@@ -221,16 +223,15 @@ export class ApplicationController {
 
 
   getNoteLengthRow() {
-    const track = this.grid.sequencer.daw.getActiveTrack();
     let selectedIndex;
     if (this.activeGates.length > 0) {
       const lastGateKeyPress = this.activeGates.at(-1);
       const stepIndex        = lastGateKeyPress.x + (16 * lastGateKeyPress.y);
-      const noteLength       = track.rhythm[stepIndex].noteLength ? track.rhythm[stepIndex].noteLength : track.noteLength;
+      const noteLength       = this.activeTrack.rhythm[stepIndex].noteLength ? this.activeTrack.rhythm[stepIndex].noteLength : this.activeTrack.noteLength;
 
       selectedIndex = noteLengthMap[noteLength].index;
     } else {
-      selectedIndex = noteLengthMap[track.noteLength].index;
+      selectedIndex = noteLengthMap[this.activeTrack.noteLength].index;
     }
     let row = blank8x1Row.slice();
     for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
@@ -239,8 +240,8 @@ export class ApplicationController {
 
 
   updateStepLength(gridPage: ApplicationController, press: GridKeyPress, updateDrumPadMelody = false) {
-    gridPage.grid.sequencer.daw.getActiveTrack().rhythmStepLength = press.x + (16 * press.y) + 1;
-    if (updateDrumPadMelody) gridPage.grid.sequencer.daw.getActiveTrack().updateDrumPadInputMelody();
+    gridPage.activeTrack.rhythmStepLength = press.x + (16 * press.y) + 1;
+    if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.setGridRhythmDisplay();
     gridPage.updateGuiRhythmDisplay();
@@ -249,28 +250,28 @@ export class ApplicationController {
 
   toggleFillMeasure(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
-      const currentState = gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x];
-      gridPage.grid.sequencer.daw.getActiveTrack().fillMeasures[press.x] = currentState == 0 ? 1 : 0;
+      const currentState = gridPage.activeTrack.fillMeasures[press.x];
+      gridPage.activeTrack.fillMeasures[press.x] = currentState == 0 ? 1 : 0;
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.setGridFillParametersDisplay();
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillMeasures();
+      gridPage.activeTrack.updateGuiFillMeasures();
     }
   }
 
 
   setFillDuration(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().fillDuration = gridPage.matrix[press.y][press.x].value;
+      gridPage.activeTrack.fillDuration = gridPage.matrix[press.y][press.x].value;
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.setGridFillParametersDisplay();
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiFillsDuration();
+      gridPage.activeTrack.updateGuiFillsDuration();
     }
   }
 
 
   setGridFillParametersDisplay() {
     // Set the measures on which the fills should play
-    const row = this.grid.sequencer.daw.getActiveTrack().fillMeasures.map((m: number) => m == 1 ? 10 : 0);
+    const row = this.activeTrack.fillMeasures.map((m: number) => m == 1 ? 10 : 0);
     this.grid.levelRow(0, 2, row);
 
     // Set the fill duration meter buttons
@@ -280,31 +281,29 @@ export class ApplicationController {
 
   updateDefaultProbability(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability = gridPage.matrix[press.y][press.x].value;
-      gridPage.updateGridRowMeter(8, 6, (gridPage.grid.sequencer.daw.getActiveTrack().defaultProbability / 0.125) - 1);
+      gridPage.activeTrack.defaultProbability = gridPage.matrix[press.y][press.x].value;
+      gridPage.updateGridRowMeter(8, 6, (gridPage.activeTrack.defaultProbability / 0.125) - 1);
     }
   }
 
 
   updateNoteLength(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
-      const track = gridPage.grid.sequencer.daw.getActiveTrack();
-
-      track.noteLength = gridPage.matrix[press.y][press.x].value;
-      gridPage.updateGridRowMeter(8, 5, noteLengthMap[track.noteLength].index);
-      track.updateGuiNoteLength();
+      gridPage.activeTrack.noteLength = gridPage.matrix[press.y][press.x].value;
+      gridPage.updateGridRowMeter(8, 5, noteLengthMap[gridPage.activeTrack.noteLength].index);
+      gridPage.activeTrack.updateGuiNoteLength();
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      if (!gridPage.grid.sequencer.testing) track.updateGuiNoteLength();
+      if (!gridPage.grid.sequencer.testing) gridPage.activeTrack.updateGuiNoteLength();
     }
   }
 
 
   updatePulse(gridPage: ApplicationController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().pulseRate = gridPage.matrix[press.y][press.x].value;
-      gridPage.toggleRadioButton(8, 4, pulseRateMap[gridPage.grid.sequencer.daw.getActiveTrack().pulseRate].index);
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPulseRate();
+      gridPage.activeTrack.pulseRate = gridPage.matrix[press.y][press.x].value;
+      gridPage.toggleRadioButton(8, 4, pulseRateMap[gridPage.activeTrack.pulseRate].index);
+      gridPage.activeTrack.updateGuiPulseRate();
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     }
@@ -312,7 +311,7 @@ export class ApplicationController {
 
 
   rhythmIsBlank() {
-    return this.grid.sequencer.daw.getActiveTrack().rhythm.reduce((total, step) => {
+    return this.activeTrack.rhythm.reduce((total, step) => {
       return total + step.state;
     }, 0) == 0;
   }
@@ -326,7 +325,7 @@ export class ApplicationController {
 
   updateGuiRhythmDisplay() {
     if (this.grid.sequencer.testing) return;
-    this.grid.sequencer.daw.getActiveTrack().updateGuiTrackRhythm();
+    this.activeTrack.updateGuiTrackRhythm();
   }
 
 
