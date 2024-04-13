@@ -23,15 +23,14 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   addSeedRange(gridPage: InfinitySeriesController, press: GridKeyPress) {
-    const track = gridPage.grid.sequencer.daw.getActiveTrack();
     const seedIndex = press.y - 2;
     const seedRange = press.x + 1;
 
     // Is a seed being removed?
-    if (track.infinitySeriesSeeds[seedIndex] == 1 && seedRange == 1) {
-      track.infinitySeriesSeeds[seedIndex] = 0;
+    if (gridPage.activeTrack.infinitySeriesSeeds[seedIndex] == 1 && seedRange == 1) {
+      gridPage.activeTrack.infinitySeriesSeeds[seedIndex] = 0;
     } else {
-      track.infinitySeriesSeeds[seedIndex] = seedRange;
+      gridPage.activeTrack.infinitySeriesSeeds[seedIndex] = seedRange;
     }
 
     gridPage.getSeedRangeRows().forEach((row, i) => gridPage.grid.levelRow(0, i + 2, row));
@@ -39,16 +38,15 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   setRhythmRepetitions(gridPage: InfinitySeriesController, press: GridKeyPress) {
-    const track = gridPage.grid.sequencer.daw.getActiveTrack();
-    track.infinitySeriesRhythmRepetitions = press.x - 7;
+    gridPage.activeTrack.infinitySeriesRhythmRepetitions = press.x - 7;
     gridPage.grid.levelRow(8, 2, gridPage.getInfinitySeriesRepetitionsRow());
   }
 
 
   advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = [];
+    gridPage.activeTrack.inputMelody = [];
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
+    gridPage.activeTrack.updateGuiTrackNotes();
   }
 
 
@@ -59,14 +57,12 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   getInfinitySeriesRepetitionsRow() {
-    const track = this.grid.sequencer.daw.getActiveTrack();
-    return blank8x1Row.map((_, i) => i < track.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+    return blank8x1Row.map((_, i) => i < this.activeTrack.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 
   getSeedRangeRows() {
-    const track = this.grid.sequencer.daw.getActiveTrack();
-    return track.infinitySeriesSeeds.map(seed => {
+    return this.activeTrack.infinitySeriesSeeds.map(seed => {
       return blank8x1Row.slice().map((_, i) => seed >= (i + 1) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     });
   }

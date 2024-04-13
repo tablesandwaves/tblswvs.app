@@ -44,7 +44,7 @@ export class AlgorithmController extends ApplicationController {
 
 
   setAlgorithm(gridPage: AlgorithmController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().algorithm = gridPage.matrix[press.y][press.x].value;
+    gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.pageIndex = press.x;
     gridPage.grid.setActiveGridPage(pageTypeMap[gridPage.type][gridPage.grid.pageIndex]);
   }
@@ -63,7 +63,7 @@ export class AlgorithmController extends ApplicationController {
 
   getGridAlgorithmRow() {
     const algorithmRow = new Array(8).fill(0);
-    algorithmRow[algorithmButtonMap[this.grid.sequencer.daw.getActiveTrack().algorithm]] = 10;
+    algorithmRow[algorithmButtonMap[this.activeTrack.algorithm]] = 10;
     return algorithmRow;
   }
 }
