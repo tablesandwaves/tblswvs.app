@@ -29,8 +29,8 @@ export class ProbabilitiesController extends ApplicationController {
     const stepIndex = press.x + (gridPage.grid.shiftKey ? 16 : 0);
 
     // Only edit probabilities for steps that are active
-    if (gridPage.grid.sequencer.daw.getActiveTrack().rhythm[stepIndex].state == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().rhythm[stepIndex].probability = gridPage.matrix[press.y][press.x].value;
+    if (gridPage.activeTrack.rhythm[stepIndex].state == 1) {
+      gridPage.activeTrack.rhythm[stepIndex].probability = gridPage.matrix[press.y][press.x].value;
       debouncedFlush(gridPage);
     }
   }
@@ -45,7 +45,7 @@ export class ProbabilitiesController extends ApplicationController {
     const [rhythmStart, rhythmEnd] = this.grid.shiftKey ? [16, 32] : [0, 16];
 
     for (let y = 0; y < 7; y++) {
-      const row = this.grid.sequencer.daw.getActiveTrack().rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
+      const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
         return (step.state == 1 && this.matrix[y][x].value <= step.probability) ? 10 : 0;
       });
 

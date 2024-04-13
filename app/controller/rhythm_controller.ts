@@ -1,7 +1,5 @@
-import { blank8x1Row } from "../helpers/utils";
 import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
-import { noteLengthMap } from "../model/ableton/note";
 import { rhythmAlgorithms } from "../model/ableton/track";
 
 
@@ -41,17 +39,16 @@ export class RhythmController extends ApplicationController {
 
     if (gridPage.activeGates.length > 0) {
 
-      const track = gridPage.grid.sequencer.daw.getActiveTrack();
       gridPage.activeGates.forEach(queuedKeyPress => {
         const stepIndex = queuedKeyPress.x + (16 * queuedKeyPress.y);
-        track.rhythm[stepIndex].noteLength = gridPage.matrix[press.y][press.x].value;
+        gridPage.activeTrack.rhythm[stepIndex].noteLength = gridPage.matrix[press.y][press.x].value;
       });
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.grid.levelRow(8, 5, gridPage.getNoteLengthRow());
       gridPage.activeGates = new Array();
 
-      if (!gridPage.grid.sequencer.testing) track.updateGuiNoteLength();
+      if (!gridPage.grid.sequencer.testing) gridPage.activeTrack.updateGuiNoteLength();
 
     } else {
       super.updateNoteLength(gridPage, press);
@@ -69,7 +66,7 @@ export class RhythmController extends ApplicationController {
   updateRhythmAlgorithm(gridPage: RhythmController, press: GridKeyPress) {
     if (press.s == 1) {
       const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
-      gridPage.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm = algorithm;
+      gridPage.activeTrack.rhythmAlgorithm = algorithm;
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.setGridRhythmDisplay();
@@ -80,13 +77,12 @@ export class RhythmController extends ApplicationController {
 
   updateRelatedRhythmTrack(gridPage: RhythmController, press: GridKeyPress) {
     if (press.s == 1) {
-      const track = gridPage.grid.sequencer.daw.getActiveTrack();
       const pressedRelatedTrack = gridPage.grid.sequencer.daw.tracks[press.x];
 
-      if (pressedRelatedTrack.relatedRhythmTrackDawIndex ==  track.dawIndex || pressedRelatedTrack.dawIndex == track.dawIndex) {
-        track.relatedRhythmTrackDawIndex = undefined;
+      if (pressedRelatedTrack.relatedRhythmTrackDawIndex ==  gridPage.activeTrack.dawIndex || pressedRelatedTrack.dawIndex == gridPage.activeTrack.dawIndex) {
+        gridPage.activeTrack.relatedRhythmTrackDawIndex = undefined;
       } else {
-        track.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;
+        gridPage.activeTrack.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;
       }
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -98,10 +94,8 @@ export class RhythmController extends ApplicationController {
 
   updateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {
     if (press.s == 1) {
-      const track = gridPage.grid.sequencer.daw.getActiveTrack();
-
-      if (track.rhythmAlgorithm == "accelerating") {
-        track.acceleratingGateCount = press.x + 1;
+      if (gridPage.activeTrack.rhythmAlgorithm == "accelerating") {
+        gridPage.activeTrack.acceleratingGateCount = press.x + 1;
       }
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -137,7 +131,7 @@ export class RhythmController extends ApplicationController {
 
   getRhythmAlgorithmRow() {
     const algorithmRow = new Array(8).fill(0);
-    algorithmRow[rhythmAlgorithms[this.grid.sequencer.daw.getActiveTrack().rhythmAlgorithm]] = 10;
+    algorithmRow[rhythmAlgorithms[this.activeTrack.rhythmAlgorithm]] = 10;
     return algorithmRow;
   }
 
@@ -145,10 +139,9 @@ export class RhythmController extends ApplicationController {
   getRhythmRelatedTrackRow() {
     const relatedTrackRow = new Array(8).fill(0);
 
-    const track = this.grid.sequencer.daw.getActiveTrack();
-    if (track.relatedRhythmTrackDawIndex != undefined) {
+    if (this.activeTrack.relatedRhythmTrackDawIndex != undefined) {
       const trackIndex = this.grid.sequencer.daw.tracks.reduce((trackIndex, t, i) => {
-        if (t.dawIndex == track.relatedRhythmTrackDawIndex) trackIndex = i;
+        if (t.dawIndex == this.activeTrack.relatedRhythmTrackDawIndex) trackIndex = i;
         return trackIndex;
       }, -1);
 
@@ -158,11 +151,10 @@ export class RhythmController extends ApplicationController {
   }
 
   getGridParameterRow() {
-    const track = this.grid.sequencer.daw.getActiveTrack();
     const parameterRow = new Array(16).fill(0);
 
-    if (track.rhythmAlgorithm == "accelerating") {
-      for (let i = 0; i < track.acceleratingGateCount; i++) {
+    if (this.activeTrack.rhythmAlgorithm == "accelerating") {
+      for (let i = 0; i < this.activeTrack.acceleratingGateCount; i++) {
         parameterRow[i] = 10;
       }
     }

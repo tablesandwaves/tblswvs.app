@@ -43,8 +43,8 @@ export class GlobalController extends ApplicationController {
     gridPage.#setGridSuperMeasureDisplay();
     gridPage.#setGuiSuperMeasureDisplay();
     gridPage.updateGuiRhythmDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
+    gridPage.activeTrack.updateGuiPianoRoll();
+    gridPage.activeTrack.updateGuiRampSequence();
   }
 
 
@@ -128,7 +128,7 @@ export class GlobalController extends ApplicationController {
 
     gridPage.setGridBeatPatternDisplay();
     gridPage.updateGuiRhythmDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiPianoRoll();
+    gridPage.activeTrack.updateGuiPianoRoll();
   }
 
 

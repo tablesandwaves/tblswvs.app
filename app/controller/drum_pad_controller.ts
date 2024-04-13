@@ -61,7 +61,7 @@ export class DrumPadController extends ApplicationController {
     this.previousCoordinates = new Array();
 
     // Brighten any drum pads that have hits for the current step
-    const step = this.grid.sequencer.daw.getActiveTrack().drumRackSequence[highlightIndex % this.grid.sequencer.daw.getActiveTrack().rhythmStepLength];
+    const step = this.activeTrack.drumRackSequence[highlightIndex % this.activeTrack.rhythmStepLength];
     if (step) {
       step.forEach(note => {
         const coordinate = drumPadMatrix[note.midi];
@@ -84,14 +84,14 @@ export class DrumPadController extends ApplicationController {
         gridPage.grid.sequencer.midiOut.send("noteon", {
           note: gridPage.matrix[press.y][press.x].value,
           velocity: 64,
-          channel: gridPage.grid.sequencer.daw.getActiveTrack().dawIndex
+          channel: gridPage.activeTrack.dawIndex
         });
 
         setTimeout(() => {
           gridPage.grid.sequencer.midiOut.send("noteoff", {
             note: gridPage.matrix[press.y][press.x].value,
             velocity: 64,
-            channel: gridPage.grid.sequencer.daw.getActiveTrack().dawIndex
+            channel: gridPage.activeTrack.dawIndex
           });
         }, 100);
       }
@@ -102,10 +102,8 @@ export class DrumPadController extends ApplicationController {
     } else {
       gridPage.heldDrumPads--;
       if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0) {
-        const track = gridPage.grid.sequencer.daw.getActiveTrack();
-
         gridPage.activeDrumPads.forEach(press => {
-          track.setDrumPadStep(gridPage.heldGate, gridPage.activeDrumPads.map(press => noteData[gridPage.matrix[press.y][press.x].value]));
+          gridPage.activeTrack.setDrumPadStep(gridPage.heldGate, gridPage.activeDrumPads.map(press => noteData[gridPage.matrix[press.y][press.x].value]));
 
           gridPage.grid.sequencer.daw.updateActiveTrackNotes();
           gridPage.disableGate = false;
@@ -128,7 +126,7 @@ export class DrumPadController extends ApplicationController {
     } else {
       gridPage.heldGate = undefined;
       if (gridPage.noteRecordingActive && gridPage.disableGate) {
-        gridPage.grid.sequencer.daw.getActiveTrack().setDrumPadStep(stepIndex, undefined);
+        gridPage.activeTrack.setDrumPadStep(stepIndex, undefined);
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
         gridPage.setGridDrumPadDisplay();
         gridPage.updateGuiRhythmDisplay();

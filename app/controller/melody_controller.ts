@@ -1,4 +1,4 @@
-import { Melody, note } from "tblswvs";
+import { Melody } from "tblswvs";
 import { MonomeGrid } from "../model/monome_grid";
 import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
 
@@ -26,26 +26,24 @@ export class MelodyController extends ApplicationController {
     // input notes are recorded.
     if (gridPage.grid.sequencer.queuedMelody.length == 0) return;
 
-    gridPage.grid.sequencer.daw.getActiveTrack().algorithm   = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = gridPage.grid.sequencer.queuedMelody;
+    gridPage.activeTrack.algorithm   = gridPage.matrix[press.y][press.x].value;
+    gridPage.activeTrack.inputMelody = gridPage.grid.sequencer.queuedMelody;
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiTrackNotes();
+    gridPage.activeTrack.updateGuiTrackNotes();
   }
 
 
   toggleVectorShifts(gridPage: MelodyController, press: GridKeyPress) {
-    const activeTrack = gridPage.grid.sequencer.daw.getActiveTrack();
-    activeTrack.vectorShiftsActive = !activeTrack.vectorShiftsActive;
-    gridPage.grid.levelSet(press.x, press.y, (activeTrack.vectorShiftsActive ? 10 : 0));
-    activeTrack.updateGuiVectorDisplay();
+    gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? 10 : 0));
+    gridPage.activeTrack.updateGuiVectorDisplay();
   }
 
 
   refresh() {
-    const activeTrack = this.grid.sequencer.daw.getActiveTrack();
-    this.grid.levelSet(15, 2, (activeTrack.createNewClip      ? 10 : 0));
-    this.grid.levelSet(15, 3, (activeTrack.vectorShiftsActive ? 10 : 0));
+    this.grid.levelSet(15, 2, (this.activeTrack.createNewClip      ? 10 : 0));
+    this.grid.levelSet(15, 3, (this.activeTrack.vectorShiftsActive ? 10 : 0));
   }
 
 

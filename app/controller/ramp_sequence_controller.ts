@@ -46,7 +46,7 @@ export class RampSequenceController extends ApplicationController {
     this.setGridSubdivisionDisplay();
     this.setGridRangeDisplay();
     this.setGridRampGlobalsDisplay();
-    this.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
+    this.activeTrack.updateGuiRampSequence();
   }
 
 
@@ -80,7 +80,7 @@ export class RampSequenceController extends ApplicationController {
   updateActiveRampSequenceIndex(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.activeSegment = undefined;
-      gridPage.grid.sequencer.daw.getActiveTrack().editableRampSequence = press.x == 0 ? 0 : 1;
+      gridPage.activeTrack.editableRampSequence = press.x == 0 ? 0 : 1;
       gridPage.setGridRampSequenceDisplay();
     }
   }
@@ -88,13 +88,13 @@ export class RampSequenceController extends ApplicationController {
 
   toggleRampSequence(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
-      const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+      const rampSequence = gridPage.activeTrack.getEditableRampSequence();
       rampSequence.active = !rampSequence.active;
 
       if (rampSequence.active) {
-        gridPage.grid.sequencer.activateRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+        gridPage.grid.sequencer.activateRampSequence(gridPage.activeTrack);
       } else {
-        gridPage.grid.sequencer.clearRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+        gridPage.grid.sequencer.clearRampSequence(gridPage.activeTrack);
       }
       gridPage.setGridRampGlobalsDisplay();
     }
@@ -104,7 +104,7 @@ export class RampSequenceController extends ApplicationController {
   updateSegment(gridPage: RampSequenceController, press: GridKeyPress) {
     if (press.s == 1) {
 
-      const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+      const rampSequence = gridPage.activeTrack.getEditableRampSequence();
       const selectedSegment = rampSequence.segments.find(s => s.startIndex == press.x);
 
       // Remove the active segment
@@ -121,9 +121,9 @@ export class RampSequenceController extends ApplicationController {
         gridPage.activeSegment = rampSequence.addSegment(press.x);
       }
 
-      gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+      gridPage.grid.sequencer.setRampSequence(gridPage.activeTrack);
       gridPage.setGridRampSequenceDisplay();
-      gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
+      gridPage.activeTrack.updateGuiRampSequence();
     }
   }
 
@@ -131,12 +131,12 @@ export class RampSequenceController extends ApplicationController {
   updateSubdivision(gridPage: RampSequenceController, press: GridKeyPress) {
     if (!gridPage.activeSegment || press.s != 1) return;
 
-    const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+    const rampSequence = gridPage.activeTrack.getEditableRampSequence();
     rampSequence.updateSubdivisionLength(gridPage.activeSegment.startIndex, press.x - gridPage.activeSegment.startIndex + 1);
 
-    gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+    gridPage.grid.sequencer.setRampSequence(gridPage.activeTrack);
     gridPage.setGridSubdivisionDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
+    gridPage.activeTrack.updateGuiRampSequence();
   }
 
 
@@ -161,7 +161,7 @@ export class RampSequenceController extends ApplicationController {
 
       if (gridPage.keyPressCount == 0) {
 
-        const rampSequence = gridPage.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+        const rampSequence = gridPage.activeTrack.getEditableRampSequence();
 
         rampSequence.updateRange(
           gridPage.activeSegment.startIndex,
@@ -171,10 +171,10 @@ export class RampSequenceController extends ApplicationController {
           RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.endIndex]
         );
 
-        gridPage.grid.sequencer.setRampSequence(gridPage.grid.sequencer.daw.getActiveTrack());
+        gridPage.grid.sequencer.setRampSequence(gridPage.activeTrack);
         gridPage.setGridRangeDisplay();
         gridPage.setGridRampGlobalsDisplay();
-        gridPage.grid.sequencer.daw.getActiveTrack().updateGuiRampSequence();
+        gridPage.activeTrack.updateGuiRampSequence();
       }
     }
   }
@@ -198,7 +198,7 @@ export class RampSequenceController extends ApplicationController {
 
   gridSubdivisionRow(): number[] {
     const segmentRow   = new Array(16).fill(0);
-    const rampSequence = this.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+    const rampSequence = this.activeTrack.getEditableRampSequence();
 
     rampSequence.segments.forEach(segment => {
       for (let i = segment.startIndex; i < segment.startIndex + segment.subdivisionLength; i++) {
@@ -214,7 +214,7 @@ export class RampSequenceController extends ApplicationController {
 
   gridSegmentRow(): number[] {
     const segmentRow   = new Array(16).fill(0);
-    const rampSequence = this.grid.sequencer.daw.getActiveTrack().getEditableRampSequence();
+    const rampSequence = this.activeTrack.getEditableRampSequence();
 
     rampSequence.segments.map(s => s.startIndex).forEach(index => {
       segmentRow[index] = this.activeSegment && this.activeSegment.startIndex == index ?
@@ -230,10 +230,10 @@ export class RampSequenceController extends ApplicationController {
     const row = new Array(8).fill(0);
 
     // Select which of the current track's 2 ramp sequences are being edited.
-    row[this.grid.sequencer.daw.getActiveTrack().editableRampSequence] = 10;
+    row[this.activeTrack.editableRampSequence] = 10;
 
     // Is the active ramp seqeunce active (is the corresponding Live device macro mapped)?
-    row[2] = this.grid.sequencer.daw.getActiveTrack().getEditableRampSequence().active ? 10 : 0;
+    row[2] = this.activeTrack.getEditableRampSequence().active ? 10 : 0;
 
     // Is the current segment low-to-high? If yes, light up column 3
     if (this.activeSegment) {

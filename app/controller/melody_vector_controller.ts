@@ -22,38 +22,38 @@ export class MelodyVectorController extends ApplicationController {
 
 
   setStepShift(gridPage: MelodyVectorController, press: GridKeyPress) {
-    if (gridPage.grid.shiftKey && press.y == 0 && gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] == -1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] = 0;
-    } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] == 1) {
-      gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] = 0;
+    if (gridPage.grid.shiftKey && press.y == 0 && gridPage.activeTrack.vectorShifts[press.x] == -1) {
+      gridPage.activeTrack.vectorShifts[press.x] = 0;
+    } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.activeTrack.vectorShifts[press.x] == 1) {
+      gridPage.activeTrack.vectorShifts[press.x] = 0;
     } else {
-      gridPage.grid.sequencer.daw.getActiveTrack().vectorShifts[press.x] =
+      gridPage.activeTrack.vectorShifts[press.x] =
           gridPage.grid.shiftKey ?
           gridPage.matrix[press.y][press.x].shiftValue :
           gridPage.matrix[press.y][press.x].value;
     }
 
     gridPage.setGridShiftsDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiVectorDisplay();
+    gridPage.activeTrack.updateGuiVectorDisplay();
   }
 
 
   setShiftSequenceLength(gridPage: MelodyVectorController, press: GridKeyPress) {
-    gridPage.grid.sequencer.daw.getActiveTrack().vectorShiftsLength = gridPage.matrix[press.y][press.x].value;
+    gridPage.activeTrack.vectorShiftsLength = gridPage.matrix[press.y][press.x].value;
     gridPage.setGridShiftLengthDisplay();
-    gridPage.grid.sequencer.daw.getActiveTrack().updateGuiVectorDisplay();
+    gridPage.activeTrack.updateGuiVectorDisplay();
   }
 
 
   setGridShiftLengthDisplay() {
     for (let y = 0; y < 3; y++)
       for (let x = 12; x < 16; x++)
-        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.grid.sequencer.daw.getActiveTrack().vectorShiftsLength ? 10 : 0);
+        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.activeTrack.vectorShiftsLength ? 10 : 0);
   }
 
 
   setGridShiftsDisplay() {
-    this.grid.sequencer.daw.getActiveTrack().vectorShifts.forEach((shift, x) => {
+    this.activeTrack.vectorShifts.forEach((shift, x) => {
       if (shift == 0) {
         for (let y = 0; y < 7; y++)
           this.grid.levelSet(x, y, 0);
