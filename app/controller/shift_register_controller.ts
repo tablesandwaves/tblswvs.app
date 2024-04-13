@@ -50,6 +50,11 @@ export class ShiftRegisterController extends AlgorithmController {
       return accum;
     }, new Array());
 
+    // Add three more scale degrees so it is possible to get the next tonic
+    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+
     gridPage.grid.sequencer.daw.getActiveTrack().inputMelody = shiftRegisterSequence.map(step => {
       const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
       const scaleDeg      = scaleDegreeRange[scaleDegIndex];
