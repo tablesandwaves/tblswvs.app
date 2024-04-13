@@ -1,5 +1,5 @@
 import { MonomeGrid } from "../model/monome_grid";
-import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, INACTIVE_BRIGHTNESS, ACTIVE_BRIGHTNESS } from "./application_controller";
 import { rhythmAlgorithms } from "../model/ableton/track";
 
 
@@ -130,14 +130,14 @@ export class RhythmController extends ApplicationController {
 
 
   getRhythmAlgorithmRow() {
-    const algorithmRow = new Array(8).fill(0);
-    algorithmRow[rhythmAlgorithms[this.activeTrack.rhythmAlgorithm]] = 10;
+    const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
+    algorithmRow[rhythmAlgorithms[this.activeTrack.rhythmAlgorithm]] = ACTIVE_BRIGHTNESS;
     return algorithmRow;
   }
 
 
   getRhythmRelatedTrackRow() {
-    const relatedTrackRow = new Array(8).fill(0);
+    const relatedTrackRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
 
     if (this.activeTrack.relatedRhythmTrackDawIndex != undefined) {
       const trackIndex = this.grid.sequencer.daw.tracks.reduce((trackIndex, t, i) => {
@@ -145,17 +145,17 @@ export class RhythmController extends ApplicationController {
         return trackIndex;
       }, -1);
 
-      if (trackIndex != -1) relatedTrackRow[trackIndex] = 10;
+      if (trackIndex != -1) relatedTrackRow[trackIndex] = ACTIVE_BRIGHTNESS;
     }
     return relatedTrackRow;
   }
 
   getGridParameterRow() {
-    const parameterRow = new Array(16).fill(0);
+    const parameterRow = new Array(16).fill(INACTIVE_BRIGHTNESS);
 
     if (this.activeTrack.rhythmAlgorithm == "accelerating") {
       for (let i = 0; i < this.activeTrack.acceleratingGateCount; i++) {
-        parameterRow[i] = 10;
+        parameterRow[i] = ACTIVE_BRIGHTNESS;
       }
     }
 

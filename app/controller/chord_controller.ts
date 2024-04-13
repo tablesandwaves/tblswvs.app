@@ -1,5 +1,5 @@
 import { note } from "tblswvs";
-import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { detect } from "@tonaljs/chord-detect";
 
@@ -23,7 +23,7 @@ export class ChordController extends ApplicationController {
 
 
   refresh() {
-    this.grid.levelSet(15, 2, (this.activeTrack.createNewClip ? 10 : 0));
+    this.grid.levelSet(15, 2, (this.activeTrack.createNewClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
   }
 
 
@@ -67,7 +67,7 @@ export class ChordController extends ApplicationController {
   toggleChordRecording(gridPage: ChordController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.recordingInputChord = !gridPage.recordingInputChord;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputChord ? 10 : 0));
+      gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputChord ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       if (gridPage.recordingInputChord) {
         gridPage.grid.sequencer.queuedChordProgression = new Array();
         gridPage.setUiQueuedChordProgression();

@@ -1,4 +1,4 @@
-import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
 
@@ -48,7 +48,7 @@ export class MelodyVectorController extends ApplicationController {
   setGridShiftLengthDisplay() {
     for (let y = 0; y < 3; y++)
       for (let x = 12; x < 16; x++)
-        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.activeTrack.vectorShiftsLength ? 10 : 0);
+        this.grid.levelSet(x, y, this.matrix[y][x].value <= this.activeTrack.vectorShiftsLength ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 
@@ -56,13 +56,13 @@ export class MelodyVectorController extends ApplicationController {
     this.activeTrack.vectorShifts.forEach((shift, x) => {
       if (shift == 0) {
         for (let y = 0; y < 7; y++)
-          this.grid.levelSet(x, y, 0);
+          this.grid.levelSet(x, y, INACTIVE_BRIGHTNESS);
       } else if (shift < 0) {
         for (let y = 0; y < 7; y++)
-          this.grid.levelSet(x, y, (-1 - y >= shift ? 10 : 0));
+          this.grid.levelSet(x, y, (-1 - y >= shift ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       } else {
         for (let y = 0; y < 7; y++)
-          this.grid.levelSet(x, y, (y >= 7 - shift ? 10 : 0));
+          this.grid.levelSet(x, y, (y >= 7 - shift ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       }
     });
   }

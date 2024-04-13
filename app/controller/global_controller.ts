@@ -1,5 +1,5 @@
 import { Key, Scale } from "tblswvs";
-import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { notes, blank8x1Row } from "../helpers/utils";
 
@@ -61,7 +61,7 @@ export class GlobalController extends ApplicationController {
 
   #setGridSuperMeasureDisplay() {
     const superMeasure    = this.grid.sequencer.superMeasure;
-    const superMeasureRow = [...new Array(superMeasure).fill(10), ...new Array(8 - superMeasure).fill(0)];
+    const superMeasureRow = [...new Array(superMeasure).fill(ACTIVE_BRIGHTNESS), ...new Array(8 - superMeasure).fill(INACTIVE_BRIGHTNESS)];
     this.grid.levelRow(8, 0, superMeasureRow);
   }
 
@@ -137,7 +137,7 @@ export class GlobalController extends ApplicationController {
       for (let y = 4; y <= 6; y++) {
         let row = blank8x1Row.slice();
         if (this.grid.sequencer.activeBeatPattern.button_xy[1] == y)
-          row[this.grid.sequencer.activeBeatPattern.button_xy[0]] = 10;
+          row[this.grid.sequencer.activeBeatPattern.button_xy[0]] = ACTIVE_BRIGHTNESS;
         this.grid.levelRow(8, y, row);
       }
     }
@@ -151,7 +151,7 @@ export class GlobalController extends ApplicationController {
 
     for (let i = 1, y = 1; y < 4; y++)
       for (let x = 0; x < 4; x++, i++)
-        this.grid.levelSet(x + 8, y, (x == xPos && y == yPos ? 10 : 1));
+        this.grid.levelSet(x + 8, y, (x == xPos && y == yPos ? ACTIVE_BRIGHTNESS : 1));
   }
 
 
@@ -162,14 +162,14 @@ export class GlobalController extends ApplicationController {
 
     for (let i = 1, y = 1; y < 4; y++)
       for (let x = 0; x < 4; x++, i++)
-        this.grid.levelSet(x + 12, y, (x == xPos && y == yPos ? 10 : 1));
+        this.grid.levelSet(x + 12, y, (x == xPos && y == yPos ? ACTIVE_BRIGHTNESS : 1));
   }
 
 
   setGridChainRow(trackIndex: number) {
     const track = this.grid.sequencer.daw.tracks[trackIndex];
-    const row = new Array(8).fill(0);
-    row[track.activeChain] = 10;
+    const row = new Array(8).fill(INACTIVE_BRIGHTNESS);
+    row[track.activeChain] = ACTIVE_BRIGHTNESS;
     this.grid.levelRow(0, trackIndex, row);
   }
 }

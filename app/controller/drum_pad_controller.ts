@@ -65,7 +65,7 @@ export class DrumPadController extends ApplicationController {
     if (step) {
       step.forEach(note => {
         const coordinate = drumPadMatrix[note.midi];
-        this.grid.levelSet(coordinate.x, coordinate.y, 10);
+        this.grid.levelSet(coordinate.x, coordinate.y, ACTIVE_BRIGHTNESS);
         this.previousCoordinates.push(coordinate);
       });
     }

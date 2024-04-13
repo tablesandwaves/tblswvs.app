@@ -1,4 +1,4 @@
-import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { RhythmStep } from "../model/ableton/track";
 import { debounce }   from "../helpers/utils";
@@ -46,7 +46,7 @@ export class ProbabilitiesController extends ApplicationController {
 
     for (let y = 0; y < 7; y++) {
       const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
-        return (step.state == 1 && this.matrix[y][x].value <= step.probability) ? 10 : 0;
+        return (step.state == 1 && this.matrix[y][x].value <= step.probability) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
       });
 
       this.grid.levelRow(0, y, row.slice(0, 8));

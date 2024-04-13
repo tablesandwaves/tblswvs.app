@@ -46,9 +46,9 @@ export const octaveTransposeMapping: Record<number, number> = {
 }
 
 
-export const ACTIVE_BRIGHTNESS   = 10;
-export const INACTIVE_BRIGHTNESS = 0;
-
+export const ACTIVE_BRIGHTNESS    = 10;
+export const INACTIVE_BRIGHTNESS  = 0;
+export const HIGHLIGHT_BRIGHTNESS = 15;
 
 export class ApplicationController {
   type = "Generic";
@@ -144,7 +144,7 @@ export class ApplicationController {
     // Necessary to check for press=1 for the chord page.
     if (press.s == 1) {
       gridPage.activeTrack.createNewClip = !gridPage.activeTrack.createNewClip;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.createNewClip ? 10 : 0));
+      gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.createNewClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       gridPage.activeTrack.updateGuiCreateNewClip();
     }
   }
@@ -153,7 +153,7 @@ export class ApplicationController {
   setGridRhythmDisplay(highlightIndex?: number) {
     // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
     const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
-    if (highlightIndex != undefined) transportRow[highlightIndex] = 15;
+    if (highlightIndex != undefined) transportRow[highlightIndex] = HIGHLIGHT_BRIGHTNESS;
     this.grid.levelRow(0, 0, transportRow.slice(0, 8));
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));
     this.grid.levelRow(0, 1, transportRow.slice(16, 24));
@@ -169,13 +169,13 @@ export class ApplicationController {
 
   getRhythmStepLengthRow() {
     const stepLength = this.activeTrack.rhythmStepLength;
-    return [...new Array(stepLength).fill(5), ...new Array(32 - stepLength).fill(0)];
+    return [...new Array(stepLength).fill(5), ...new Array(32 - stepLength).fill(INACTIVE_BRIGHTNESS)];
   }
 
 
   getRhythmGatesRow() {
     return this.activeTrack.rhythm.map((rhythmStep: RhythmStep) => {
-      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
+      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * ACTIVE_BRIGHTNESS) : INACTIVE_BRIGHTNESS;
     });
   }
 
@@ -234,7 +234,7 @@ export class ApplicationController {
       selectedIndex = noteLengthMap[this.activeTrack.noteLength].index;
     }
     let row = blank8x1Row.slice();
-    for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
+    for (let i = 0; i <= selectedIndex; i++) row[i] = ACTIVE_BRIGHTNESS;
     return row;
   }
 
@@ -271,7 +271,7 @@ export class ApplicationController {
 
   setGridFillParametersDisplay() {
     // Set the measures on which the fills should play
-    const row = this.activeTrack.fillMeasures.map((m: number) => m == 1 ? 10 : 0);
+    const row = this.activeTrack.fillMeasures.map((m: number) => m == 1 ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     this.grid.levelRow(0, 2, row);
 
     // Set the fill duration meter buttons
@@ -338,14 +338,14 @@ export class ApplicationController {
 
   toggleRadioButton(startIndex: number, rowIndex: number, selectedIndex: number) {
     let row = blank8x1Row.slice();
-    row[selectedIndex] = 10;
+    row[selectedIndex] = ACTIVE_BRIGHTNESS;
     this.grid.levelRow(startIndex, rowIndex, row);
   }
 
 
   updateGridRowMeter(startIndex: number, rowIndex: number, selectedIndex: number) {
     let row = blank8x1Row.slice();
-    for (let i = 0; i <= selectedIndex; i++) row[i] = 10;
+    for (let i = 0; i <= selectedIndex; i++) row[i] = ACTIVE_BRIGHTNESS;
     this.grid.levelRow(startIndex, rowIndex, row);
   }
 

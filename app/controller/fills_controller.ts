@@ -1,4 +1,4 @@
-import { ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { RhythmStep } from "../model/ableton/track";
 
@@ -50,7 +50,7 @@ export class FillsController extends ApplicationController {
 
     // Display the current rhythm on row 7
     const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((rhythmStep: RhythmStep, i: any) => {
-      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * 10) : 0;
+      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * ACTIVE_BRIGHTNESS) : INACTIVE_BRIGHTNESS;
     });
     this.grid.levelRow(0, 6, row.slice(0, 8));
     this.grid.levelRow(8, 6, row.slice(8, 16));
@@ -58,7 +58,7 @@ export class FillsController extends ApplicationController {
     // Display the repeats as vertical meters for any steps with a non-zero fill-repeat value
     for (let y = 0; y < 6; y++) {
       const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((rhythmStep: RhythmStep, x: number) => {
-        return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.fillRepeats) ? 10 : 0;
+        return (rhythmStep.state == 1 && this.matrix[y][x].value <= rhythmStep.fillRepeats) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
       });
       this.grid.levelRow(0, y, row.slice(0, 8));
       this.grid.levelRow(8, y, row.slice(8, 16));

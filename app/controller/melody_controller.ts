@@ -1,6 +1,6 @@
 import { Melody } from "tblswvs";
 import { MonomeGrid } from "../model/monome_grid";
-import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 
 
 export class MelodyController extends ApplicationController {
@@ -36,14 +36,14 @@ export class MelodyController extends ApplicationController {
 
   toggleVectorShifts(gridPage: MelodyController, press: GridKeyPress) {
     gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
-    gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? 10 : 0));
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     gridPage.activeTrack.updateGuiVectorDisplay();
   }
 
 
   refresh() {
-    this.grid.levelSet(15, 2, (this.activeTrack.createNewClip      ? 10 : 0));
-    this.grid.levelSet(15, 3, (this.activeTrack.vectorShiftsActive ? 10 : 0));
+    this.grid.levelSet(15, 2, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+    this.grid.levelSet(15, 3, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
   }
 
 
@@ -54,7 +54,7 @@ export class MelodyController extends ApplicationController {
 
   toggleMelodyRecording(gridPage: MelodyController, press: GridKeyPress) {
     gridPage.recordingInputMelody = !gridPage.recordingInputMelody;
-    gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputMelody ? 10 : 0));
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputMelody ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     if (gridPage.recordingInputMelody) {
       gridPage.grid.sequencer.queuedMelody = new Array();
       gridPage.setUiQueuedMelody();

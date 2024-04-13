@@ -1,4 +1,4 @@
-import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, INACTIVE_BRIGHTNESS, ACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid, pageTypeMap } from "../model/monome_grid";
 
 
@@ -62,8 +62,8 @@ export class AlgorithmController extends ApplicationController {
 
 
   getGridAlgorithmRow() {
-    const algorithmRow = new Array(8).fill(0);
-    algorithmRow[algorithmButtonMap[this.activeTrack.algorithm]] = 10;
+    const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
+    algorithmRow[algorithmButtonMap[this.activeTrack.algorithm]] = ACTIVE_BRIGHTNESS;
     return algorithmRow;
   }
 }

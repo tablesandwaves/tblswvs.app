@@ -1,5 +1,5 @@
 import { RampSegment } from "../model/ableton/ramp_sequence";
-import { GridConfig, GridKeyPress, ApplicationController } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
 
@@ -181,7 +181,7 @@ export class RampSequenceController extends ApplicationController {
 
 
   gridRangeRow(): number[] {
-    if (this.activeSegment == undefined) return new Array(16).fill(0);
+    if (this.activeSegment == undefined) return new Array(16).fill(INACTIVE_BRIGHTNESS);
 
     let min: number, max: number;
     if (this.activeSegment.range.start <= this.activeSegment.range.end) {
@@ -192,12 +192,12 @@ export class RampSequenceController extends ApplicationController {
       max = this.activeSegment.range.start;
     }
 
-    return RAMP_SEQ_RANGE_STEPS.map(step => step < min || step > max ? 0 : this.activeDivisionBrightness);
+    return RAMP_SEQ_RANGE_STEPS.map(step => step < min || step > max ? INACTIVE_BRIGHTNESS : this.activeDivisionBrightness);
   }
 
 
   gridSubdivisionRow(): number[] {
-    const segmentRow   = new Array(16).fill(0);
+    const segmentRow   = new Array(16).fill(INACTIVE_BRIGHTNESS);
     const rampSequence = this.activeTrack.getEditableRampSequence();
 
     rampSequence.segments.forEach(segment => {
@@ -213,7 +213,7 @@ export class RampSequenceController extends ApplicationController {
 
 
   gridSegmentRow(): number[] {
-    const segmentRow   = new Array(16).fill(0);
+    const segmentRow   = new Array(16).fill(INACTIVE_BRIGHTNESS);
     const rampSequence = this.activeTrack.getEditableRampSequence();
 
     rampSequence.segments.map(s => s.startIndex).forEach(index => {
@@ -227,17 +227,17 @@ export class RampSequenceController extends ApplicationController {
 
 
   gridRampSequenceGlobalsRow(): number[] {
-    const row = new Array(8).fill(0);
+    const row = new Array(8).fill(INACTIVE_BRIGHTNESS);
 
     // Select which of the current track's 2 ramp sequences are being edited.
-    row[this.activeTrack.editableRampSequence] = 10;
+    row[this.activeTrack.editableRampSequence] = ACTIVE_BRIGHTNESS;
 
     // Is the active ramp seqeunce active (is the corresponding Live device macro mapped)?
-    row[2] = this.activeTrack.getEditableRampSequence().active ? 10 : 0;
+    row[2] = this.activeTrack.getEditableRampSequence().active ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
 
     // Is the current segment low-to-high? If yes, light up column 3
     if (this.activeSegment) {
-      row[3] = this.activeSegment.range.start > this.activeSegment.range.end ? 10 : 0;
+      row[3] = this.activeSegment.range.start > this.activeSegment.range.end ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
     }
 
     return row;
