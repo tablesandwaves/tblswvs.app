@@ -23,6 +23,8 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   addSeedRange(gridPage: InfinitySeriesController, press: GridKeyPress) {
+    if (press.s == 0) return;
+
     const seedIndex = press.y - 2;
     const seedRange = press.x + 1;
 

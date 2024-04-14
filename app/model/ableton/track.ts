@@ -168,15 +168,14 @@ export class AbletonTrack {
 
     if (this.algorithm == "simple" || this.algorithm == "shift_reg") {
       notes = this.#inputMelody;
+    } else if (this.algorithm == "inf_series") {
+      notes = this.#getInfinitySeries();
     } else {
       const melody = new Melody(this.inputMelody, this.daw.sequencer.key);
 
       switch (this.algorithm) {
         case "self_replicate":
           notes = melody.selfReplicate(63).notes;
-          break;
-        case "inf_series":
-          notes = this.#getInfinitySeries();
           break;
         case "counted":
           notes = melody.counted().notes;
@@ -197,6 +196,9 @@ export class AbletonTrack {
 
   #getInfinitySeries() {
     const notes: note[] = new Array();
+    const sequenceCenter = (this.chains[this.activeChain].type == "drum rack") ?
+      this.#getDrumRackCenterNote() :
+      this.daw.sequencer.key.midiTonic + 60;
 
     this.infinitySeriesSeeds.forEach(seed => {
       if (seed == 0) return;
@@ -204,12 +206,19 @@ export class AbletonTrack {
       const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length * this.infinitySeriesRhythmRepetitions;
       notes.push(
         ...Melody.infinitySeries([0, seed], stepCount).map(step => {
-          return noteData[step + this.daw.sequencer.key.midiTonic + 60];
+          return noteData[step + sequenceCenter];
         })
       );
     });
 
     return notes;
+  }
+
+
+  #getDrumRackCenterNote() {
+    const padCount  = this.chains[this.#activeChain].pads.length;
+    const midiNotes = [...new Array(padCount)].map((_, i) => i + 36);
+    return (padCount % 2 == 0) ? midiNotes[padCount / 2] : midiNotes[(padCount + 1) / 2];
   }
 
 
