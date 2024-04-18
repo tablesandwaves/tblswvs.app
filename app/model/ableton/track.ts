@@ -75,8 +75,7 @@ export class AbletonTrack {
   currentMutation: note[] = new Array();
   currentAbletonNotes: AbletonNote[] = new Array();
 
-  // When in drum rack mode, do not use an independent rhythm/melody phasing model
-  #drumRackSequence: note[][] = new Array(16).fill(undefined);
+  #sequence: note[][] = new Array(128);
 
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
@@ -111,6 +110,10 @@ export class AbletonTrack {
 
     for (let i = 0; i < this.rhythm.length; i++) {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
+    }
+
+    for (let i = 0; i < this.#sequence.length; i++) {
+      this.#sequence[i] = [];
     }
 
     this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
@@ -190,6 +193,17 @@ export class AbletonTrack {
       this.#outputNotes = notes.filter(note => note).map(note => {
         return note.note == "rest" ? [undefined] : [note];
       });
+
+      for (let seqIndex = 0, noteIndex = -1; seqIndex < this.#sequence.length; seqIndex++) {
+        const rhythmStep = this.#rhythm[seqIndex % this.#rhythmStepLength];
+        if (rhythmStep.state == 1) {
+          noteIndex++;
+          const note = notes[noteIndex % notes.length];
+          this.#sequence[seqIndex] = [note];
+        } else {
+          this.#sequence[seqIndex] = [];
+        }
+      }
     }
   }
 
@@ -228,29 +242,29 @@ export class AbletonTrack {
   }
 
 
-  get drumRackSequence() {
-    return this.#drumRackSequence;
+  get sequence() {
+    return this.#sequence;
   }
 
 
   setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
     this.polyphonicVoiceMode = true;
-    this.#drumRackSequence[rhythmStepIndex] = inputNotes;
+
+    if (inputNotes == undefined) {
+      this.#sequence[rhythmStepIndex] = [];
+      this.#rhythm[rhythmStepIndex].state = 0;
+    } else {
+      this.#sequence[rhythmStepIndex] = inputNotes;
+      this.#rhythm[rhythmStepIndex].state = 1;
+    }
+
     this.updateDrumPadInputMelody();
   }
 
 
   updateDrumPadInputMelody() {
-    this.#drumRackSequence.slice(0, this.#rhythmStepLength).forEach((step, i) => {
-      if (step != undefined) {
-        this.#rhythm[i].state = 1;
-      } else {
-        this.#rhythm[i].state = 0;
-      }
-    });
-
     // Output notes is a compacted version of the drum rack sequence.
-    this.#outputNotes = this.#drumRackSequence.slice(0, this.#rhythmStepLength).filter(noteArray => noteArray);
+    this.#outputNotes = this.#sequence.slice(0, this.#rhythmStepLength).filter(noteArray => noteArray.length > 0);
   }
 
 
@@ -769,6 +783,7 @@ export class AbletonTrack {
 
 
   updateGuiTrackNotes() {
+    if (this.daw.sequencer.testing) return;
     this.polyphonicVoiceMode ? this.setGuiChordProgression() : this.setGuiMelody();
   }
 

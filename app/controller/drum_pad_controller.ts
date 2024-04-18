@@ -60,15 +60,17 @@ export class DrumPadController extends ApplicationController {
     });
     this.previousCoordinates = new Array();
 
+    if (highlightIndex == undefined) return;
+
     // Brighten any drum pads that have hits for the current step
-    const step = this.activeTrack.drumRackSequence[highlightIndex % this.activeTrack.rhythmStepLength];
-    if (step) {
-      step.forEach(note => {
+    const step = this.activeTrack.sequence[highlightIndex];
+    step.forEach(note => {
+      if (note) {
         const coordinate = drumPadMatrix[note.midi];
         this.grid.levelSet(coordinate.x, coordinate.y, ACTIVE_BRIGHTNESS);
         this.previousCoordinates.push(coordinate);
-      });
-    }
+      }
+    });
   }
 
 
