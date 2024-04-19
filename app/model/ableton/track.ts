@@ -190,19 +190,21 @@ export class AbletonTrack {
     }
 
     if (notes.length > 0) {
-      this.#outputNotes = notes.filter(note => note).map(note => {
-        return note.note == "rest" ? [undefined] : [note];
-      });
+      this.#outputNotes = notes.filter(note => note).map(note => note.note == "rest" ? [undefined] : [note]);
+      this.generateSequence()
+    }
+  }
 
-      for (let seqIndex = 0, noteIndex = -1; seqIndex < this.#sequence.length; seqIndex++) {
-        const rhythmStep = this.#rhythm[seqIndex % this.#rhythmStepLength];
-        if (rhythmStep.state == 1) {
-          noteIndex++;
-          const note = notes[noteIndex % notes.length];
-          this.#sequence[seqIndex] = [note];
-        } else {
-          this.#sequence[seqIndex] = [];
-        }
+
+  generateSequence() {
+    for (let seqIndex = 0, noteIndex = -1; seqIndex < this.#sequence.length; seqIndex++) {
+      const rhythmStep = this.#rhythm[seqIndex % this.#rhythmStepLength];
+      if (rhythmStep.state == 1) {
+        noteIndex++;
+        const noteArray = this.#outputNotes[noteIndex % this.#outputNotes.length];
+        this.#sequence[seqIndex] = noteArray;
+      } else {
+        this.#sequence[seqIndex] = [];
       }
     }
   }
@@ -239,6 +241,7 @@ export class AbletonTrack {
   setChordProgression(chordNotes: note[][]) {
     this.polyphonicVoiceMode = true;
     this.#outputNotes = chordNotes;
+    this.generateSequence();
   }
 
 
