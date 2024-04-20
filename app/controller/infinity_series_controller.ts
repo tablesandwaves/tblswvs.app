@@ -17,7 +17,7 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   refresh() {
-    super.setGlobalAlgorithmControls();
+    super.refresh();
     this.setGridInfinitySeriesDisplay();
   }
 
