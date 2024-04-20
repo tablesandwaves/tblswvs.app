@@ -187,6 +187,7 @@ export class DrumPadController extends ApplicationController {
           gridPage.activeTrack.updateGuiTrackNotes();
         }
       }
+      gridPage.setGridDrumPadDisplay();
     }
   }
 
@@ -203,6 +204,7 @@ export class DrumPadController extends ApplicationController {
     // Drum Pad Controls
     this.grid.levelSet(4, 3, this.notePlayingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     this.grid.levelSet(4, 4, this.noteRecordingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+    this.grid.levelSet(4, 5, this.noteEditingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 
