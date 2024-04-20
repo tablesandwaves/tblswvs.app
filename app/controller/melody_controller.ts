@@ -78,12 +78,4 @@ export class MelodyController extends ApplicationController {
       gridPage.setUiQueuedMelody();
     }
   }
-
-
-  setUiQueuedMelody() {
-    this.grid.sequencer.gui.webContents.send(
-      "update-melody",
-      this.grid.sequencer.queuedMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
-    );
-  }
 }

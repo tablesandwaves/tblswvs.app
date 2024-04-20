@@ -329,6 +329,16 @@ export class ApplicationController {
   }
 
 
+  setUiQueuedMelody() {
+    if (this.grid.sequencer.testing) return;
+
+    this.grid.sequencer.gui.webContents.send(
+      "update-melody",
+      this.grid.sequencer.queuedMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
+    );
+  }
+
+
   updateGuiRhythmTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     if (this.grid.sequencer.testing || !this.grid.sequencer.gui.webContents) return;
 

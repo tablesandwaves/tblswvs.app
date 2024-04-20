@@ -1,25 +1,25 @@
-import { noteData } from "tblswvs";
+import { note, noteData } from "tblswvs";
 import { ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, xyCoordinate, ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
 
-const drumPadMatrixCoordinates: Record<number, xyCoordinate> = {
-  36: {x: 0, y: 6},
-  37: {x: 1, y: 6},
-  38: {x: 2, y: 6},
-  39: {x: 3, y: 6},
-  40: {x: 0, y: 5},
-  41: {x: 1, y: 5},
-  42: {x: 2, y: 5},
-  43: {x: 3, y: 5},
-  44: {x: 0, y: 4},
-  45: {x: 1, y: 4},
-  46: {x: 2, y: 4},
-  47: {x: 3, y: 4},
-  48: {x: 0, y: 3},
-  49: {x: 1, y: 3},
-  50: {x: 2, y: 3},
-  51: {x: 3, y: 3}
+const drumPadMatrix: Record<number, {coordinates: xyCoordinate, note: note}> = {
+  36: {coordinates: {x: 0, y: 6}, note: {midi: 36, note: "C", octave: 1}},
+  37: {coordinates: {x: 1, y: 6}, note: {midi: 37, note: "C", octave: 1}},
+  38: {coordinates: {x: 2, y: 6}, note: {midi: 38, note: "C", octave: 1}},
+  39: {coordinates: {x: 3, y: 6}, note: {midi: 39, note: "C", octave: 1}},
+  40: {coordinates: {x: 0, y: 5}, note: {midi: 40, note: "C", octave: 1}},
+  41: {coordinates: {x: 1, y: 5}, note: {midi: 41, note: "C", octave: 1}},
+  42: {coordinates: {x: 2, y: 5}, note: {midi: 42, note: "C", octave: 1}},
+  43: {coordinates: {x: 3, y: 5}, note: {midi: 43, note: "C", octave: 1}},
+  44: {coordinates: {x: 0, y: 4}, note: {midi: 44, note: "C", octave: 1}},
+  45: {coordinates: {x: 1, y: 4}, note: {midi: 45, note: "C", octave: 1}},
+  46: {coordinates: {x: 2, y: 4}, note: {midi: 46, note: "C", octave: 1}},
+  47: {coordinates: {x: 3, y: 4}, note: {midi: 47, note: "C", octave: 1}},
+  48: {coordinates: {x: 0, y: 3}, note: {midi: 48, note: "C", octave: 1}},
+  49: {coordinates: {x: 1, y: 3}, note: {midi: 49, note: "C", octave: 1}},
+  50: {coordinates: {x: 2, y: 3}, note: {midi: 50, note: "C", octave: 1}},
+  51: {coordinates: {x: 3, y: 3}, note: {midi: 51, note: "C", octave: 1}}
 }
 
 
@@ -67,9 +67,9 @@ export class DrumPadController extends ApplicationController {
     // Brighten any drum pads that have hits for the current step
     const step = this.activeTrack.sequence[pianoRollHighlightIndex];
     step.forEach(note => {
-      if (note && drumPadMatrixCoordinates[note.midi]) {
-        this.grid.levelSet(drumPadMatrixCoordinates[note.midi].x, drumPadMatrixCoordinates[note.midi].y, ACTIVE_BRIGHTNESS);
-        this.previousCoordinates.push(drumPadMatrixCoordinates[note.midi]);
+      if (note && drumPadMatrix[note.midi]) {
+        this.grid.levelSet(drumPadMatrix[note.midi].coordinates.x, drumPadMatrix[note.midi].coordinates.y, ACTIVE_BRIGHTNESS);
+        this.previousCoordinates.push(drumPadMatrix[note.midi].coordinates);
       }
     });
   }
@@ -101,6 +101,11 @@ export class DrumPadController extends ApplicationController {
 
       if (gridPage.noteRecordingActive) {
         gridPage.activeDrumPads.push(press);
+      }
+
+      if (gridPage.noteEditingActive) {
+        const note = Object.values(drumPadMatrix).find(obj => obj.coordinates.x == press.x && obj.coordinates.y == press.y).note;
+        gridPage.grid.sequencer.queuedMelody.push(note);
       }
     } else {
       gridPage.heldDrumPads--;
@@ -168,6 +173,12 @@ export class DrumPadController extends ApplicationController {
       gridPage.noteRecordingActive = false;
       gridPage.noteEditingActive = !gridPage.noteEditingActive;
       gridPage.setGridDrumPadDisplay();
+
+      if (gridPage.noteEditingActive) {
+        gridPage.grid.sequencer.queuedMelody = new Array();
+        gridPage.setUiQueuedMelody();
+      }
+      // if (!gridPage)
     }
   }
 
