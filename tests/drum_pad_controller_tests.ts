@@ -138,6 +138,29 @@ describe("DrumPadController", () => {
   });
 
 
+  describe("Enabling note editing and toggling rhythm gates", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+
+    // Select the rhythm page to load the drum pad controller, then turn on editing, then add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+    const track = sequencer.daw.getActiveTrack();
+
+    it("updates the track rhythm", () => {
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ])
+    });
+  });
+
+
   describe("activating a pad for a rhythm step", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
