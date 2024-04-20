@@ -28,6 +28,7 @@ export class DrumPadController extends ApplicationController {
 
   notePlayingActive    = false;
   noteRecordingActive  = false;
+  noteEditingActive    = false;
   heldGate:     number = undefined;
   heldDrumPads: number = 0;
   disableGate: boolean = false;
@@ -44,6 +45,7 @@ export class DrumPadController extends ApplicationController {
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("toggleNotePlaying", this.toggleNotePlaying);
     this.functionMap.set("toggleNoteRecording", this.toggleNoteRecording);
+    this.functionMap.set("toggleNoteEditing", this.toggleNoteEditing);
     this.functionMap.set("updateDefaultProbability", this.updateDefaultProbability);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
     this.functionMap.set("updatePulse", this.updatePulse);
@@ -154,7 +156,17 @@ export class DrumPadController extends ApplicationController {
 
   toggleNoteRecording(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
+      gridPage.noteEditingActive = false;
       gridPage.noteRecordingActive = !gridPage.noteRecordingActive;
+      gridPage.setGridDrumPadDisplay();
+    }
+  }
+
+
+  toggleNoteEditing(gridPage: DrumPadController, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.noteRecordingActive = false;
+      gridPage.noteEditingActive = !gridPage.noteEditingActive;
       gridPage.setGridDrumPadDisplay();
     }
   }

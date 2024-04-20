@@ -25,6 +25,54 @@ describe("DrumPadController", () => {
   });
 
 
+  describe("toggling note editing when note recording is active", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const activePage = sequencer.grid.activePage as DrumPadController;
+
+    // Toggle note recording
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+    expect(activePage.noteRecordingActive).to.be.true;
+
+    // Toggle note recording
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+
+    it("enables note editing", () => expect(activePage.noteEditingActive).to.be.true);
+    it("disables note editing", () => expect(activePage.noteRecordingActive).to.be.false);
+  });
+
+
+  describe("toggling note recording when note editing is active", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.activeChain = 1;
+
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const activePage = sequencer.grid.activePage as DrumPadController;
+
+    // Toggle note recording
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    expect(activePage.noteEditingActive).to.be.true;
+
+    // Toggle note recording
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+
+    it("enables note editing", () => expect(activePage.noteRecordingActive).to.be.true);
+    it("disables note editing", () => expect(activePage.noteEditingActive).to.be.false);
+  });
+
+
   describe("activating a pad for a rhythm step", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 

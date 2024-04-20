@@ -91,13 +91,22 @@ rows:
     mapping: toggleNotePlaying
   -
     name: Toggle Note Recording
-    description: When enabled, when the pad buttons are pressed, the note will be recorded into the current sequencer step
+    description: When enabled, when a gate button and pad buttons are pressed, the note will be recorded into the current sequencer step for the gate
     group: drum-rack-controls
     type: toggle
     index: 4
     xStart: 4
     xLength: 1
     mapping: toggleNoteRecording
+  -
+    name: Toggle Note Editing
+    description: When enabled, record notes into the track's input melody; when released flush the melody to the sequencer with gate pattern
+    group: drum-rack-controls
+    type: toggle
+    index: 5
+    xStart: 4
+    xLength: 1
+    mapping: toggleNoteEditing
   -
     name: Pulse Rate
     description: Set the current track's pulse rate between 16n and 2n
