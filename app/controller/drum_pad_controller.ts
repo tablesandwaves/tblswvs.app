@@ -3,7 +3,7 @@ import { ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, xyCoordinate, ApplicationContro
 import { MonomeGrid } from "../model/monome_grid";
 
 
-const drumPadMatrix: Record<number, xyCoordinate> = {
+const drumPadMatrixCoordinates: Record<number, xyCoordinate> = {
   36: {x: 0, y: 6},
   37: {x: 1, y: 6},
   38: {x: 2, y: 6},
@@ -50,7 +50,7 @@ export class DrumPadController extends ApplicationController {
   }
 
 
-  setGridRhythmDisplay(highlightIndex?: number) {
+  setGridRhythmDisplay(highlightIndex?: number, pianoRollHighlightIndex?: number) {
     // Display the transport row
     super.setGridRhythmDisplay(highlightIndex);
 
@@ -60,15 +60,14 @@ export class DrumPadController extends ApplicationController {
     });
     this.previousCoordinates = new Array();
 
-    if (highlightIndex == undefined) return;
+    if (pianoRollHighlightIndex == undefined) return;
 
     // Brighten any drum pads that have hits for the current step
-    const step = this.activeTrack.sequence[highlightIndex];
+    const step = this.activeTrack.sequence[pianoRollHighlightIndex];
     step.forEach(note => {
-      if (note) {
-        const coordinate = drumPadMatrix[note.midi];
-        this.grid.levelSet(coordinate.x, coordinate.y, ACTIVE_BRIGHTNESS);
-        this.previousCoordinates.push(coordinate);
+      if (note && drumPadMatrixCoordinates[note.midi]) {
+        this.grid.levelSet(drumPadMatrixCoordinates[note.midi].x, drumPadMatrixCoordinates[note.midi].y, ACTIVE_BRIGHTNESS);
+        this.previousCoordinates.push(drumPadMatrixCoordinates[note.midi]);
       }
     });
   }
@@ -177,7 +176,7 @@ export class DrumPadController extends ApplicationController {
 
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    this.setGridRhythmDisplay(highlightIndex);
+    this.setGridRhythmDisplay(highlightIndex, pianoRollHighlightIndex);
     this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
   }
 }
