@@ -91,6 +91,53 @@ describe("DrumPadController", () => {
   });
 
 
+  describe("enabling note editing and adding notes", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    // Toggle note editing and press two drum pads then toggle note editing again to flush
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 0});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
+
+    it("sets the input melody", () => {
+      const expected = [{ octave: 1, note: 'C', midi: 36 }, { octave: 1, note: 'C#', midi: 37 }];
+      expect(track.inputMelody).to.deep.eq(expected);
+    });
+
+    it("sets the output notes", () => {
+      const expected = [[{ octave: 1, note: 'C', midi: 36 }], [{ octave: 1, note: 'C#', midi: 37 }]];
+      expect(track.outputNotes).to.deep.eq(expected);
+    });
+
+    it("sets the sequence", () => {
+      expect(track.sequence[0]).to.deep.eq(  [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[16]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
+      expect(track.sequence[32]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[48]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
+      expect(track.sequence[64]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[80]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
+      expect(track.sequence[96]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[112]).to.deep.eq([{ octave: 1, note: 'C#', midi: 37 }]);
+    });
+  });
+
+
   describe("activating a pad for a rhythm step", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 

@@ -56,7 +56,6 @@ describe("InfinitySeriesController", () => {
     const activePage = sequencer.grid.activePage as InfinitySeriesController;
 
     it("updates the track's infinity series seeds", () => {
-      console.log(track.outputNotes)
       expect(track.infinitySeriesSeeds).to.have.ordered.members([1, 0, 0, 0]);
     });
 
