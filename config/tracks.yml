@@ -146,6 +146,9 @@ live_tracks:
       -
         name: Slow Burn
         type: synth
+      -
+        name: Meld Noise Pad
+        type: synth
   -
     name: Hydra
     dawIndex: 7
