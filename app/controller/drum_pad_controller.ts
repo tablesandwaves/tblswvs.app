@@ -34,6 +34,7 @@ export class DrumPadController extends ApplicationController {
   disableGate: boolean = false;
   activeDrumPads: GridKeyPress[] = new Array();
   previousCoordinates: xyCoordinate[] = new Array();
+  padNotes: note[] = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -104,11 +105,22 @@ export class DrumPadController extends ApplicationController {
       }
 
       if (gridPage.noteEditingActive) {
-        const note = Object.values(drumPadMatrix).find(obj => obj.coordinates.x == press.x && obj.coordinates.y == press.y).note;
-        gridPage.grid.sequencer.queuedMelody.push(note);
+        gridPage.padNotes.push(
+          Object.values(drumPadMatrix).find(obj => {
+            return obj.coordinates.x == press.x && obj.coordinates.y == press.y;
+          }).note
+        );
       }
     } else {
       gridPage.heldDrumPads--;
+
+      // Note Editing Mode
+      if (gridPage.noteEditingActive && gridPage.heldDrumPads == 0) {
+        gridPage.grid.sequencer.queuedChordProgression.push(gridPage.padNotes.sort((a,b) => a.midi - b.midi));
+        gridPage.padNotes = new Array();
+      }
+
+      // Note Recording Mode
       if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0) {
         gridPage.activeDrumPads.forEach(press => {
           gridPage.activeTrack.setDrumPadStep(gridPage.heldGate, gridPage.activeDrumPads.map(press => noteData[gridPage.matrix[press.y][press.x].value]));
@@ -180,13 +192,14 @@ export class DrumPadController extends ApplicationController {
 
       if (gridPage.noteEditingActive) {
         // When note editing is still active, queue up notes
-        gridPage.grid.sequencer.queuedMelody = new Array();
+        gridPage.grid.sequencer.queuedChordProgression = new Array();
         gridPage.setUiQueuedMelody();
       } else {
         // When note editing is turned off, flush the notes from the queued melody to the track
         // unless there are no queued notes (due to inadvertent button press).
-        if (gridPage.grid.sequencer.queuedMelody.length > 0) {
-          gridPage.activeTrack.inputMelody = gridPage.grid.sequencer.queuedMelody;
+        if (gridPage.grid.sequencer.queuedChordProgression.length > 0) {
+          // gridPage.activeTrack.inputMelody = gridPage.grid.sequencer.queuedMelody;
+          gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
           gridPage.grid.sequencer.daw.updateActiveTrackNotes();
           gridPage.activeTrack.updateGuiTrackNotes();
         }
