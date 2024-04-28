@@ -174,10 +174,10 @@ export class AbletonTrack {
       notes = this.#inputMelody;
     } else if (this.algorithm == "inf_series") {
       notes = this.#getInfinitySeries();
-    } else {
+    } else if (this.algorithm == "self_similarity") {
       const melody = new Melody(this.inputMelody, this.daw.sequencer.key);
 
-      switch (this.algorithm) {
+      switch (this.selfSimilarityType) {
         case "self_replicate":
           notes = melody.selfReplicate(63).notes;
           break;

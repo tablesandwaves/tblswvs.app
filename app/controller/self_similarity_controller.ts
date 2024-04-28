@@ -15,11 +15,28 @@ export class SelfSimilarityController extends AlgorithmController {
   }
 
 
+  refresh() {
+    this.setGridSelfSimilarityDisplay();
+  }
+
+
   setSelfSimilaryType(gridPage: SelfSimilarityController, press: GridKeyPress) {
     gridPage.activeTrack.selfSimilarityType = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.levelRow(0, 2, gridPage.getGridSelfSimilarityTypeRow());
+  }
+
+
+  advance(gridPage: SelfSimilarityController, press: GridKeyPress) {
+    gridPage.activeTrack.inputMelody = gridPage.grid.sequencer.queuedMelody;
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.updateGuiTrackNotes();
+  }
 
+
+  setGridSelfSimilarityDisplay() {
+    super.setGlobalAlgorithmControls();
+    super.getRhythmRepetitionsRow();
+    this.grid.levelRow(0, 2, this.getGridSelfSimilarityTypeRow());
   }
 
 
