@@ -34,8 +34,8 @@ export class SelfSimilarityController extends AlgorithmController {
 
 
   setGridSelfSimilarityDisplay() {
+    super.setGridRhythmDisplay();
     super.setGlobalAlgorithmControls();
-    super.getRhythmRepetitionsRow();
     this.grid.levelRow(0, 2, this.getGridSelfSimilarityTypeRow());
   }
 
