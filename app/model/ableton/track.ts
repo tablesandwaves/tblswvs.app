@@ -64,6 +64,7 @@ export class AbletonTrack {
   shiftRegisterOctaveRange: number[] = [0, 1, 1, 0];
   infinitySeriesSeeds: number[] = [0, 0, 0, 0];
   infinitySeriesRhythmRepetitions: number = 1;
+  selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Are the output notes a melody or chord progression?
   polyphonicVoiceMode = false;

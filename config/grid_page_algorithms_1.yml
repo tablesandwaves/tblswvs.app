@@ -47,12 +47,13 @@ rows:
     type: radio
     index: 6
     xStart: 0
-    xLength: 3
+    xLength: 4
     mapping: setAlgorithm
     values:
       - simple
       - shift_reg
       - inf_series
+      - self_similarity
   -
     name: Advance
     description: advance the current algorithm 1 iteration

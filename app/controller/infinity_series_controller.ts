@@ -12,7 +12,6 @@ export class InfinitySeriesController extends AlgorithmController {
     super(config, grid);
 
     this.functionMap.set("addSeedRange", this.addSeedRange);
-    this.functionMap.set("setRhythmRepetitions", this.setRhythmRepetitions);
   }
 
 
@@ -39,12 +38,6 @@ export class InfinitySeriesController extends AlgorithmController {
   }
 
 
-  setRhythmRepetitions(gridPage: InfinitySeriesController, press: GridKeyPress) {
-    gridPage.activeTrack.infinitySeriesRhythmRepetitions = press.x - 7;
-    gridPage.grid.levelRow(8, 2, gridPage.getInfinitySeriesRepetitionsRow());
-  }
-
-
   advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
     gridPage.activeTrack.inputMelody = [];
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -54,12 +47,7 @@ export class InfinitySeriesController extends AlgorithmController {
 
   setGridInfinitySeriesDisplay() {
     this.getSeedRangeRows().forEach((row, i) => this.grid.levelRow(0, i + 2, row));
-    this.grid.levelRow(8, 2, this.getInfinitySeriesRepetitionsRow());
-  }
-
-
-  getInfinitySeriesRepetitionsRow() {
-    return blank8x1Row.map((_, i) => i < this.activeTrack.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+    this.grid.levelRow(8, 2, this.getRhythmRepetitionsRow());
   }
 
 

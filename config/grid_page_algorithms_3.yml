@@ -1,5 +1,5 @@
-name: Algorithms
-description: Edit the track algorithms
+name: Self-similarity Algorithms
+description: "Configure the self-similarity algorithms: self-replicating, counted, zig-zag"
 matrices:
   -
     name: Rhythm Pattern / Step Length
@@ -13,6 +13,28 @@ matrices:
     mapping: updateRhythm
     shiftMapping: updateStepLength
 rows:
+  -
+    name: Algorithm types
+    description: Select whether to use the self-replicating, counted or zig-zag algorithms
+    group: self-similarity-type
+    type: radio
+    index: 2
+    xStart: 0
+    xLength: 3
+    mapping: setSelfSimilaryType
+    values:
+      - self_replicate
+      - counted
+      - zig_zag
+  -
+    name: Rhythm Repetitions
+    description: Set the number of times thru the gate pattern before switching to the next seed
+    group: rhythm-repetition
+    type: meter
+    index: 2
+    xStart: 8
+    xLength: 8
+    mapping: setRhythmRepetitions
   -
     name: Algorithms
     description: select the current algorithm

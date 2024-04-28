@@ -19,6 +19,7 @@ import { DrumPadController } from "../controller/drum_pad_controller";
 import { AlgorithmController, algorithmButtonMap } from "../controller/algorithm_controller";
 import { ShiftRegisterController } from "../controller/shift_register_controller";
 import { InfinitySeriesController } from "../controller/infinity_series_controller";
+import { SelfSimilarityController } from "../controller/self_similarity_controller";
 
 
 export type DeviceConfig = {
@@ -41,7 +42,7 @@ export const pageTypeMap: Record<string, string[]> = {
   "Chords":       ["Chords"],
   "Melody":       ["Melody", "Mutation", "MelodyVector"],
   "RampSequence": ["RampSequence"],
-  "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries"],
+  "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries", "SelfSimilarity"],
   "Global":       ["Global"]
 }
 
@@ -259,6 +260,12 @@ export class MonomeGrid {
       case "InfinitySeries":
         this.pageIndex = 2;
         this.activePage = new InfinitySeriesController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 11;
+        break;
+      case "SelfSimilarity":
+        this.pageIndex = 3;
+        this.activePage = new SelfSimilarityController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 11;
         break;

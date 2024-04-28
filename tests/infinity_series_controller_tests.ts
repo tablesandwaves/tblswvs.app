@@ -16,19 +16,19 @@ describe("InfinitySeriesController", () => {
     sequencer.grid.keyPress({y: 6, x: 2, s: 1});
     const activePage = sequencer.grid.activePage as InfinitySeriesController;
 
-    it("the shift register controller can be selected", () => {
+    it("the infinity series controller can be selected", () => {
       expect(activePage).to.be.instanceOf(InfinitySeriesController)
     });
 
-    describe("the default shift register controller state", () => {
-      it("has the default shift register range row", () => {
+    describe("the default infinity series controller state", () => {
+      it("has the default infinity series seed row", () => {
         activePage.getSeedRangeRows().forEach(row => {
           expect(row).to.have.ordered.members([0, 0, 0, 0,  0, 0, 0, 0]);
         });
       });
 
       it("has the default repetitions row", () => {
-        expect(activePage.getInfinitySeriesRepetitionsRow()).to.have.ordered.members([
+        expect(activePage.getRhythmRepetitionsRow()).to.have.ordered.members([
           10, 0, 0, 0,  0, 0, 0, 0
         ]);
       });

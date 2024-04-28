@@ -1,11 +1,13 @@
 import { GridConfig, GridKeyPress, ApplicationController, INACTIVE_BRIGHTNESS, ACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid, pageTypeMap } from "../model/monome_grid";
+import { blank8x1Row } from "../helpers/utils";
 
 
 export const algorithmButtonMap: Record<string, number> = {
-  "simple":     0,
-  "shift_reg":  1,
-  "inf_series": 2
+  "simple":          0,
+  "shift_reg":       1,
+  "inf_series":      2,
+  "self_similarity": 3
 }
 
 
@@ -17,6 +19,7 @@ export class AlgorithmController extends ApplicationController {
     super(config, grid);
     this.functionMap.set("setAlgorithm", this.setAlgorithm);
     this.functionMap.set("advance", this.advance);
+    this.functionMap.set("setRhythmRepetitions", this.setRhythmRepetitions);
   }
 
 
@@ -50,9 +53,15 @@ export class AlgorithmController extends ApplicationController {
   }
 
 
+  setRhythmRepetitions(gridPage: AlgorithmController, press: GridKeyPress) {
+    gridPage.activeTrack.infinitySeriesRhythmRepetitions = press.x - 7;
+    gridPage.grid.levelRow(8, 2, gridPage.getRhythmRepetitionsRow());
+  }
+
+
   // to be overridden by sub-classes
   advance(gridPage: AlgorithmController, press: GridKeyPress) {
-    console.log("AlgorithmController.advance()")
+    // console.log("AlgorithmController.advance()")
   }
 
 
@@ -65,5 +74,10 @@ export class AlgorithmController extends ApplicationController {
     const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
     algorithmRow[algorithmButtonMap[this.activeTrack.algorithm]] = ACTIVE_BRIGHTNESS;
     return algorithmRow;
+  }
+
+
+  getRhythmRepetitionsRow() {
+    return blank8x1Row.map((_, i) => i < this.activeTrack.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 }
