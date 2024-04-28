@@ -1,7 +1,18 @@
 import { note } from "tblswvs";
-import { GridConfig, GridKeyPress, ApplicationController, octaveTransposeMapping, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { detect } from "@tonaljs/chord-detect";
+
+
+export const octaveTransposeMapping: Record<number, number> = {
+  0: 3,
+  1: 2,
+  2: 1,
+  3: 0,
+  4: -1,
+  5: -2,
+  6: -3
+}
+
 
 export class ChordController extends ApplicationController {
   type = "Chords";
@@ -61,7 +72,7 @@ export class ChordController extends ApplicationController {
     if (press.s == 1 && gridPage.grid.sequencer.queuedChordProgression.length > 0) {
       gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.activeTrack.updateGuiTrackNotes();
+      gridPage.activeTrack.setGuiChordProgression();
     }
   }
 
@@ -84,18 +95,5 @@ export class ChordController extends ApplicationController {
       gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       gridPage.activeTrack.updateGuiVectorDisplay();
     }
-  }
-
-
-  setUiQueuedChordProgression() {
-    this.grid.sequencer.gui.webContents.send(
-      "update-progression",
-      this.grid.sequencer.queuedChordProgression.flatMap((chordNotes: note[]) => {
-        let chord = chordNotes.map(n => n.note + n.octave).join("-");
-        let namedChord = detect(chordNotes.map(n => n.note))[0];
-        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
-        return chord;
-      }).join("; ")
-    );
   }
 }

@@ -541,8 +541,6 @@ describe("AbletonTrack", () => {
       const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
       track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
 
-      it("sets the track to the drum rack note type", () => expect(track.polyphonicVoiceMode).to.be.true);
-
       it("should update the rhythm", () => {
         expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
           1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,

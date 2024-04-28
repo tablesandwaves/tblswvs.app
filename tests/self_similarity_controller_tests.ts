@@ -40,12 +40,12 @@ describe("SelfSimilarityController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     const track = sequencer.daw.getActiveTrack();
-    sequencer.queuedMelody = [
-      { octave: 3, note: 'C',  midi: 60, scaleDegree: 1 },
-      { octave: 3, note: 'D',  midi: 62, scaleDegree: 2 },
-      { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
-      { octave: 3, note: 'F',  midi: 65, scaleDegree: 4 },
-      { octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }
+    sequencer.queuedChordProgression = [
+      [{ octave: 3, note: 'C',  midi: 60, scaleDegree: 1 }],
+      [{ octave: 3, note: 'D',  midi: 62, scaleDegree: 2 }],
+      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
+      [{ octave: 3, note: 'F',  midi: 65, scaleDegree: 4 }],
+      [{ octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }]
     ];
 
     // Select the algorithm page, then the self-similarity sub-page

@@ -27,7 +27,7 @@ describe("DrumPadController", () => {
 
   describe("toggling note editing when note recording is active", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.queuedMelody.push({ octave: 1, note: 'C', midi: 36 })
+    sequencer.queuedChordProgression.push([{ octave: 1, note: 'C', midi: 36 }]);
 
     // Select the Perc track with a drum rack
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});

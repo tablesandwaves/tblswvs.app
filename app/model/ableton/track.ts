@@ -67,7 +67,7 @@ export class AbletonTrack {
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Are the output notes a melody or chord progression?
-  polyphonicVoiceMode = false;
+  // polyphonicVoiceMode = false;
   // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
   #inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
   // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
@@ -165,7 +165,7 @@ export class AbletonTrack {
 
 
   set inputMelody(inputNotes: note[]) {
-    this.polyphonicVoiceMode = false;
+    // this.polyphonicVoiceMode = false;
 
     this.#inputMelody = inputNotes;
     let notes: note[] = new Array();
@@ -240,7 +240,7 @@ export class AbletonTrack {
 
 
   setChordProgression(chordNotes: note[][]) {
-    this.polyphonicVoiceMode = true;
+    // this.polyphonicVoiceMode = true;
     this.#outputNotes = chordNotes;
     this.generateSequence();
   }
@@ -252,7 +252,7 @@ export class AbletonTrack {
 
 
   setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
-    this.polyphonicVoiceMode = true;
+    // this.polyphonicVoiceMode = true;
 
     if (inputNotes == undefined) {
       this.#sequence[rhythmStepIndex] = [];
@@ -663,7 +663,7 @@ export class AbletonTrack {
     this.updateGuiTrackRhythm();
     this.updateGuiPulseRate();
     this.updateGuiNoteLength();
-    this.updateGuiTrackNotes();
+    this.setGuiChordProgression();
     this.updateGuiFillsDuration();
     this.updateGuiFillMeasures();
     this.updateGuiCreateNewClip();
@@ -719,7 +719,7 @@ export class AbletonTrack {
 
 
   updateGuiVectorDisplay() {
-    this.daw.sequencer.gui.webContents.send("update-melody-vector", this.vectorShifts, this.vectorShiftsLength, this.vectorShiftsActive);
+    this.daw.sequencer.gui.webContents.send("update-note-vector", this.vectorShifts, this.vectorShiftsLength, this.vectorShiftsActive);
   }
 
 
@@ -786,22 +786,9 @@ export class AbletonTrack {
   }
 
 
-  updateGuiTrackNotes() {
-    if (this.daw.sequencer.testing) return;
-    this.polyphonicVoiceMode ? this.setGuiChordProgression() : this.setGuiMelody();
-  }
-
-
-  setGuiMelody() {
-    this.daw.sequencer.gui.webContents.send(
-      "update-track-notes",
-      this.algorithm + " melody",
-      this.inputMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
-    );
-  }
-
-
   setGuiChordProgression() {
+    if (this.daw.sequencer.testing) return;
+
     this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
       "chords",

@@ -2,6 +2,8 @@ import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
+import { detect } from "@tonaljs/chord-detect";
+import { note } from "tblswvs";
 
 
 export type xyCoordinate = {
@@ -31,18 +33,6 @@ export type GridButton = {
   // group?: string,
   value?: any,
   shiftValue?: any
-}
-
-
-// Used by chord page and melody page.
-export const octaveTransposeMapping: Record<number, number> = {
-  0: 3,
-  1: 2,
-  2: 1,
-  3: 0,
-  4: -1,
-  5: -2,
-  6: -3
 }
 
 
@@ -329,20 +319,25 @@ export class ApplicationController {
   }
 
 
-  setUiQueuedMelody() {
-    if (this.grid.sequencer.testing) return;
-
-    this.grid.sequencer.gui.webContents.send(
-      "update-melody",
-      this.grid.sequencer.queuedMelody.flatMap(n => `${n.note}${n.octave}`).join(" ")
-    );
-  }
-
-
   updateGuiRhythmTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     if (this.grid.sequencer.testing || !this.grid.sequencer.gui.webContents) return;
 
     this.grid.sequencer.gui.webContents.send("transport", highlightIndex, pianoRollHighlightIndex);
+  }
+
+
+  setUiQueuedChordProgression() {
+    if (this.grid.sequencer.testing) return;
+
+    this.grid.sequencer.gui.webContents.send(
+      "update-progression",
+      this.grid.sequencer.queuedChordProgression.flatMap((chordNotes: note[]) => {
+        let chord = chordNotes.map(n => n.note + n.octave).join("-");
+        let namedChord = detect(chordNotes.map(n => n.note))[0];
+        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
+        return chord;
+      }).join("; ")
+    );
   }
 
 

@@ -60,7 +60,7 @@ export class ShiftRegisterController extends AlgorithmController {
     });
 
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.activeTrack.updateGuiTrackNotes();
+    gridPage.activeTrack.setGuiChordProgression();
   }
 
 

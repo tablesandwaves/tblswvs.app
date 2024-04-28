@@ -47,7 +47,6 @@ window.parameters.activateTrackNav((event: any, trackName: string) => {
 
 window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
 window.parameters.updateBeat((event: any, name: string) => updateText("#current-beat span", name));
-window.parameters.updateQueuedMelody((event: any, melody: string) => updateText("#melody p span", melody));
 window.parameters.updateQueuedProgression((event: any, progression: string) => updateText("#chord-progression p span", progression));
 window.parameters.updateTrackNotes((event: any, type: string, notes: string) => {
   updateText("#note-type", type);
@@ -102,7 +101,7 @@ const toggleEvolutionIndicator = (evolutionType: string, trackIndices: number[])
 }
 
 
-window.parameters.updateMelodyVector((event: any, vector: number[], activeLength: number, active: boolean) => {
+window.parameters.updateNoteVector((event: any, vector: number[], activeLength: number, active: boolean) => {
   document.querySelectorAll(".vector-step").forEach((vectorStep, i) => {
     if (i < activeLength)
       vectorStep.classList.add("active");
