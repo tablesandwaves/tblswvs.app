@@ -3,7 +3,7 @@ import { MonomeGrid } from "../model/monome_grid";
 
 
 export class MelodyEvolutionController extends ApplicationController {
-  type = "Melody";
+  type = "Global";
   keyReleaseFunctionality = false;
 
 

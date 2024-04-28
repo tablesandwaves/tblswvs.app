@@ -1,0 +1,105 @@
+name: Mutation
+description: Mutations are accessed on Melody page 2. Mutate melodic sequences and launch voice trading among tracks.
+rows:
+  -
+    name: Randomizing Voices
+    description: Select the voices to randomize
+    group: randomizing-voices
+    type: toggle
+    index: 0
+    xStart: 0
+    xLength: 7
+    mapping: toggleRandomizingVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Bass
+      - Keys
+      - Hydra
+  -
+    name: Independent Mutating Voices
+    description: Select the voices to mutate
+    group: mutating-voices
+    type: toggle
+    index: 1
+    xStart: 0
+    xLength: 7
+    mapping: toggleMutatingVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Bass
+      - Keys
+      - Hydra
+  -
+    name: Trading Solo Voices
+    description: Select the voices to mutate, taking turns (trading solos)
+    group: trading-solos
+    type: toggle
+    index: 2
+    xStart: 0
+    xLength: 7
+    mapping: toggleSoloingVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Bass
+      - Keys
+      - Hydra
+  -
+    name: Mutation Algorithms
+    description: Select the mutation algorithms used in mutation
+    group: mutation-algorithms
+    type: toggle
+    index: 0
+    xStart: 7
+    xLength: 8
+    mapping: toggleMutationAlgorithm
+    values:
+      - trps-2
+      - rev
+      - rot-3
+      - sort
+      - -sort
+      - inv
+      - inv-rev
+      - bitflip
+  -
+    name: Toggle Mutations
+    description: Enable or disable mutation mode for all tracks at the start of the next super measure. Must be on for mutations to occur
+    group: mutation-controls
+    type: toggle
+    index: 0
+    xStart: 15
+    xLength: 1
+    mapping: toggleMutations

@@ -40,10 +40,10 @@ const globalKeyPageTypeMap: Record<number, string> = {
 export const pageTypeMap: Record<string, string[]> = {
   "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
   "Chords":       ["Chords"],
-  "Melody":       ["Melody", "Mutation", "MelodyVector"],
+  "Melody":       ["Melody", "MelodyVector"],
   "RampSequence": ["RampSequence"],
   "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries", "SelfSimilarity"],
-  "Global":       ["Global"]
+  "Global":       ["Global", "Mutation"]
 }
 
 
@@ -227,14 +227,8 @@ export class MonomeGrid {
         updated = true;
         globalKeyIndex = 9;
         break;
-      case "Mutation":
-        // Do not reset page index to 0, this is page 2/index 1 of the Melody page group.
-        this.activePage = new MelodyEvolutionController(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 9;
-        break;
       case "MelodyVector":
-        // Do not reset page index to 0, this is page 3/index 2 of the Melody page group.
+        this.pageIndex = 1;
         this.activePage = new MelodyVectorController(this.#loadConfig(`grid_page_melody_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
@@ -272,6 +266,12 @@ export class MonomeGrid {
       case "Global":
         this.pageIndex = 0;
         this.activePage = new GlobalController(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 12;
+        break;
+      case "Mutation":
+        this.pageIndex = 1;
+        this.activePage = new MelodyEvolutionController(this.#loadConfig(`grid_page_global_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 12;
         break;

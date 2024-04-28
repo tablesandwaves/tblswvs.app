@@ -1,105 +1,56 @@
-name: Mutation
-description: Mutations are accessed on Melody page 2. Mutate melodic sequences and launch voice trading among tracks.
-rows:
+name: Melodic Vectors
+description: Melodic vectors are accessed on Melody page 3. Apply shifts to a sequence of notes.
+matrices:
   -
-    name: Randomizing Voices
-    description: Select the voices to randomize
-    group: randomizing-voices
-    type: toggle
-    index: 0
-    xStart: 0
-    xLength: 7
-    mapping: toggleRandomizingVoice
-    values:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
+    name: Shift Step
+    description: Sets the melodic vector shift for a step
+    group: shift-steps
+    type: bipolar vertical meter
+    rowStart: 0
+    rowEnd: 6
+    columnStart: 0
+    columnEnd: 11
+    mapping: setStepShift
+    columnValues:
+      - 7
       - 6
-    displayValues:
-      - Kick
-      - Snare
-      - HiHat
-      - Perc
-      - Bass
-      - Keys
-      - Hydra
-  -
-    name: Independent Mutating Voices
-    description: Select the voices to mutate
-    group: mutating-voices
-    type: toggle
-    index: 1
-    xStart: 0
-    xLength: 7
-    mapping: toggleMutatingVoice
-    values:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
       - 5
-      - 6
-    displayValues:
-      - Kick
-      - Snare
-      - HiHat
-      - Perc
-      - Bass
-      - Keys
-      - Hydra
-  -
-    name: Trading Solo Voices
-    description: Select the voices to mutate, taking turns (trading solos)
-    group: trading-solos
-    type: toggle
-    index: 2
-    xStart: 0
-    xLength: 7
-    mapping: toggleSoloingVoice
-    values:
-      - 0
-      - 1
-      - 2
-      - 3
       - 4
-      - 5
-      - 6
-    displayValues:
-      - Kick
-      - Snare
-      - HiHat
-      - Perc
-      - Bass
-      - Keys
-      - Hydra
+      - 3
+      - 2
+      - 1
+    shiftColumnValues:
+      - -1
+      - -2
+      - -3
+      - -4
+      - -5
+      - -6
+      - -7
   -
-    name: Mutation Algorithms
-    description: Select the mutation algorithms used in mutation
-    group: mutation-algorithms
-    type: toggle
-    index: 0
-    xStart: 7
-    xLength: 8
-    mapping: toggleMutationAlgorithm
-    values:
-      - trps-2
-      - rev
-      - rot-3
-      - sort
-      - -sort
-      - inv
-      - inv-rev
-      - bitflip
-  -
-    name: Toggle Mutations
-    description: Enable or disable mutation mode for all tracks at the start of the next super measure. Must be on for mutations to occur
-    group: mutation-controls
-    type: toggle
-    index: 0
-    xStart: 15
-    xLength: 1
-    mapping: toggleMutations
+    name: Shift Sequence Length
+    description: Sets the number of steps in the shift sequence between 1 and 12
+    group: shift-sequence
+    type: multi-row meter
+    rowStart: 0
+    rowEnd: 2
+    columnStart: 12
+    columnEnd: 15
+    mapping: setShiftSequenceLength
+    rowValues:
+      -
+        - 1
+        - 2
+        - 3
+        - 4
+      -
+        - 5
+        - 6
+        - 7
+        - 8
+      -
+        - 9
+        - 10
+        - 11
+        - 12
+

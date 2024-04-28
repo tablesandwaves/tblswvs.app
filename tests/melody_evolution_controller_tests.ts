@@ -11,8 +11,8 @@ describe("MelodyEvolutionController", () => {
   describe("Selecting the initial blank melody evolution page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -58,8 +58,8 @@ describe("MelodyEvolutionController", () => {
   describe("setting tracks to randomizing", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -84,8 +84,8 @@ describe("MelodyEvolutionController", () => {
   describe("setting a previously mutating track to randomizing", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -122,8 +122,8 @@ describe("MelodyEvolutionController", () => {
   describe("setting a previously randomizing track to mutating", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -160,8 +160,8 @@ describe("MelodyEvolutionController", () => {
   describe("setting a previously soloing track to mutating", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -204,8 +204,8 @@ describe("MelodyEvolutionController", () => {
     ];
     sequencer.daw.tracks[1].inputMelody = melodyNotes;
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -236,8 +236,8 @@ describe("MelodyEvolutionController", () => {
     ];
     sequencer.daw.tracks[1].inputMelody = melodyNotes;
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -263,8 +263,8 @@ describe("MelodyEvolutionController", () => {
   describe("enabling the mutations to start", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
@@ -284,8 +284,8 @@ describe("MelodyEvolutionController", () => {
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
     ]);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
     // Set a track to mutating, select a deterministic evolutionary algorithm, then press the enable mutations button
@@ -321,8 +321,8 @@ describe("MelodyEvolutionController", () => {
   describe("disabling mutations", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the melody page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
