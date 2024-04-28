@@ -23,7 +23,7 @@ rows:
   -
     name: Toggle Chord Recording
     description: Turn chord recording on/off; when turning on, the queued chord progression clears
-    group: chord-recording-controls
+    group: note-input-controls
     index: 0
     xStart: 15
     xLength: 1
@@ -32,17 +32,26 @@ rows:
   -
     name: Remove Last Chord
     description: Remove the last chord from the currently queued chord progression
-    group: chord-recording-controls
+    group: note-input-controls
     index: 1
     xStart: 15
     xLength: 1
     type: momentary
     mapping: removeLastChord
   -
+    name: Toggle Vector Shifts
+    description: When on, after processing by the melody algorithm, it will be processed by the melodic vector shifts
+    group: melody-recording-controls
+    type: toggle
+    index: 4
+    xStart: 15
+    xLength: 1
+    mapping: toggleVectorShifts
+  -
     name: Toggle Create Clip Mode
     description: When on, will add the chord progression to the next clip
-    group: chord-recording-controls
-    index: 2
+    group: note-input-controls
+    index: 5
     xStart: 15
     xLength: 1
     type: toggle
@@ -50,8 +59,8 @@ rows:
   -
     name: Add Progression to Track
     description: Adds the currently queued chord progression to the currently selected track
-    group: chord-recording-controls
-    index: 3
+    group: note-input-controls
+    index: 6
     xStart: 15
     xLength: 1
     type: momentary

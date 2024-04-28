@@ -1,9 +1,9 @@
-name: Melodic Vectors
-description: Melodic vectors are accessed on Melody page 3. Apply shifts to a sequence of notes.
+name: Note Vectors
+description: Note vectors are accessed on Chord page 2. Apply scale degree shifts to notes.
 matrices:
   -
     name: Shift Step
-    description: Sets the melodic vector shift for a step
+    description: Sets the note vector shift for a step
     group: shift-steps
     type: bipolar vertical meter
     rowStart: 0

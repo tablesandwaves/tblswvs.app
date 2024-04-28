@@ -2,8 +2,8 @@ import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INA
 import { MonomeGrid } from "../model/monome_grid";
 
 
-export class MelodyVectorController extends ApplicationController {
-  type = "Melody";
+export class NoteVectorController extends ApplicationController {
+  type = "Chords";
   keyReleaseFunctionality = false;
 
 
@@ -21,7 +21,7 @@ export class MelodyVectorController extends ApplicationController {
   }
 
 
-  setStepShift(gridPage: MelodyVectorController, press: GridKeyPress) {
+  setStepShift(gridPage: NoteVectorController, press: GridKeyPress) {
     if (gridPage.grid.shiftKey && press.y == 0 && gridPage.activeTrack.vectorShifts[press.x] == -1) {
       gridPage.activeTrack.vectorShifts[press.x] = 0;
     } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.activeTrack.vectorShifts[press.x] == 1) {
@@ -38,7 +38,7 @@ export class MelodyVectorController extends ApplicationController {
   }
 
 
-  setShiftSequenceLength(gridPage: MelodyVectorController, press: GridKeyPress) {
+  setShiftSequenceLength(gridPage: NoteVectorController, press: GridKeyPress) {
     gridPage.activeTrack.vectorShiftsLength = gridPage.matrix[press.y][press.x].value;
     gridPage.setGridShiftLengthDisplay();
     gridPage.activeTrack.updateGuiVectorDisplay();

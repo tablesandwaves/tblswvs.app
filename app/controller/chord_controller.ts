@@ -6,9 +6,9 @@ import { detect } from "@tonaljs/chord-detect";
 export class ChordController extends ApplicationController {
   type = "Chords";
 
-  recordingInputChord     = false;
-  keyPressCount           = 0;
-  chordNotes: note[]      = new Array();
+  recordingInputChord = false;
+  keyPressCount       = 0;
+  chordNotes: note[]  = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -19,11 +19,13 @@ export class ChordController extends ApplicationController {
     this.functionMap.set("toggleNewClipCreation",    this.toggleNewClipCreation);
     this.functionMap.set("setTrackChordProgression", this.setTrackChordProgression);
     this.functionMap.set("toggleChordRecording",     this.toggleChordRecording);
+    this.functionMap.set("toggleVectorShifts",       this.toggleVectorShifts);
   }
 
 
   refresh() {
-    this.grid.levelSet(15, 2, (this.activeTrack.createNewClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+    this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+    this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
   }
 
 
@@ -72,6 +74,15 @@ export class ChordController extends ApplicationController {
         gridPage.grid.sequencer.queuedChordProgression = new Array();
         gridPage.setUiQueuedChordProgression();
       }
+    }
+  }
+
+
+  toggleVectorShifts(gridPage: ChordController, press: GridKeyPress) {
+    if (press.s == 1) {
+      gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
+      gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+      gridPage.activeTrack.updateGuiVectorDisplay();
     }
   }
 
