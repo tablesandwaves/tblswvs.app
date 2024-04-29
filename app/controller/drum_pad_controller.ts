@@ -84,56 +84,63 @@ export class DrumPadController extends ApplicationController {
   triggerDrumPad(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.heldDrumPads++;
-      if (gridPage.notePlayingActive) {
-        gridPage.grid.sequencer.midiOut.send("noteon", {
-          note: gridPage.matrix[press.y][press.x].value,
-          velocity: 64,
-          channel: gridPage.activeTrack.dawIndex
-        });
 
-        setTimeout(() => {
-          gridPage.grid.sequencer.midiOut.send("noteoff", {
-            note: gridPage.matrix[press.y][press.x].value,
-            velocity: 64,
-            channel: gridPage.activeTrack.dawIndex
-          });
-        }, 100);
-      }
+      if (gridPage.notePlayingActive) gridPage.#playNote(press);
+      if (gridPage.noteRecordingActive) gridPage.activeDrumPads.push(press);
+      if (gridPage.noteEditingActive) gridPage.#updateEditedNoteSequence(press);
 
-      if (gridPage.noteRecordingActive) {
-        gridPage.activeDrumPads.push(press);
-      }
-
-      if (gridPage.noteEditingActive) {
-        gridPage.padNotes.push(
-          Object.values(drumPadMatrix).find(obj => {
-            return obj.coordinates.x == press.x && obj.coordinates.y == press.y;
-          }).note
-        );
-      }
     } else {
       gridPage.heldDrumPads--;
 
-      // Note Editing Mode
-      if (gridPage.noteEditingActive && gridPage.heldDrumPads == 0) {
-        gridPage.grid.sequencer.queuedChordProgression.push(gridPage.padNotes.sort((a,b) => a.midi - b.midi));
-        gridPage.padNotes = new Array();
-      }
-
-      // Note Recording Mode
-      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0) {
-        gridPage.activeDrumPads.forEach(press => {
-          gridPage.activeTrack.setDrumPadStep(gridPage.heldGate, gridPage.activeDrumPads.map(press => noteData[gridPage.matrix[press.y][press.x].value]));
-
-          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-          gridPage.disableGate = false;
-          gridPage.setGridDrumPadDisplay();
-          gridPage.updateGuiRhythmDisplay();
-        });
-
-        gridPage.activeDrumPads = new Array();
-      }
+      if (gridPage.noteEditingActive && gridPage.heldDrumPads == 0) gridPage.#flushEditedNoteSequence();
+      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0) gridPage.#flushRecordedNotes();
     }
+  }
+
+
+  #flushRecordedNotes() {
+    this.activeDrumPads.forEach(press => {
+      this.activeTrack.setDrumPadStep(this.heldGate, this.activeDrumPads.map(press => noteData[this.matrix[press.y][press.x].value]));
+
+      this.grid.sequencer.daw.updateActiveTrackNotes();
+      this.disableGate = false;
+      this.setGridDrumPadDisplay();
+      this.updateGuiRhythmDisplay();
+    });
+
+    this.activeDrumPads = new Array();
+  }
+
+
+  #flushEditedNoteSequence() {
+    this.grid.sequencer.queuedChordProgression.push(this.padNotes.sort((a,b) => a.midi - b.midi));
+    this.padNotes = new Array();
+  }
+
+
+  #updateEditedNoteSequence(press: GridKeyPress) {
+    this.padNotes.push(
+      Object.values(drumPadMatrix).find(obj => {
+        return obj.coordinates.x == press.x && obj.coordinates.y == press.y;
+      }).note
+    );
+  }
+
+
+  #playNote(press: GridKeyPress) {
+    this.grid.sequencer.midiOut.send("noteon", {
+      note: this.matrix[press.y][press.x].value,
+      velocity: 64,
+      channel: this.activeTrack.dawIndex
+    });
+
+    setTimeout(() => {
+      this.grid.sequencer.midiOut.send("noteoff", {
+        note: this.matrix[press.y][press.x].value,
+        velocity: 64,
+        channel: this.activeTrack.dawIndex
+      });
+    }, 100);
   }
 
 
