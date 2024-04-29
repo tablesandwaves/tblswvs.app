@@ -131,7 +131,6 @@ export class ApplicationController {
 
 
   toggleNewClipCreation(gridPage: ApplicationController, press: GridKeyPress) {
-    // Necessary to check for press=1 for the chord page.
     if (press.s == 1) {
       gridPage.activeTrack.createNewClip = !gridPage.activeTrack.createNewClip;
       gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.createNewClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
@@ -326,16 +325,16 @@ export class ApplicationController {
   }
 
 
-  setUiQueuedChordProgression() {
+  setUiQueuedInputNotes() {
     if (this.grid.sequencer.testing) return;
 
     this.grid.sequencer.gui.webContents.send(
-      "update-progression",
-      this.grid.sequencer.queuedChordProgression.flatMap((chordNotes: note[]) => {
-        let chord = chordNotes.map(n => n.note + n.octave).join("-");
-        let namedChord = detect(chordNotes.map(n => n.note))[0];
-        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
-        return chord;
+      "update-queued-notes",
+      this.grid.sequencer.queuedNotes.flatMap((queuedNotes: note[]) => {
+        let notes = queuedNotes.map(n => n.note + n.octave).join("-");
+        let namedChord = detect(queuedNotes.map(n => n.note))[0];
+        notes += namedChord == undefined ? "" : " (" + namedChord + ")";
+        return notes;
       }).join("; ")
     );
   }

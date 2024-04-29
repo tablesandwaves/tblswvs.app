@@ -202,7 +202,7 @@ describe("MelodyEvolutionController", () => {
       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
       [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
     ];
-    sequencer.daw.tracks[1].setChordProgression(melodyNotes);
+    sequencer.daw.tracks[1].setInputNotes(melodyNotes);
 
     // Select the global page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
@@ -234,7 +234,7 @@ describe("MelodyEvolutionController", () => {
       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
       [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
     ];
-    sequencer.daw.tracks[1].setChordProgression(melodyNotes);
+    sequencer.daw.tracks[1].setInputNotes(melodyNotes);
 
     // Select the global page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
@@ -279,7 +279,7 @@ describe("MelodyEvolutionController", () => {
   describe("turning mutations on for a second time", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    sequencer.daw.tracks[5].setChordProgression([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
+    sequencer.daw.tracks[5].setInputNotes([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
     sequencer.daw.tracks[5].generateOutputNotes();
     sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,

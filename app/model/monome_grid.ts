@@ -28,7 +28,7 @@ export type DeviceConfig = {
 
 const globalKeyPageTypeMap: Record<number, string> = {
   7:  "Rhythm",
-  8:  "Chords",
+  8:  "InputNotes",
   10: "RampSequence",
   11: "Algorithm",
   12: "Global"
@@ -37,7 +37,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 export const pageTypeMap: Record<string, string[]> = {
   "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
-  "Chords":       ["Chords", "NoteVector"],
+  "InputNotes":   ["InputNotes", "NoteVector"],
   "RampSequence": ["RampSequence"],
   "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries", "SelfSimilarity"],
   "Global":       ["Global", "Mutation"]
@@ -212,15 +212,15 @@ export class MonomeGrid {
         updated = true;
         globalKeyIndex = 7;
         break;
-      case "Chords":
+      case "InputNotes":
         this.pageIndex = 0;
-        this.activePage = new InputNoteController(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
       case "NoteVector":
         this.pageIndex = 1;
-        this.activePage = new NoteVectorController(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new NoteVectorController(this.#loadConfig(`grid_page_input_notes_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
         break;

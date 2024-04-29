@@ -372,7 +372,7 @@ describe("AbletonTrack", () => {
 
   describe("generating output notes", () => {
     it("should convert a melodic array to a two dimentional array (for polyphony)", () => {
-      daw.getActiveTrack().setChordProgression([
+      daw.getActiveTrack().setInputNotes([
         [{octave: 3, note: "C", midi: 60}],
         [{octave: 3, note: "D", midi: 62}]
       ]);
@@ -385,7 +385,7 @@ describe("AbletonTrack", () => {
     });
 
     it("should set chord progression notes as is in their 2D form", () => {
-      daw.getActiveTrack().setChordProgression([
+      daw.getActiveTrack().setInputNotes([
         [{octave: 3, note: "C", midi: 60},  {octave: 3, note: "G", midi: 67}],
         [{octave: 3, note: "C", midi: 60},  {octave: 3, note: "Eb", midi: 63}],
       ]);
@@ -409,7 +409,7 @@ describe("AbletonTrack", () => {
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
       track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
-      track.setChordProgression([
+      track.setInputNotes([
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
         [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
@@ -443,7 +443,7 @@ describe("AbletonTrack", () => {
   describe("when generating rhythmic fills", () => {
     const track = daw.getActiveTrack();
     track.rhythmStepLength = 16;
-    track.setChordProgression([[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]]);
+    track.setInputNotes([[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]]);
     track.rhythm = rhythmStepsForPattern([
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
@@ -492,7 +492,7 @@ describe("AbletonTrack", () => {
     track.rhythm[4]        = {state: 1, probability: 1, fillRepeats: 0};
 
     describe("when successive overlapping notes share the same pitch", () => {
-      track.setChordProgression([[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]]);
+      track.setInputNotes([[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]]);
       track.updateCurrentAbletonNotes();
 
       const abletonNotes = track.currentAbletonNotes.sort((a, b) => {
@@ -519,7 +519,7 @@ describe("AbletonTrack", () => {
     });
 
     describe("when successive overlapping notes do not share the same pitch", () => {
-      track.setChordProgression([
+      track.setInputNotes([
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
         [{ octave: 3, note: 'D', midi: 62, scaleDegree: 1 }],
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]

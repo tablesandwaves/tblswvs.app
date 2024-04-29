@@ -47,7 +47,7 @@ window.parameters.activateTrackNav((event: any, trackName: string) => {
 
 window.parameters.updateScale((event: any, name: string) => updateText("#current-scale span", name));
 window.parameters.updateBeat((event: any, name: string) => updateText("#current-beat span", name));
-window.parameters.updateQueuedProgression((event: any, progression: string) => updateText("#chord-progression p span", progression));
+window.parameters.updateQueuedNotes((event: any, progression: string) => updateText("#queued-notes p span", progression));
 window.parameters.updateTrackNotes((event: any, type: string, notes: string) => {
   updateText("#note-type", type);
   updateText("#input-notes", notes);

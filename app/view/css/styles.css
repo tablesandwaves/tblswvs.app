@@ -262,7 +262,7 @@ h2 {
 }
 
 
-div#chord-progression,
+div#queued-notes,
 div#evolution,
 div#current-scale,
 div#current-beat {
@@ -347,7 +347,7 @@ div#global-params div#evolution div#mutations ul li.on {
 }
 
 
-div#global-note-data div#chord-progression {
+div#global-note-data div#queued-notes {
   width: 100%;
   height: 100px;
   overflow: hidden;

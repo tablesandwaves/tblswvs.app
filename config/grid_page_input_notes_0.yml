@@ -1,16 +1,16 @@
-name: Chords
-description: Add chord progressions to the active track.
+name: Input Notes
+description: Add input notes to the active track.
 matrices:
   -
     name: Keyboard Octave
-    description: Button represents a chord note; first button in the row is the current scale's tonic for the row's octave
-    group: chord-notes
+    description: Button represents a note; first button in the row is the current scale's tonic for the row's octave
+    group: notes
     type: momentary
     rowStart: 0
     rowEnd: 6
     columnStart: 0
     columnEnd: 14
-    mapping: addChordNote
+    mapping: addNotes
     columnValues:
       - 6
       - 5
@@ -21,23 +21,23 @@ matrices:
       - 0
 rows:
   -
-    name: Toggle Chord Recording
-    description: Turn chord recording on/off; when turning on, the queued chord progression clears
+    name: Toggle Note Recording
+    description: Turn note recording on/off; when turning on, the queued input notes are cleared
     group: note-input-controls
     index: 0
     xStart: 15
     xLength: 1
     type: toggle
-    mapping: toggleChordRecording
+    mapping: toggleNoteRecording
   -
-    name: Remove Last Chord
-    description: Remove the last chord from the currently queued chord progression
+    name: Remove Last Notes
+    description: Remove the last notes from the currently queued input notes
     group: note-input-controls
     index: 1
     xStart: 15
     xLength: 1
     type: momentary
-    mapping: removeLastChord
+    mapping: removeLastNotes
   -
     name: Toggle Vector Shifts
     description: When on, after processing by the melody algorithm, it will be processed by the melodic vector shifts
@@ -49,7 +49,7 @@ rows:
     mapping: toggleVectorShifts
   -
     name: Toggle Create Clip Mode
-    description: When on, will add the chord progression to the next clip
+    description: When on, will add the input notes to the next clip
     group: note-input-controls
     index: 5
     xStart: 15
@@ -57,11 +57,11 @@ rows:
     type: toggle
     mapping: toggleNewClipCreation
   -
-    name: Add Progression to Track
-    description: Adds the currently queued chord progression to the currently selected track
+    name: Add Notes to Track
+    description: Adds the currently queued input notes to the currently selected track
     group: note-input-controls
     index: 6
     xStart: 15
     xLength: 1
     type: momentary
-    mapping: setTrackChordProgression
+    mapping: setTrackNotes

@@ -29,7 +29,7 @@ export class ShiftRegisterController extends AlgorithmController {
     if (press.s == 0) return;
     gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.activeTrack.setGuiChordProgression();
+    gridPage.activeTrack.setGuiInputNotes();
   }
 
 

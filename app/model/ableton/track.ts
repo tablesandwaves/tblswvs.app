@@ -152,7 +152,7 @@ export class AbletonTrack {
 
   /**
    * The output notes array should be accessible with a getter, but it should be set via the
-   * separate input melody setter or the chord progression setter.
+   * input note setter.
    */
   get outputNotes() {
     return this.#outputNotes;
@@ -268,8 +268,8 @@ export class AbletonTrack {
   }
 
 
-  setChordProgression(chordNotes: note[][]) {
-    this.#inputNotes = chordNotes;
+  setInputNotes(inputNotes: note[][]) {
+    this.#inputNotes = inputNotes;
     this.generateOutputNotes();
     this.generateSequence();
   }
@@ -690,7 +690,7 @@ export class AbletonTrack {
     this.updateGuiTrackRhythm();
     this.updateGuiPulseRate();
     this.updateGuiNoteLength();
-    this.setGuiChordProgression();
+    this.setGuiInputNotes();
     this.updateGuiFillsDuration();
     this.updateGuiFillMeasures();
     this.updateGuiCreateNewClip();
@@ -813,18 +813,17 @@ export class AbletonTrack {
   }
 
 
-  setGuiChordProgression() {
+  setGuiInputNotes() {
     if (this.daw.sequencer.testing) return;
 
     this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
       this.algorithm == "self_similarity" ? this.selfSimilarityType : this.algorithm,
-      this.#inputNotes.flatMap(chordNotes => {
-        // if (chordNotes.length == 1 && chordNotes[0] == undefined) return "rest";
-        let chord = chordNotes.map(n => n.note + n.octave).join("-");
-        let namedChord = detect(chordNotes.map(n => n.note))[0];
-        chord += namedChord == undefined ? "" : " (" + namedChord + ")";
-        return chord;
+      this.#inputNotes.flatMap(inputNotes => {
+        let notes = inputNotes.map(n => n.note + n.octave).join("-");
+        let namedChord = detect(inputNotes.map(n => n.note))[0];
+        notes += namedChord == undefined ? "" : " (" + namedChord + ")";
+        return notes;
       }).join("; ")
     );
   }

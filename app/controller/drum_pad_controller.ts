@@ -113,7 +113,7 @@ export class DrumPadController extends ApplicationController {
 
 
   #flushEditedNoteSequence() {
-    this.grid.sequencer.queuedChordProgression.push(this.padNotes.sort((a,b) => a.midi - b.midi));
+    this.grid.sequencer.queuedNotes.push(this.padNotes.sort((a,b) => a.midi - b.midi));
     this.padNotes = new Array();
   }
 
@@ -199,16 +199,16 @@ export class DrumPadController extends ApplicationController {
 
       if (gridPage.noteEditingActive) {
         // When note editing is still active, queue up notes
-        gridPage.grid.sequencer.queuedChordProgression = new Array();
-        gridPage.setUiQueuedChordProgression();
+        gridPage.grid.sequencer.queuedNotes = new Array();
+        gridPage.setUiQueuedInputNotes();
       } else {
         // When note editing is turned off, flush the notes from the queued melody to the track
         // unless there are no queued notes (due to inadvertent button press).
-        if (gridPage.grid.sequencer.queuedChordProgression.length > 0) {
-          gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
+        if (gridPage.grid.sequencer.queuedNotes.length > 0) {
+          gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
           gridPage.activeTrack.generateOutputNotes();
           gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-          gridPage.activeTrack.setGuiChordProgression();
+          gridPage.activeTrack.setGuiInputNotes();
         }
       }
       gridPage.setGridDrumPadDisplay();

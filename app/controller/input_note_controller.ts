@@ -15,22 +15,22 @@ export const octaveTransposeMapping: Record<number, number> = {
 
 
 export class InputNoteController extends ApplicationController {
-  type = "Chords";
+  type = "InputNotes";
 
-  recordingInputChord = false;
+  recordingInputNotes = false;
   keyPressCount       = 0;
-  chordNotes: note[]  = new Array();
+  inputNotes: note[]  = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
-    this.functionMap.set("addChordNote",             this.addChordNote);
-    this.functionMap.set("removeLastChord",          this.removeLastChord);
-    this.functionMap.set("toggleNewClipCreation",    this.toggleNewClipCreation);
-    this.functionMap.set("setTrackChordProgression", this.setTrackChordProgression);
-    this.functionMap.set("toggleChordRecording",     this.toggleChordRecording);
-    this.functionMap.set("toggleVectorShifts",       this.toggleVectorShifts);
+    this.functionMap.set("addNotes",              this.addNotes);
+    this.functionMap.set("removeLastNotes",       this.removeLastNotes);
+    this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
+    this.functionMap.set("setTrackNotes",         this.setTrackNotes);
+    this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
+    this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
   }
 
 
@@ -40,18 +40,18 @@ export class InputNoteController extends ApplicationController {
   }
 
 
-  addChordNote(gridPage: InputNoteController, press: GridKeyPress) {
-    if (gridPage.recordingInputChord) {
+  addNotes(gridPage: InputNoteController, press: GridKeyPress) {
+    if (gridPage.recordingInputNotes) {
       if (press.s == 0) {
         gridPage.keyPressCount--;
 
         let octaveTranspose = octaveTransposeMapping[press.y];
-        gridPage.chordNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
+        gridPage.inputNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
 
         if (gridPage.keyPressCount == 0) {
-          gridPage.grid.sequencer.queuedChordProgression.push(gridPage.chordNotes.sort((a,b) => a.midi - b.midi));
-          gridPage.chordNotes = new Array();
-          gridPage.setUiQueuedChordProgression();
+          gridPage.grid.sequencer.queuedNotes.push(gridPage.inputNotes.sort((a,b) => a.midi - b.midi));
+          gridPage.inputNotes = new Array();
+          gridPage.setUiQueuedInputNotes();
         }
       } else {
         gridPage.keyPressCount++;
@@ -60,30 +60,30 @@ export class InputNoteController extends ApplicationController {
   }
 
 
-  removeLastChord(gridPage: InputNoteController, press: GridKeyPress) {
-    if (gridPage.recordingInputChord && press.s == 1) {
-      gridPage.grid.sequencer.queuedChordProgression.pop();
-      gridPage.setUiQueuedChordProgression();
+  removeLastNotes(gridPage: InputNoteController, press: GridKeyPress) {
+    if (gridPage.recordingInputNotes && press.s == 1) {
+      gridPage.grid.sequencer.queuedNotes.pop();
+      gridPage.setUiQueuedInputNotes();
     }
   }
 
 
-  setTrackChordProgression(gridPage: InputNoteController, press: GridKeyPress) {
-    if (press.s == 1 && gridPage.grid.sequencer.queuedChordProgression.length > 0) {
-      gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
+  setTrackNotes(gridPage: InputNoteController, press: GridKeyPress) {
+    if (press.s == 1 && gridPage.grid.sequencer.queuedNotes.length > 0) {
+      gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.activeTrack.setGuiChordProgression();
+      gridPage.activeTrack.setGuiInputNotes();
     }
   }
 
 
-  toggleChordRecording(gridPage: InputNoteController, press: GridKeyPress) {
+  toggleNoteRecording(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.recordingInputChord = !gridPage.recordingInputChord;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputChord ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
-      if (gridPage.recordingInputChord) {
-        gridPage.grid.sequencer.queuedChordProgression = new Array();
-        gridPage.setUiQueuedChordProgression();
+      gridPage.recordingInputNotes = !gridPage.recordingInputNotes;
+      gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+      if (gridPage.recordingInputNotes) {
+        gridPage.grid.sequencer.queuedNotes = new Array();
+        gridPage.setUiQueuedInputNotes();
       }
     }
   }

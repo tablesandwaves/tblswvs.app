@@ -3,7 +3,7 @@ import { MonomeGrid } from "../model/monome_grid";
 
 
 export class NoteVectorController extends ApplicationController {
-  type = "Chords";
+  type = "InputNotes";
   keyReleaseFunctionality = false;
 
 

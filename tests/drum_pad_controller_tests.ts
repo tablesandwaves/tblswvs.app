@@ -27,7 +27,7 @@ describe("DrumPadController", () => {
 
   describe("toggling note editing when note recording is active", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.queuedChordProgression.push([{ octave: 1, note: 'C', midi: 36 }]);
+    sequencer.queuedNotes.push([{ octave: 1, note: 'C', midi: 36 }]);
 
     // Select the Perc track with a drum rack
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
@@ -45,7 +45,7 @@ describe("DrumPadController", () => {
 
     it("enables note editing", () => expect(activePage.noteEditingActive).to.be.true);
     it("disables note recording", () => expect(activePage.noteRecordingActive).to.be.false);
-    it("clears the sequencer's queued melody", () => expect(sequencer.queuedChordProgression.length).to.eq(0));
+    it("clears the sequencer's queued melody", () => expect(sequencer.queuedNotes.length).to.eq(0));
   });
 
 
@@ -86,7 +86,7 @@ describe("DrumPadController", () => {
     sequencer.grid.keyPress({y: 6, x: 0, s: 0});
 
     it("adds the corresponding note to the sequencer's queued chord progression", () => {
-      expect(sequencer.queuedChordProgression).to.deep.eq([[{ octave: 1, note: 'C', midi: 36 }]]);
+      expect(sequencer.queuedNotes).to.deep.eq([[{ octave: 1, note: 'C', midi: 36 }]]);
     });
   });
 

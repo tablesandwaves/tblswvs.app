@@ -52,7 +52,7 @@ export class Sequencer {
   superMeasure: number = 4;
   gui: BrowserWindow;
   key: Key;
-  queuedChordProgression: note[][] = new Array();
+  queuedNotes: note[][] = new Array();
   testing: boolean;
   beatPatterns: BeatSet;
   activeBeatPattern: Beat = undefined;

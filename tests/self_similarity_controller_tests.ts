@@ -40,7 +40,7 @@ describe("SelfSimilarityController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     const track = sequencer.daw.getActiveTrack();
-    sequencer.queuedChordProgression = [
+    sequencer.queuedNotes = [
       [{ octave: 3, note: 'C',  midi: 60, scaleDegree: 1 }],
       [{ octave: 3, note: 'D',  midi: 62, scaleDegree: 2 }],
       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
