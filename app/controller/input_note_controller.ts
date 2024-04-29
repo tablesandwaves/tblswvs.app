@@ -14,7 +14,7 @@ export const octaveTransposeMapping: Record<number, number> = {
 }
 
 
-export class ChordController extends ApplicationController {
+export class InputNoteController extends ApplicationController {
   type = "Chords";
 
   recordingInputChord = false;
@@ -40,7 +40,7 @@ export class ChordController extends ApplicationController {
   }
 
 
-  addChordNote(gridPage: ChordController, press: GridKeyPress) {
+  addChordNote(gridPage: InputNoteController, press: GridKeyPress) {
     if (gridPage.recordingInputChord) {
       if (press.s == 0) {
         gridPage.keyPressCount--;
@@ -60,7 +60,7 @@ export class ChordController extends ApplicationController {
   }
 
 
-  removeLastChord(gridPage: ChordController, press: GridKeyPress) {
+  removeLastChord(gridPage: InputNoteController, press: GridKeyPress) {
     if (gridPage.recordingInputChord && press.s == 1) {
       gridPage.grid.sequencer.queuedChordProgression.pop();
       gridPage.setUiQueuedChordProgression();
@@ -68,7 +68,7 @@ export class ChordController extends ApplicationController {
   }
 
 
-  setTrackChordProgression(gridPage: ChordController, press: GridKeyPress) {
+  setTrackChordProgression(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1 && gridPage.grid.sequencer.queuedChordProgression.length > 0) {
       gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -77,7 +77,7 @@ export class ChordController extends ApplicationController {
   }
 
 
-  toggleChordRecording(gridPage: ChordController, press: GridKeyPress) {
+  toggleChordRecording(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.recordingInputChord = !gridPage.recordingInputChord;
       gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputChord ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
@@ -89,7 +89,7 @@ export class ChordController extends ApplicationController {
   }
 
 
-  toggleVectorShifts(gridPage: ChordController, press: GridKeyPress) {
+  toggleVectorShifts(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
       gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));

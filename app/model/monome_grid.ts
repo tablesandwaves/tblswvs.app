@@ -9,7 +9,7 @@ import { GlobalController } from "../controller/global_controller";
 import { RhythmController } from "../controller/rhythm_controller";
 import { ProbabilitiesController } from "../controller/probabilities_controller";
 import { FillsController } from "../controller/fills_controller";
-import { ChordController } from "../controller/chord_controller";
+import { InputNoteController } from "../controller/input_note_controller";
 import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
 import { NoteVectorController } from "../controller/note_vector_controller";
 import { blank16x16Row } from "../helpers/utils";
@@ -214,7 +214,7 @@ export class MonomeGrid {
         break;
       case "Chords":
         this.pageIndex = 0;
-        this.activePage = new ChordController(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new InputNoteController(this.#loadConfig(`grid_page_chord_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
