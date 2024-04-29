@@ -280,6 +280,7 @@ describe("MelodyEvolutionController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.daw.tracks[5].setChordProgression([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
+    sequencer.daw.tracks[5].generateOutputNotes();
     sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
     ]);

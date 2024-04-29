@@ -198,8 +198,8 @@ export class DrumPadController extends ApplicationController {
         // When note editing is turned off, flush the notes from the queued melody to the track
         // unless there are no queued notes (due to inadvertent button press).
         if (gridPage.grid.sequencer.queuedChordProgression.length > 0) {
-          // gridPage.activeTrack.inputMelody = gridPage.grid.sequencer.queuedMelody;
           gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
+          gridPage.activeTrack.generateOutputNotes();
           gridPage.grid.sequencer.daw.updateActiveTrackNotes();
           gridPage.activeTrack.setGuiChordProgression();
         }

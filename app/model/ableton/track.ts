@@ -71,6 +71,7 @@ export class AbletonTrack {
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Using a 2-dimensional array to accommodate polyphony.
+  #inputNotes:  note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
   currentAbletonNotes: AbletonNote[] = new Array();
@@ -161,6 +162,7 @@ export class AbletonTrack {
   generateOutputNotes() {
     if (this.algorithm == "simple") {
       // When simple, simply generate the sequence
+      this.#outputNotes = this.#inputNotes;
       this.generateSequence();
     } else {
       let notes: note[] = new Array();
@@ -170,7 +172,7 @@ export class AbletonTrack {
       } else if (this.algorithm == "inf_series") {
         notes = this.#getInfinitySeries();
       } else if (this.algorithm == "self_similarity") {
-        const melody = new Melody(this.#outputNotes.flat(), this.daw.sequencer.key);
+        const melody = new Melody(this.#inputNotes.flat(), this.daw.sequencer.key);
 
         switch (this.selfSimilarityType) {
           case "self_replicate":
@@ -267,8 +269,8 @@ export class AbletonTrack {
 
 
   setChordProgression(chordNotes: note[][]) {
-    // this.polyphonicVoiceMode = true;
-    this.#outputNotes = chordNotes;
+    this.#inputNotes = chordNotes;
+    this.generateOutputNotes();
     this.generateSequence();
   }
 
@@ -279,8 +281,6 @@ export class AbletonTrack {
 
 
   setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
-    // this.polyphonicVoiceMode = true;
-
     if (inputNotes == undefined) {
       this.#sequence[rhythmStepIndex] = [];
       this.#rhythm[rhythmStepIndex].state = 0;
@@ -818,8 +818,9 @@ export class AbletonTrack {
 
     this.daw.sequencer.gui.webContents.send(
       "update-track-notes",
-      "chords",
-      this.#outputNotes.flatMap(chordNotes => {
+      this.algorithm == "self_similarity" ? this.selfSimilarityType : this.algorithm,
+      this.#inputNotes.flatMap(chordNotes => {
+        // if (chordNotes.length == 1 && chordNotes[0] == undefined) return "rest";
         let chord = chordNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(chordNotes.map(n => n.note))[0];
         chord += namedChord == undefined ? "" : " (" + namedChord + ")";
