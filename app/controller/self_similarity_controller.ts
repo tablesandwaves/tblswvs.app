@@ -27,7 +27,9 @@ export class SelfSimilarityController extends AlgorithmController {
 
 
   advance(gridPage: SelfSimilarityController, press: GridKeyPress) {
-    gridPage.activeTrack.inputMelody = gridPage.grid.sequencer.queuedChordProgression.flat();
+    // TODO: this should operate on the track's current notes, not the sequencer's queued progression
+    gridPage.activeTrack.setChordProgression(gridPage.grid.sequencer.queuedChordProgression);
+    gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.setGuiChordProgression();
   }

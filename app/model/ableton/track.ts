@@ -6,6 +6,7 @@ import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 import { RampSequence } from "./ramp_sequence";
 import { surroundRhythm, acceleratingBeatPositions } from "../../helpers/rhythm_algorithms";
+import { scaleToRange } from "../../helpers/utils";
 
 
 export type TrackConfig = {
@@ -42,6 +43,9 @@ export const rhythmAlgorithms: Record<string, number> = {
 }
 
 
+const SHIFT_REG_OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
+
+
 const CLIP_16N_COUNT = 128;
 
 
@@ -66,11 +70,6 @@ export class AbletonTrack {
   infinitySeriesRhythmRepetitions: number = 1;
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
-  // Are the output notes a melody or chord progression?
-  // polyphonicVoiceMode = false;
-  // Notes keyed in on the grid. Will be passed to a melody algorithm, resulting in output melody.
-  #inputMelody: note[] = [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }];
-  // Notes resulting from the input melody being processed by a melody algorithm OR a chord progression.
   // Using a 2-dimensional array to accommodate polyphony.
   #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
@@ -159,40 +158,37 @@ export class AbletonTrack {
   }
 
 
-  get inputMelody() {
-    return this.#inputMelody;
-  }
+  generateOutputNotes() {
+    if (this.algorithm == "simple") {
+      // When simple, simply generate the sequence
+      this.generateSequence();
+    } else {
+      let notes: note[] = new Array();
 
+      if (this.algorithm == "shift_reg") {
+        notes = this.#getShiftRegisterSequence();
+      } else if (this.algorithm == "inf_series") {
+        notes = this.#getInfinitySeries();
+      } else if (this.algorithm == "self_similarity") {
+        const melody = new Melody(this.#outputNotes.flat(), this.daw.sequencer.key);
 
-  set inputMelody(inputNotes: note[]) {
-    // this.polyphonicVoiceMode = false;
-
-    this.#inputMelody = inputNotes;
-    let notes: note[] = new Array();
-
-    if (this.algorithm == "simple" || this.algorithm == "shift_reg") {
-      notes = this.#inputMelody;
-    } else if (this.algorithm == "inf_series") {
-      notes = this.#getInfinitySeries();
-    } else if (this.algorithm == "self_similarity") {
-      const melody = new Melody(this.inputMelody, this.daw.sequencer.key);
-
-      switch (this.selfSimilarityType) {
-        case "self_replicate":
-          notes = melody.selfReplicate(63).notes;
-          break;
-        case "counted":
-          notes = melody.counted().notes;
-          break;
-        case "zig_zag":
-          notes = melody.zigZag().notes;
-          break;
+        switch (this.selfSimilarityType) {
+          case "self_replicate":
+            notes = melody.selfReplicate(63).notes;
+            break;
+          case "counted":
+            notes = melody.counted().notes;
+            break;
+          case "zig_zag":
+            notes = melody.zigZag().notes;
+            break;
+        }
       }
-    }
 
-    if (notes.length > 0) {
-      this.#outputNotes = notes.filter(note => note).map(note => note.note == "rest" ? [undefined] : [note]);
-      this.generateSequence()
+      if (notes.length > 0) {
+        this.#outputNotes = notes.filter(note => note).map(note => note.note == "rest" ? [undefined] : [note]);
+        this.generateSequence();
+      }
     }
   }
 
@@ -208,6 +204,37 @@ export class AbletonTrack {
         this.#sequence[seqIndex] = [];
       }
     }
+  }
+
+
+  #getShiftRegisterSequence() {
+    let stepCount = 0;
+    for (let i = 0; i < this.daw.sequencer.superMeasure * 16; i++)
+      stepCount += this.rhythm[i % this.rhythmStepLength].state;
+    const shiftRegisterSequence = [...new Array(stepCount)].map(_ => this.shiftRegister.step());
+
+    const scaleDegrees     = this.daw.sequencer.key.scaleNotes.map((_, j) => j + 1);
+    const scaleDegreeRange = this.shiftRegisterOctaveRange.reduce((accum, octaveRange, i) => {
+      if (octaveRange == 1) {
+        let offset = SHIFT_REG_OCTAVE_RANGE_OFFSETS[i] * scaleDegrees.length;
+        if (offset >= 0) offset++;
+        for (let degree = offset; degree < offset + scaleDegrees.length; degree++) {
+          accum.push(degree);
+        }
+      }
+      return accum;
+    }, new Array());
+
+    // Add three more scale degrees so it is possible to get the next tonic
+    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+
+    return shiftRegisterSequence.map(step => {
+      const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
+      const scaleDeg      = scaleDegreeRange[scaleDegIndex];
+      return this.daw.sequencer.key.degree(scaleDeg);
+    });
   }
 
 

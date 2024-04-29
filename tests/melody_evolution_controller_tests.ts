@@ -198,11 +198,11 @@ describe("MelodyEvolutionController", () => {
   describe("setting tracks to mutating", () => {
     const sequencer = new Sequencer(configDirectory, testing);
     const melodyNotes = [
-      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
-      { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
-      { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
+      [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
+      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
+      [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
     ];
-    sequencer.daw.tracks[1].inputMelody = melodyNotes;
+    sequencer.daw.tracks[1].setChordProgression(melodyNotes);
 
     // Select the global page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
@@ -230,11 +230,11 @@ describe("MelodyEvolutionController", () => {
   describe("setting tracks to soloing", () => {
     const sequencer = new Sequencer(configDirectory, testing);
     const melodyNotes = [
-      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
-      { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
-      { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
+      [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
+      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
+      [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
     ];
-    sequencer.daw.tracks[1].inputMelody = melodyNotes;
+    sequencer.daw.tracks[1].setChordProgression(melodyNotes);
 
     // Select the global page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
@@ -256,7 +256,7 @@ describe("MelodyEvolutionController", () => {
     });
 
     it("sets the DAW's current mutation to the first soloist's flattened output notes", () => {
-      expect(sequencer.daw.currentSoloistMelody).to.have.ordered.members(melodyNotes);
+      expect(sequencer.daw.currentSoloistMelody).to.have.ordered.members(melodyNotes.flat());
     });
   });
 
@@ -279,7 +279,7 @@ describe("MelodyEvolutionController", () => {
   describe("turning mutations on for a second time", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    sequencer.daw.tracks[5].inputMelody = [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }];
+    sequencer.daw.tracks[5].setChordProgression([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
     sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
     ]);

@@ -4,9 +4,6 @@ import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row, scaleToRange } from "../helpers/utils";
 
 
-const OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
-
-
 export class ShiftRegisterController extends AlgorithmController {
   type                        = "Algorithm";
   keyPressCount               = 0;
@@ -30,35 +27,7 @@ export class ShiftRegisterController extends AlgorithmController {
 
   advance(gridPage: ShiftRegisterController, press: GridKeyPress) {
     if (press.s == 0) return;
-
-    let stepCount = 0;
-    for (let i = 0; i < gridPage.grid.sequencer.superMeasure * 16; i++)
-      stepCount += gridPage.activeTrack.rhythm[i % gridPage.activeTrack.rhythmStepLength].state;
-    const shiftRegisterSequence = [...new Array(stepCount)].map(_ => gridPage.activeTrack.shiftRegister.step());
-
-    const scaleDegrees     = gridPage.grid.sequencer.key.scaleNotes.map((_, j) => j + 1);
-    const scaleDegreeRange = gridPage.activeTrack.shiftRegisterOctaveRange.reduce((accum, octaveRange, i) => {
-      if (octaveRange == 1) {
-        let offset = OCTAVE_RANGE_OFFSETS[i] * scaleDegrees.length;
-        if (offset >= 0) offset++;
-        for (let degree = offset; degree < offset + scaleDegrees.length; degree++) {
-          accum.push(degree);
-        }
-      }
-      return accum;
-    }, new Array());
-
-    // Add three more scale degrees so it is possible to get the next tonic
-    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
-    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
-    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
-
-    gridPage.activeTrack.inputMelody = shiftRegisterSequence.map(step => {
-      const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
-      const scaleDeg      = scaleDegreeRange[scaleDegIndex];
-      return gridPage.grid.sequencer.key.degree(scaleDeg);
-    });
-
+    gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.setGuiChordProgression();
   }

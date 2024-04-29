@@ -39,7 +39,7 @@ export class InfinitySeriesController extends AlgorithmController {
 
 
   advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
-    gridPage.activeTrack.inputMelody = [];
+    gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.setGuiChordProgression();
   }

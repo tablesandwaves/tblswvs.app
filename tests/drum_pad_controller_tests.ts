@@ -368,7 +368,7 @@ describe("DrumPadController", () => {
     });
 
     it("does not update the track's input melody", () => {
-      expect(track.inputMelody.length).to.eq(1);
+      expect(track.outputNotes.length).to.eq(1);
     });
   });
 
