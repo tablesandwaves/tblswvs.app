@@ -22,15 +22,6 @@ describe("AbletonTrack", () => {
       track.updateCurrentAbletonNotes();
       expect(track.currentAbletonNotes[0].velocity).to.eq(64);
     });
-
-    // it("can set rhythm steps with specific velocities", () => {
-    //   track.rhythm = rhythmStepsForPattern([
-    //     1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-    //     0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-    //   ]);
-    //   track.updateCurrentAbletonNotes();
-    //   expect(track.currentAbletonNotes[0].velocity).to.eq(100);
-    // });
   });
 
   describe("rhythm algorithms", () => {

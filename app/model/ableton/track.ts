@@ -467,9 +467,16 @@ export class AbletonTrack {
 
 
   updateCurrentAbletonNotes() {
+    const sourceNotes = this.#getSourceNotes();
+
+    // If there notes yet?
+    if (sourceNotes.length == 0) {
+      this.currentAbletonNotes = new Array();
+      return;
+    }
+
     const defaultDuration = noteLengthMap[this.noteLength].size,
           noteMap         = new Map<number,AbletonNote[]>(),
-          sourceNotes     = this.#getSourceNotes(),
           sourceRhythm    = this.daw.mutating && this.randomizing ? this.#randomRhythm() : this.rhythm,
           stepLength      = this.daw.mutating && this.randomizing ? sourceRhythm.length : this.rhythmStepLength;
 
