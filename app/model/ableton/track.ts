@@ -109,6 +109,10 @@ export class AbletonTrack {
       this.chains = config.chains.map(c => new AbletonChain(c));
     }
 
+    if (this.chains[this.#activeChain] && this.chains[this.#activeChain].type == "drum rack") {
+      this.#inputNotes = [[{ octave: 1, note: 'C', midi: 36 }]];
+    }
+
     for (let i = 0; i < this.rhythm.length; i++) {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
     }
@@ -132,7 +136,16 @@ export class AbletonTrack {
 
 
   set activeChain(chainIndex: number) {
-    this.#activeChain = chainIndex;
+    const previousChainType = this.chains[this.#activeChain].type;
+    this.#activeChain       = chainIndex;
+    const newChainType      = this.chains[this.#activeChain].type;
+
+    if (newChainType == "drum rack" && previousChainType != "drum rack") {
+      this.#inputNotes = [[{ octave: 1, note: 'C', midi: 36 }]];
+    } else if (newChainType != "drum rack" && previousChainType == "drum rack") {
+      this.#inputNotes = [[{ octave: 3, note: 'C', midi: 60 }]];
+    }
+
     this.daw.sequencer.setTrackChain(this);
   }
 
@@ -265,6 +278,11 @@ export class AbletonTrack {
     const padCount  = this.chains[this.#activeChain].pads.length;
     const midiNotes = [...new Array(padCount)].map((_, i) => i + 36);
     return (padCount % 2 == 0) ? midiNotes[padCount / 2] : midiNotes[(padCount + 1) / 2];
+  }
+
+
+  get inputNotes() {
+    return this.#inputNotes;
   }
 
 
@@ -741,6 +759,7 @@ export class AbletonTrack {
 
 
   updateGuiChains() {
+    if (this.daw.sequencer.testing) return;
     this.daw.sequencer.gui.webContents.send("update-track-chains", this.chains, this.activeChain);
   }
 
