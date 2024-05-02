@@ -14,7 +14,7 @@ describe("RampSequenceController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the ramp sequencer page
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     const rampSequenceController = sequencer.grid.activePage as RampSequenceController;
 
     it("sets the active page to a ramp sequence page",() => expect(rampSequenceController).to.be.instanceOf(RampSequenceController));
@@ -49,7 +49,7 @@ describe("RampSequenceController", () => {
 
   describe("Adding a segment", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
     let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -86,7 +86,7 @@ describe("RampSequenceController", () => {
 
   describe("Adding multiple segments", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
     let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -130,7 +130,7 @@ describe("RampSequenceController", () => {
 
   describe("Removing a segment", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
     let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -165,7 +165,7 @@ describe("RampSequenceController", () => {
 
   describe("Activating a ramp sequence", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
     let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -188,7 +188,7 @@ describe("RampSequenceController", () => {
 
   describe("Removing the first segment when two were added", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
     // let rampSequence = sequencer.daw.getActiveTrack().rampSequence;
 
@@ -232,7 +232,7 @@ describe("RampSequenceController", () => {
 
   describe("Adding segments to both of a track's 2 ramp sequences", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
 
     // Add a segment at index 0
@@ -276,7 +276,7 @@ describe("RampSequenceController", () => {
 
   describe("Adding segments to both of a track's 2 ramp sequences and reselecting the first edited segment", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
 
     // Add a segment at index 0
@@ -325,7 +325,7 @@ describe("RampSequenceController", () => {
   describe("Subdivision editing", () => {
     describe("shortening the subdivision length", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -347,7 +347,7 @@ describe("RampSequenceController", () => {
 
     describe("extending the subdivision length when it is the same size as the segment length", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -372,7 +372,7 @@ describe("RampSequenceController", () => {
 
     describe("subdivision lengths are not extended when it is not the same size as the segment length", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -397,7 +397,7 @@ describe("RampSequenceController", () => {
 
   describe("Removing a segment updates the grid rows", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
 
     // Add segments at index 0, 8, then press
@@ -427,7 +427,7 @@ describe("RampSequenceController", () => {
 
   describe("Selecting another track while on the ramp sequence page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
 
     // Add segments at index 0, 8, then press
@@ -477,7 +477,7 @@ describe("RampSequenceController", () => {
 
   describe("Going back to a track with segments while on the ramp sequence page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
 
     // Add segments at index 0, 8, then press
@@ -530,7 +530,7 @@ describe("RampSequenceController", () => {
   describe("Range editing", () => {
     describe("can set a range between 0 and 1", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -555,7 +555,7 @@ describe("RampSequenceController", () => {
 
     describe("setting a high-to-low range", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -586,7 +586,7 @@ describe("RampSequenceController", () => {
 
     describe("setting a static range", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -615,7 +615,7 @@ describe("RampSequenceController", () => {
 
     describe("setting a static range of 1", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
@@ -638,7 +638,7 @@ describe("RampSequenceController", () => {
 
     describe("setting a static range of 0", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 10, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1});
       let RampSequenceController = sequencer.grid.activePage as RampSequenceController;
       let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
 
