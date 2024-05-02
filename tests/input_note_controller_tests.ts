@@ -22,5 +22,9 @@ describe("InputNoteController", () => {
     const activePage = sequencer.grid.activePage as InputNoteController;
 
     it("sets the active page to a chord page", () => expect(activePage).to.be.instanceOf(InputNoteController));
+
+    it("has the default algorithm row (simple selected)", () => expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
+      10, 0, 0, 0,  0, 0, 0, 0
+    ]));
   });
 });

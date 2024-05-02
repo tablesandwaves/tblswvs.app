@@ -1,5 +1,5 @@
 import { note } from "tblswvs";
-import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 
@@ -47,12 +47,32 @@ export class InputNoteController extends ApplicationController {
     this.functionMap.set("advance",               this.advance);
     this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
     this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
+    this.functionMap.set("setRhythmRepetitions",  this.setRhythmRepetitions);
   }
 
 
   refresh() {
+    this.setGridRhythmDisplay();
     this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+    this.setGlobalAlgorithmControls();
+  }
+
+
+  displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+    this.setGridRhythmDisplay(highlightIndex);
+    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+  }
+
+
+  setGridRhythmDisplay(highlightIndex?: number) {
+    // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
+    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
+    if (highlightIndex != undefined) transportRow[highlightIndex] = HIGHLIGHT_BRIGHTNESS;
+    this.grid.levelRow(0, 0, transportRow.slice(0, 8));
+    this.grid.levelRow(8, 0, transportRow.slice(8, 16));
+    this.grid.levelRow(0, 1, transportRow.slice(16, 24));
+    this.grid.levelRow(8, 1, transportRow.slice(24, 32));
   }
 
 
@@ -118,6 +138,12 @@ export class InputNoteController extends ApplicationController {
       gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       gridPage.activeTrack.updateGuiVectorDisplay();
     }
+  }
+
+
+  setRhythmRepetitions(gridPage: InputNoteController, press: GridKeyPress) {
+    gridPage.activeTrack.infinitySeriesRhythmRepetitions = press.x - 7;
+    gridPage.grid.levelRow(8, 2, gridPage.getRhythmRepetitionsRow());
   }
 
 

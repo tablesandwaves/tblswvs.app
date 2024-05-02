@@ -32,6 +32,10 @@ describe("SelfSimilarityController", () => {
           10, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
+
+      it("has the default algorithm row (self-similarity selected)", () => expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
+        0, 0, 0, 10,  0, 0, 0, 0
+      ]));
     });
   });
 
