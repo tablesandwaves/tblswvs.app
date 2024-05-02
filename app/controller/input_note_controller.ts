@@ -142,7 +142,7 @@ export class InputNoteController extends ApplicationController {
 
 
   setRhythmRepetitions(gridPage: InputNoteController, press: GridKeyPress) {
-    gridPage.activeTrack.infinitySeriesRhythmRepetitions = press.x - 7;
+    gridPage.activeTrack.algorithmRhythmRepetitions = press.x - 7;
     gridPage.grid.levelRow(8, 2, gridPage.getRhythmRepetitionsRow());
   }
 
@@ -160,6 +160,6 @@ export class InputNoteController extends ApplicationController {
 
 
   getRhythmRepetitionsRow() {
-    return blank8x1Row.map((_, i) => i < this.activeTrack.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+    return blank8x1Row.map((_, i) => i < this.activeTrack.algorithmRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 }

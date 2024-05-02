@@ -64,10 +64,10 @@ export class AbletonTrack {
   acceleratingGateCount = 10;
 
   algorithm: string = "simple";
+  algorithmRhythmRepetitions: number = 1;
   shiftRegister: ShiftRegister;
   shiftRegisterOctaveRange: number[] = [0, 1, 1, 0];
   infinitySeriesSeeds: number[] = [0, 0, 0, 0];
-  infinitySeriesRhythmRepetitions: number = 1;
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Using a 2-dimensional array to accommodate polyphony.
@@ -262,7 +262,7 @@ export class AbletonTrack {
     this.infinitySeriesSeeds.forEach(seed => {
       if (seed == 0) return;
 
-      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length * this.infinitySeriesRhythmRepetitions;
+      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length * this.algorithmRhythmRepetitions;
       notes.push(
         ...Melody.infinitySeries([0, seed], stepCount).map(step => {
           return noteData[step + sequenceCenter];
