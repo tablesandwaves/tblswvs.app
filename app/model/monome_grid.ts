@@ -9,13 +9,12 @@ import { GlobalController } from "../controller/global_controller";
 import { RhythmController } from "../controller/rhythm_controller";
 import { ProbabilitiesController } from "../controller/probabilities_controller";
 import { FillsController } from "../controller/fills_controller";
-import { InputNoteController } from "../controller/input_note_controller";
+import { InputNoteController, algorithmMapping } from "../controller/input_note_controller";
 import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
 import { NoteVectorController } from "../controller/note_vector_controller";
 import { blank16x16Row } from "../helpers/utils";
 import { RampSequenceController } from "../controller/ramp_sequence_controller";
 import { DrumPadController } from "../controller/drum_pad_controller";
-import { AlgorithmController, algorithmButtonMap } from "../controller/algorithm_controller";
 import { ShiftRegisterController } from "../controller/shift_register_controller";
 import { InfinitySeriesController } from "../controller/infinity_series_controller";
 import { SelfSimilarityController } from "../controller/self_similarity_controller";
@@ -30,7 +29,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
   7:  "Rhythm",
   8:  "InputNotes",
   10: "RampSequence",
-  11: "Algorithm",
+  // 11: "Algorithm",
   12: "Global"
 }
 
@@ -39,7 +38,7 @@ export const pageTypeMap: Record<string, string[]> = {
   "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
   "InputNotes":   ["InputNotes", "NoteVector"],
   "RampSequence": ["RampSequence"],
-  "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries", "SelfSimilarity"],
+  // "Algorithm":    ["Algorithm", "ShiftRegister", "InfinitySeries", "SelfSimilarity"],
   "Global":       ["Global", "Mutation"]
 }
 
@@ -103,12 +102,11 @@ export class MonomeGrid {
 
       if (press.x <= 6 && press.s == 1) {
         this.#setActiveTrack(press);
-      } else if (press.s == 1 && press.x == 11) {
-        const algorithmIndex = algorithmButtonMap[this.sequencer.daw.getActiveTrack().algorithm];
-        if (algorithmIndex)
-          this.setActiveGridPage(pageTypeMap["Algorithm"][algorithmIndex]);
+      } else if (press.s == 1 && press.x == 8) {
+        if (algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm])
+          this.setActiveGridPage(algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm].pageType);
         else
-          this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
+          this.setActiveGridPage("InputNotes");
       } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
         this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {
@@ -121,6 +119,7 @@ export class MonomeGrid {
 
     // Other rows, forward to the key press to the currently active page
     } else {
+      // console.log(this.activePage)
       this.activePage.keyPress(press);
     }
   }
@@ -176,8 +175,8 @@ export class MonomeGrid {
     if ((this.activePage && this.activePage instanceof RhythmController  && activeChainType == "drum rack") ||
         (this.activePage && this.activePage instanceof DrumPadController && activeChainType != "drum rack")) {
       this.setActiveGridPage(this.activePage.type);
-    } else if (this.activePage && this.activePage instanceof AlgorithmController) {
-      this.pageIndex = algorithmButtonMap[this.sequencer.daw.getActiveTrack().algorithm];
+    } else if (this.activePage && this.activePage instanceof InputNoteController) {
+      this.pageIndex = algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm].button;
       this.setActiveGridPage(pageTypeMap[this.activePage.type][this.pageIndex]);
     }
     if (this.activePage) this.activePage.refresh();
@@ -214,13 +213,31 @@ export class MonomeGrid {
         break;
       case "InputNotes":
         this.pageIndex = 0;
-        this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         break;
+      case "ShiftRegister":
+        this.pageIndex = 0;
+        this.activePage = new ShiftRegisterController(this.#loadConfig(`grid_page_input_notes_0.1.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 11;
+        break;
+      case "InfinitySeries":
+        this.pageIndex = 0;
+        this.activePage = new InfinitySeriesController(this.#loadConfig(`grid_page_input_notes_0.2.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 11;
+        break;
+      case "SelfSimilarity":
+        this.pageIndex = 0;
+        this.activePage = new SelfSimilarityController(this.#loadConfig(`grid_page_input_notes_0.3.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 11;
+        break;
       case "NoteVector":
         this.pageIndex = 1;
-        this.activePage = new NoteVectorController(this.#loadConfig(`grid_page_input_notes_${this.pageIndex}.yml`) as GridConfig, this);
+        this.activePage = new NoteVectorController(this.#loadConfig(`grid_page_input_notes_1.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
         break;
@@ -229,30 +246,6 @@ export class MonomeGrid {
         this.activePage = new RampSequenceController(this.#loadConfig(`grid_page_ramps_${this.pageIndex}.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 10;
-        break;
-      case "Algorithm":
-        this.pageIndex = 0;
-        this.activePage = new AlgorithmController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 11;
-        break;
-      case "ShiftRegister":
-        this.pageIndex = 1;
-        this.activePage = new ShiftRegisterController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 11;
-        break;
-      case "InfinitySeries":
-        this.pageIndex = 2;
-        this.activePage = new InfinitySeriesController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 11;
-        break;
-      case "SelfSimilarity":
-        this.pageIndex = 3;
-        this.activePage = new SelfSimilarityController(this.#loadConfig(`grid_page_algorithms_${this.pageIndex}.yml`) as GridConfig, this);
-        updated = true;
-        globalKeyIndex = 11;
         break;
       case "Global":
         this.pageIndex = 0;

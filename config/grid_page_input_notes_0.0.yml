@@ -2,29 +2,51 @@ name: Input Notes
 description: Add input notes to the active track.
 matrices:
   -
+    name: Rhythm Pattern / Step Length
+    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    group: rhythm-pattern
+    type: toggle / meter
+    rowStart: 0
+    rowEnd: 1
+    columnStart: 0
+    columnEnd: 15
+    mapping: updateRhythm
+    shiftMapping: updateStepLength
+  -
     name: Keyboard Octave
     description: Button represents a note; first button in the row is the current scale's tonic for the row's octave
     group: notes
     type: momentary
-    rowStart: 0
-    rowEnd: 6
+    rowStart: 2
+    rowEnd: 5
     columnStart: 0
     columnEnd: 14
     mapping: addNotes
     columnValues:
-      - 6
-      - 5
       - 4
       - 3
       - 2
       - 1
-      - 0
 rows:
+  -
+    name: Algorithms
+    description: select the current algorithm
+    group: algorithms
+    type: radio
+    index: 6
+    xStart: 0
+    xLength: 4
+    mapping: setAlgorithm
+    values:
+      - simple
+      - shift_reg
+      - inf_series
+      - self_similarity
   -
     name: Toggle Note Recording
     description: Turn note recording on/off; when turning on, the queued input notes are cleared
     group: note-input-controls
-    index: 0
+    index: 2
     xStart: 15
     xLength: 1
     type: toggle
@@ -33,7 +55,7 @@ rows:
     name: Remove Last Notes
     description: Remove the last notes from the currently queued input notes
     group: note-input-controls
-    index: 1
+    index: 3
     xStart: 15
     xLength: 1
     type: momentary
@@ -57,11 +79,20 @@ rows:
     type: toggle
     mapping: toggleNewClipCreation
   -
-    name: Add Notes to Track
-    description: Adds the currently queued input notes to the currently selected track
-    group: note-input-controls
+    name: Advance
+    description: advance the current algorithm 1 iteration
+    group: advance
+    type: momentary
     index: 6
     xStart: 15
     xLength: 1
-    type: momentary
-    mapping: setTrackNotes
+    mapping: advance
+  # -
+  #   name: Add Notes to Track
+  #   description: Adds the currently queued input notes to the currently selected track
+  #   group: note-input-controls
+  #   index: 6
+  #   xStart: 15
+  #   xLength: 1
+  #   type: momentary
+  #   mapping: setTrackNotes

@@ -125,6 +125,7 @@ export class ApplicationController {
     if (this.grid.shiftKey && this.matrix[press.y][press.x].shiftMapping != undefined) {
       this.functionMap.get(this.matrix[press.y][press.x].shiftMapping)(this, press);
     } else {
+      // console.log(this.matrix[press.y][press.x].mapping)
       this.functionMap.get(this.matrix[press.y][press.x].mapping)(this, press);
     }
   }

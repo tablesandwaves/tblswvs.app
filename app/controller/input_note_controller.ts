@@ -1,6 +1,7 @@
 import { note } from "tblswvs";
 import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
+import { blank8x1Row } from "../helpers/utils";
 
 
 export const octaveTransposeMapping: Record<number, number> = {
@@ -11,6 +12,20 @@ export const octaveTransposeMapping: Record<number, number> = {
   4: -1,
   5: -2,
   6: -3
+}
+
+
+export type algorithmMapping = {
+  button: number,
+  pageType: string,
+}
+
+
+export const algorithmMapping: Record<string, algorithmMapping> = {
+  "simple":          {button: 0, pageType: "InputNotes"},
+  "shift_reg":       {button: 1, pageType: "ShiftRegister"},
+  "inf_series":      {button: 2, pageType: "InfinitySeries"},
+  "self_similarity": {button: 3, pageType: "SelfSimilarity"}
 }
 
 
@@ -25,10 +40,11 @@ export class InputNoteController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
+    this.functionMap.set("setAlgorithm",          this.setAlgorithm);
     this.functionMap.set("addNotes",              this.addNotes);
     this.functionMap.set("removeLastNotes",       this.removeLastNotes);
     this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
-    this.functionMap.set("setTrackNotes",         this.setTrackNotes);
+    this.functionMap.set("advance",               this.advance);
     this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
     this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
   }
@@ -37,6 +53,13 @@ export class InputNoteController extends ApplicationController {
   refresh() {
     this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+  }
+
+
+  setAlgorithm(gridPage: InputNoteController, press: GridKeyPress) {
+    gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
+    gridPage.grid.pageIndex = press.x;
+    gridPage.grid.setActiveGridPage(algorithmMapping[gridPage.activeTrack.algorithm].pageType)
   }
 
 
@@ -68,7 +91,7 @@ export class InputNoteController extends ApplicationController {
   }
 
 
-  setTrackNotes(gridPage: InputNoteController, press: GridKeyPress) {
+  advance(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1 && gridPage.grid.sequencer.queuedNotes.length > 0) {
       gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -95,5 +118,22 @@ export class InputNoteController extends ApplicationController {
       gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
       gridPage.activeTrack.updateGuiVectorDisplay();
     }
+  }
+
+
+  setGlobalAlgorithmControls() {
+    this.grid.levelRow(0, 6, this.getGridAlgorithmRow());
+  }
+
+
+  getGridAlgorithmRow() {
+    const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
+    algorithmRow[algorithmMapping[this.activeTrack.algorithm].button] = ACTIVE_BRIGHTNESS;
+    return algorithmRow;
+  }
+
+
+  getRhythmRepetitionsRow() {
+    return blank8x1Row.map((_, i) => i < this.activeTrack.infinitySeriesRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 }

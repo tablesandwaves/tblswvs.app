@@ -1,10 +1,10 @@
 import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
-import { AlgorithmController } from "./algorithm_controller";
+import { InputNoteController } from "./input_note_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row, scaleToRange } from "../helpers/utils";
 
 
-export class ShiftRegisterController extends AlgorithmController {
+export class ShiftRegisterController extends InputNoteController {
   type                        = "Algorithm";
   keyPressCount               = 0;
   activeGates: GridKeyPress[] = new Array();

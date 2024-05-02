@@ -11,8 +11,8 @@ describe("SelfSimilarityController", () => {
   describe("After selecting the initial algorithm page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the algorithm page, then the self-similarity sub-page
-    sequencer.grid.keyPress({y: 7, x: 11, s: 1});
+    // Select the note input page, then the self-similarity sub-page
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 6, x: 3, s: 1});
     const activePage = sequencer.grid.activePage as SelfSimilarityController;
 
@@ -48,8 +48,8 @@ describe("SelfSimilarityController", () => {
       [{ octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }]
     ];
 
-    // Select the algorithm page, then the self-similarity sub-page
-    sequencer.grid.keyPress({y: 7, x: 11, s: 1});
+    // Select the note input page, then the self-similarity sub-page
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 6, x: 3, s: 1});
 
     it("include self-replication melodies", () => {

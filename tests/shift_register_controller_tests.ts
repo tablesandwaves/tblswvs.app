@@ -11,8 +11,8 @@ describe("ShiftRegisterController", () => {
   describe("After selecting the initial algorithm page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the algorithm page, then the shift register sub-page
-    sequencer.grid.keyPress({y: 7, x: 11, s: 1});
+    // Select the note input page, then the shift register sub-page
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
     const activePage = sequencer.grid.activePage as ShiftRegisterController;
 
@@ -40,8 +40,8 @@ describe("ShiftRegisterController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
     const track = sequencer.daw.getActiveTrack();
 
-    // Select the algorithm page, then the shift register sub-page
-    sequencer.grid.keyPress({y: 7, x: 11, s: 1});
+    // Select the note input page, then the shift register sub-page
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
     const activePage = sequencer.grid.activePage as ShiftRegisterController;
 
