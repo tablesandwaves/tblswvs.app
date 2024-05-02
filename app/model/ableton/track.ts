@@ -173,37 +173,23 @@ export class AbletonTrack {
 
 
   generateOutputNotes() {
+
+    let notes: note[][];
+
+    // When simple, simply use the input note array; otherwise, generate by algorithm.
     if (this.algorithm == "simple") {
-      // When simple, simply generate the sequence
-      this.#outputNotes = this.#inputNotes;
+      notes = this.#inputNotes;
+    } else if (this.algorithm == "self_similarity") {
+      notes = this.#getSelfSimilarMelody();
+    } else if (this.algorithm == "shift_reg") {
+      notes = this.#getShiftRegisterSequence();
+    } else if (this.algorithm == "inf_series") {
+      notes = this.#getInfinitySeries();
+    }
+
+    if (notes.length > 0) {
+      this.#outputNotes = notes;
       this.generateSequence();
-    } else {
-      let notes: note[] = new Array();
-
-      if (this.algorithm == "shift_reg") {
-        notes = this.#getShiftRegisterSequence();
-      } else if (this.algorithm == "inf_series") {
-        notes = this.#getInfinitySeries();
-      } else if (this.algorithm == "self_similarity") {
-        const melody = new Melody(this.#inputNotes.flat(), this.daw.sequencer.key);
-
-        switch (this.selfSimilarityType) {
-          case "self_replicate":
-            notes = melody.selfReplicate(63).notes;
-            break;
-          case "counted":
-            notes = melody.counted().notes;
-            break;
-          case "zig_zag":
-            notes = melody.zigZag().notes;
-            break;
-        }
-      }
-
-      if (notes.length > 0) {
-        this.#outputNotes = notes.filter(note => note).map(note => note.note == "rest" ? [undefined] : [note]);
-        this.generateSequence();
-      }
     }
   }
 
@@ -219,6 +205,33 @@ export class AbletonTrack {
         this.#sequence[seqIndex] = [];
       }
     }
+  }
+
+
+  #getSelfSimilarMelody() {
+    let selfSimilarMelody: note[];
+
+    // Create fake notes where the MIDI notes are actually #outputNotes element indices. This is done so that
+    // self-similar sequences can be created for chord progressions.
+    const offsetMelodyIndices = this.#inputNotes.map((_, i) => {return {octave: 0, note: "", midi: i};});
+    const melody = new Melody(offsetMelodyIndices);
+
+    switch (this.selfSimilarityType) {
+      case "self_replicate":
+        selfSimilarMelody = melody.selfReplicate(63).notes;
+        break;
+      case "counted":
+        selfSimilarMelody = melody.counted().notes;
+        break;
+      case "zig_zag":
+        selfSimilarMelody = melody.zigZag().notes;
+        break;
+    }
+
+    let indices = selfSimilarMelody.map(note => note.note == "rest" ? undefined : note.midi);
+    return indices.map(index => {
+      return index == undefined ? [undefined] : this.#inputNotes[index];
+    });
   }
 
 
@@ -248,13 +261,13 @@ export class AbletonTrack {
     return shiftRegisterSequence.map(step => {
       const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
       const scaleDeg      = scaleDegreeRange[scaleDegIndex];
-      return this.daw.sequencer.key.degree(scaleDeg);
+      return [this.daw.sequencer.key.degree(scaleDeg)];
     });
   }
 
 
   #getInfinitySeries() {
-    const notes: note[] = new Array();
+    const notes: note[][] = new Array();
     const sequenceCenter = (this.chains[this.activeChain].type == "drum rack") ?
       this.#getDrumRackCenterNote() :
       this.daw.sequencer.key.midiTonic + 60;
@@ -265,7 +278,7 @@ export class AbletonTrack {
       const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length * this.algorithmRhythmRepetitions;
       notes.push(
         ...Melody.infinitySeries([0, seed], stepCount).map(step => {
-          return noteData[step + sequenceCenter];
+          return [noteData[step + sequenceCenter]];
         })
       );
     });

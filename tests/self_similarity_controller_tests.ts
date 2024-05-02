@@ -90,6 +90,33 @@ describe("SelfSimilarityController", () => {
   });
 
 
+  describe("self-similarity for chord progressions", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    const track = sequencer.daw.getActiveTrack();
+    sequencer.queuedNotes = [
+      [{ octave: 3, note: 'C',  midi: 60, scaleDegree: 1 }, { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
+      [{ octave: 3, note: 'D',  midi: 62, scaleDegree: 2 }, { octave: 3, note: 'F',  midi: 65, scaleDegree: 4 }],
+      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }, { octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }],
+      [{ octave: 3, note: 'F',  midi: 65, scaleDegree: 4 }, { octave: 3, note: 'Ab', midi: 68, scaleDegree: 6 }],
+      [{ octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }, { octave: 3, note: 'Bb', midi: 70, scaleDegree: 7 }]
+    ];
+
+    // Select the note input page, then the self-similarity sub-page
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 3, s: 1});
+
+    it("include self-replication melodies", () => {
+      // Select the self-replicating type, then advance
+      sequencer.grid.keyPress({y: 2, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+
+      const actual = track.outputNotes.slice(0, 4).map(noteArray => noteArray.map(note => note.midi));
+      expect(actual).to.deep.eq([ [60, 63], [62, 65], [62, 65], [63, 67] ]);
+    });
+  });
+
+
   // describe("Setting the self-similarty algorithm on a drum rack", () => {
   // });
 });
