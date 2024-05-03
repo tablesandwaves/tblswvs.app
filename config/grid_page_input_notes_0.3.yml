@@ -12,20 +12,22 @@ matrices:
     columnEnd: 15
     mapping: updateRhythm
     shiftMapping: updateStepLength
-rows:
   -
-    name: Algorithm types
-    description: Select whether to use the self-replicating, counted or zig-zag algorithms
-    group: self-similarity-type
-    type: radio
-    index: 2
-    xStart: 0
-    xLength: 3
-    mapping: setSelfSimilaryType
-    values:
-      - self_replicate
-      - counted
-      - zig_zag
+    name: Keyboard Octave
+    description: Button represents a note; first button in the row is the current scale's tonic for the row's octave
+    group: notes
+    type: momentary
+    rowStart: 2
+    rowEnd: 5
+    columnStart: 0
+    columnEnd: 14
+    mapping: addNotes
+    columnValues:
+      - 4
+      - 3
+      - 2
+      - 1
+rows:
   -
     name: Rhythm Repetitions
     description: Set the number of times thru the gate pattern before switching to the next seed
@@ -49,6 +51,19 @@ rows:
       - shift_reg
       - inf_series
       - self_similarity
+  -
+    name: Algorithm types
+    description: Select whether to use the self-replicating, counted or zig-zag algorithms
+    group: self-similarity-type
+    type: radio
+    index: 6
+    xStart: 8
+    xLength: 3
+    mapping: setSelfSimilaryType
+    values:
+      - self_replicate
+      - counted
+      - zig_zag
   -
     name: Advance
     description: advance the current algorithm 1 iteration

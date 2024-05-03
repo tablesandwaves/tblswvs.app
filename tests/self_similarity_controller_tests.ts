@@ -67,7 +67,7 @@ describe("SelfSimilarityController", () => {
 
     it("include counted melodies", () => {
       // Select the counting type, then advance
-      sequencer.grid.keyPress({y: 2, x: 1, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 9, s: 1});
       sequencer.grid.keyPress({y: 6, x: 15, s: 1});
 
       const actual = track.outputNotes.flat().slice(0, 25).map(note => note == undefined ? undefined : note.midi);
@@ -79,7 +79,7 @@ describe("SelfSimilarityController", () => {
 
     it("include zig zag melodies", () => {
       // Select the counting type, then advance
-      sequencer.grid.keyPress({y: 2, x: 2, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 10, s: 1});
       sequencer.grid.keyPress({y: 6, x: 15, s: 1});
 
       const actual = track.outputNotes.flat().slice(0, 16).map(note => note == undefined ? undefined : note.midi);
