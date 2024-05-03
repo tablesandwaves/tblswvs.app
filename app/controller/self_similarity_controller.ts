@@ -22,7 +22,7 @@ export class SelfSimilarityController extends InputNoteController {
 
   setSelfSimilaryType(gridPage: SelfSimilarityController, press: GridKeyPress) {
     gridPage.activeTrack.selfSimilarityType = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.levelRow(0, 2, gridPage.getGridSelfSimilarityTypeRow());
+    gridPage.grid.levelRow(8, 6, gridPage.getGridSelfSimilarityTypeRow());
   }
 
 
@@ -38,7 +38,7 @@ export class SelfSimilarityController extends InputNoteController {
   setGridSelfSimilarityDisplay() {
     super.setGridRhythmDisplay();
     super.setGlobalAlgorithmControls();
-    this.grid.levelRow(0, 2, this.getGridSelfSimilarityTypeRow());
+    this.grid.levelRow(8, 6, this.getGridSelfSimilarityTypeRow());
   }
 
 

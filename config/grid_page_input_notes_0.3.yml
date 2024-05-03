@@ -29,15 +29,6 @@ matrices:
       - 1
 rows:
   -
-    name: Rhythm Repetitions
-    description: Set the number of times thru the gate pattern before switching to the next seed
-    group: rhythm-repetition
-    type: meter
-    index: 2
-    xStart: 8
-    xLength: 8
-    mapping: setRhythmRepetitions
-  -
     name: Algorithms
     description: select the current algorithm
     group: algorithms
@@ -64,6 +55,42 @@ rows:
       - self_replicate
       - counted
       - zig_zag
+  -
+    name: Toggle Note Recording
+    description: Turn note recording on/off; when turning on, the queued input notes are cleared
+    group: note-input-controls
+    index: 2
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: toggleNoteRecording
+  -
+    name: Remove Last Notes
+    description: Remove the last notes from the currently queued input notes
+    group: note-input-controls
+    index: 3
+    xStart: 15
+    xLength: 1
+    type: momentary
+    mapping: removeLastNotes
+  -
+    name: Toggle Vector Shifts
+    description: When on, after processing by the melody algorithm, it will be processed by the melodic vector shifts
+    group: melody-recording-controls
+    type: toggle
+    index: 4
+    xStart: 15
+    xLength: 1
+    mapping: toggleVectorShifts
+  -
+    name: Toggle Create Clip Mode
+    description: When on, will add the input notes to the next clip
+    group: note-input-controls
+    index: 5
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: toggleNewClipCreation
   -
     name: Advance
     description: advance the current algorithm 1 iteration

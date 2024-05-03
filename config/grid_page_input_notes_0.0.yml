@@ -87,12 +87,3 @@ rows:
     xStart: 15
     xLength: 1
     mapping: advance
-  # -
-  #   name: Add Notes to Track
-  #   description: Adds the currently queued input notes to the currently selected track
-  #   group: note-input-controls
-  #   index: 6
-  #   xStart: 15
-  #   xLength: 1
-  #   type: momentary
-  #   mapping: setTrackNotes
