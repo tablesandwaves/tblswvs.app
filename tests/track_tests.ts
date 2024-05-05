@@ -632,4 +632,25 @@ describe("AbletonTrack", () => {
       });
     });
   });
+
+
+  describe("editing the rhythm step length", () => {
+    const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+    track.rhythmStepLength = 16;
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+    ]);
+    track.generateOutputNotes();
+    expect(track.sequence[0].length).to.eq(1);
+    expect(track.sequence[16].length).to.eq(1);
+    expect(track.sequence[20].length).to.eq(0);
+
+    it("should update the track's sequence of notes", () => {
+      track.rhythmStepLength = 20;
+      expect(track.sequence[0].length).to.eq(1);
+      expect(track.sequence[16].length).to.eq(0);
+      expect(track.sequence[20].length).to.eq(1);
+    });
+  });
 });
