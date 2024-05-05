@@ -5,7 +5,7 @@ import { blank8x1Row, scaleToRange } from "../helpers/utils";
 
 
 export class ShiftRegisterController extends InputNoteController {
-  type                        = "Algorithm";
+  type                        = "InputNotes";
   keyPressCount               = 0;
   activeGates: GridKeyPress[] = new Array();
 

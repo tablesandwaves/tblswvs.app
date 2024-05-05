@@ -5,7 +5,7 @@ import { blank8x1Row } from "../helpers/utils";
 
 
 export class InfinitySeriesController extends InputNoteController {
-  type = "Algorithm";
+  type = "InputNotes";
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
