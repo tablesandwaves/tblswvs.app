@@ -193,56 +193,67 @@ export class MonomeGrid {
           this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
+        this.pageIndex = 0;
         break;
       case "Probabilities":
         this.activePage = new ProbabilitiesController(this.#loadConfig(`grid_page_rhythm_1.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
+        this.pageIndex = 1;
         break;
       case "Fills":
         this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_2.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
+        this.pageIndex = 2;
         break;
       case "InputNotes":
         this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
+        this.pageIndex = 0;
         break;
       case "ShiftRegister":
         this.activePage = new ShiftRegisterController(this.#loadConfig(`grid_page_input_notes_0.1.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
+        this.pageIndex = 0;
         break;
       case "InfinitySeries":
         this.activePage = new InfinitySeriesController(this.#loadConfig(`grid_page_input_notes_0.2.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
+        this.pageIndex = 0;
         break;
       case "SelfSimilarity":
         this.activePage = new SelfSimilarityController(this.#loadConfig(`grid_page_input_notes_0.3.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
+        this.pageIndex = 0;
         break;
       case "NoteVector":
         this.activePage = new NoteVectorController(this.#loadConfig(`grid_page_input_notes_1.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
+        this.pageIndex = 1;
         break;
       case "RampSequence":
         this.activePage = new RampSequenceController(this.#loadConfig(`grid_page_ramps_0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 9;
+        this.pageIndex = 0;
         break;
       case "Global":
         this.activePage = new GlobalController(this.#loadConfig(`grid_page_global_0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 12;
+        this.pageIndex = 0;
         break;
       case "Mutation":
         this.activePage = new MelodyEvolutionController(this.#loadConfig(`grid_page_global_1.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 12;
+        this.pageIndex = 1;
         break;
     }
 

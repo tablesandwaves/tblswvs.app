@@ -1,5 +1,5 @@
 name: Mutation
-description: Mutations are accessed on Melody page 2. Mutate melodic sequences and launch voice trading among tracks.
+description: Mutations are accessed on Global page 2. Mutate melodic sequences and launch voice trading among tracks.
 rows:
   -
     name: Randomizing Voices
