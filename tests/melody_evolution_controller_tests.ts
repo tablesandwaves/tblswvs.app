@@ -224,6 +224,14 @@ describe("MelodyEvolutionController", () => {
         [0, 10, 0, 0,  0, 10, 0]
       );
     });
+
+    it("sets the track's current mutation to the flattened output notes", () => {
+      expect(sequencer.daw.tracks[1].currentMutation).to.deep.eq([
+        { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+        { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
+        { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
+      ]);
+    });
   });
 
 

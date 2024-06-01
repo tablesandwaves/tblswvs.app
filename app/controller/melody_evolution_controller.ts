@@ -91,6 +91,7 @@ export class MelodyEvolutionController extends ApplicationController {
   toggleMutatingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.mutating = !track.mutating;
+    if (track.mutating) track.currentMutation = track.outputNotes.flat();
     gridPage.refresh();
   }
 
