@@ -1,5 +1,3 @@
-import * as path from "path";
-
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
 const easymidi    = require("easymidi");

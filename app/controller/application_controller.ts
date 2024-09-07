@@ -60,7 +60,9 @@ export class ApplicationController {
     if (config.rows) {
       config.rows.forEach((row) => {
         for (let i = row.xStart; i < row.xStart + row.xLength; i++) {
-          let entry: GridButton = this.matrix[row.index][i] ? this.matrix[row.index][i] : {mapping: undefined, shiftMapping: undefined};
+          let entry: GridButton = this.matrix[row.index][i] ?
+                                  this.matrix[row.index][i] :
+                                  {mapping: undefined, shiftMapping: undefined};
 
           entry.mapping      = row.mapping      ? row.mapping      : entry.mapping;
           entry.shiftMapping = row.shiftMapping ? row.shiftMapping : entry.shiftMapping;
@@ -81,7 +83,9 @@ export class ApplicationController {
       config.matrices.forEach((matrix) => {
         for (let y = matrix.rowStart; y <= matrix.rowEnd; y++) {
           for (let x = matrix.columnStart; x <= matrix.columnEnd; x++) {
-            let entry: GridButton = this.matrix[y][x] ? this.matrix[y][x] : {mapping: undefined, shiftMapping: undefined};
+            let entry: GridButton = this.matrix[y][x] ?
+                                    this.matrix[y][x] :
+                                    {mapping: undefined, shiftMapping: undefined};
 
             entry.mapping      = matrix.mapping      ? matrix.mapping      : entry.mapping;
             entry.shiftMapping = matrix.shiftMapping ? matrix.shiftMapping : entry.shiftMapping;
@@ -181,7 +185,9 @@ export class ApplicationController {
       if (gridPage.keyPressCount == 0) {
         // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
         if (gridPage.activeTrack.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
-          gridPage.activeTrack.rhythmAlgorithm = gridPage.activeTrack.rhythmAlgorithm == "accelerating" ? gridPage.activeTrack.rhythmAlgorithm : "manual";
+          gridPage.activeTrack.rhythmAlgorithm = gridPage.activeTrack.rhythmAlgorithm == "accelerating" ?
+                                                 gridPage.activeTrack.rhythmAlgorithm :
+                                                 "manual";
 
           const updatedRhythm = gridPage.activeTrack.rhythm.map(step => {return {...step}});
           gridPage.activeGates.forEach(queuedKeyPress => {
@@ -217,7 +223,9 @@ export class ApplicationController {
     if (this.activeGates.length > 0) {
       const lastGateKeyPress = this.activeGates.at(-1);
       const stepIndex        = lastGateKeyPress.x + (16 * lastGateKeyPress.y);
-      const noteLength       = this.activeTrack.rhythm[stepIndex].noteLength ? this.activeTrack.rhythm[stepIndex].noteLength : this.activeTrack.noteLength;
+      const noteLength       = this.activeTrack.rhythm[stepIndex].noteLength ?
+                               this.activeTrack.rhythm[stepIndex].noteLength :
+                               this.activeTrack.noteLength;
 
       selectedIndex = noteLengthMap[noteLength].index;
     } else {

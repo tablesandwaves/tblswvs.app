@@ -275,7 +275,9 @@ export class AbletonTrack {
     this.infinitySeriesSeeds.forEach(seed => {
       if (seed == 0) return;
 
-      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength).filter(step => step.state == 1).length * this.algorithmRhythmRepetitions;
+      const stepCount = this.#rhythm.slice(0, this.rhythmStepLength)
+                                    .filter(step => step.state == 1)
+                                    .length * this.algorithmRhythmRepetitions;
       notes.push(
         ...Melody.infinitySeries([0, seed], stepCount).map(step => {
           return [noteData[step + sequenceCenter]];
@@ -524,7 +526,8 @@ export class AbletonTrack {
 
           acceleratingBeatPositions(this.acceleratingGateCount, spreadAmount, offset).forEach(gatePosition => {
             const clipPosition = gatePosition + (step * 0.25);
-            noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, acceleratingRhythmStep, clipPosition, defaultDuration));
+            noteMap.get(nextNote.midi)
+                   .push(this.#abletonNoteForNote(nextNote, acceleratingRhythmStep, clipPosition, defaultDuration));
           });
 
         } else if (rhythmStep.fillRepeats > 1 && this.fillMeasures[measure] == 1) {
@@ -533,7 +536,11 @@ export class AbletonTrack {
           for (let j = 0; j <= rhythmStep.fillRepeats; j++) {
             noteMap.get(nextNote.midi).push(
               this.#abletonNoteForNote(
-                nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration), defaultDuration, fillVelocities[rhythmStep.fillRepeats][j]
+                nextNote,
+                rhythmStep,
+                (step * 0.25) + (j * fillBeatDuration),
+                defaultDuration,
+                fillVelocities[rhythmStep.fillRepeats][j]
               )
             );
           }
@@ -546,8 +553,8 @@ export class AbletonTrack {
       noteIndex += 1;
     }
 
-    // Finally, deal with overlapping notes. Depending on the order in which Live processes notes, overlapping notes may result in
-    // dropped notes in the clips.
+    // Finally, deal with overlapping notes. Depending on the order in which Live processes notes,
+    // overlapping notes may result in dropped notes in the clips.
     for (const notes of noteMap.values()) {
       notes.sort((a, b) => a.clipPosition - b.clipPosition);
       notes.forEach((note, i, notes) => {
@@ -595,7 +602,8 @@ export class AbletonTrack {
   }
 
 
-  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, duration: number, velocity?: number): AbletonNote {
+  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number,
+    duration: number, velocity?: number): AbletonNote {
     const _velocity = velocity ? velocity : (rhythmStep.velocity ? rhythmStep.velocity : 64);
     return new AbletonNote(
       note.midi,
@@ -646,7 +654,9 @@ export class AbletonTrack {
           mutationSource[(i * gatesPerMeasure + j) % mutationSource.length]
         );
       }
-      mutatedMelody = mutatedMelody.concat(Mutation.random(new Melody(melody, this.daw.sequencer.key), activeMutations).notes);
+      mutatedMelody = mutatedMelody.concat(
+        Mutation.random(new Melody(melody, this.daw.sequencer.key), activeMutations).notes
+      );
     }
 
     // Update both current mutation melodies: the track so it is picked up when setting MIDI notes
@@ -786,7 +796,12 @@ export class AbletonTrack {
 
 
   updateGuiVectorDisplay() {
-    this.daw.sequencer.gui.webContents.send("update-note-vector", this.vectorShifts, this.vectorShiftsLength, this.vectorShiftsActive);
+    this.daw.sequencer.gui.webContents.send(
+      "update-note-vector",
+      this.vectorShifts,
+      this.vectorShiftsLength,
+      this.vectorShiftsActive
+    );
   }
 
 

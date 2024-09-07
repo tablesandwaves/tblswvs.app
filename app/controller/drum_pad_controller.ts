@@ -1,5 +1,8 @@
 import { note, noteData } from "tblswvs";
-import { ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, xyCoordinate, ApplicationController, GridConfig, GridKeyPress } from "./application_controller";
+import {
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, xyCoordinate,
+  ApplicationController, GridConfig, GridKeyPress
+} from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
 
@@ -69,7 +72,11 @@ export class DrumPadController extends ApplicationController {
     const step = this.activeTrack.sequence[pianoRollHighlightIndex];
     step.forEach(note => {
       if (note && drumPadMatrix[note.midi]) {
-        this.grid.levelSet(drumPadMatrix[note.midi].coordinates.x, drumPadMatrix[note.midi].coordinates.y, ACTIVE_BRIGHTNESS);
+        this.grid.levelSet(
+          drumPadMatrix[note.midi].coordinates.x,
+          drumPadMatrix[note.midi].coordinates.y,
+          ACTIVE_BRIGHTNESS
+        );
         this.previousCoordinates.push(drumPadMatrix[note.midi].coordinates);
       }
     });
@@ -93,14 +100,18 @@ export class DrumPadController extends ApplicationController {
       gridPage.heldDrumPads--;
 
       if (gridPage.noteEditingActive && gridPage.heldDrumPads == 0) gridPage.#flushEditedNoteSequence();
-      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0) gridPage.#flushRecordedNotes();
+      if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0)
+        gridPage.#flushRecordedNotes();
     }
   }
 
 
   #flushRecordedNotes() {
     this.activeDrumPads.forEach(press => {
-      this.activeTrack.setDrumPadStep(this.heldGate, this.activeDrumPads.map(press => noteData[this.matrix[press.y][press.x].value]));
+      this.activeTrack.setDrumPadStep(
+        this.heldGate,
+        this.activeDrumPads.map(press => noteData[this.matrix[press.y][press.x].value])
+      );
 
       this.grid.sequencer.daw.updateActiveTrackNotes();
       this.disableGate = false;

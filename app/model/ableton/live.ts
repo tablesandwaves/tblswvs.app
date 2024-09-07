@@ -73,14 +73,18 @@ export class AbletonLive {
 
 
   combinedRhythm(trackIndices: number[]) {
-    const trackStepCounts = trackIndices.map(trackIndex => this.tracks[trackIndex].rhythmStepLength * pulseRateMap[this.tracks[trackIndex].pulseRate].size);
+    const trackStepCounts = trackIndices.map(trackIndex => {
+      return this.tracks[trackIndex].rhythmStepLength * pulseRateMap[this.tracks[trackIndex].pulseRate].size
+    });
     let combinedTracksStepCount = trackStepCounts[0];
     trackStepCounts.slice(1).forEach(num => combinedTracksStepCount = lcm(combinedTracksStepCount, num));
 
     const superMeasureSteps    = this.sequencer.superMeasure * 16;
     const combinedRhythmLength = gcd(combinedTracksStepCount, superMeasureSteps) == combinedTracksStepCount ?
                                  combinedTracksStepCount :
-                                 lcm(combinedTracksStepCount, superMeasureSteps) == superMeasureSteps ? combinedTracksStepCount : superMeasureSteps;
+                                 lcm(combinedTracksStepCount, superMeasureSteps) == superMeasureSteps ?
+                                   combinedTracksStepCount :
+                                   superMeasureSteps;
 
     let rhythm = new Array(combinedRhythmLength).fill(0);
 
@@ -105,7 +109,7 @@ export class AbletonLive {
   #loadConfig(): any {
     return yaml.load(
       fs.readFileSync(
-        path.resolve(this.sequencer.configDirectory, "tracks.yml"),
+        path.resolve(this.sequencer.configDirectory, "tracks_2024.3.yml"),
         "utf8"
       )
     ) as TrackConfig;

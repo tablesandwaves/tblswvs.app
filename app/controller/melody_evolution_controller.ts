@@ -1,4 +1,7 @@
-import { ApplicationController, GridConfig, GridKeyPress, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
+import {
+  ApplicationController, GridConfig, GridKeyPress,
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS
+} from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
 
@@ -112,7 +115,8 @@ export class MelodyEvolutionController extends ApplicationController {
 
   toggleMutationAlgorithm(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const offset = 7;
-    gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
+    const currentState = gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
+    gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - currentState;
     gridPage.refresh();
   }
 

@@ -1,5 +1,8 @@
 import { Key, Scale } from "tblswvs";
-import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
+import {
+  ACTIVE_BRIGHTNESS, ApplicationController, GridConfig,
+  GridKeyPress, INACTIVE_BRIGHTNESS
+} from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { notes, blank8x1Row } from "../helpers/utils";
 
@@ -61,7 +64,10 @@ export class GlobalController extends ApplicationController {
 
   #setGridSuperMeasureDisplay() {
     const superMeasure    = this.grid.sequencer.superMeasure;
-    const superMeasureRow = [...new Array(superMeasure).fill(ACTIVE_BRIGHTNESS), ...new Array(8 - superMeasure).fill(INACTIVE_BRIGHTNESS)];
+    const superMeasureRow = [
+      ...new Array(superMeasure).fill(ACTIVE_BRIGHTNESS),
+      ...new Array(8 - superMeasure).fill(INACTIVE_BRIGHTNESS)
+    ];
     this.grid.levelRow(8, 0, superMeasureRow);
   }
 
@@ -117,7 +123,8 @@ export class GlobalController extends ApplicationController {
       track.rhythmStepLength = beat.length;
       track.rhythmAlgorithm  = gridPage.matrix[press.y][press.x].value;
 
-      const rhythmSteps = new Array(32).fill(undefined).map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined}));
+      const rhythmSteps = new Array(32).fill(undefined)
+                                       .map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined}));
       voice.hits.forEach((hit, i) => {
         rhythmSteps[hit].state = 1;
         rhythmSteps[hit].velocity = voice.velocities[i];

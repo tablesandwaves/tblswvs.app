@@ -1,5 +1,8 @@
 import { MonomeGrid } from "../model/monome_grid";
-import { GridConfig, GridKeyPress, ApplicationController, INACTIVE_BRIGHTNESS, ACTIVE_BRIGHTNESS } from "./application_controller";
+import {
+  GridConfig, GridKeyPress, ApplicationController,
+  INACTIVE_BRIGHTNESS, ACTIVE_BRIGHTNESS
+} from "./application_controller";
 import { rhythmAlgorithms } from "../model/ableton/track";
 
 
@@ -65,7 +68,9 @@ export class RhythmController extends ApplicationController {
 
   updateRhythmAlgorithm(gridPage: RhythmController, press: GridKeyPress) {
     if (press.s == 1) {
-      const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ? "manual" : gridPage.matrix[press.y][press.x].value;
+      const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ?
+                        "manual" :
+                        gridPage.matrix[press.y][press.x].value;
       gridPage.activeTrack.rhythmAlgorithm = algorithm;
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
@@ -79,7 +84,8 @@ export class RhythmController extends ApplicationController {
     if (press.s == 1) {
       const pressedRelatedTrack = gridPage.grid.sequencer.daw.tracks[press.x];
 
-      if (pressedRelatedTrack.relatedRhythmTrackDawIndex ==  gridPage.activeTrack.dawIndex || pressedRelatedTrack.dawIndex == gridPage.activeTrack.dawIndex) {
+      if (pressedRelatedTrack.relatedRhythmTrackDawIndex == gridPage.activeTrack.dawIndex ||
+        pressedRelatedTrack.dawIndex == gridPage.activeTrack.dawIndex) {
         gridPage.activeTrack.relatedRhythmTrackDawIndex = undefined;
       } else {
         gridPage.activeTrack.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;

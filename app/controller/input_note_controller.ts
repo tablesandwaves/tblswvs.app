@@ -1,5 +1,8 @@
 import { note } from "tblswvs";
-import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS } from "./application_controller";
+import {
+  GridConfig, GridKeyPress, ApplicationController,
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS
+} from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 
@@ -134,7 +137,11 @@ export class InputNoteController extends ApplicationController {
   toggleVectorShifts(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+      gridPage.grid.levelSet(
+        press.x,
+        press.y,
+        (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS)
+      );
       gridPage.activeTrack.updateGuiVectorDisplay();
     }
   }
