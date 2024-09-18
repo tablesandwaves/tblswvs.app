@@ -32,6 +32,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   sequencer.connectToGrid().then((msg) => {
     console.log(msg);
+    sequencer.follow();
 
     // The grid and UI need a moment to be fully ready. Wait half a second, then simulate a key press
     // to set the grid to the track 1, rhythm page.

@@ -92,9 +92,10 @@ export class AbletonTrack {
   currentClip: number = 0;
   createNewClip: boolean = false;
 
-  #randomizing: boolean = false;
-  #mutating:    boolean = false;
-  #soloing:     boolean = false;
+  #randomizing:   boolean = false;
+  #mutating:      boolean = false;
+  #soloing:       boolean = false;
+  #accompaniment: boolean = false;
 
   chains: AbletonChain[] = new Array();
   #activeChain: number = 0;
@@ -376,8 +377,28 @@ export class AbletonTrack {
     this.#randomizing = state;
 
     if (this.#randomizing) {
-      this.#mutating = false;
-      this.#soloing  = false;
+      this.#mutating      = false;
+      this.#soloing       = false;
+      this.#accompaniment = false;
+
+      const index = this.daw.soloists.indexOf(this.dawIndex);
+      if (index !== -1) this.daw.soloists.splice(index, 1);
+    }
+  }
+
+
+  get accompaniment() {
+    return this.#accompaniment;
+  }
+
+
+  set accompaniment(state: boolean) {
+    this.#accompaniment = state;
+
+    if (this.#accompaniment) {
+      this.#randomizing = false;
+      this.#mutating    = false;
+      this.#soloing     = false;
 
       const index = this.daw.soloists.indexOf(this.dawIndex);
       if (index !== -1) this.daw.soloists.splice(index, 1);
@@ -394,8 +415,9 @@ export class AbletonTrack {
     this.#mutating    = state;
 
     if (this.#mutating) {
-      this.#randomizing = false;
-      this.#soloing     = false;
+      this.#randomizing   = false;
+      this.#soloing       = false;
+      this.#accompaniment = false;
 
       const index = this.daw.soloists.indexOf(this.dawIndex);
       if (index !== -1) this.daw.soloists.splice(index, 1);
@@ -415,9 +437,10 @@ export class AbletonTrack {
   set soloing(state: boolean) {
     if (state) {
       if (!this.daw.soloists.includes(this.dawIndex)) this.daw.soloists.push(this.dawIndex);
-      this.#soloing     = true;
-      this.#randomizing = false;
-      this.#mutating    = false;
+      this.#soloing       = true;
+      this.#randomizing   = false;
+      this.#mutating      = false;
+      this.#accompaniment = false;
     } else {
       this.#soloing = false;
       const index = this.daw.soloists.indexOf(this.dawIndex);

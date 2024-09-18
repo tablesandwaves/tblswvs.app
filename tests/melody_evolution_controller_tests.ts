@@ -55,6 +55,70 @@ describe("MelodyEvolutionController", () => {
   });
 
 
+  describe("setting tracks to accompaniment", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
+
+    // Set the snare and keys track to randomizing
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 5, s: 1});
+
+    it("enables the tracks' accompaniment mode", () => {
+      expect(sequencer.daw.tracks.map(t => t.accompaniment)).to.have.ordered.members(
+        [false, true, false, false, false, true, false]
+      );
+    });
+
+    it("updates the accompaniment row", () => {
+      expect(evolutionPage.gridAccopmanimentTracksRow()).to.have.ordered.members(
+        [0, 10, 0, 0,  0, 10, 0]
+      );
+    });
+  });
+
+
+  describe("setting a previously randomizing track to accompaniment", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the global page, then paginate over to the right 1 sub-page
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
+
+    // Set the snare track to randomizing
+    sequencer.grid.keyPress({y: 0, x: 1, s: 1});
+    expect(sequencer.daw.tracks[1].randomizing).to.be.true;
+    expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+
+    // Then set it to accompaniment
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+
+    it("enables the track's accompaniment mode", () => {
+      expect(sequencer.daw.tracks[1].accompaniment).to.be.true;
+    });
+
+    it("disables the track's randomizing mode", () => {
+      expect(sequencer.daw.tracks[1].randomizing).to.be.false;
+    });
+
+    it("updates the randomizing row", () => {
+      expect(evolutionPage.gridAccopmanimentTracksRow()).to.have.ordered.members(
+        [0, 10, 0, 0,  0, 0, 0]
+      );
+    });
+
+    it("updates the mutating row", () => {
+      expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
+        [0, 0, 0, 0,  0, 0, 0]
+      );
+    });
+  });
+
+
   describe("setting tracks to randomizing", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 

@@ -77,6 +77,31 @@ rows:
       - Keys
       - Hydra
   -
+    name: Randomizing Accompaniment
+    description: Select the voices to add random accompaniment to
+    group: randomizing-accompaniment
+    type: toggle
+    index: 6
+    xStart: 0
+    xLength: 7
+    mapping: toggleRandomAccompanimentVoice
+    values:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    displayValues:
+      - Kick
+      - Snare
+      - HiHat
+      - Perc
+      - Bass
+      - Keys
+      - Hydra
+  -
     name: Mutation Algorithms
     description: Select the mutation algorithms used in mutation
     group: mutation-algorithms

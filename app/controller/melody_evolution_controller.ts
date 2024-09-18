@@ -15,6 +15,7 @@ export class MelodyEvolutionController extends ApplicationController {
 
     this.functionMap.set("toggleMutationAlgorithm", this.toggleMutationAlgorithm);
     this.functionMap.set("toggleRandomizingVoice", this.toggleRandomizingVoice);
+    this.functionMap.set("toggleRandomAccompanimentVoice", this.toggleRandomAccompanimentVoice);
     this.functionMap.set("toggleMutatingVoice", this.toggleMutatingVoice);
     this.functionMap.set("toggleSoloingVoice", this.toggleSoloingVoice);
     this.functionMap.set("toggleMutations", this.toggleMutations);
@@ -35,6 +36,7 @@ export class MelodyEvolutionController extends ApplicationController {
     this.setGridTopRow();
     this.setGridMutatingTracksDisplay();
     this.setGridSoloistMutatingTracksDisplay();
+    this.setGridAccompanimentTracksDisplay();
   }
 
 
@@ -51,6 +53,13 @@ export class MelodyEvolutionController extends ApplicationController {
     const row = this.gridMutatingTracksRow();
     row.push(INACTIVE_BRIGHTNESS); // Grid requires updates of 8 per row
     this.grid.levelRow(0, 1, row);
+  }
+
+
+  setGridAccompanimentTracksDisplay() {
+    const row = this.gridAccopmanimentTracksRow();
+    row.push(INACTIVE_BRIGHTNESS); // Grid requires updates of 8 per row
+    this.grid.levelRow(0, 6, row);
   }
 
 
@@ -86,6 +95,14 @@ export class MelodyEvolutionController extends ApplicationController {
   toggleRandomizingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.randomizing = !track.randomizing;
+
+    gridPage.refresh();
+  }
+
+
+  toggleRandomAccompanimentVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
+    const track = gridPage.grid.sequencer.daw.tracks[press.x];
+    track.accompaniment = !track.accompaniment;
 
     gridPage.refresh();
   }
@@ -157,6 +174,11 @@ export class MelodyEvolutionController extends ApplicationController {
 
   gridSoloingTracksRow() {
     return this.grid.sequencer.daw.tracks.map(t => t.soloing ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+  }
+
+
+  gridAccopmanimentTracksRow() {
+    return this.grid.sequencer.daw.tracks.map(t => t.accompaniment ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 

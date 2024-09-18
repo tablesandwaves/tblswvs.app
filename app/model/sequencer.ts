@@ -2,11 +2,10 @@ const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
 const easymidi    = require("easymidi");
 
-import { Key, Scale } from "tblswvs";
+import { Key, Scale, note } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./monome_grid";
 import { AbletonLive } from "./ableton/live";
-import { note } from "tblswvs";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
 import { INACTIVE_BRIGHTNESS } from "../controller/application_controller";
@@ -44,6 +43,7 @@ export class Sequencer {
   emitter: any;
   receiver: any;
   midiOut: any;
+  midiIn: any;
   grid: MonomeGrid;
   daw: AbletonLive;
   ticks: number = 0;
@@ -80,6 +80,7 @@ export class Sequencer {
     this.key  = new Key(60, Scale.Minor);
 
     this.midiOut = new easymidi.Output("tblswvs.app", true);
+    this.midiIn  = new easymidi.Input("tblswvs.app in", true);
   }
 
 
@@ -114,6 +115,42 @@ export class Sequencer {
         this.#queueNextSoloist();
       }
     }
+  }
+
+
+  async follow() {
+    this.midiIn.on("clock", () => {
+      this.ticks++;
+      if (this.ticks % 12 != 0) return;
+
+      this.daw.tracks.forEach(track => {
+        if (track.accompaniment) {
+          const midiNoteNumber = this.key.degree(Math.round(Math.random() * 8 + 1)).midi;
+          this.midiOut.send("noteon", {
+            note: midiNoteNumber,
+            velocity: 64,
+            channel: track.dawIndex
+          });
+
+          setTimeout(() => {
+            this.grid.sequencer.midiOut.send("noteoff", {
+              note: midiNoteNumber,
+              velocity: 64,
+              channel: track.dawIndex
+            });
+          }, 100);
+        }
+      });
+    });
+
+    this.midiIn.on("start", () => {
+      // console.log("start");
+    });
+
+    this.midiIn.on("position", (data: any) => {
+      if (data.value != 0) return;
+      this.ticks = 0;
+    });
   }
 
 
