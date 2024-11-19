@@ -16,11 +16,43 @@ describe("AbletonTrack", () => {
 
     it("can set rhythm steps with default velocities", () => {
       track.rhythm = rhythmStepsForPattern([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
+        1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1
       ]);
       track.updateCurrentAbletonNotes();
-      expect(track.currentAbletonNotes[0].velocity).to.eq(64);
+      expect(track.currentAbletonNotes[0].velocity).to.eq(120);
+      expect(track.currentAbletonNotes[1].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[2].velocity).to.eq(100);
+      expect(track.currentAbletonNotes[3].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[4].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[5].velocity).to.eq(60);
+      expect(track.currentAbletonNotes[6].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[7].velocity).to.eq(60);
+      expect(track.currentAbletonNotes[8].velocity).to.eq(100);
+      expect(track.currentAbletonNotes[9].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[10].velocity).to.eq(80);
+      expect(track.currentAbletonNotes[11].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[12].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[13].velocity).to.eq(60);
+      expect(track.currentAbletonNotes[14].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[15].velocity).to.eq(60);
+
+      expect(track.currentAbletonNotes[16].velocity).to.eq(120);
+      expect(track.currentAbletonNotes[17].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[18].velocity).to.eq(100);
+      expect(track.currentAbletonNotes[19].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[20].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[21].velocity).to.eq(60);
+      expect(track.currentAbletonNotes[22].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[23].velocity).to.eq(60);
+      expect(track.currentAbletonNotes[24].velocity).to.eq(100);
+      expect(track.currentAbletonNotes[25].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[26].velocity).to.eq(80);
+      expect(track.currentAbletonNotes[27].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[28].velocity).to.eq(90);
+      expect(track.currentAbletonNotes[29].velocity).to.eq(60);
+      expect(track.currentAbletonNotes[30].velocity).to.eq(70);
+      expect(track.currentAbletonNotes[31].velocity).to.eq(60);
     });
   });
 

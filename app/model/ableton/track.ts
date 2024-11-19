@@ -35,6 +35,18 @@ const fillVelocities: Record<number,number[]> = {
 }
 
 
+const defaultVelocities: number[] = [
+  120, 90, 100, 90,
+  90,  60,  70, 60,
+  100, 70,  80, 70,
+  90,  60,  70, 60,
+  120, 90, 100, 90,
+  90,  60,  70, 60,
+  100, 70,  80, 70,
+  90,  60,  70, 60,
+];
+
+
 export const rhythmAlgorithms: Record<string, number> = {
   "manual":   0,
   "surround": 1,
@@ -526,7 +538,8 @@ export class AbletonTrack {
     for (let step = 0, noteIndex = 0, measure = -1; step < CLIP_16N_COUNT; step += pulseRateMap[this.pulseRate].size) {
       if (step % this.rhythmStepLength == 0) measure++;
 
-      const rhythmStep = sourceRhythm[(step / pulseRateMap[this.pulseRate].size) % stepLength];
+      const rhythmIndex = (step / pulseRateMap[this.pulseRate].size) % stepLength;
+      const rhythmStep  = sourceRhythm[rhythmIndex];
       if (rhythmStep.state == 0) continue;
 
       nextNotes = sourceNotes[noteIndex % sourceNotes.length];
@@ -570,7 +583,15 @@ export class AbletonTrack {
         } else {
           // Add the current note
           const duration = rhythmStep.noteLength ? noteLengthMap[rhythmStep.noteLength].size : defaultDuration;
-          noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25, duration));
+          noteMap.get(nextNote.midi).push(
+            this.#abletonNoteForNote(
+              nextNote,
+              rhythmStep,
+              step * 0.25,
+              duration,
+              defaultVelocities[rhythmIndex]
+            )
+          );
         }
       });
       noteIndex += 1;
@@ -625,8 +646,8 @@ export class AbletonTrack {
   }
 
 
-  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number,
-    duration: number, velocity?: number): AbletonNote {
+  #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, duration: number, velocity?: number): AbletonNote {
+
     const _velocity = velocity ? velocity : (rhythmStep.velocity ? rhythmStep.velocity : 64);
     return new AbletonNote(
       note.midi,
