@@ -35,8 +35,8 @@
     "chai": "^5.1.2",
     "electron": "^33.2.0",
     "mocha": "^10.8.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@tonaljs/chord-detect": "^4.8.0",
