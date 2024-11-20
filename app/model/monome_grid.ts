@@ -48,6 +48,7 @@ export class MonomeGrid {
   activePage: ApplicationController;
   shiftStateActive: boolean = false;
   shiftKeyHeld: boolean = false;
+  shiftKeyHeldPlusOtherKey: boolean = false;
   pageIndex: number = 0;
   testing = false;
 
@@ -112,9 +113,12 @@ export class MonomeGrid {
         this.shiftKeyHeld = true;
         this.activePage.holdShiftKey();
       } else if (press.x == 13 && press.s == 0) {
-        this.shiftKeyHeld = false;
         this.activePage.releaseShiftKey();
-        this.setShiftState(press);
+        // While the shift key was being held down, did another key get pressed? If yes, then do not go into
+        // the shift state because the shift key was only held to access a fast/temporary shift menu.
+        if (!this.shiftKeyHeldPlusOtherKey) this.setShiftState(press);
+        this.shiftKeyHeld = false;
+        this.shiftKeyHeldPlusOtherKey = false;
       } else if (press.x == 14 && press.s == 1) {
         this.decrementPage();
       } else if (press.x == 15 && press.s == 1) {
