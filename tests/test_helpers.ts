@@ -42,3 +42,12 @@ export const getRhythmControllerMocks = (): [Sequencer, AbletonTrack, RhythmCont
 
   return [sequencer, track, controller];
 }
+
+
+const velocityDeviation = 5;
+
+export const velocityWithinRange = (value: number, defaultValue: number) => {
+  const min = defaultValue - velocityDeviation;
+  const max = defaultValue + velocityDeviation;
+  return value >= min && value <= max;
+}
