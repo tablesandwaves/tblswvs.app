@@ -21,7 +21,6 @@ describe("AbletonTrack", () => {
         1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1
       ]);
       track.updateCurrentAbletonNotes();
-      console.log(track.currentAbletonNotes)
       expect(velocityWithinRange(track.currentAbletonNotes[0].velocity, 120)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[1].velocity, 90)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[2].velocity, 100)).to.be.true;

@@ -1,16 +1,16 @@
-name: Probabilities
-description: Probabilities are accessed on Rhythm page 2. Set per step probabilities for each rhythmic gate. Seq steps 1-16 are set by default; when shift key is activated, edits steps 17-32.
+name: Dynamics
+description: Dynamics in the form of note probabilities and velocities are accessed on Rhythm page 2. Set per step dynamics for each rhythmic gate. Seq steps 1-16 are set by default; when shift key is activated, edits steps 17-32. Hold down the shift key to switch between the edit mode for probabilities or velocities. Probabilities are option 1, velocities are option 2. Options are selected on row 7 when the shift key is held.
 matrices:
   -
-    name: Step Probability
-    description: Set the probability for the x-position rhythm step
-    group: probability
+    name: Step Probability or Velocity
+    description: Set the probability/velocity for the x-position rhythm step
+    group: dynamics
     type: vertical meter
     rowStart: 0
     rowEnd: 6
     columnStart: 0
     columnEnd: 15
-    mapping: updateProbability
+    mapping: updateValue
     columnValues:
       - 1
       - 0.875

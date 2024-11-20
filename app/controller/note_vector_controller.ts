@@ -22,13 +22,13 @@ export class NoteVectorController extends ApplicationController {
 
 
   setStepShift(gridPage: NoteVectorController, press: GridKeyPress) {
-    if (gridPage.grid.shiftKey && press.y == 0 && gridPage.activeTrack.vectorShifts[press.x] == -1) {
+    if (gridPage.grid.shiftStateActive && press.y == 0 && gridPage.activeTrack.vectorShifts[press.x] == -1) {
       gridPage.activeTrack.vectorShifts[press.x] = 0;
-    } else if (!gridPage.grid.shiftKey && press.y == 6 && gridPage.activeTrack.vectorShifts[press.x] == 1) {
+    } else if (!gridPage.grid.shiftStateActive && press.y == 6 && gridPage.activeTrack.vectorShifts[press.x] == 1) {
       gridPage.activeTrack.vectorShifts[press.x] = 0;
     } else {
       gridPage.activeTrack.vectorShifts[press.x] =
-          gridPage.grid.shiftKey ?
+          gridPage.grid.shiftStateActive ?
           gridPage.matrix[press.y][press.x].shiftValue :
           gridPage.matrix[press.y][press.x].value;
     }

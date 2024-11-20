@@ -70,7 +70,7 @@ export class InputNoteController extends ApplicationController {
 
   setGridRhythmDisplay(highlightIndex?: number) {
     // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
-    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
+    const transportRow = this.grid.shiftStateActive ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
     if (highlightIndex != undefined) transportRow[highlightIndex] = HIGHLIGHT_BRIGHTNESS;
     this.grid.levelRow(0, 0, transportRow.slice(0, 8));
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));

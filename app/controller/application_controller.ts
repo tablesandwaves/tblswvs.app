@@ -117,6 +117,11 @@ export class ApplicationController {
   refresh(): void {}
 
 
+  // Catch shift key held state for subclasses that do not care (e.g., not dynamics controller)
+  holdShiftKey(): void {}
+  releaseShiftKey(): void {}
+
+
   // Blank method to catch buttons that light up but provide no user interaction
   ignoredIndicator(): void {}
 
@@ -126,7 +131,7 @@ export class ApplicationController {
     if ((press.s == 0 && !this.keyReleaseFunctionality) || this.matrix[press.y][press.x] == undefined)
       return;
 
-    if (this.grid.shiftKey && this.matrix[press.y][press.x].shiftMapping != undefined) {
+    if (this.grid.shiftStateActive && this.matrix[press.y][press.x].shiftMapping != undefined) {
       this.functionMap.get(this.matrix[press.y][press.x].shiftMapping)(this, press);
     } else {
       // console.log(this.matrix[press.y][press.x].mapping)
@@ -146,7 +151,7 @@ export class ApplicationController {
 
   setGridRhythmDisplay(highlightIndex?: number) {
     // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
-    const transportRow = this.grid.shiftKey ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
+    const transportRow = this.grid.shiftStateActive ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
     if (highlightIndex != undefined) transportRow[highlightIndex] = HIGHLIGHT_BRIGHTNESS;
     this.grid.levelRow(0, 0, transportRow.slice(0, 8));
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));

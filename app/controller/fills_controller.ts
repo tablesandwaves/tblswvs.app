@@ -24,7 +24,7 @@ export class FillsController extends ApplicationController {
 
 
   setFillRepeats(gridPage: FillsController, press: GridKeyPress) {
-    const stepIndex = press.x + (gridPage.grid.shiftKey ? 16 : 0);
+    const stepIndex = press.x + (gridPage.grid.shiftStateActive ? 16 : 0);
 
     // Only edit fills for steps that are active
     if (gridPage.activeTrack.rhythm[stepIndex].state == 1) {
@@ -37,7 +37,7 @@ export class FillsController extends ApplicationController {
 
 
   clearFillRepeats(gridPage: FillsController, press: GridKeyPress) {
-    const stepIndex = press.x + (gridPage.grid.shiftKey ? 16 : 0);
+    const stepIndex = press.x + (gridPage.grid.shiftStateActive ? 16 : 0);
 
     if (gridPage.activeTrack.rhythm[stepIndex].state == 1) {
       gridPage.activeTrack.rhythm[stepIndex].fillRepeats = 0;
@@ -49,7 +49,7 @@ export class FillsController extends ApplicationController {
 
 
   setGridFillsDisplay() {
-    const [rhythmStart, rhythmEnd] = this.grid.shiftKey ? [16, 32] : [0, 16];
+    const [rhythmStart, rhythmEnd] = this.grid.shiftStateActive ? [16, 32] : [0, 16];
 
     // Display the current rhythm on row 7
     const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((rhythmStep: RhythmStep, i: any) => {

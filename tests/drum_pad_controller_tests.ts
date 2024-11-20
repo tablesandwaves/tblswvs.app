@@ -444,6 +444,7 @@ describe("DrumPadController", () => {
 
     // Shorten the track rhythm step length
     sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 13, s: 0});
     sequencer.grid.keyPress({y: 0, x: 11, s: 1});
 
     it("updates the track rhythm step length", () => expect(track.rhythmStepLength).to.eq(12));

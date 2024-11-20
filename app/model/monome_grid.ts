@@ -7,7 +7,7 @@ import { Sequencer } from "./sequencer";
 import { GridConfig, GridKeyPress, ApplicationController } from "../controller/application_controller";
 import { GlobalController } from "../controller/global_controller";
 import { RhythmController } from "../controller/rhythm_controller";
-import { ProbabilitiesController } from "../controller/probabilities_controller";
+import { DynamicsController } from "../controller/dynamics_controller";
 import { FillsController } from "../controller/fills_controller";
 import { InputNoteController, algorithmMapping } from "../controller/input_note_controller";
 import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
@@ -34,7 +34,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 
 export const pageTypeMap: Record<string, string[]> = {
-  "Rhythm":       ["Rhythm", "Probabilities", "Fills"],
+  "Rhythm":       ["Rhythm", "Dynamics", "Fills"],
   "InputNotes":   ["InputNotes", "NoteVector"],
   "RampSequence": ["RampSequence"],
   "Global":       ["Global", "Mutation"]
@@ -46,7 +46,8 @@ export class MonomeGrid {
   device: any;
   playing: any;
   activePage: ApplicationController;
-  shiftKey: boolean = false;
+  shiftStateActive: boolean = false;
+  shiftKeyHeld: boolean = false;
   pageIndex: number = 0;
   testing = false;
 
@@ -108,6 +109,11 @@ export class MonomeGrid {
       } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
         this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {
+        this.shiftKeyHeld = true;
+        this.activePage.holdShiftKey();
+      } else if (press.x == 13 && press.s == 0) {
+        this.shiftKeyHeld = false;
+        this.activePage.releaseShiftKey();
         this.setShiftState(press);
       } else if (press.x == 14 && press.s == 1) {
         this.decrementPage();
@@ -139,8 +145,8 @@ export class MonomeGrid {
 
 
   setShiftState(press: GridKeyPress) {
-    this.shiftKey = !this.shiftKey;
-    if (!this.testing) this.device.levelSet(press.x, press.y, (this.shiftKey ? 10 : 0));
+    this.shiftStateActive = !this.shiftStateActive;
+    if (!this.testing) this.device.levelSet(press.x, press.y, (this.shiftStateActive ? 10 : 0));
     this.activePage.toggleShiftState();
   }
 
@@ -195,8 +201,8 @@ export class MonomeGrid {
         globalKeyIndex = 7;
         this.pageIndex = 0;
         break;
-      case "Probabilities":
-        this.activePage = new ProbabilitiesController(this.#loadConfig(`grid_page_rhythm_1.yml`) as GridConfig, this);
+      case "Dynamics":
+        this.activePage = new DynamicsController(this.#loadConfig(`grid_page_rhythm_1.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         this.pageIndex = 1;
