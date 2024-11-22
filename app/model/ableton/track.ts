@@ -582,10 +582,15 @@ export class AbletonTrack {
           }
         } else {
           // Add the current note
-          const duration  = rhythmStep.noteLength ? noteLengthMap[rhythmStep.noteLength].size : defaultDuration;
-          const upOrDown  = Math.random() < 0.5 ? -1 : 1;
-          const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
-          const velocity  = defaultVelocities[rhythmIndex] + deviation;
+          const duration = rhythmStep.noteLength ? noteLengthMap[rhythmStep.noteLength].size : defaultDuration;
+          let velocity;
+          if (rhythmStep.velocity) {
+            velocity = rhythmStep.velocity;
+          } else {
+            const upOrDown  = Math.random() < 0.5 ? -1 : 1;
+            const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
+            velocity = defaultVelocities[rhythmIndex] + deviation;
+          }
           noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25, duration, velocity));
         }
       });
