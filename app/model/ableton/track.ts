@@ -61,6 +61,9 @@ const SHIFT_REG_OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
 const CLIP_16N_COUNT = 128;
 
 
+const MAX_VELOCITY = 120;
+
+
 export class AbletonTrack {
   name: string;
 
@@ -556,6 +559,7 @@ export class AbletonTrack {
 
         if (this.rhythmAlgorithm == "accelerating") {
 
+          // Generate acceleration note repeats
           const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 };
           const spreadAmount           = (rhythmIndicesAndOffsets[step % stepLength] * 0.25);
           const offset                 = (step % stepLength) * 0.25;
@@ -571,21 +575,16 @@ export class AbletonTrack {
           const fillBeatDuration = fillLengthMap[this.fillDuration].size / rhythmStep.fillRepeats;
           for (let j = 0; j <= rhythmStep.fillRepeats; j++) {
             noteMap.get(nextNote.midi).push(
-              this.#abletonNoteForNote(
-                nextNote,
-                rhythmStep,
-                (step * 0.25) + (j * fillBeatDuration),
-                defaultDuration,
-                fillVelocities[rhythmStep.fillRepeats][j]
-              )
+              this.#abletonNoteForNote(nextNote, rhythmStep, (step * 0.25) + (j * fillBeatDuration),
+                defaultDuration, fillVelocities[rhythmStep.fillRepeats][j])
             );
           }
         } else {
-          // Add the current note
+          // Add the current note with no modifications
           const duration = rhythmStep.noteLength ? noteLengthMap[rhythmStep.noteLength].size : defaultDuration;
           let velocity;
           if (rhythmStep.velocity) {
-            velocity = rhythmStep.velocity;
+            velocity = Math.floor(rhythmStep.velocity * MAX_VELOCITY);
           } else {
             const upOrDown  = Math.random() < 0.5 ? -1 : 1;
             const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;

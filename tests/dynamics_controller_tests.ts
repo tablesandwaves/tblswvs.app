@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { DynamicsController } from "../app/controller/dynamics_controller";
-import { configDirectory, patternForRhythmSteps } from "./test_helpers";
+import { configDirectory, patternForRhythmSteps, velocityWithinRange } from "./test_helpers";
 
 
 const testing = true;
@@ -67,7 +67,9 @@ describe("DynamicsController", () => {
 
     it("and subsequent changes to state update step velocity on the active track", () => {
       sequencer.grid.keyPress({y: 1, x: 0, s: 1});
-      expect(track.rhythm[0].velocity).to.equal(105);
+      expect(track.rhythm[0].velocity).to.equal(0.875);
+      track.updateCurrentAbletonNotes();
+      expect(velocityWithinRange(track.currentAbletonNotes[0].velocity, 105)).to.be.true;
     });
   });
 });

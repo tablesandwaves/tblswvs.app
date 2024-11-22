@@ -14,9 +14,6 @@ const flush = (gridPage: DynamicsController) => {
 const debouncedFlush = debounce(flush, 500);
 
 
-const MAX_VELOCITY = 120;
-
-
 export class DynamicsController extends ApplicationController {
   type = "Rhythm";
   keyReleaseFunctionality = false;
@@ -62,9 +59,7 @@ export class DynamicsController extends ApplicationController {
 
       // Only edit dynamics for steps that are active
       if (gridPage.activeTrack.rhythm[stepIndex].state == 1) {
-        gridPage.activeTrack.rhythm[stepIndex][gridPage.activeDynamic] = gridPage.activeDynamic == "probability" ?
-                                                gridPage.matrix[press.y][press.x].value :
-                                                Math.floor(gridPage.matrix[press.y][press.x].value * MAX_VELOCITY);
+        gridPage.activeTrack.rhythm[stepIndex][gridPage.activeDynamic] = gridPage.matrix[press.y][press.x].value;
         debouncedFlush(gridPage);
       }
     }
