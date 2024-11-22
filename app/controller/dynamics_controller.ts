@@ -76,7 +76,8 @@ export class DynamicsController extends ApplicationController {
 
     for (let y = 0; y < 7; y++) {
       const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
-        return (step.state == 1 && this.matrix[y][x].value <= step.probability) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+        const property = this.activeDynamic == "probability" ? step.probability : step.velocity;
+        return (step.state == 1 && this.matrix[y][x].value <= property) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
       });
 
       this.grid.levelRow(0, y, row.slice(0, 8));

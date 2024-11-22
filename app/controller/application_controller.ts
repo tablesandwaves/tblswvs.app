@@ -1,6 +1,6 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
-import { RhythmStep } from "../model/ableton/track";
+import { defaultVelocities, RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
 import { detect } from "@tonaljs/chord-detect";
 import { note } from "tblswvs";
@@ -200,6 +200,7 @@ export class ApplicationController {
             const stepState                      = 1 - gridPage.activeTrack.rhythm[stepIndex].state;
             updatedRhythm[stepIndex].state       = stepState;
             updatedRhythm[stepIndex].probability = gridPage.activeTrack.defaultProbability;
+            updatedRhythm[stepIndex].velocity    = defaultVelocities[stepIndex];
             if (stepState == 0) {
               updatedRhythm[stepIndex].fillRepeats = 0;
               updatedRhythm[stepIndex].noteLength  = undefined;

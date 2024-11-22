@@ -34,17 +34,18 @@ const fillVelocities: Record<number,number[]> = {
   8: [30, 40, 50, 64,  90, 120, 110, 120],
 }
 
-
-const defaultVelocities: number[] = [
-  120, 90, 100, 90,
-  90,  60,  70, 60,
-  100, 70,  80, 70,
-  90,  60,  70, 60,
-  120, 90, 100, 90,
-  90,  60,  70, 60,
-  100, 70,  80, 70,
-  90,  60,  70, 60,
+export const defaultVelocities: number[] = [
+  1,     0.75,  0.875, 0.75,
+  0.75,  0.5,   0.625, 0.5,
+  0.875, 0.625, 0.75,  0.625,
+  0.75,  0.5,   0.625, 0.5,
+  1,     0.75,  0.875, 0.75,
+  0.75,  0.5,   0.625, 0.5,
+  0.875, 0.625, 0.75,  0.625,
+  0.75,  0.5,   0.625, 0.5
 ];
+
+const MAX_VELOCITY = 120;
 
 
 export const rhythmAlgorithms: Record<string, number> = {
@@ -59,9 +60,6 @@ const SHIFT_REG_OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
 
 
 const CLIP_16N_COUNT = 128;
-
-
-const MAX_VELOCITY = 120;
 
 
 export class AbletonTrack {
@@ -588,7 +586,7 @@ export class AbletonTrack {
           } else {
             const upOrDown  = Math.random() < 0.5 ? -1 : 1;
             const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
-            velocity = defaultVelocities[rhythmIndex] + deviation;
+            velocity = defaultVelocities[rhythmIndex] * MAX_VELOCITY + deviation;
           }
           noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25, duration, velocity));
         }
