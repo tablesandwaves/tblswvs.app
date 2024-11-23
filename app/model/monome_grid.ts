@@ -8,6 +8,7 @@ import { GridConfig, GridKeyPress, ApplicationController } from "../controller/a
 import { GlobalController } from "../controller/global_controller";
 import { RhythmController } from "../controller/rhythm_controller";
 import { DynamicsController } from "../controller/dynamics_controller";
+import { TimingController } from "../controller/timing_controller";
 import { FillsController } from "../controller/fills_controller";
 import { InputNoteController, algorithmMapping } from "../controller/input_note_controller";
 import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
@@ -34,7 +35,7 @@ const globalKeyPageTypeMap: Record<number, string> = {
 
 
 export const pageTypeMap: Record<string, string[]> = {
-  "Rhythm":       ["Rhythm", "Dynamics", "Fills"],
+  "Rhythm":       ["Rhythm", "Dynamics", "Timing", "Fills"],
   "InputNotes":   ["InputNotes", "NoteVector"],
   "RampSequence": ["RampSequence"],
   "Global":       ["Global", "Mutation"]
@@ -211,11 +212,17 @@ export class MonomeGrid {
         globalKeyIndex = 7;
         this.pageIndex = 1;
         break;
-      case "Fills":
-        this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_2.yml`) as GridConfig, this);
+      case "Timing":
+        this.activePage = new TimingController(this.#loadConfig(`grid_page_rhythm_2.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 7;
         this.pageIndex = 2;
+        break;
+      case "Fills":
+        this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_3.yml`) as GridConfig, this);
+        updated = true;
+        globalKeyIndex = 7;
+        this.pageIndex = 3;
         break;
       case "InputNotes":
         this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0.yml`) as GridConfig, this);

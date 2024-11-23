@@ -1,0 +1,29 @@
+name: Timing
+description: Update rhythm timings to move them on/off the metric grid
+matrices:
+  -
+    name: Step Timing
+    description: Set the timing offsets for the x-position rhythm step; row 3 (center) is no offset; lower rows shift early; higher rows shift late
+    group: timing
+    type: vertical radio
+    rowStart: 0
+    rowEnd: 6
+    columnStart: 0
+    columnEnd: 15
+    mapping: updateValue
+    columnValues:
+      - 0.3
+      - 0.15
+      - 0.05
+      - 0
+      - -0.05
+      - -0.15
+      - -0.3
+    columnDisplayValues:
+      - very late
+      - late
+      - slightly late
+      - straight
+      - slightly early
+      - early
+      - very early
