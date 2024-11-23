@@ -80,7 +80,8 @@ export class AbletonNote {
     return [
       this.midiNote,
       this.clipPosition,
-      this.duration
+      this.duration,
+      this.velocity
     ]
   }
 }
