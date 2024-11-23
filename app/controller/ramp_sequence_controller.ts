@@ -42,6 +42,8 @@ export class RampSequenceController extends ApplicationController {
 
 
   setGridRampSequenceDisplay() {
+    if (this.activeTrack.rampSequence0 == undefined) return;
+
     this.setGridSegmentDisplay();
     this.setGridSubdivisionDisplay();
     this.setGridRangeDisplay();
@@ -51,6 +53,8 @@ export class RampSequenceController extends ApplicationController {
 
 
   setGridSegmentDisplay() {
+    if (this.activeTrack.rampSequence0 == undefined) return;
+
     const row = this.gridSegmentRow();
     this.grid.levelRow(0, 0, row.slice(0, 8));
     this.grid.levelRow(8, 0, row.slice(8, 16));
@@ -58,6 +62,8 @@ export class RampSequenceController extends ApplicationController {
 
 
   setGridSubdivisionDisplay() {
+    if (this.activeTrack.rampSequence0 == undefined) return;
+
     const row = this.gridSubdivisionRow();
     this.grid.levelRow(0, 1, row.slice(0, 8));
     this.grid.levelRow(8, 1, row.slice(8, 16));
@@ -65,6 +71,8 @@ export class RampSequenceController extends ApplicationController {
 
 
   setGridRangeDisplay() {
+    if (this.activeTrack.rampSequence0 == undefined) return;
+
     const row = this.gridRangeRow();
     this.grid.levelRow(0, 2, row.slice(0, 8));
     this.grid.levelRow(8, 2, row.slice(8, 16));
@@ -72,12 +80,15 @@ export class RampSequenceController extends ApplicationController {
 
 
   setGridRampGlobalsDisplay() {
+    if (this.activeTrack.rampSequence0 == undefined) return;
+
     const row = this.gridRampSequenceGlobalsRow();
     this.grid.levelRow(0, 6, row);
   }
 
 
   updateActiveRampSequenceIndex(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rampSequence0 == undefined) return;
     if (press.s == 1) {
       gridPage.activeSegment = undefined;
       gridPage.activeTrack.editableRampSequence = press.x == 0 ? 0 : 1;
@@ -87,6 +98,7 @@ export class RampSequenceController extends ApplicationController {
 
 
   toggleRampSequence(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rampSequence0 == undefined) return;
     if (press.s == 1) {
       const rampSequence = gridPage.activeTrack.getEditableRampSequence();
       rampSequence.active = !rampSequence.active;
@@ -102,6 +114,7 @@ export class RampSequenceController extends ApplicationController {
 
 
   updateSegment(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rampSequence0 == undefined) return;
     if (press.s == 1) {
 
       const rampSequence = gridPage.activeTrack.getEditableRampSequence();
@@ -129,6 +142,7 @@ export class RampSequenceController extends ApplicationController {
 
 
   updateSubdivision(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rampSequence0 == undefined) return;
     if (!gridPage.activeSegment || press.s != 1) return;
 
     const rampSequence = gridPage.activeTrack.getEditableRampSequence();
@@ -141,6 +155,7 @@ export class RampSequenceController extends ApplicationController {
 
 
   updateRange(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rampSequence0 == undefined) return;
     if (!gridPage.activeSegment) return;
 
     // Button press
@@ -197,6 +212,8 @@ export class RampSequenceController extends ApplicationController {
 
 
   gridSubdivisionRow(): number[] {
+    if (this.activeTrack.rampSequence0 == undefined) return new Array(16).fill(INACTIVE_BRIGHTNESS);
+
     const segmentRow   = new Array(16).fill(INACTIVE_BRIGHTNESS);
     const rampSequence = this.activeTrack.getEditableRampSequence();
 
@@ -213,6 +230,8 @@ export class RampSequenceController extends ApplicationController {
 
 
   gridSegmentRow(): number[] {
+    if (this.activeTrack.rampSequence0 == undefined) return new Array(16).fill(INACTIVE_BRIGHTNESS);
+
     const segmentRow   = new Array(16).fill(INACTIVE_BRIGHTNESS);
     const rampSequence = this.activeTrack.getEditableRampSequence();
 

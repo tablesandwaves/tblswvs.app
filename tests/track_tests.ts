@@ -547,7 +547,7 @@ describe("AbletonTrack", () => {
 
 
   describe("truncating note durations for overlapping notes", () => {
-    const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1});
+    const track = new AbletonTrack(daw, {name: "Kick", dawIndex: 1, rampSequencer: false});
     track.rhythmStepLength = 16;
     track.noteLength       = "8n";
     track.rhythm = rhythmStepsForPattern([
@@ -605,7 +605,7 @@ describe("AbletonTrack", () => {
 
   describe("a drum pad note sequence", () => {
     describe("setting a single step", () => {
-      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4, rampSequencer: false});
       track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
 
       it("should update the rhythm", () => {
@@ -624,7 +624,7 @@ describe("AbletonTrack", () => {
 
 
     describe("setting a single step with polyphony", () => {
-      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4, rampSequencer: false});
       track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}, {octave: 1, note: "D", midi: 38}]);
 
       it("should update the rhythm", () => {
@@ -646,7 +646,7 @@ describe("AbletonTrack", () => {
 
 
     describe("setting multiple steps", () => {
-      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4, rampSequencer: false});
       track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
       track.setDrumPadStep(8, [{octave: 1, note: "Eb", midi: 39}]);
 
@@ -669,7 +669,7 @@ describe("AbletonTrack", () => {
 
 
     describe("removing a step", () => {
-      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4, rampSequencer: false});
       track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
       track.setDrumPadStep(8, [{octave: 1, note: "Eb", midi: 39}]);
       track.setDrumPadStep(0, undefined);
@@ -690,7 +690,7 @@ describe("AbletonTrack", () => {
 
 
     describe("removing one note from a step with multiple notes", () => {
-      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+      const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4, rampSequencer: false});
       track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}, {octave: 1, note: "D", midi: 38}]);
       track.setDrumPadStep(0, [{octave: 1, note: "D", midi: 38}]);
 
@@ -711,7 +711,7 @@ describe("AbletonTrack", () => {
 
 
   describe("editing the rhythm step length", () => {
-    const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4});
+    const track = new AbletonTrack(daw, {name: "Perc", dawIndex: 4, rampSequencer: false});
     track.rhythmStepLength = 16;
     track.rhythm = rhythmStepsForPattern([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,

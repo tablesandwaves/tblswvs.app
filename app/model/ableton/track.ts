@@ -12,6 +12,7 @@ import { scaleToRange } from "../../helpers/utils";
 export type TrackConfig = {
   name: string,
   dawIndex: number,
+  rampSequencer: boolean,
   chains?: ChainConfig[]
 }
 
@@ -137,8 +138,10 @@ export class AbletonTrack {
 
     this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
 
-    this.rampSequence0 = new RampSequence();
-    this.rampSequence1 = new RampSequence();
+    if (config.rampSequencer) {
+      this.rampSequence0 = new RampSequence();
+      this.rampSequence1 = new RampSequence();
+    }
 
     this.shiftRegister = new ShiftRegister();
   }
