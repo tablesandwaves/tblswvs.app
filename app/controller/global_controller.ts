@@ -124,7 +124,7 @@ export class GlobalController extends ApplicationController {
       track.rhythmAlgorithm  = gridPage.matrix[press.y][press.x].value;
 
       const rhythmSteps = new Array(32).fill(undefined)
-                                       .map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined}));
+                                       .map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined, timingOffset: 0}));
       voice.hits.forEach((hit, i) => {
         rhythmSteps[hit].state = 1;
         rhythmSteps[hit].velocity = voice.velocities[i];

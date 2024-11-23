@@ -22,6 +22,7 @@ export type RhythmStep = {
   probability: number;
   fillRepeats: number;
   velocity?: number;
+  timingOffset: number;
   noteLength?: "16n"|"8n"|"8nd"|"4n"|"4nd"|"2n"|"2nd"|"1n";
 };
 
@@ -129,7 +130,7 @@ export class AbletonTrack {
     }
 
     for (let i = 0; i < this.rhythm.length; i++) {
-      this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
+      this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
     }
 
     for (let i = 0; i < this.#sequence.length; i++) {
@@ -514,7 +515,7 @@ export class AbletonTrack {
         32 - this.#rhythmStepLength,
         32 - this.#rhythmStepLength,
         ...[...new Array(32 - this.#rhythmStepLength)].map(() => {
-          return {state: 0, probability: 1, fillRepeats: 0};
+          return {state: 0, probability: 1, fillRepeats: 0, timingOffset: 0};
         })
       );
     }
@@ -561,7 +562,7 @@ export class AbletonTrack {
         if (this.rhythmAlgorithm == "accelerating") {
 
           // Generate acceleration note repeats
-          const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0 };
+          const acceleratingRhythmStep = { state: 1, probability: 1, fillRepeats: 0, timingOffset: 0 };
           const spreadAmount           = (rhythmIndicesAndOffsets[step % stepLength] * 0.25);
           const offset                 = (step % stepLength) * 0.25;
 
@@ -753,7 +754,7 @@ export class AbletonTrack {
     let rhythm: RhythmStep[] = new Array();
 
     for (let i = 0; i < 16 * this.daw.sequencer.superMeasure; i++) {
-      rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0};
+      rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
     }
 
     for (let measure = 0; measure < this.daw.sequencer.superMeasure; measure++) {
@@ -820,6 +821,7 @@ export class AbletonTrack {
 
   updateGuiRampSequence() {
     if (this.daw.sequencer.gui == undefined) return;
+    if (this.rampSequence0 == undefined) return;
     this.daw.sequencer.gui.webContents.send(
       "update-ramp-sequence",
       this.editableRampSequence == 0 ? this.rampSequence0.deviceData() : this.rampSequence1.deviceData(),

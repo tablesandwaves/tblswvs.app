@@ -3,7 +3,7 @@ import { RhythmStep } from "../model/ableton/track";
 
 export const surroundRhythm = (sourceRhythm: RhythmStep[]): RhythmStep[] => {
   const surroundingRhythm: RhythmStep[] = [...new Array(sourceRhythm.length)].map(() => {
-    return {state: 0, probability: 1, fillRepeats: 0};
+    return {state: 0, probability: 1, fillRepeats: 0, timingOffset: 0};
   });
 
   sourceRhythm.forEach((step, i, steps) => {

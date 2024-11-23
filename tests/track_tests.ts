@@ -475,7 +475,7 @@ describe("AbletonTrack", () => {
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
-      track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
+      track.rhythm[0] = {state: 1, probability: 1, fillRepeats: 0, timingOffset: 0};
       track.setInputNotes([
         [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
@@ -515,8 +515,8 @@ describe("AbletonTrack", () => {
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
-    track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 3};
-    track.fillMeasures[1]  = 1;
+    track.rhythm[0]       = {state: 1, probability: 1, fillRepeats: 3, timingOffset: 0};
+    track.fillMeasures[1] = 1;
     track.updateCurrentAbletonNotes();
     const abletonNotes = track.currentAbletonNotes.sort((a, b) => {
       if (a.clipPosition > b.clipPosition) return 1;
@@ -554,9 +554,9 @@ describe("AbletonTrack", () => {
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
-    track.rhythm[0]        = {state: 1, probability: 1, fillRepeats: 0};
-    track.rhythm[1]        = {state: 1, probability: 1, fillRepeats: 0};
-    track.rhythm[4]        = {state: 1, probability: 1, fillRepeats: 0};
+    track.rhythm[0] = {state: 1, probability: 1, fillRepeats: 0, timingOffset: 0};
+    track.rhythm[1] = {state: 1, probability: 1, fillRepeats: 0, timingOffset: 0};
+    track.rhythm[4] = {state: 1, probability: 1, fillRepeats: 0, timingOffset: 0};
 
     describe("when successive overlapping notes share the same pitch", () => {
       track.setInputNotes([[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]]);
