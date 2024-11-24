@@ -66,14 +66,14 @@ describe("TimingController", () => {
     });
 
     it("updates the active track rhythm steps", () => {
-      expect(track.rhythm[0].timingOffset).to.equal(0.15);
-      expect(track.rhythm[4].timingOffset).to.equal(-0.15);
+      expect(track.rhythm[0].timingOffset).to.equal(0.25);
+      expect(track.rhythm[4].timingOffset).to.equal(-0.25);
     });
 
     it("updates the active track's Ableton notes", () => {
       track.updateCurrentAbletonNotes();
-      expect(track.currentAbletonNotes[0].clipPosition).to.equal(0.0375);
-      expect(track.currentAbletonNotes[2].clipPosition).to.equal(0.9625);
+      expect(track.currentAbletonNotes[0].clipPosition).to.equal(0.0625);
+      expect(track.currentAbletonNotes[2].clipPosition).to.equal(0.9375);
     });
   });
 });
