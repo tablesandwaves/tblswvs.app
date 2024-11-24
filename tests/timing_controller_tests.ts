@@ -39,4 +39,41 @@ describe("TimingController", () => {
       });
     });
   });
+
+
+  describe("when editing timings page", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    const track     = sequencer.daw.getActiveTrack();
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,
+      1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
+    ]);
+
+    // Select the rhythm page and page over two to the right
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const controller = sequencer.grid.activePage as TimingController;
+
+    // Set the downbeat late by 0.15, the backbeat early by 0.15
+    sequencer.grid.keyPress({y: 1, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    const rowMatrix = controller.gridRowMatrix();
+
+    it("updates the display matrix", () => {
+      [1, 2, 3].forEach(y => expect(rowMatrix[y][0]).to.eq(10));
+      [3, 4, 5].forEach(y => expect(rowMatrix[y][4]).to.eq(10));
+    });
+
+    it("updates the active track rhythm steps", () => {
+      expect(track.rhythm[0].timingOffset).to.equal(0.15);
+      expect(track.rhythm[4].timingOffset).to.equal(-0.15);
+    });
+
+    it("updates the active track's Ableton notes", () => {
+      track.updateCurrentAbletonNotes();
+      expect(track.currentAbletonNotes[0].clipPosition).to.equal(0.0375);
+      expect(track.currentAbletonNotes[2].clipPosition).to.equal(0.9625);
+    });
+  });
 });

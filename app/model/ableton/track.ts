@@ -592,7 +592,8 @@ export class AbletonTrack {
             const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
             velocity = defaultVelocities[rhythmIndex] * MAX_VELOCITY + deviation;
           }
-          noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, step * 0.25, duration, velocity));
+          const clipPosition = (step * 0.25) + (rhythmStep.timingOffset * 0.25);
+          noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, clipPosition, duration, velocity));
         }
       });
       noteIndex += 1;
@@ -648,13 +649,11 @@ export class AbletonTrack {
 
 
   #abletonNoteForNote(note: note, rhythmStep: RhythmStep, clipPosition: number, duration: number, velocity?: number): AbletonNote {
-
-    const _velocity = velocity ? velocity : (rhythmStep.velocity ? rhythmStep.velocity : 64);
     return new AbletonNote(
       note.midi,
       clipPosition,
       duration,
-      _velocity,
+      velocity ? velocity : (rhythmStep.velocity ? rhythmStep.velocity : 64),
       (this.randomizing && this.daw.mutating ? 1 : rhythmStep.probability)
     )
   }

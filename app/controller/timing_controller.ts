@@ -2,6 +2,7 @@ import { ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS, A
 import { MonomeGrid } from "../model/monome_grid";
 import { RhythmStep } from "../model/ableton/track";
 
+
 export class TimingController extends ApplicationController {
   type = "Rhythm";
   keyReleaseFunctionality = false;
@@ -26,8 +27,16 @@ export class TimingController extends ApplicationController {
   }
 
 
-  updateValue() {
+  updateValue(gridPage: TimingController, press: GridKeyPress) {
+    const stepIndex = press.x + (gridPage.grid.shiftStateActive ? 16 : 0);
 
+    // Only edit dynamics for steps that are active
+    if (gridPage.activeTrack.rhythm[stepIndex].state == 1) {
+      gridPage.activeTrack.rhythm[stepIndex].timingOffset = gridPage.matrix[press.y][press.x].value;
+      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+      gridPage.setGridTimingDisplay();
+      gridPage.updateGuiRhythmDisplay();
+    }
   }
 
 
