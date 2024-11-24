@@ -582,7 +582,7 @@ export class AbletonTrack {
             );
           }
         } else {
-          // Add the current note with no modifications
+          // Add the current note with no acceleration or fills
           const duration = rhythmStep.noteLength ? noteLengthMap[rhythmStep.noteLength].size : defaultDuration;
           let velocity;
           if (rhythmStep.velocity) {
@@ -592,7 +592,7 @@ export class AbletonTrack {
             const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
             velocity = defaultVelocities[rhythmIndex] * MAX_VELOCITY + deviation;
           }
-          const clipPosition = (step * 0.25) + (rhythmStep.timingOffset * 0.25);
+          const clipPosition = (step * 0.25) + (this.#timingOffset(rhythmStep, rhythmIndex) * 0.25);
           noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, clipPosition, duration, velocity));
         }
       });
@@ -611,6 +611,17 @@ export class AbletonTrack {
     }
 
     this.currentAbletonNotes = [...noteMap.values()].flat();
+  }
+
+
+  #timingOffset(rhythmStep: RhythmStep, i: number): number {
+    if (i == 0) return 0;
+
+    if (this.daw.sequencer.humanize) {
+      return Math.random() > 0.5 ? 0.1 : -0.1;
+    } else {
+      return rhythmStep.timingOffset;
+    }
   }
 
 

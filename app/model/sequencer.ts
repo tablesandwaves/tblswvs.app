@@ -54,6 +54,7 @@ export class Sequencer {
   testing: boolean;
   beatPatterns: BeatSet;
   activeBeatPattern: Beat = undefined;
+  humanize: boolean = false;
 
 
   constructor(configDirectory: string, testing: boolean = false) {

@@ -36,6 +36,7 @@ export class GlobalController extends ApplicationController {
     this.functionMap.set("setScale", this.setScale);
     this.functionMap.set("setTonic", this.setTonic);
     this.functionMap.set("setBeat", this.setBeat);
+    this.functionMap.set("setTiming", this.setTiming);
   }
 
 
@@ -135,6 +136,18 @@ export class GlobalController extends ApplicationController {
 
     gridPage.setGridBeatPatternDisplay();
     gridPage.updateGuiRhythmDisplay();
+    gridPage.activeTrack.updateGuiPianoRoll();
+  }
+
+
+  setTiming(gridPage: GlobalController, press: GridKeyPress) {
+    switch (gridPage.matrix[press.y][press.x].value) {
+      case "humanize":
+        gridPage.grid.sequencer.humanize = !gridPage.grid.sequencer.humanize;
+        break;
+    }
+
+    gridPage.grid.sequencer.daw.tracks.slice(0, 3).forEach(track => gridPage.grid.sequencer.setNotesInLive(track));
     gridPage.activeTrack.updateGuiPianoRoll();
   }
 

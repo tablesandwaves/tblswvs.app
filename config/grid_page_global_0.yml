@@ -104,7 +104,7 @@ matrices:
     gropu: beats
     type: radio
     rowStart: 4
-    rowEnd: 6
+    rowEnd: 5
     columnStart: 8
     columnEnd: 15
     mapping: setBeat
@@ -123,16 +123,23 @@ matrices:
         - hip_hop/hip_hop_4
         - hip_hop/hip_hop_7
         - hip_hop/hip_hop_8
-        - undefined
-        - undefined
-        - undefined
-        - undefined
-      -
         - hip_hop/funky_drummer
         - hip_hop/amen_break
         - hip_hop/funky_president
         - hip_hop/levee
-        - undefined
-        - undefined
-        - undefined
-        - undefined
+  -
+    name: Timings
+    description: Predefined timing patterns for multiple tracks
+    gropu: timings
+    type: toggle
+    rowStart: 6
+    rowEnd: 6
+    columnStart: 12
+    columnEnd: 15
+    mapping: setTiming
+    rowValues:
+      -
+        - humanize
+        - ghosts
+        - hh_swing
+        - drunk
