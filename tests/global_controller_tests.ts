@@ -28,7 +28,7 @@ describe("GlobalController", () => {
         1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
       ]);
 
-      // Select the rhythm page and page over two to the right
+      // Select the global page
       sequencer.grid.keyPress({y: 7, x: 12, s: 1});
       const controller = sequencer.grid.activePage as GlobalController;
 
@@ -53,6 +53,53 @@ describe("GlobalController", () => {
 
       it("does not humanize step rhythm step 0", () => {
         expect(track.currentAbletonNotes[0].clipPosition).to.equal(0);
+      });
+    });
+
+
+    describe("hihat swing", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+
+      // Set the kick track to a the 4n drum pattern
+      sequencer.daw.tracks[0].rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0
+      ]);
+
+      // Set the hihat track to an 8n drum pattern
+      sequencer.grid.keyPress({y: 7, x: 2, s: 1});
+      sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern([
+        1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,
+        1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
+      ]);
+
+      // Select the global page
+      sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+
+      // Engage the hihat swing algorithm
+      sequencer.grid.keyPress({y: 6, x: 13, s: 1});
+
+      it("sets hihat swing in the sequencer", () => expect(sequencer.hihatSwing).to.be.true);
+
+      it("leaves individual rhythm voice track rhythm steps intact", () => {
+        sequencer.daw.tracks[2].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
+      });
+
+      it("swings every second hihat note at the point of generating Ableton notes", () => {
+        sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+        sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
+          if (i % 2 != 0) {
+            const noOffsetExpectedPosition = i * 0.25 * 2;
+            expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(0.1125);
+          }
+        });
+      });
+
+      it("does not swing a non-hihat track", () => {
+        sequencer.daw.tracks[0].updateCurrentAbletonNotes();
+        sequencer.daw.tracks[0].currentAbletonNotes.forEach((note, noOffsetExpectedPosition) => {
+          expect(note.clipPosition).to.equal(noOffsetExpectedPosition);
+        });
       });
     });
   });

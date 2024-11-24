@@ -617,7 +617,9 @@ export class AbletonTrack {
   #timingOffset(rhythmStep: RhythmStep, i: number): number {
     if (i == 0) return 0;
 
-    if (this.daw.sequencer.humanize) {
+    if (this.name == "HiHat" && this.daw.sequencer.hihatSwing && i % 2 == 0) {
+      return 0.45;
+    } else if (this.daw.sequencer.humanize) {
       return Math.random() > 0.5 ? 0.1 : -0.1;
     } else {
       return rhythmStep.timingOffset;

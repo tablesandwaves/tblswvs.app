@@ -55,6 +55,7 @@ export class Sequencer {
   beatPatterns: BeatSet;
   activeBeatPattern: Beat = undefined;
   humanize: boolean = false;
+  hihatSwing: boolean = false;
 
 
   constructor(configDirectory: string, testing: boolean = false) {

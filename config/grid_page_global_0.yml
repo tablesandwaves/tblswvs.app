@@ -140,6 +140,6 @@ matrices:
     rowValues:
       -
         - humanize
-        - ghosts
-        - hh_swing
+        - hihat_swing
         - drunk
+        - ghosts
