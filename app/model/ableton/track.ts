@@ -615,9 +615,16 @@ export class AbletonTrack {
 
 
   #timingOffset(rhythmStep: RhythmStep, i: number): number {
-    if (i == 0) return 0;
+    if (this.name == "Kick" && i == 0) return 0;
 
-    if (this.name == "HiHat" && this.daw.sequencer.hihatSwing && i % 2 == 0) {
+    if (this.name == "Snare" && this.daw.sequencer.drunk && i % 4 == 0) {
+      return -0.45;
+    } else if (this.name == "HiHat" && this.daw.sequencer.drunk) {
+      // Coin flips for both smal to medium offset and early or late offset
+      return Math.random() > 0.5 ?
+             Math.random() > 0.5 ? 0.1  : -0.1 :
+             Math.random() > 0.5 ? 0.25 : -0.25;
+    } else if (this.name == "HiHat" && this.daw.sequencer.hihatSwing && i % 2 == 0) {
       return 0.45;
     } else if (this.daw.sequencer.humanize) {
       return Math.random() > 0.5 ? 0.1 : -0.1;

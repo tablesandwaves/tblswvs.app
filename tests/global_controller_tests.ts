@@ -67,7 +67,6 @@ describe("GlobalController", () => {
       ]);
 
       // Set the hihat track to an 8n drum pattern
-      sequencer.grid.keyPress({y: 7, x: 2, s: 1});
       sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern([
         1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,
         1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
@@ -82,6 +81,7 @@ describe("GlobalController", () => {
       it("sets hihat swing in the sequencer", () => expect(sequencer.hihatSwing).to.be.true);
 
       it("leaves individual rhythm voice track rhythm steps intact", () => {
+        sequencer.daw.tracks[0].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
         sequencer.daw.tracks[2].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
       });
 
@@ -96,6 +96,67 @@ describe("GlobalController", () => {
       });
 
       it("does not swing a non-hihat track", () => {
+        sequencer.daw.tracks[0].updateCurrentAbletonNotes();
+        sequencer.daw.tracks[0].currentAbletonNotes.forEach((note, noOffsetExpectedPosition) => {
+          expect(note.clipPosition).to.equal(noOffsetExpectedPosition);
+        });
+      });
+    });
+
+
+    describe("drunk", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+
+      // Set the kick track to a the 4n drum pattern
+      sequencer.daw.tracks[0].rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
+        1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0
+      ]);
+
+      // Set the snare track to a backbeat pattern
+      sequencer.daw.tracks[1].rhythm = rhythmStepsForPattern([
+        0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
+        0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+      ]);
+
+      // Set the hihat track to an 8n drum pattern
+      sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern([
+        1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,
+        1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
+      ]);
+
+      // Select the global page
+      sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+
+      // Engage the drunk algorithm
+      sequencer.grid.keyPress({y: 6, x: 14, s: 1});
+
+      it("sets drunk in the sequencer", () => expect(sequencer.drunk).to.be.true);
+
+      it("leaves individual rhythm voice track rhythm steps intact", () => {
+        sequencer.daw.tracks[0].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
+        sequencer.daw.tracks[1].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
+        sequencer.daw.tracks[2].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
+      });
+
+      it("shifts the snares very early", () => {
+        sequencer.daw.tracks[1].updateCurrentAbletonNotes();
+        sequencer.daw.tracks[1].currentAbletonNotes.forEach((note, i) => {
+          const noOffsetExpectedPosition = i * 2 + 1;
+          expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(-0.1125);
+        });
+      });
+
+      it("adds a small to medium amount of random variation to the hihats", () => {
+        sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+        sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
+          const noOffsetExpectedPosition = i * 0.25 * 2;
+          expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000)
+            .to.satisfy((value: number) => Math.abs(value) == 0.025 || Math.abs(value) == 0.0625);
+        });
+      });
+
+      it("does not adjust timing of the track", () => {
         sequencer.daw.tracks[0].updateCurrentAbletonNotes();
         sequencer.daw.tracks[0].currentAbletonNotes.forEach((note, noOffsetExpectedPosition) => {
           expect(note.clipPosition).to.equal(noOffsetExpectedPosition);

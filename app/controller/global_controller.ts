@@ -148,6 +148,9 @@ export class GlobalController extends ApplicationController {
       case "hihat_swing":
         gridPage.grid.sequencer.hihatSwing = !gridPage.grid.sequencer.hihatSwing;
         break;
+      case "drunk":
+        gridPage.grid.sequencer.drunk = !gridPage.grid.sequencer.drunk;
+        break;
     }
 
     gridPage.grid.sequencer.daw.tracks.slice(0, 3).forEach(track => gridPage.grid.sequencer.setNotesInLive(track));
