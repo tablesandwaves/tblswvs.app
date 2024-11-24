@@ -20,6 +20,7 @@ module.exports = {
       "./dist/config/grid_page_rhythm_0.yml",
       "./dist/config/grid_page_rhythm_1.yml",
       "./dist/config/grid_page_rhythm_2.yml",
+      "./dist/config/grid_page_rhythm_3.yml",
       "./dist/config/patterns_beats.yml",
       "./dist/config/tracks.yml",
       "./dist/config/tracks_2024.3.yml",
