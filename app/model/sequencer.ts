@@ -57,6 +57,7 @@ export class Sequencer {
   humanize: boolean = false;
   hihatSwing: boolean = false;
   drunk: boolean = false;
+  ghostNotes: boolean = false;
 
 
   constructor(configDirectory: string, testing: boolean = false) {

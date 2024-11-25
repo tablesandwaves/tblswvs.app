@@ -163,5 +163,89 @@ describe("GlobalController", () => {
         });
       });
     });
+
+
+    describe("ghost notes", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+
+      // Set the kick track to a the 2n drum pattern
+      const kickGatePattern: (0|1)[] = [
+        1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+        1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0
+      ];
+      sequencer.daw.tracks[0].rhythm = rhythmStepsForPattern(kickGatePattern);
+
+      // Set the snare track to a backbeat pattern
+      const snareGatePattern: (0|1)[] = [
+        0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
+        0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+      ];
+      sequencer.daw.tracks[1].rhythm = rhythmStepsForPattern(snareGatePattern);
+
+      // Set the hihat track to a weak beats drum pattern
+      const hihatGatePattern: (0|1)[] = [
+        0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0,
+        0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0
+      ];
+      sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern(hihatGatePattern);
+
+      // Select the global page and engage the drunk algorithm
+      sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+
+      sequencer.daw.tracks[0].updateCurrentAbletonNotes();
+      sequencer.daw.tracks[1].updateCurrentAbletonNotes();
+      sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+
+      it("sets ghosts in the sequencer", () => expect(sequencer.ghostNotes).to.be.true);
+
+      it("leaves individual rhythm voice track rhythm steps intact", () => {
+        expect(sequencer.daw.tracks[0].rhythm.map(n => n.state)).to.have.ordered.members(kickGatePattern);
+        expect(sequencer.daw.tracks[1].rhythm.map(n => n.state)).to.have.ordered.members(snareGatePattern);
+        expect(sequencer.daw.tracks[2].rhythm.map(n => n.state)).to.have.ordered.members(hihatGatePattern);
+      });
+
+      it("adds ghost kicks between the 1st and 2nd hits and between the 3rd and 4th hits", () => {
+        expect(sequencer.daw.tracks[0].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition < 2;
+        }).length).to.eq(2);
+        expect(sequencer.daw.tracks[0].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 4 && abletonNote.clipPosition < 6;
+        }).length).to.eq(2);
+      });
+
+      it("adds ghost snares between the 1st and 2nd hits and between the 3rd and 4th hits", () => {
+        expect(sequencer.daw.tracks[1].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 1 && abletonNote.clipPosition < 3;
+        }).length).to.eq(2);
+        expect(sequencer.daw.tracks[1].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 5 && abletonNote.clipPosition < 7;
+        }).length).to.eq(2);
+      });
+
+      it("does not add ghost notes to the hihat track", () => {
+        expect(sequencer.daw.tracks[2].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 0 && abletonNote.clipPosition < 8;
+        }).length).to.eq(8);
+      });
+
+      it("does not add ghost kicks between the 2nd and 3rd hits or after the 4th hit", () => {
+        expect(sequencer.daw.tracks[0].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 2 && abletonNote.clipPosition < 4;
+        }).length).to.eq(1);
+        expect(sequencer.daw.tracks[0].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 6 && abletonNote.clipPosition < 8;
+        }).length).to.eq(1);
+      });
+
+      it("does not add ghost snares between the 2nd and 3rd hits or after the 4th hit", () => {
+        expect(sequencer.daw.tracks[1].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 3 && abletonNote.clipPosition < 5;
+        }).length).to.eq(1);
+        expect(sequencer.daw.tracks[1].currentAbletonNotes.filter(abletonNote => {
+          return abletonNote.clipPosition >= 7 && abletonNote.clipPosition < 8;
+        }).length).to.eq(1);
+      });
+    });
   });
 });

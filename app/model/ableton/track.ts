@@ -5,7 +5,7 @@ import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note"
 import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 import { RampSequence } from "./ramp_sequence";
-import { surroundRhythm, acceleratingBeatPositions } from "../../helpers/rhythm_algorithms";
+import { surroundRhythm, acceleratingBeatPositions, ghostNotesFor } from "../../helpers/rhythm_algorithms";
 import { scaleToRange } from "../../helpers/utils";
 
 
@@ -61,7 +61,7 @@ export const rhythmAlgorithms: Record<string, number> = {
 const SHIFT_REG_OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
 
 
-const CLIP_16N_COUNT = 128;
+export const CLIP_16N_COUNT = 128;
 
 
 export class AbletonTrack {
@@ -597,6 +597,13 @@ export class AbletonTrack {
         }
       });
       noteIndex += 1;
+    }
+
+    if (this.daw.sequencer.ghostNotes && (this.name == "Kick" || this.name == "Snare")) {
+      ghostNotesFor(this.#rhythm).forEach(abletonNote => {
+        if (!noteMap.has(abletonNote.midi)) noteMap.set(abletonNote.midi, []);
+        noteMap.get(abletonNote.midi).push(abletonNote);
+      });
     }
 
     // Finally, deal with overlapping notes. Depending on the order in which Live processes notes,

@@ -151,6 +151,9 @@ export class GlobalController extends ApplicationController {
       case "drunk":
         gridPage.grid.sequencer.drunk = !gridPage.grid.sequencer.drunk;
         break;
+      case "ghost_notes":
+        gridPage.grid.sequencer.ghostNotes = !gridPage.grid.sequencer.ghostNotes;
+        break;
     }
 
     gridPage.grid.sequencer.daw.tracks.slice(0, 3).forEach(track => gridPage.grid.sequencer.setNotesInLive(track));
