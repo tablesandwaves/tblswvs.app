@@ -57,6 +57,7 @@ export class GlobalController extends ApplicationController {
     this.setGridScaleDisplay();
     this.setGridTonicDisplay();
     this.setGridBeatPatternDisplay();
+    this.setGridTimingAlgorithmDisplay();
 
     for (let i = 0; i < 6; i++)
       this.setGridChainRow(i);
@@ -157,13 +158,24 @@ export class GlobalController extends ApplicationController {
     }
 
     gridPage.grid.sequencer.daw.tracks.slice(0, 3).forEach(track => gridPage.grid.sequencer.setNotesInLive(track));
+    gridPage.setGridTimingAlgorithmDisplay();
     gridPage.activeTrack.updateGuiPianoRoll();
+  }
+
+
+  setGridTimingAlgorithmDisplay() {
+    const row = new Array(8).fill(0);
+    if (this.grid.sequencer.humanize)   row[4] = ACTIVE_BRIGHTNESS;
+    if (this.grid.sequencer.hihatSwing) row[5] = ACTIVE_BRIGHTNESS;
+    if (this.grid.sequencer.drunk)      row[6] = ACTIVE_BRIGHTNESS;
+    if (this.grid.sequencer.ghostNotes) row[7] = ACTIVE_BRIGHTNESS;
+    this.grid.levelRow(8, 6, row);
   }
 
 
   setGridBeatPatternDisplay() {
     if (this.grid.sequencer.activeBeatPattern) {
-      for (let y = 4; y <= 6; y++) {
+      for (let y = 4; y <= 5; y++) {
         let row = blank8x1Row.slice();
         if (this.grid.sequencer.activeBeatPattern.button_xy[1] == y)
           row[this.grid.sequencer.activeBeatPattern.button_xy[0]] = ACTIVE_BRIGHTNESS;
