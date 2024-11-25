@@ -35,14 +35,15 @@ describe("GlobalController", () => {
       // Engage the humanize algorithm
       sequencer.grid.keyPress({y: 6, x: 12, s: 1});
 
+      track.updateCurrentAbletonNotes();
+
       it("sets huminization in the sequencer", () => expect(sequencer.humanize).to.be.true);
 
       it("leaves individual rhythm voice track rhythm steps intact", () => {
         track.rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
       });
 
-      it("humanizes at the point of generating Ableton notes", () => {
-        track.updateCurrentAbletonNotes();
+      it("humanizes at the point of generating Ableton notes: small +/- offsets", () => {
         track.currentAbletonNotes.forEach((note, i) => {
           if (i % 8 != 0) {
             const noOffsetExpectedPosition = i * 0.25 * 2;
@@ -51,7 +52,7 @@ describe("GlobalController", () => {
         });
       });
 
-      it("does not humanize step rhythm step 0", () => {
+      it("does not humanize rhythm step 0", () => {
         expect(track.currentAbletonNotes[0].clipPosition).to.equal(0);
       });
     });
@@ -78,6 +79,9 @@ describe("GlobalController", () => {
       // Engage the hihat swing algorithm
       sequencer.grid.keyPress({y: 6, x: 13, s: 1});
 
+      sequencer.daw.tracks[0].updateCurrentAbletonNotes();
+      sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+
       it("sets hihat swing in the sequencer", () => expect(sequencer.hihatSwing).to.be.true);
 
       it("leaves individual rhythm voice track rhythm steps intact", () => {
@@ -85,8 +89,7 @@ describe("GlobalController", () => {
         sequencer.daw.tracks[2].rhythm.forEach(step => expect(step.timingOffset).to.equal(0));
       });
 
-      it("swings every second hihat note at the point of generating Ableton notes", () => {
-        sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+      it("swings every second hihat note at the point of generating Ableton notes: large + offsets", () => {
         sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
           if (i % 2 != 0) {
             const noOffsetExpectedPosition = i * 0.25 * 2;
@@ -125,11 +128,13 @@ describe("GlobalController", () => {
         1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
       ]);
 
-      // Select the global page
+      // Select the global page and engage the drunk algorithm
       sequencer.grid.keyPress({y: 7, x: 12, s: 1});
-
-      // Engage the drunk algorithm
       sequencer.grid.keyPress({y: 6, x: 14, s: 1});
+
+      sequencer.daw.tracks[0].updateCurrentAbletonNotes();
+      sequencer.daw.tracks[1].updateCurrentAbletonNotes();
+      sequencer.daw.tracks[2].updateCurrentAbletonNotes();
 
       it("sets drunk in the sequencer", () => expect(sequencer.drunk).to.be.true);
 
@@ -140,7 +145,6 @@ describe("GlobalController", () => {
       });
 
       it("shifts the snares very early", () => {
-        sequencer.daw.tracks[1].updateCurrentAbletonNotes();
         sequencer.daw.tracks[1].currentAbletonNotes.forEach((note, i) => {
           const noOffsetExpectedPosition = i * 2 + 1;
           expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(-0.1125);
@@ -148,7 +152,6 @@ describe("GlobalController", () => {
       });
 
       it("adds a small to medium amount of random variation to the hihats", () => {
-        sequencer.daw.tracks[2].updateCurrentAbletonNotes();
         sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
           const noOffsetExpectedPosition = i * 0.25 * 2;
           expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000)
@@ -156,8 +159,7 @@ describe("GlobalController", () => {
         });
       });
 
-      it("does not adjust timing of the track", () => {
-        sequencer.daw.tracks[0].updateCurrentAbletonNotes();
+      it("does not adjust timing of the kick track", () => {
         sequencer.daw.tracks[0].currentAbletonNotes.forEach((note, noOffsetExpectedPosition) => {
           expect(note.clipPosition).to.equal(noOffsetExpectedPosition);
         });
@@ -245,6 +247,117 @@ describe("GlobalController", () => {
         expect(sequencer.daw.tracks[1].currentAbletonNotes.filter(abletonNote => {
           return abletonNote.clipPosition >= 7 && abletonNote.clipPosition < 8;
         }).length).to.eq(1);
+      });
+    });
+
+
+    describe("pattern precedence", () => {
+      describe("when hihat swing + and humanization are both set", () => {
+        const sequencer = new Sequencer(configDirectory, testing);
+
+        // Set the hihat track to a weak beats drum pattern
+        const hihatGatePattern: (0|1)[] = [
+          0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0,
+          0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0,  0, 0, 1, 0
+        ];
+        sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern(hihatGatePattern);
+
+        // Select the global page and engage the humanize and hihat swing algorithms
+        sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+        sequencer.grid.keyPress({y: 6, x: 12, s: 1});
+        sequencer.grid.keyPress({y: 6, x: 13, s: 1});
+
+        sequencer.daw.tracks[1].updateCurrentAbletonNotes();
+
+        it("sets huminization in the sequencer", () => expect(sequencer.humanize).to.be.true);
+        it("sets hihat swing in the sequencer", () => expect(sequencer.hihatSwing).to.be.true);
+
+        it("hihats are swung rather than humanized (large late offset)", () => {
+          sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
+            if (i % 2 != 0) {
+              const noOffsetExpectedPosition = i * 0.25 * 2;
+              expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(0.1125);
+            }
+          });
+        });
+      });
+
+
+      describe("when humanize and drunk are both set", () => {
+        const sequencer = new Sequencer(configDirectory, testing);
+
+        // Set the kick track to a the 4n drum pattern
+        sequencer.daw.tracks[0].rhythm = rhythmStepsForPattern([
+          1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,
+          1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0
+        ]);
+
+        // Set the snare track to a backbeat pattern
+        sequencer.daw.tracks[1].rhythm = rhythmStepsForPattern([
+          0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
+          0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0
+        ]);
+
+        // Set the hihat track to an 8n drum pattern
+        sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern([
+          1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,
+          1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
+        ]);
+
+        // Select the global page and engage humanization and drunk algorithm
+        sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+        sequencer.grid.keyPress({y: 6, x: 12, s: 1});
+        sequencer.grid.keyPress({y: 6, x: 14, s: 1});
+
+        sequencer.daw.tracks[1].updateCurrentAbletonNotes();
+        sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+
+        it("sets huminization in the sequencer", () => expect(sequencer.humanize).to.be.true);
+        it("sets drunk in the sequencer", () => expect(sequencer.drunk).to.be.true);
+
+        it("hihats are drunk rather than humanized (small and medium variation)", () => {
+          sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
+            const noOffsetExpectedPosition = i * 0.25 * 2;
+            expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000)
+              .to.satisfy((value: number) => Math.abs(value) == 0.025 || Math.abs(value) == 0.0625);
+          });
+        });
+
+        it("snares are drunk rather than humanized (only large early offsets)", () => {
+          sequencer.daw.tracks[1].currentAbletonNotes.forEach((note, i) => {
+            const noOffsetExpectedPosition = i * 2 + 1;
+            expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(-0.1125);
+          });
+        });
+      });
+
+
+      describe("when hihat swing + and drunk are both set", () => {
+        const sequencer = new Sequencer(configDirectory, testing);
+
+        // Set the hihat track to an 8n drum pattern
+        sequencer.daw.tracks[2].rhythm = rhythmStepsForPattern([
+          1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,
+          1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0
+        ]);
+
+        // Select the global page and engage hihat swing and drunk algorithms
+        sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+        sequencer.grid.keyPress({y: 6, x: 13, s: 1});
+        sequencer.grid.keyPress({y: 6, x: 14, s: 1});
+
+        sequencer.daw.tracks[2].updateCurrentAbletonNotes();
+
+        it("sets hihat swing in the sequencer", () => expect(sequencer.hihatSwing).to.be.true);
+        it("sets drunk in the sequencer", () => expect(sequencer.drunk).to.be.true);
+
+        it("hihats are drunk rather than swung (small and medium variation)", () => {
+          sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
+            const noOffsetExpectedPosition = i * 0.25 * 2;
+            expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000)
+              .to.satisfy((value: number) => Math.abs(value) == 0.025 || Math.abs(value) == 0.0625);
+          });
+        });
       });
     });
   });
