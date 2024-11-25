@@ -84,6 +84,17 @@ window.parameters.updateTrackChains((event: any, chains: any[], activeChainIndex
 });
 
 
+window.parameters.setTimingAlgorithms((event: any, algorithms: boolean[]) => {
+  const timingAlgoList = document.querySelectorAll("#global-timing-algorithms ul li");
+  timingAlgoList.forEach((item, i) => {
+    if (algorithms[i])
+      item.classList.add("on");
+    else
+      item.classList.remove("on");
+  });
+});
+
+
 window.parameters.updateTrackEvolution((event: any, randomizingTracks: number[], mutatingTracks: number[], soloingTracks: number[]) => {
   toggleEvolutionIndicator("randomizing", randomizingTracks);
   toggleEvolutionIndicator("mutating", mutatingTracks);

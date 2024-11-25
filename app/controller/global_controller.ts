@@ -159,6 +159,7 @@ export class GlobalController extends ApplicationController {
 
     gridPage.grid.sequencer.daw.tracks.slice(0, 3).forEach(track => gridPage.grid.sequencer.setNotesInLive(track));
     gridPage.setGridTimingAlgorithmDisplay();
+    gridPage.activeTrack.updateGlobalTimingAlgorithms();
     gridPage.activeTrack.updateGuiPianoRoll();
   }
 

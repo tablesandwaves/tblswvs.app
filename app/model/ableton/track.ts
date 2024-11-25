@@ -819,6 +819,7 @@ export class AbletonTrack {
     this.updateGuiChains();
     this.updateGuiRampSequence();
     this.updateGuiPianoRoll();
+    this.updateGlobalTimingAlgorithms();
   }
 
 
@@ -842,6 +843,19 @@ export class AbletonTrack {
         this.rhythmStepLength
       );
     }
+  }
+
+
+  updateGlobalTimingAlgorithms() {
+    this.daw.sequencer.gui.webContents.send(
+      "timing-algorithms",
+      [
+        this.daw.sequencer.humanize,
+        this.daw.sequencer.hihatSwing,
+        this.daw.sequencer.drunk,
+        this.daw.sequencer.ghostNotes
+      ]
+    );
   }
 
 
