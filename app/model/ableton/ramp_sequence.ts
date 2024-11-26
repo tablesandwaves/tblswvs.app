@@ -81,6 +81,27 @@ export class RampSequence {
   }
 
 
+  generateRandomSteps() {
+    let sequenceLength = 0;
+    this.segments = new Array();
+
+    while (sequenceLength < 16) {
+      const segmentLength = Math.ceil(Math.random() * 4);
+      const segmentRange  = Math.random();
+      const rampSegment = {
+        startIndex: sequenceLength,
+        length: segmentLength,
+        subdivisionLength: segmentLength,
+        range: {start: segmentRange, end: segmentRange}
+      }
+
+      this.segments.push(rampSegment);
+      sequenceLength += segmentLength;
+    }
+    this.segments.at(-1).length = 16 - this.segments.at(-1).startIndex;
+  }
+
+
   deviceData(): number[] {
     return this.segments.flatMap(segment => [
       segment.length,

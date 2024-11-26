@@ -182,8 +182,8 @@ export class RampSequenceController extends ApplicationController {
           gridPage.activeSegment.startIndex,
           RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.startIndex],
           gridPage.rampPressRange.endIndex == undefined ?
-          RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.startIndex] :
-          RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.endIndex]
+            RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.startIndex] :
+            RAMP_SEQ_RANGE_STEPS[gridPage.rampPressRange.endIndex]
         );
 
         gridPage.grid.sequencer.setRampSequence(gridPage.activeTrack);

@@ -254,4 +254,18 @@ describe("RampSequence", () => {
       });
     });
   });
+
+
+  describe("random steps", () => {
+    const rampSequence = new RampSequence();
+    rampSequence.generateRandomSteps();
+
+    it("generates at least 4 segments based on the max segment length", () => {
+      expect(rampSequence.segments.length).to.be.greaterThanOrEqual(4);
+    });
+
+    it("has segments with flat ramps", () => {
+      rampSequence.segments.forEach(segment => expect(segment.range.start).to.eq(segment.range.end));
+    });
+  });
 });
