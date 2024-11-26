@@ -317,7 +317,66 @@ describe("RhythmController", () => {
   });
 
 
-  describe("Editing steps in the transport row", () => {
+  describe("the pulse rate property", () => {
+    describe("editing the pulse rate", () => {
+      const [sequencer, track, controller] = getRhythmControllerMocks();
+
+      // Add a gate, with the change queuing on the press and applying on the release
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+      // Update the track's pulse rate
+      sequencer.grid.keyPress({y: 4, x: 9, s: 1});
+      track.updateCurrentAbletonNotes();
+
+      it("updates the active track's pulse rate", () => {
+        expect(track.pulseRate).to.eq("8n");
+      });
+
+      it("does not update the active track's rhythm step note lengths", () => {
+        expect(track.rhythm[0].noteLength).to.be.undefined;
+      });
+
+      it("scales the note length of the resulting Ableton notes", () => {
+        expect(track.currentAbletonNotes[0].duration).to.eq(0.5);
+      });
+    });
+
+
+    describe("editing the pulse rate when a rhythm step has set a note length", () => {
+      const [sequencer, track, controller] = getRhythmControllerMocks();
+
+      // Add a gate, with the change queuing on the press and applying on the release
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+      // Update the track's pulse rate to 8n
+      sequencer.grid.keyPress({y: 4, x: 9, s: 1});
+
+      // Set an explicit note length for the rhythm step: hold down step, press note length of 16n
+      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 5, x: 8, s: 1});
+      sequencer.grid.keyPress({y: 5, x: 8, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+      track.updateCurrentAbletonNotes();
+
+      it("updates the active track's pulse rate", () => {
+        expect(track.pulseRate).to.eq("8n");
+      });
+
+      it("updates the active track's rhythm step note length", () => {
+        expect(track.rhythm[0].noteLength).to.eq("16n");
+      });
+
+      it("does not scale the note length of the resulting Ableton notes because the step has a note length", () => {
+        expect(track.currentAbletonNotes[0].duration).to.eq(0.25);
+      });
+    });
+  });
+
+
+  describe("editing steps in the transport row", () => {
     describe("when the manual algorithm is selected and gate buttons are pressed", () => {
       const [sequencer, track, controller] = getRhythmControllerMocks();
 

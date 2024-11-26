@@ -531,7 +531,7 @@ export class AbletonTrack {
       return;
     }
 
-    const defaultDuration = noteLengthMap[this.noteLength].size,
+    const defaultDuration = noteLengthMap[this.noteLength].size * pulseRateMap[this.pulseRate].size,
           noteMap         = new Map<number,AbletonNote[]>(),
           sourceRhythm    = this.daw.mutating && this.randomizing ? this.#randomRhythm() : this.rhythm,
           stepLength      = this.daw.mutating && this.randomizing ? sourceRhythm.length : this.rhythmStepLength;
@@ -915,6 +915,7 @@ export class AbletonTrack {
 
 
   updateGuiPulseRate() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send("update-pulse-rate", this.pulseRate);
   }
 
