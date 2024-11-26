@@ -1,4 +1,4 @@
-import { RampSegment } from "../model/ableton/ramp_sequence";
+import { RampSegment, RAMP_SEQ_RANGE_STEPS } from "../model/ableton/ramp_sequence";
 import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
@@ -7,12 +7,6 @@ export type RampPressRange = {
   startIndex: number,
   endIndex: number
 }
-
-
-// Scale the grid row integers 0-15 to 0-1
-export const RAMP_SEQ_RANGE_STEPS = [...new Array(16)].map((_, i) => i).map((step) => {
-  return Math.round((((step - 0) / 15) * 1000)) / 1000;
-});
 
 
 export class RampSequenceController extends ApplicationController {
@@ -32,6 +26,7 @@ export class RampSequenceController extends ApplicationController {
     this.functionMap.set("updateRange", this.updateRange);
     this.functionMap.set("updateActiveRampSequenceIndex", this.updateActiveRampSequenceIndex);
     this.functionMap.set("toggleRampSequence", this.toggleRampSequence);
+    this.functionMap.set("generateRandomSteps", this.generateRandomSteps);
   }
 
 
@@ -109,6 +104,16 @@ export class RampSequenceController extends ApplicationController {
         gridPage.grid.sequencer.clearRampSequence(gridPage.activeTrack);
       }
       gridPage.setGridRampGlobalsDisplay();
+    }
+  }
+
+
+  generateRandomSteps(gridPage: RampSequenceController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rampSequence0 == undefined) return;
+    if (press.s == 1) {
+      gridPage.activeTrack.getEditableRampSequence().generateRandomSteps();
+      gridPage.grid.sequencer.setRampSequence(gridPage.activeTrack);
+      gridPage.refresh();
     }
   }
 

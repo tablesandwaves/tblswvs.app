@@ -12,6 +12,12 @@ export type RampSegment = {
 }
 
 
+// Scale the grid row integers 0-15 to 0-1
+export const RAMP_SEQ_RANGE_STEPS = [...new Array(16)].map((_, i) => i).map((step) => {
+  return Math.round((((step - 0) / 15) * 1000)) / 1000;
+});
+
+
 export class RampSequence {
   active: boolean = false;
   segments: RampSegment[] = new Array();
@@ -87,7 +93,7 @@ export class RampSequence {
 
     while (sequenceLength < 16) {
       const segmentLength = Math.ceil(Math.random() * 4);
-      const segmentRange  = Math.random();
+      const segmentRange  = RAMP_SEQ_RANGE_STEPS[Math.floor(Math.random() * 16)];
       const rampSegment = {
         startIndex: sequenceLength,
         length: segmentLength,

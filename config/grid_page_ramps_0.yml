@@ -55,3 +55,12 @@ rows:
     xStart: 3
     xLength: 1
     mapping: ignoredIndicator
+  -
+    name: Random Steps
+    description: Generate random steps for the currently active ramp sequence
+    group: generators
+    type: momentary
+    index: 6
+    xStart: 15
+    xLength: 1
+    mapping: generateRandomSteps

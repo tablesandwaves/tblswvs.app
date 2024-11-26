@@ -105,6 +105,7 @@ export class ApplicationController {
 
     this.functionMap.set("updateRhythm", this.updateRhythm);
     this.functionMap.set("updateStepLength", this.updateStepLength);
+    this.functionMap.set("ignoredIndicator", this.ignoredIndicator);
   }
 
 

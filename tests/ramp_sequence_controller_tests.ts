@@ -733,4 +733,22 @@ describe("RampSequenceController", () => {
       });
     });
   });
+
+
+  describe("the random step generation button produces a random steps 'ramp'", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    // Select the Keys track that has a ramp sequencer, then the ramp sequencer page
+    sequencer.grid.keyPress({y: 7, x: 5, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    let rampSequence = sequencer.daw.getActiveTrack().getEditableRampSequence();
+    rampSequence.generateRandomSteps();
+
+    it("generates at least 4 segments based on the max segment length", () => {
+      expect(rampSequence.segments.length).to.be.greaterThanOrEqual(4);
+    });
+
+    it("has segments with flat ramps", () => {
+      rampSequence.segments.forEach(segment => expect(segment.range.start).to.eq(segment.range.end));
+    });
+  });
 });
