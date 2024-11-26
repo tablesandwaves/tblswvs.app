@@ -847,6 +847,7 @@ export class AbletonTrack {
 
 
   updateGlobalTimingAlgorithms() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send(
       "timing-algorithms",
       [
