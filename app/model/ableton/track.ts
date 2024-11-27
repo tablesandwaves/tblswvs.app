@@ -625,7 +625,7 @@ export class AbletonTrack {
     if (this.name == "Kick" && i == 0) return 0;
 
     if (this.name == "Snare" && this.daw.sequencer.drunk && i % 4 == 0) {
-      return -0.45;
+      return Math.random() > 0.5 ? -0.45 : -0.25;
     } else if (this.name == "HiHat" && this.daw.sequencer.drunk) {
       // Coin flips for both smal to medium offset and early or late offset
       return Math.random() > 0.5 ?

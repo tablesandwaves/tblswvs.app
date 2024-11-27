@@ -147,7 +147,8 @@ describe("GlobalController", () => {
       it("shifts the snares very early", () => {
         sequencer.daw.tracks[1].currentAbletonNotes.forEach((note, i) => {
           const noOffsetExpectedPosition = i * 2 + 1;
-          expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(-0.1125);
+          expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000)
+            .to.satisfy((value: number) => value == -0.1125 || value == -0.0625);
         });
       });
 
@@ -326,7 +327,8 @@ describe("GlobalController", () => {
         it("snares are drunk rather than humanized (only large early offsets)", () => {
           sequencer.daw.tracks[1].currentAbletonNotes.forEach((note, i) => {
             const noOffsetExpectedPosition = i * 2 + 1;
-            expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(-0.1125);
+            expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000)
+              .to.satisfy((value: number) => value == -0.1125 || value == -0.0625);
           });
         });
       });
