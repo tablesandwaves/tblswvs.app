@@ -177,6 +177,49 @@ describe("RhythmController", () => {
         expect(track.currentAbletonNotes.length).to.eq(6);
       });
     });
+
+
+    describe("setting independent step lengths for each row", () => {
+      const [sequencer, track, controller] = getRhythmControllerMocks();
+      track.rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      // Flush the track notes
+      track.updateCurrentAbletonNotes();
+      expect(track.currentAbletonNotes.length).to.eq(4);
+
+      // Press the shift key to edit the rhythm step length,
+      // then set the length for row 1 to 5, the length of row 2 to 7
+      // finally release the shift functionality
+      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 1, x: 6, s: 1});
+      // Release must happen after both presses
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+      sequencer.grid.keyPress({y: 1, x: 6, s: 0});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+
+      // Flush the track notes
+      track.updateCurrentAbletonNotes();
+
+      sequencer.grid.testLogging = true;
+
+      it("updates the active track rhythm step length", () => {
+        expect(track.rhythmStepLength).to.eq(12);
+      });
+
+      it("updates the active track rhythm break point", () => {
+        expect(track.rhythmStepBreakpoint).to.eq(5);
+      });
+
+      it("updates the active track Ableton notes", () => {
+        expect(track.currentAbletonNotes.length).to.eq(11);
+      });
+    });
   });
 
 

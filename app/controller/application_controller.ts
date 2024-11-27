@@ -255,14 +255,15 @@ export class ApplicationController {
         const firstRowIndex  = gridPage.activeGates.filter(press => press.y == 0).map(press => press.x).sort().at(-1);
         const secondRowIndex = gridPage.activeGates.filter(press => press.y == 1).map(press => press.x).sort().at(-1);
 
-        if (secondRowIndex == undefined) {
+        if (firstRowIndex != undefined && secondRowIndex != undefined) {
+          gridPage.activeTrack.rhythmStepLength = firstRowIndex + 1 + secondRowIndex + 1;
+          gridPage.activeTrack.rhythmStepBreakpoint = firstRowIndex + 1;
+        } else if (secondRowIndex == undefined) {
           gridPage.activeTrack.rhythmStepLength = firstRowIndex + 1;
           gridPage.activeTrack.rhythmStepBreakpoint = gridPage.activeTrack.rhythmStepLength;
         } else if (firstRowIndex == undefined) {
           gridPage.activeTrack.rhythmStepLength = secondRowIndex + 16 + 1;
           gridPage.activeTrack.rhythmStepBreakpoint = gridPage.activeTrack.rhythmStepLength;
-        } else {
-          // gridPage.activeTrack.rhythmStepLength = press.x + (16 * press.y) + 1;
         }
         gridPage.activeGates = new Array();
 
