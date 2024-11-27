@@ -29,6 +29,7 @@
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "electron-squirrel-startup": "^1.0.1",
     "@types/chai": "^5.0.1",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.9",
@@ -41,7 +42,6 @@
   "dependencies": {
     "@tonaljs/chord-detect": "^4.8.0",
     "easymidi": "^3.1.0",
-    "electron-squirrel-startup": "^1.0.1",
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
     "tblswvs": "^0.20.1"
