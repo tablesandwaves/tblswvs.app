@@ -245,11 +245,33 @@ export class ApplicationController {
 
 
   updateStepLength(gridPage: ApplicationController, press: GridKeyPress, updateDrumPadMelody = false) {
-    gridPage.activeTrack.rhythmStepLength = press.x + (16 * press.y) + 1;
-    if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.setGridRhythmDisplay();
-    gridPage.updateGuiRhythmDisplay();
+    if (press.s == 1) {
+      gridPage.keyPressCount++;
+      gridPage.activeGates.push(press);
+    } else {
+      gridPage.keyPressCount--;
+
+      if (gridPage.keyPressCount == 0) {
+        const firstRowIndex  = gridPage.activeGates.filter(press => press.y == 0).map(press => press.x).sort().at(-1);
+        const secondRowIndex = gridPage.activeGates.filter(press => press.y == 1).map(press => press.x).sort().at(-1);
+
+        if (secondRowIndex == undefined) {
+          gridPage.activeTrack.rhythmStepLength = firstRowIndex + 1;
+          gridPage.activeTrack.rhythmStepBreakpoint = gridPage.activeTrack.rhythmStepLength;
+        } else if (firstRowIndex == undefined) {
+          gridPage.activeTrack.rhythmStepLength = secondRowIndex + 16 + 1;
+          gridPage.activeTrack.rhythmStepBreakpoint = gridPage.activeTrack.rhythmStepLength;
+        } else {
+          // gridPage.activeTrack.rhythmStepLength = press.x + (16 * press.y) + 1;
+        }
+        gridPage.activeGates = new Array();
+
+        if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
+        gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+        gridPage.setGridRhythmDisplay();
+        gridPage.updateGuiRhythmDisplay();
+      }
+    }
   }
 
 

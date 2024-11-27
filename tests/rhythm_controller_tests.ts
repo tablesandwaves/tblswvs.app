@@ -34,34 +34,91 @@ describe("RhythmController", () => {
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
+  });
 
 
-    describe("adding notes to an existing rhythm", () => {
-      const sequencer = new Sequencer(configDirectory, testing);
+  describe("adding notes to an existing rhythm", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
 
-      // Select the rhythm page
-      sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-      const track = sequencer.daw.getActiveTrack();
+    // Select the rhythm page
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const track = sequencer.daw.getActiveTrack();
 
-      sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-      sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+
+    it("does not delete the existing notes", () => {
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
         1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+    });
+  });
 
-      it("does not delete the existing notes", () => {
-        sequencer.grid.keyPress({y: 0, x: 4, s: 1});
-        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-        ]);
-        sequencer.grid.keyPress({y: 0, x: 4, s: 0});
-        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-          1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-        ]);
+
+  describe("adjusting the rhythm step length", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the rhythm page
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+    // Flush the track notes
+    track.updateCurrentAbletonNotes();
+    expect(track.currentAbletonNotes.length).to.eq(4);
+
+    describe("setting the step length to a single row", () => {
+      sequencer.grid.testLogging = true;
+
+      // Press the shift key to edit the rhythm step length, then set the length to 16, then release the shift functionality
+      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+      sequencer.grid.keyPress({y: 0, x: 15, s: 0});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+
+      // Flush the track notes
+      track.updateCurrentAbletonNotes();
+
+      it("updates the active track rhythm step length", () => {
+        expect(track.rhythmStepLength).to.eq(16);
       });
+
+      it("updates the active track rhythm break point", () => {
+        expect(track.rhythmStepBreakpoint).to.eq(16);
+      });
+
+      it("updates the active track Ableton notes", () => {
+        expect(track.currentAbletonNotes.length).to.eq(8);
+      });
+      sequencer.grid.testLogging = false;
+    });
+
+
+    describe("setting the step length to less than a single row", () => {
+
+    });
+
+
+    describe("setting the step length to greater than a single row, less than the max length", () => {
+
     });
   });
 

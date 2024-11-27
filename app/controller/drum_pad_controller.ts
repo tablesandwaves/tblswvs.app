@@ -178,13 +178,6 @@ export class DrumPadController extends ApplicationController {
   }
 
 
-  updateStepLength(gridPage: DrumPadController, press: GridKeyPress) {
-    if (press.s == 1) {
-      super.updateStepLength(gridPage, press, true);
-    }
-  }
-
-
   toggleNotePlaying(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
       gridPage.notePlayingActive = !gridPage.notePlayingActive;

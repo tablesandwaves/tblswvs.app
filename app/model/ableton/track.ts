@@ -74,6 +74,7 @@ export class AbletonTrack {
   noteLength: string = "16n";
   #pulseRate: string = "16n";
   #rhythmStepLength: number = 32;
+  #rhythmStepBreakpoint: number = 32;
   #rhythmAlgorithm: string = "manual";
   #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
   acceleratingGateCount = 10;
@@ -373,6 +374,18 @@ export class AbletonTrack {
       this.#rhythmStepLength = stepLength;
       this.generateOutputNotes();
       this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
+    }
+  }
+
+
+  get rhythmStepBreakpoint() {
+    return this.#rhythmStepBreakpoint;
+  }
+
+
+  set rhythmStepBreakpoint(breakpoint: number) {
+    if (this.#relatedRhythmTrackDawIndex == undefined) {
+      this.#rhythmStepBreakpoint = breakpoint;
     }
   }
 

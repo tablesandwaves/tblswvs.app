@@ -52,6 +52,7 @@ export class MonomeGrid {
   shiftKeyHeldPlusOtherKey: boolean = false;
   pageIndex: number = 0;
   testing = false;
+  testLogging = false;
 
 
   constructor(sequencer: Sequencer, testing = false) {

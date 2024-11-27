@@ -7,7 +7,7 @@ import { rhythmAlgorithms } from "../model/ableton/track";
 
 
 export class RhythmController extends ApplicationController {
-  type                        = "Rhythm";
+  type = "Rhythm";
   customNoteLength: "16n"|"8n"|"8nd"|"4n"|"4nd"|"2n"|"2nd"|"1n" = undefined;
 
 
@@ -27,13 +27,6 @@ export class RhythmController extends ApplicationController {
 
   refresh() {
     this.setGridRhythmDisplay();
-  }
-
-
-  updateStepLength(gridPage: RhythmController, press: GridKeyPress) {
-    if (press.s == 1) {
-      super.updateStepLength(gridPage, press);
-    }
   }
 
 
