@@ -78,13 +78,11 @@ describe("RhythmController", () => {
       track.updateCurrentAbletonNotes();
       expect(track.currentAbletonNotes.length).to.eq(4);
 
-      // Press the shift key to edit the rhythm step length, then set the length to 16, then release the shift functionality
+      // Press the shift key to edit the rhythm step length, then set the length to 16
       sequencer.grid.keyPress({y: 7, x: 13, s: 1});
       sequencer.grid.keyPress({y: 7, x: 13, s: 0});
       sequencer.grid.keyPress({y: 0, x: 15, s: 1});
       sequencer.grid.keyPress({y: 0, x: 15, s: 0});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
 
       // Flush the track notes
       track.updateCurrentAbletonNotes();
@@ -99,6 +97,13 @@ describe("RhythmController", () => {
 
       it("updates the active track Ableton notes", () => {
         expect(track.currentAbletonNotes.length).to.eq(8);
+      });
+
+      it("updates the rhythm step length grid row", () => {
+        expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
+          5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
       });
     });
 
@@ -115,14 +120,11 @@ describe("RhythmController", () => {
       expect(track.currentAbletonNotes.length).to.eq(4);
 
       // Press the shift key to edit the rhythm step length,
-      // then set the length to 12,
-      // finally release the shift functionality
+      // then set the length to 12
       sequencer.grid.keyPress({y: 7, x: 13, s: 1});
       sequencer.grid.keyPress({y: 7, x: 13, s: 0});
       sequencer.grid.keyPress({y: 0, x: 11, s: 1});
       sequencer.grid.keyPress({y: 0, x: 11, s: 0});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
 
       // Flush the track notes
       track.updateCurrentAbletonNotes();
@@ -137,6 +139,13 @@ describe("RhythmController", () => {
 
       it("updates the active track Ableton notes", () => {
         expect(track.currentAbletonNotes.length).to.eq(11);
+      });
+
+      it("updates the rhythm step length grid row", () => {
+        expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
+          5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
       });
     });
 
@@ -153,14 +162,11 @@ describe("RhythmController", () => {
       expect(track.currentAbletonNotes.length).to.eq(4);
 
       // Press the shift key to edit the rhythm step length,
-      // then set the length to 24,
-      // finally release the shift functionality
+      // then set the length to 24
       sequencer.grid.keyPress({y: 7, x: 13, s: 1});
       sequencer.grid.keyPress({y: 7, x: 13, s: 0});
       sequencer.grid.keyPress({y: 1, x: 7, s: 1});
       sequencer.grid.keyPress({y: 1, x: 7, s: 0});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
 
       // Flush the track notes
       track.updateCurrentAbletonNotes();
@@ -175,6 +181,13 @@ describe("RhythmController", () => {
 
       it("updates the active track Ableton notes", () => {
         expect(track.currentAbletonNotes.length).to.eq(6);
+      });
+
+      it("updates the rhythm step length grid row", () => {
+        expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
+          5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,
+          5, 5, 5, 5,  5, 5, 5, 5,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
       });
     });
 
@@ -218,6 +231,13 @@ describe("RhythmController", () => {
 
       it("updates the active track Ableton notes", () => {
         expect(track.currentAbletonNotes.length).to.eq(11);
+      });
+
+      it("updates the rhythm step length grid row", () => {
+        expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
+          5, 5, 5, 5,  5, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          5, 5, 5, 5,  5, 5, 5, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
       });
     });
   });

@@ -168,8 +168,21 @@ export class ApplicationController {
 
 
   getRhythmStepLengthRow() {
-    const stepLength = this.activeTrack.rhythmStepLength;
-    return [...new Array(stepLength).fill(5), ...new Array(32 - stepLength).fill(INACTIVE_BRIGHTNESS)];
+    if (this.activeTrack.rhythmStepBreakpoint == this.activeTrack.rhythmStepLength) {
+      return [
+        ...new Array(this.activeTrack.rhythmStepLength).fill(5),
+        ...new Array(32 - this.activeTrack.rhythmStepLength).fill(INACTIVE_BRIGHTNESS)
+      ];
+    } else {
+      const firstRowActiveStepCount  = this.activeTrack.rhythmStepBreakpoint >= 16 ? 16 : this.activeTrack.rhythmStepBreakpoint;
+      const secondRowActiveStepCount = this.activeTrack.rhythmStepLength - firstRowActiveStepCount;
+      return [
+        ...new Array(firstRowActiveStepCount).fill(5),
+        ...new Array(16 - firstRowActiveStepCount).fill(INACTIVE_BRIGHTNESS),
+        ...new Array(secondRowActiveStepCount).fill(5),
+        ...new Array(16 - secondRowActiveStepCount).fill(INACTIVE_BRIGHTNESS)
+      ];
+    }
   }
 
 
