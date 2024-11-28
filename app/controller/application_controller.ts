@@ -186,10 +186,35 @@ export class ApplicationController {
   }
 
 
+  /**
+   * Generate two rows of grid display data for rhythm gates.
+   *
+   * The resulting row will be based on the rhythm step length and the break point.
+   *
+   * @returns (Array) of 32 grid row brighness numbers for displaying the on/off rhythm gates
+   */
   getRhythmGatesRow() {
-    return this.activeTrack.rhythm.map((rhythmStep: RhythmStep) => {
-      return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * ACTIVE_BRIGHTNESS) : INACTIVE_BRIGHTNESS;
-    });
+    if (this.activeTrack.rhythmStepBreakpoint == this.activeTrack.rhythmStepLength) {
+      return [
+        ...this.activeTrack.rhythm.slice(0, this.activeTrack.rhythmStepLength).map((rhythmStep: RhythmStep) => {
+          return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * ACTIVE_BRIGHTNESS) : INACTIVE_BRIGHTNESS;
+        }),
+        ...new Array(32 - this.activeTrack.rhythmStepLength).fill(INACTIVE_BRIGHTNESS)
+      ];
+    } else {
+      const firstRowActiveStepCount  = this.activeTrack.rhythmStepBreakpoint >= 16 ? 16 : this.activeTrack.rhythmStepBreakpoint;
+      const secondRowActiveStepCount = this.activeTrack.rhythmStepLength - firstRowActiveStepCount;
+      return [
+        ...this.activeTrack.rhythm.slice(0, firstRowActiveStepCount).map((rhythmStep: RhythmStep) => {
+          return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * ACTIVE_BRIGHTNESS) : INACTIVE_BRIGHTNESS;
+        }),
+        ...new Array(16 - firstRowActiveStepCount).fill(INACTIVE_BRIGHTNESS),
+        ...this.activeTrack.rhythm.slice(this.activeTrack.rhythmStepBreakpoint, this.activeTrack.rhythmStepLength).map((rhythmStep: RhythmStep) => {
+          return rhythmStep.state == 1 ? Math.round(rhythmStep.probability * ACTIVE_BRIGHTNESS) : INACTIVE_BRIGHTNESS;
+        }),
+        ...new Array(16 - secondRowActiveStepCount).fill(INACTIVE_BRIGHTNESS)
+      ];
+    }
   }
 
 

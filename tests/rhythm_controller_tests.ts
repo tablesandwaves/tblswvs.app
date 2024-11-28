@@ -95,15 +95,23 @@ describe("RhythmController", () => {
         expect(track.rhythmStepBreakpoint).to.eq(16);
       });
 
-      it("updates the active track Ableton notes", () => {
-        expect(track.currentAbletonNotes.length).to.eq(8);
-      });
-
       it("updates the rhythm step length grid row", () => {
         expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
           5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,
           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
+      });
+
+      it("does not alter the rhythm gates grid row", () => {
+        expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("updates the active track Ableton notes", () => {
+        const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+        expect(actual).to.have.ordered.members([0, 4, 8, 12, 16, 20, 24, 28]);
       });
     });
 
@@ -137,15 +145,23 @@ describe("RhythmController", () => {
         expect(track.rhythmStepBreakpoint).to.eq(12);
       });
 
-      it("updates the active track Ableton notes", () => {
-        expect(track.currentAbletonNotes.length).to.eq(11);
-      });
-
       it("updates the rhythm step length grid row", () => {
         expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
           5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,  0, 0, 0, 0,
           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
+      });
+
+      it("does not alter the rhythm gates grid row", () => {
+        expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("updates the active track Ableton notes", () => {
+        const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+        expect(actual).to.have.ordered.members([0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30]);
       });
     });
 
@@ -179,29 +195,38 @@ describe("RhythmController", () => {
         expect(track.rhythmStepBreakpoint).to.eq(24);
       });
 
-      it("updates the active track Ableton notes", () => {
-        expect(track.currentAbletonNotes.length).to.eq(6);
-      });
-
       it("updates the rhythm step length grid row", () => {
         expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
           5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,  5, 5, 5, 5,
           5, 5, 5, 5,  5, 5, 5, 5,  0, 0, 0, 0,  0, 0, 0, 0
         ]);
       });
+
+      it("does not alter the rhythm gates grid row", () => {
+        expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+           0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("updates the active track Ableton notes", () => {
+        const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+        expect(actual).to.have.ordered.members([0, 6, 12, 18, 24, 30]);
+      });
     });
 
 
     describe("setting independent step lengths for each row", () => {
       const [sequencer, track, controller] = getRhythmControllerMocks();
+      // Note this rhythm corresponds to index 0 for both rows 1 and 2 after the step length modifications
       track.rhythm = rhythmStepsForPattern([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
 
       // Flush the track notes
       track.updateCurrentAbletonNotes();
-      expect(track.currentAbletonNotes.length).to.eq(4);
+      expect(track.currentAbletonNotes.length).to.eq(8);
 
       // Press the shift key to edit the rhythm step length,
       // then set the length for row 1 to 5, the length of row 2 to 7
@@ -229,14 +254,26 @@ describe("RhythmController", () => {
         expect(track.rhythmStepBreakpoint).to.eq(5);
       });
 
-      it("updates the active track Ableton notes", () => {
-        expect(track.currentAbletonNotes.length).to.eq(11);
-      });
-
       it("updates the rhythm step length grid row", () => {
         expect(controller.getRhythmStepLengthRow()).to.have.ordered.members([
           5, 5, 5, 5,  5, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
           5, 5, 5, 5,  5, 5, 5, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("alters the rhythm gates grid row", () => {
+        expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("updates the active track Ableton notes", () => {
+        const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+        expect(actual).to.have.ordered.members([
+          0,   1.25,  3,  4.25,  6,  7.25,  9, 10.25,
+          12, 13.25, 15, 16.25, 18, 19.25, 21, 22.25,
+          24, 25.25, 27, 28.25, 30, 31.25
         ]);
       });
     });
