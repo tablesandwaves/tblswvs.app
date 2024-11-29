@@ -229,13 +229,15 @@ export class ApplicationController {
       if (gridPage.keyPressCount == 0) {
         // Active gates may be reset by a single gate note length in RhythmController.updateNoteLength
         if (gridPage.activeTrack.rhythmAlgorithm != "surround" && gridPage.activeGates.length > 0) {
-          gridPage.activeTrack.rhythmAlgorithm = gridPage.activeTrack.rhythmAlgorithm == "accelerating" ?
-                                                 gridPage.activeTrack.rhythmAlgorithm :
-                                                 "manual";
-
           const updatedRhythm = gridPage.activeTrack.rhythm.map(step => {return {...step}});
           gridPage.activeGates.forEach(queuedKeyPress => {
-            const stepIndex                      = queuedKeyPress.x + (16 * queuedKeyPress.y);
+            let stepIndex = queuedKeyPress.x + (16 * queuedKeyPress.y);
+            if (gridPage.activeTrack.rhythmStepBreakpoint < 16 && queuedKeyPress.y == 1)
+              stepIndex -= (16 - gridPage.activeTrack.rhythmStepBreakpoint);
+
+            // Do not allow changes to the steps outside the track's rhythm step lengths.
+            if (stepIndex >= gridPage.activeTrack.rhythmStepLength) return;
+
             const stepState                      = 1 - gridPage.activeTrack.rhythm[stepIndex].state;
             updatedRhythm[stepIndex].state       = stepState;
             updatedRhythm[stepIndex].probability = gridPage.activeTrack.defaultProbability;

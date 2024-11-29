@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { before } from "mocha";
 import { Sequencer } from "../app/model/sequencer";
 import { RhythmController } from "../app/controller/rhythm_controller";
 import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern, getRhythmControllerMocks } from "./test_helpers";
@@ -66,7 +67,7 @@ describe("RhythmController", () => {
   });
 
 
-  describe("adjusting the rhythm step length", () => {
+  describe("when adjusting the rhythm step length", () => {
     describe("setting the step length to a single row", () => {
       const [sequencer, track, controller] = getRhythmControllerMocks();
       track.rhythm = rhythmStepsForPattern([
@@ -112,6 +113,72 @@ describe("RhythmController", () => {
       it("updates the active track Ableton notes", () => {
         const actual = track.currentAbletonNotes.map(note => note.clipPosition);
         expect(actual).to.have.ordered.members([0, 4, 8, 12, 16, 20, 24, 28]);
+      });
+
+
+      describe("adding steps within the first row", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+          sequencer.grid.keyPress({y: 0, x: 8, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("alters the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("alters the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,
+             0, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("updates the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]);
+        });
+      });
+
+
+      describe("attempting to add steps within the second row", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 1, x: 8, s: 1});
+          sequencer.grid.keyPress({y: 1, x: 8, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("does not alter the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not alter the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,
+             0, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not update the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]);
+        });
       });
     });
 
@@ -163,6 +230,72 @@ describe("RhythmController", () => {
         const actual = track.currentAbletonNotes.map(note => note.clipPosition);
         expect(actual).to.have.ordered.members([0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30]);
       });
+
+
+      describe("adding steps within the first row and within the step length", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 0, x: 8, s: 1});
+          sequencer.grid.keyPress({y: 0, x: 8, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("alters the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("alters the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,
+             0, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("updates the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 29, 30]);
+        });
+      });
+
+
+      describe("attempting to add steps within the first row but outside the step length", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 0, x: 12, s: 1});
+          sequencer.grid.keyPress({y: 0, x: 12, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("does not alter the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not alter the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,
+             0, 0, 0, 0,  0, 0, 0, 0,   0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not update the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 29, 30]);
+        });
+      });
     });
 
 
@@ -212,6 +345,72 @@ describe("RhythmController", () => {
       it("updates the active track Ableton notes", () => {
         const actual = track.currentAbletonNotes.map(note => note.clipPosition);
         expect(actual).to.have.ordered.members([0, 6, 12, 18, 24, 30]);
+      });
+
+
+      describe("adding steps within the second row and within the step length", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 1, x: 0, s: 1});
+          sequencer.grid.keyPress({y: 1, x: 0, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("alters the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("alters the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("updates the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 4, 6, 10, 12, 16, 18, 22, 24, 28, 30]);
+        });
+      });
+
+
+      describe("attempting to add steps within the second row but outside the step length", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 1, x: 12, s: 1});
+          sequencer.grid.keyPress({y: 1, x: 12, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("does not alter the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not alter the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not update the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 4, 6, 10, 12, 16, 18, 22, 24, 28, 30]);
+        });
       });
     });
 
@@ -275,6 +474,117 @@ describe("RhythmController", () => {
           12, 13.25, 15, 16.25, 18, 19.25, 21, 22.25,
           24, 25.25, 27, 28.25, 30, 31.25
         ]);
+      });
+
+
+      describe("adding steps within the first and before the break point", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 0, x: 2, s: 1});
+          sequencer.grid.keyPress({y: 0, x: 2, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("alters the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 1, 0,  0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("alters the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0,  0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("updates the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([
+            0, 0.5, 1.25, 3, 3.5, 4.25, 6, 6.5, 7.25, 9, 9.5, 10.25,
+            12, 12.5, 13.25, 15, 15.5, 16.25, 18, 18.5, 19.25, 21, 21.5, 22.25,
+            24, 24.5, 25.25, 27, 27.5, 28.25, 30, 30.5, 31.25
+          ]);
+        });
+      });
+
+
+      describe("adding steps within the second row and before the cummulative step length", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 1, x: 2, s: 1});
+          sequencer.grid.keyPress({y: 1, x: 2, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("alters the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 1, 0,  0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("alters the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("updates the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([
+            0, 0.5, 1.25, 1.75, 3, 3.5, 4.25, 4.75, 6, 6.5, 7.25, 7.75, 9, 9.5, 10.25, 10.75,
+            12, 12.5, 13.25, 13.75, 15, 15.5, 16.25, 16.75, 18, 18.5, 19.25, 19.75, 21, 21.5, 22.25, 22.75,
+            24, 24.5, 25.25, 25.75, 27, 27.5, 28.25, 28.75, 30, 30.5, 31.25, 31.75
+          ]);
+        });
+      });
+
+
+      describe("attempting to add steps within the second row but outside the step length", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 1, x: 12, s: 1});
+          sequencer.grid.keyPress({y: 1, x: 12, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("does not alter the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 1, 0,  0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not alter the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not update the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([
+            0, 0.5, 1.25, 1.75, 3, 3.5, 4.25, 4.75, 6, 6.5, 7.25, 7.75, 9, 9.5, 10.25, 10.75,
+            12, 12.5, 13.25, 13.75, 15, 15.5, 16.25, 16.75, 18, 18.5, 19.25, 19.75, 21, 21.5, 22.25, 22.75,
+            24, 24.5, 25.25, 25.75, 27, 27.5, 28.25, 28.75, 30, 30.5, 31.25, 31.75
+          ]);
+        });
       });
     });
   });
