@@ -597,13 +597,18 @@ export class AbletonTrack {
         } else {
           // Add the current note with no acceleration or fills
           const duration = rhythmStep.noteLength ? noteLengthMap[rhythmStep.noteLength].size : defaultDuration;
+          // Velocities are associated with the step's row 1 or 2 index on the grid, not the absolute step index
+          const velocityIndex = this.rhythmStepBreakpoint < 16 && rhythmIndex >= this.rhythmStepBreakpoint ?
+                                rhythmIndex + (16 - this.rhythmStepBreakpoint) :
+                                rhythmIndex;
+
           let velocity;
           if (rhythmStep.velocity) {
             velocity = Math.floor(rhythmStep.velocity * MAX_VELOCITY);
           } else {
             const upOrDown  = Math.random() < 0.5 ? -1 : 1;
             const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
-            velocity = defaultVelocities[rhythmIndex] * MAX_VELOCITY + deviation;
+            velocity = defaultVelocities[velocityIndex] * MAX_VELOCITY + deviation;
           }
           const clipPosition = (step * 0.25) + (this.#timingOffset(rhythmStep, rhythmIndex) * 0.25);
           noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, clipPosition, duration, velocity));

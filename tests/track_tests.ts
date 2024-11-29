@@ -101,6 +101,44 @@ describe("AbletonTrack", () => {
     });
   });
 
+
+  describe("track rhythms with a breakpoint", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    const daw       = new AbletonLive(sequencer);
+    const track     = daw.getActiveTrack();
+
+    before(() => {
+      track.rhythmStepLength = 12;
+      track.rhythmStepBreakpoint = 5;
+      track.rhythm = rhythmStepsForPattern([
+        1, 0, 1, 0,  1, 1, 0, 1,  0, 1, 0, 1,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      track.updateCurrentAbletonNotes();
+    });
+
+    it("generate velocities based on grid row position", () => {
+      expect(velocityWithinRange(track.currentAbletonNotes[0].velocity, 120)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[1].velocity, 90)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[2].velocity, 105)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[3].velocity, 120)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[4].velocity, 90)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[5].velocity, 105)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[6].velocity, 75)).to.be.true;
+
+      expect(velocityWithinRange(track.currentAbletonNotes[7].velocity, 120)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[8].velocity, 90)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[9].velocity, 105)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[10].velocity, 120)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[11].velocity, 90)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[12].velocity, 105)).to.be.true;
+      expect(velocityWithinRange(track.currentAbletonNotes[13].velocity, 75)).to.be.true;
+
+      // ...
+    });
+  });
+
+
   describe("rhythm algorithms", () => {
     describe("setting the rhythm algorithm to acceleration", () => {
       const sequencer = new Sequencer(configDirectory, testing);
