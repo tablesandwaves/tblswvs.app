@@ -116,7 +116,7 @@ div#top-row div#harmonic-rhythm-circle canvas {
 
 
 div#top-row div#step-sequencer,
-div#top-row div#step-sequencer div#sequencer-steps,
+div#top-row div#step-sequencer div.sequencer-steps,
 div#top-row div#step-sequencer div#sequencer-fills,
 div#top-row div#step-sequencer div#rhythm-params {
   display: block;
@@ -363,7 +363,7 @@ div#global-note-data div#queued-notes {
   * current: step corresponds to the transport's active 16n step
     * When current: transport hits step, lights up green
 */
-div#sequencer-steps div {
+div.sequencer-steps div {
   width: 40px;
   height: 40px;
   margin: 4px;
@@ -372,18 +372,13 @@ div#sequencer-steps div {
 }
 
 
-div#sequencer-steps div.active {
+div.sequencer-steps div.active {
   background-color: #333;  /* medium gray: background color for active step */
   border: 1px solid #555;  /* medium-light gray: border color for active step */
 }
 
 
-div#sequencer-steps div.current {
-  background-color: #117733; /* green: highlight background color for current transport step */
-}
-
-
-div#sequencer-steps div span {
+div.sequencer-steps div span {
   display: inline-block;
   width: 40px;
   position: absolute;
@@ -397,14 +392,14 @@ div#sequencer-steps div span {
   Due to default, *recommended* content security policies for Electron, cannot set attributes for
   inline styles via JS, so setting up classes for the heights corresponding to step probabilities.
 */
-div#sequencer-steps div span.prob100 { height: 40px; }
-div#sequencer-steps div span.prob087 { height: 35px; }
-div#sequencer-steps div span.prob075 { height: 30px; }
-div#sequencer-steps div span.prob062 { height: 25px; }
-div#sequencer-steps div span.prob050 { height: 20px; }
-div#sequencer-steps div span.prob037 { height: 15px; }
-div#sequencer-steps div span.prob025 { height: 10px; }
-div#sequencer-steps div span.prob000 { height: 0px; }
+div.sequencer-steps div span.prob100 { height: 40px; }
+div.sequencer-steps div span.prob087 { height: 35px; }
+div.sequencer-steps div span.prob075 { height: 30px; }
+div.sequencer-steps div span.prob062 { height: 25px; }
+div.sequencer-steps div span.prob050 { height: 20px; }
+div.sequencer-steps div span.prob037 { height: 15px; }
+div.sequencer-steps div span.prob025 { height: 10px; }
+div.sequencer-steps div span.prob000 { height: 0px; }
 
 
 div#sequencer-fills div {

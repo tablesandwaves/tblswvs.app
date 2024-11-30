@@ -142,17 +142,17 @@ const toggleIndicator = (selector: string, state: boolean) => {
 window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
   rhythm.forEach((step, i: number) => {
     if (i < stepLength)
-      document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("active");
+      document.querySelector(`.sequencer-steps .step-${i}`).classList.remove("active");
     else
-      document.querySelector(`#sequencer-steps .step-${i}`).classList.add("active");
+      document.querySelector(`.sequencer-steps .step-${i}`).classList.add("active");
 
     if (step.state == 0) {
-      document.querySelector(`#sequencer-steps .step-${i}`).classList.remove("on");
-      document.querySelector(`#sequencer-steps .step-${i} span:last-child`).className = "prob000";
+      document.querySelector(`.sequencer-steps .step-${i}`).classList.remove("on");
+      document.querySelector(`.sequencer-steps .step-${i} span:last-child`).className = "prob000";
       document.querySelector(`#sequencer-fills .step-${i} span`).textContent = "";
     } else {
-      document.querySelector(`#sequencer-steps .step-${i}`).classList.add("on");
-      document.querySelector(`#sequencer-steps .step-${i} span`).className = "prob" + `${Math.floor(step.probability * 100)}`.padStart(3, "0");
+      document.querySelector(`.sequencer-steps .step-${i}`).classList.add("on");
+      document.querySelector(`.sequencer-steps .step-${i} span`).className = "prob" + `${Math.floor(step.probability * 100)}`.padStart(3, "0");
       document.querySelector(`#sequencer-fills .step-${i} span`).textContent = step.fillRepeats == 0 ? "" : step.fillRepeats;
     }
   });
@@ -416,10 +416,6 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
 
 
 const updateTransport = (currentStep: number, currentPianoRollStep: number) => {
-  // document.querySelector(`#sequencer-steps .step-${previousStep}`).classList.remove("current");
-  // document.querySelector(`#sequencer-steps .step-${currentStep}`).classList.add("current");
-  // previousStep = currentStep;
-
   if (document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`))
     document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`).classList.remove("current");
   if (document.querySelector(`#pianoroll-transport #pianoroll-step-${currentPianoRollStep}`))
