@@ -924,6 +924,7 @@ export class AbletonTrack {
       "track-rhythm",
       this.#rhythm,
       this.#rhythmStepLength,
+      this.#rhythmStepBreakpoint,
       this.#rhythmAlgorithm,
       relatedTrackName,
       this.daw.rhythmSectionRhythm(),

@@ -10,6 +10,8 @@ let noteData: any[];
 
 const RAMP_SEQ_HEIGHT     = 80;
 const RAMP_SEQ_STEP_WIDTH = 50;
+const TOTAL_STEPS         = 32;
+const STEPS_PER_ROW       = 16;
 
 
 window.documentation.pageDocumentation((event: any, page: any) => {
@@ -27,7 +29,7 @@ window.documentation.pageDocumentation((event: any, page: any) => {
 window.documentation.setNoteData((event: any, _noteData: any[]) => noteData = _noteData);
 
 window.documentation.displayResourcesPath((event: any, path: string) => {
-  console.log(path)
+  // console.log(path)
   updateText("#resources-path", path);
 });
 
@@ -139,22 +141,30 @@ const toggleIndicator = (selector: string, state: boolean) => {
 }
 
 
-window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, rhythmAlgorithm: string, relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
-  rhythm.forEach((step, i: number) => {
-    if (i < stepLength)
-      document.querySelector(`.sequencer-steps .step-${i}`).classList.remove("active");
-    else
-      document.querySelector(`.sequencer-steps .step-${i}`).classList.add("active");
+window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, breakpoint: number, rhythmAlgorithm: string,
+  relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
 
-    if (step.state == 0) {
-      document.querySelector(`.sequencer-steps .step-${i}`).classList.remove("on");
-      document.querySelector(`.sequencer-steps .step-${i} span:last-child`).className = "prob000";
-      document.querySelector(`#sequencer-fills .step-${i} span`).textContent = "";
-    } else {
-      document.querySelector(`.sequencer-steps .step-${i}`).classList.add("on");
-      document.querySelector(`.sequencer-steps .step-${i} span`).className = "prob" + `${Math.floor(step.probability * 100)}`.padStart(3, "0");
-      document.querySelector(`#sequencer-fills .step-${i} span`).textContent = step.fillRepeats == 0 ? "" : step.fillRepeats;
-    }
+  rhythmActiveStates(stepLength, breakpoint).forEach((state, rhythmStepDisplayIndex) => {
+    if (state == 1)
+      document.querySelector(`.sequencer-steps .step-${rhythmStepDisplayIndex}`).classList.add("active");
+    else
+      document.querySelector(`.sequencer-steps .step-${rhythmStepDisplayIndex}`).classList.remove("active");
+  });
+
+  rhythmStepRows(rhythm, stepLength, breakpoint).forEach((rhythm, rowIndex) => {
+    rhythm.forEach((step, stepIndex) => {
+      let rhythmStepDisplayIndex = stepIndex + (16 * rowIndex);
+
+      if (step == undefined || step.state == 0) {
+        document.querySelector(`.sequencer-steps .step-${rhythmStepDisplayIndex}`).classList.remove("on");
+        document.querySelector(`.sequencer-steps .step-${rhythmStepDisplayIndex} span:last-child`).className = "prob000";
+        document.querySelector(`#sequencer-fills .step-${rhythmStepDisplayIndex} span`).textContent = "";
+      } else {
+        document.querySelector(`.sequencer-steps .step-${rhythmStepDisplayIndex}`).classList.add("on");
+        document.querySelector(`.sequencer-steps .step-${rhythmStepDisplayIndex} span`).className = "prob" + `${Math.floor(step.probability * 100)}`.padStart(3, "0");
+        document.querySelector(`#sequencer-fills .step-${rhythmStepDisplayIndex} span`).textContent = step.fillRepeats == 0 ? "" : step.fillRepeats;
+      }
+    });
   });
 
   displayRhythmCircle(rhythm.slice(0, stepLength).map(step => step.state), "track-rhythm-circle");
@@ -165,6 +175,50 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: numbe
   if (relatedTrackName) algorithm += "/" + relatedTrackName;
   document.querySelector("#rhythm-params #algorithm span").textContent = algorithm;
 });
+
+
+const rhythmStepRows = (rhythm: any[], stepLength: number, breakpoint: number) => {
+  const totalInactiveSteps = TOTAL_STEPS - stepLength;
+
+  let row1Rhythm = breakpoint < 16 ? rhythm.slice(0, breakpoint) : rhythm.slice(0, 16);
+
+  let row2Rhythm;
+  if (breakpoint == stepLength)
+    row2Rhythm = STEPS_PER_ROW - totalInactiveSteps < 0 ? [] : rhythm.slice(16, 16 + STEPS_PER_ROW - totalInactiveSteps);
+  else
+    row2Rhythm = rhythm.slice(breakpoint, stepLength);
+
+  return [
+    [
+      ...row1Rhythm,
+      ...new Array(STEPS_PER_ROW - row1Rhythm.length)
+    ],
+    [
+      ...row2Rhythm,
+      ...new Array(STEPS_PER_ROW - row2Rhythm.length)
+    ]
+  ];
+}
+
+
+const rhythmActiveStates = (stepLength: number, breakpoint: number): (0|1)[] => {
+  const totalInactiveSteps = TOTAL_STEPS - stepLength;
+
+  const activeRow1 = breakpoint < STEPS_PER_ROW ? breakpoint : STEPS_PER_ROW;
+
+  let activeRow2;
+  if (breakpoint == stepLength)
+    activeRow2 = STEPS_PER_ROW - totalInactiveSteps < 0 ? 0 : STEPS_PER_ROW - totalInactiveSteps;
+  else
+    activeRow2 = stepLength - breakpoint;
+
+  return [
+    ...new Array(activeRow1).fill(1),
+    ...new Array(16 - activeRow1).fill(0),
+    ...new Array(activeRow2).fill(1),
+    ...new Array(16 - activeRow2).fill(0)
+  ];
+}
 
 
 window.parameters.updateRampSequence((event: any, rampSequence: number[], superMeasureLength: number) => {
