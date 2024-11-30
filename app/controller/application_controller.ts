@@ -241,7 +241,6 @@ export class ApplicationController {
             const stepState                      = 1 - gridPage.activeTrack.rhythm[stepIndex].state;
             updatedRhythm[stepIndex].state       = stepState;
             updatedRhythm[stepIndex].probability = gridPage.activeTrack.defaultProbability;
-            updatedRhythm[stepIndex].velocity    = defaultVelocities[stepIndex];
             if (stepState == 0) {
               updatedRhythm[stepIndex].fillRepeats = 0;
               updatedRhythm[stepIndex].noteLength  = undefined;

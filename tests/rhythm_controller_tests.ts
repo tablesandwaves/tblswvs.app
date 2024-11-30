@@ -2,7 +2,9 @@ import { expect } from "chai";
 import { before } from "mocha";
 import { Sequencer } from "../app/model/sequencer";
 import { RhythmController } from "../app/controller/rhythm_controller";
-import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern, getRhythmControllerMocks } from "./test_helpers";
+import {
+  configDirectory, patternForRhythmSteps, rhythmStepsForPattern, getRhythmControllerMocks, velocityWithinRange
+} from "./test_helpers";
 
 
 const testing = true;
@@ -547,6 +549,15 @@ describe("RhythmController", () => {
             12, 12.5, 13.25, 13.75, 15, 15.5, 16.25, 16.75, 18, 18.5, 19.25, 19.75, 21, 21.5, 22.25, 22.75,
             24, 24.5, 25.25, 25.75, 27, 27.5, 28.25, 28.75, 30, 30.5, 31.25, 31.75
           ]);
+        });
+
+        it("generates the velocities based on the grid step index (not the 'absolute' rhythm index)", () => {
+          // First measure, pre-breakpoint
+          expect(velocityWithinRange(track.currentAbletonNotes[0].velocity, 120)).to.be.true;
+          expect(velocityWithinRange(track.currentAbletonNotes[1].velocity, 90)).to.be.true;
+          // First measure, post-breakpoint
+          expect(velocityWithinRange(track.currentAbletonNotes[2].velocity, 120)).to.be.true;
+          expect(velocityWithinRange(track.currentAbletonNotes[3].velocity, 90)).to.be.true;
         });
       });
 

@@ -118,17 +118,21 @@ describe("AbletonTrack", () => {
     });
 
     it("generate velocities based on grid row position", () => {
+      // First measure, pre-breakpoint
       expect(velocityWithinRange(track.currentAbletonNotes[0].velocity, 120)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[1].velocity, 90)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[2].velocity, 105)).to.be.true;
+      // First measure, post-breakpoint
       expect(velocityWithinRange(track.currentAbletonNotes[3].velocity, 120)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[4].velocity, 90)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[5].velocity, 105)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[6].velocity, 75)).to.be.true;
 
+      // Second measure, pre-breakpoint
       expect(velocityWithinRange(track.currentAbletonNotes[7].velocity, 120)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[8].velocity, 90)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[9].velocity, 105)).to.be.true;
+      // Second measure, post-breakpoint
       expect(velocityWithinRange(track.currentAbletonNotes[10].velocity, 120)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[11].velocity, 90)).to.be.true;
       expect(velocityWithinRange(track.currentAbletonNotes[12].velocity, 105)).to.be.true;
