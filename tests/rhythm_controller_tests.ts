@@ -303,24 +303,27 @@ describe("RhythmController", () => {
 
     describe("setting the step length to greater than a single row, less than the max length", () => {
       const [sequencer, track, controller] = getRhythmControllerMocks();
-      track.rhythm = rhythmStepsForPattern([
-        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
 
-      // Flush the track notes
-      track.updateCurrentAbletonNotes();
-      expect(track.currentAbletonNotes.length).to.eq(4);
+      before(() => {
+        track.rhythm = rhythmStepsForPattern([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
 
-      // Press the shift key to edit the rhythm step length,
-      // then set the length to 24
-      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
-      sequencer.grid.keyPress({y: 1, x: 7, s: 1});
-      sequencer.grid.keyPress({y: 1, x: 7, s: 0});
+        // Flush the track notes
+        track.updateCurrentAbletonNotes();
+        expect(track.currentAbletonNotes.length).to.eq(4);
 
-      // Flush the track notes
-      track.updateCurrentAbletonNotes();
+        // Press the shift key to edit the rhythm step length,
+        // then set the length to 24
+        sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+        sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+        sequencer.grid.keyPress({y: 1, x: 7, s: 1});
+        sequencer.grid.keyPress({y: 1, x: 7, s: 0});
+
+        // Flush the track notes
+        track.updateCurrentAbletonNotes();
+      });
 
       it("updates the active track rhythm step length", () => {
         expect(track.rhythmStepLength).to.eq(24);
@@ -354,10 +357,13 @@ describe("RhythmController", () => {
         before(() => {
           // Get out of shift-state-active mode
           sequencer.grid.shiftStateActive = false;
+          sequencer.grid.testLogging = true;
 
           // Add another step
           sequencer.grid.keyPress({y: 1, x: 0, s: 1});
           sequencer.grid.keyPress({y: 1, x: 0, s: 0});
+
+          sequencer.grid.testLogging = false;
 
           track.updateCurrentAbletonNotes();
         });
@@ -562,12 +568,49 @@ describe("RhythmController", () => {
       });
 
 
+      describe("attempting to add steps within the first row but after the break point", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Attempt to add another step in a non-editable range
+          sequencer.grid.keyPress({y: 0, x: 5, s: 1});
+          sequencer.grid.keyPress({y: 0, x: 5, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("does not alter the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 1, 0,  0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not alter the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0, 10, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("does not update the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([
+            0, 0.5, 1.25, 1.75, 3, 3.5, 4.25, 4.75, 6, 6.5, 7.25, 7.75, 9, 9.5, 10.25, 10.75,
+            12, 12.5, 13.25, 13.75, 15, 15.5, 16.25, 16.75, 18, 18.5, 19.25, 19.75, 21, 21.5, 22.25, 22.75,
+            24, 24.5, 25.25, 25.75, 27, 27.5, 28.25, 28.75, 30, 30.5, 31.25, 31.75
+          ]);
+        });
+      });
+
+
       describe("attempting to add steps within the second row but outside the step length", () => {
         before(() => {
           // Get out of shift-state-active mode
           sequencer.grid.shiftStateActive = false;
 
-          // Add another step
+          // Attempt to add another step in a non-editable range
           sequencer.grid.keyPress({y: 1, x: 12, s: 1});
           sequencer.grid.keyPress({y: 1, x: 12, s: 0});
 

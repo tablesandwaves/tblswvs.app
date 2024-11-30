@@ -222,7 +222,19 @@ export class ApplicationController {
     // As they are pressed, add gates to the active gates array for storing until the last key press is released.
     if (press.s == 1) {
       gridPage.keyPressCount++;
-      gridPage.activeGates.push(press);
+
+      if (press.y == 0) {
+        if (press.x < gridPage.activeTrack.rhythmStepBreakpoint)
+          gridPage.activeGates.push(press);
+      } else {
+        if (gridPage.activeTrack.rhythmStepBreakpoint < gridPage.activeTrack.rhythmStepLength) {
+          if (press.x < gridPage.activeTrack.rhythmStepLength - gridPage.activeTrack.rhythmStepBreakpoint)
+            gridPage.activeGates.push(press);
+        } else {
+          if (press.x < 32 - gridPage.activeTrack.rhythmStepLength)
+            gridPage.activeGates.push(press);
+        }
+      }
     } else {
       gridPage.keyPressCount--;
 
