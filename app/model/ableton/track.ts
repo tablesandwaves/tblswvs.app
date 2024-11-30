@@ -850,7 +850,8 @@ export class AbletonTrack {
         this.currentAbletonNotes.map(n => n.toPianoRollNote()),
         this.chains[this.activeChain].pads,
         this.daw.sequencer.superMeasure,
-        this.rhythmStepLength
+        this.rhythmStepLength,
+        this.rhythmStepBreakpoint
       )
     } else {
       this.daw.sequencer.gui.webContents.send(
@@ -858,7 +859,8 @@ export class AbletonTrack {
         this.currentAbletonNotes.map(n => n.toPianoRollNote()),
         this.daw.sequencer.key.midiTonic,
         this.daw.sequencer.superMeasure,
-        this.rhythmStepLength
+        this.rhythmStepLength,
+        this.rhythmStepBreakpoint
       );
     }
   }
