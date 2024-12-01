@@ -26,7 +26,8 @@ export class RhythmController extends ApplicationController {
 
 
   refresh() {
-    this.setGridRhythmDisplay();
+    super.setGridRhythmGatesDisplay();
+    this.setGridRhythmParameterDisplay();
   }
 
 
@@ -67,7 +68,7 @@ export class RhythmController extends ApplicationController {
       gridPage.activeTrack.rhythmAlgorithm = algorithm;
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.setGridRhythmDisplay();
+      gridPage.setGridRhythmGatesDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
   }
@@ -85,7 +86,7 @@ export class RhythmController extends ApplicationController {
       }
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.setGridRhythmDisplay();
+      gridPage.setGridRhythmGatesDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
   }
@@ -111,16 +112,15 @@ export class RhythmController extends ApplicationController {
 
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    this.setGridRhythmDisplay(highlightIndex);
+    super.setGridRhythmGatesDisplay(highlightIndex);
     this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
   }
 
 
-  setGridRhythmDisplay(highlightIndex?: number) {
-    // Transport row
-    super.setGridRhythmDisplay(highlightIndex);
+  setGridRhythmParameterDisplay() {
+    super.setGridSharedRhythmParametersDisplay();
 
-    // Parameter rows
+    // Parameter rows used by this page/controller, not by drum pad page/controller
     this.grid.levelRow(0, 3, this.getGridParameterRow().slice(0, 8));
     this.grid.levelRow(8, 3, this.getGridParameterRow().slice(8, 16));
     this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());

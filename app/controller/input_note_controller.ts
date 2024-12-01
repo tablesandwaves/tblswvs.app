@@ -55,7 +55,7 @@ export class InputNoteController extends ApplicationController {
 
 
   refresh() {
-    this.setGridRhythmDisplay();
+    this.setGridRhythmGatesDisplay();
     this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.setGlobalAlgorithmControls();
@@ -63,19 +63,8 @@ export class InputNoteController extends ApplicationController {
 
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    this.setGridRhythmDisplay(highlightIndex);
+    this.setGridRhythmGatesDisplay(highlightIndex);
     this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
-  }
-
-
-  setGridRhythmDisplay(highlightIndex?: number) {
-    // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
-    const transportRow = this.grid.shiftStateActive ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
-    if (highlightIndex != undefined) transportRow[highlightIndex] = HIGHLIGHT_BRIGHTNESS;
-    this.grid.levelRow(0, 0, transportRow.slice(0, 8));
-    this.grid.levelRow(8, 0, transportRow.slice(8, 16));
-    this.grid.levelRow(0, 1, transportRow.slice(16, 24));
-    this.grid.levelRow(8, 1, transportRow.slice(24, 32));
   }
 
 

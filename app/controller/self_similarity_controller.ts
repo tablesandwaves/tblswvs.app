@@ -16,7 +16,9 @@ export class SelfSimilarityController extends InputNoteController {
 
 
   refresh() {
-    this.setGridSelfSimilarityDisplay();
+    super.setGridRhythmGatesDisplay();
+    super.setGlobalAlgorithmControls();
+    this.grid.levelRow(8, 6, this.getGridSelfSimilarityTypeRow());
   }
 
 
@@ -32,13 +34,6 @@ export class SelfSimilarityController extends InputNoteController {
     gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.setGuiInputNotes();
-  }
-
-
-  setGridSelfSimilarityDisplay() {
-    super.setGridRhythmDisplay();
-    super.setGlobalAlgorithmControls();
-    this.grid.levelRow(8, 6, this.getGridSelfSimilarityTypeRow());
   }
 
 

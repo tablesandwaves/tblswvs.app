@@ -150,7 +150,7 @@ export class ApplicationController {
   }
 
 
-  setGridRhythmDisplay(highlightIndex?: number) {
+  setGridRhythmGatesDisplay(highlightIndex?: number) {
     // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
     const transportRow = this.grid.shiftStateActive ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();
     if (highlightIndex != undefined) transportRow[highlightIndex] = HIGHLIGHT_BRIGHTNESS;
@@ -158,8 +158,11 @@ export class ApplicationController {
     this.grid.levelRow(8, 0, transportRow.slice(8, 16));
     this.grid.levelRow(0, 1, transportRow.slice(16, 24));
     this.grid.levelRow(8, 1, transportRow.slice(24, 32));
+  }
 
-    // Shared parameter rows
+
+  // Parameters shared by the RhythmController and the DrumPadController
+  setGridSharedRhythmParametersDisplay() {
     this.setGridFillParametersDisplay();
     this.toggleRadioButton(8, 4, pulseRateMap[this.activeTrack.pulseRate].index);
     this.updateGridRowMeter(8, 5, noteLengthMap[this.activeTrack.noteLength].index);
@@ -263,7 +266,7 @@ export class ApplicationController {
 
           gridPage.grid.sequencer.daw.updateActiveTrackNotes();
 
-          gridPage.setGridRhythmDisplay();
+          gridPage.setGridRhythmGatesDisplay();
           gridPage.updateGuiRhythmDisplay();
 
           if (gridPage.rhythmIsBlank()) {
@@ -320,7 +323,7 @@ export class ApplicationController {
 
         if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-        gridPage.setGridRhythmDisplay();
+        gridPage.setGridRhythmGatesDisplay();
         gridPage.updateGuiRhythmDisplay();
       }
     }
@@ -396,7 +399,8 @@ export class ApplicationController {
   }
 
 
-  // Overridden on the RhythmPage and RampSequencePage where the grid's transport row also needs to be updated.
+  // Overridden on the RhythmController, InputNoteController, DrumPadController
+  // where the grid's transport row also needs to be updated.
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
   }

@@ -56,9 +56,9 @@ export class DrumPadController extends ApplicationController {
   }
 
 
-  setGridRhythmDisplay(highlightIndex?: number, pianoRollHighlightIndex?: number) {
+  setGridRhythmGatesDisplay(highlightIndex?: number, pianoRollHighlightIndex?: number) {
     // Display the transport row
-    super.setGridRhythmDisplay(highlightIndex);
+    super.setGridRhythmGatesDisplay(highlightIndex);
 
     // Reset any drum pads brightened from the previous sequencer step
     this.previousCoordinates.forEach(coordinate => {
@@ -85,6 +85,7 @@ export class DrumPadController extends ApplicationController {
 
   refresh() {
     this.setGridDrumPadDisplay();
+    super.setGridSharedRhythmParametersDisplay();
   }
 
 
@@ -222,7 +223,7 @@ export class DrumPadController extends ApplicationController {
 
   setGridDrumPadDisplay(highlightIndex?: number) {
     // Transport row
-    super.setGridRhythmDisplay(highlightIndex);
+    super.setGridRhythmGatesDisplay(highlightIndex);
 
     // Drum Pads
     for (let y = 3; y <= 6; y++)
@@ -237,7 +238,7 @@ export class DrumPadController extends ApplicationController {
 
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    this.setGridRhythmDisplay(highlightIndex, pianoRollHighlightIndex);
+    this.setGridRhythmGatesDisplay(highlightIndex, pianoRollHighlightIndex);
     this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
   }
 }
