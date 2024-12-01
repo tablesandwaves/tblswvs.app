@@ -231,7 +231,7 @@ export class ApplicationController {
           if (press.x < gridPage.activeTrack.rhythmStepLength - gridPage.activeTrack.rhythmStepBreakpoint)
             gridPage.activeGates.push(press);
         } else {
-          if (press.x < 32 - gridPage.activeTrack.rhythmStepLength)
+          if (press.x < 32 - gridPage.activeTrack.rhythmStepLength + 16)
             gridPage.activeGates.push(press);
         }
       }

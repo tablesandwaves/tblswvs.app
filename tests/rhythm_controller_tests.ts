@@ -70,6 +70,54 @@ describe("RhythmController", () => {
 
 
   describe("when adjusting the rhythm step length", () => {
+    describe("a maximum rhythm step length", () => {
+      const [sequencer, track, controller] = getRhythmControllerMocks();
+
+      before(() => {
+        track.rhythm = rhythmStepsForPattern([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+
+        // Flush the track notes
+        track.updateCurrentAbletonNotes();
+        expect(track.currentAbletonNotes.length).to.eq(4);
+      });
+
+      describe("adding steps within the second row", () => {
+        before(() => {
+          // Get out of shift-state-active mode
+          sequencer.grid.shiftStateActive = false;
+
+          // Add another step
+          sequencer.grid.keyPress({y: 1, x: 0, s: 1});
+          sequencer.grid.keyPress({y: 1, x: 0, s: 0});
+
+          track.updateCurrentAbletonNotes();
+        });
+
+        it("alters the active track rhythm", () => {
+          expect(track.rhythm.map(s => s.state)).to.have.ordered.members([
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("alters the rhythm gates grid row", () => {
+          expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+            10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+          ]);
+        });
+
+        it("updates the active track Ableton notes", () => {
+          const actual = track.currentAbletonNotes.map(note => note.clipPosition);
+          expect(actual).to.have.ordered.members([0, 4, 8, 12, 16, 20, 24, 28]);
+        });
+      });
+    });
+
+
     describe("setting the step length to a single row", () => {
       const [sequencer, track, controller] = getRhythmControllerMocks();
       track.rhythm = rhythmStepsForPattern([
