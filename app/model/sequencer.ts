@@ -102,7 +102,20 @@ export class Sequencer {
   transport(step: number) {
     // If the current track is set to an 8n pulse, for example, don't advance on fractions of a step.
     const trackStep = Math.floor(step / pulseRateMap[this.daw.getActiveTrack().pulseRate].size);
-    this.grid.displayRhythmWithTransport(trackStep % this.daw.getActiveTrack().rhythmStepLength, step);
+    // Next find the step within the measure by modulo division against the rhythm step length
+    const measureStep = trackStep % this.daw.getActiveTrack().rhythmStepLength;
+    // Finally, account for whether the track has a breakpoint less than the rhythm step length
+    if (this.daw.getActiveTrack().rhythmStepBreakpoint < this.daw.getActiveTrack().rhythmStepLength) {
+      if (measureStep < this.daw.getActiveTrack().rhythmStepBreakpoint) {
+        this.grid.displayRhythmWithTransport(measureStep, step)
+      } else {
+        // Second row: skip the last portion of the first 16 steps.
+        const adjustedStep = measureStep + 16 - this.daw.getActiveTrack().rhythmStepBreakpoint;
+        this.grid.displayRhythmWithTransport(adjustedStep, step)
+      }
+    } else {
+      this.grid.displayRhythmWithTransport(measureStep, step);
+    }
 
     // If on the first beat of the last measure, fire any mutating clips
     if (step == (this.superMeasure * 16) - 16) {
