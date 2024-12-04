@@ -69,6 +69,7 @@ export class RhythmController extends ApplicationController {
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.setGridRhythmGatesDisplay();
+      gridPage.setGridRhythmParameterDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
   }
@@ -87,6 +88,7 @@ export class RhythmController extends ApplicationController {
 
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       gridPage.setGridRhythmGatesDisplay();
+      gridPage.setGridRhythmParameterDisplay();
       gridPage.updateGuiRhythmDisplay();
     }
   }
