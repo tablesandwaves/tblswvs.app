@@ -132,7 +132,7 @@ export class GlobalController extends ApplicationController {
         rhythmSteps[hit].velocity = voice.velocities[i];
       });
       track.rhythm = rhythmSteps;
-      gridPage.grid.sequencer.daw.updateTrackNotes(track);
+      gridPage.grid.sequencer.setNotesInLive(track);
     });
 
     gridPage.setGridBeatPatternDisplay();

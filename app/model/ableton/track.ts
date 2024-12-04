@@ -393,7 +393,7 @@ export class AbletonTrack {
   notify(dawIndex: number, notification: string) {
     if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm" && this.#rhythmAlgorithm == "surround") {
       this.#generateSurroundRhythm();
-      this.daw.updateTrackNotes(this);
+      this.daw.sequencer.setNotesInLive(this);
     }
   }
 
