@@ -76,35 +76,37 @@ describe("DynamicsController", () => {
   });
 
 
-  describe("displaying dynamics properties for rhythms with breakpoints", () => {
+  describe("dynamics properties for rhythms with breakpoints", () => {
     const [sequencer, track, controller] = getRhythmControllerMocks();
-      // Note this rhythm corresponds to index 0 for both rows 1 and 2 after the step length modifications
-      track.rhythm = rhythmStepsForPattern([
-        1, 0, 0, 0,  1, 1, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,
-        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
+    // Note this rhythm corresponds to index 0 for both rows 1 and 2 after the step length modifications
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 0, 0,  1, 1, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
 
-      // Flush the track notes
-      track.updateCurrentAbletonNotes();
-      expect(track.currentAbletonNotes.length).to.eq(16);
+    // Flush the track notes
+    track.updateCurrentAbletonNotes();
+    expect(track.currentAbletonNotes.length).to.eq(16);
 
-      // Press the shift key to edit the rhythm step length,
-      // then set the length for row 1 to 5, the length of row 2 to 7
-      // finally release the shift functionality
-      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
-      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
-      sequencer.grid.keyPress({y: 1, x: 6, s: 1});
-      // Release must happen after both presses
-      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
-      sequencer.grid.keyPress({y: 1, x: 6, s: 0});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
-      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+    // Press the shift key to edit the rhythm step length,
+    // then set the length for row 1 to 5, the length of row 2 to 7
+    // finally release the shift functionality
+    sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+    sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 1, x: 6, s: 1});
+    // Release must happen after both presses
+    sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 1, x: 6, s: 0});
+    sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 13, s: 0});
 
-      // Page over to the dynamics controller
-      sequencer.grid.keyPress({y: 7, x: 15, s: 1});
-      const dController = sequencer.grid.activePage as DynamicsController;
+    // Page over to the dynamics controller
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    const dController = sequencer.grid.activePage as DynamicsController;
 
+
+    describe("displaying the patterns on the grid", () => {
       it("should only display the first active step on shift page 1", () => {
         dController.getGridDynamicsMatrix().forEach(row => {
           expect(row).to.have.ordered.members([10, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
@@ -119,5 +121,30 @@ describe("DynamicsController", () => {
           expect(row).to.have.ordered.members([10, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
         });
       });
+    });
+
+
+    describe("editing the patterns", () => {
+      it("can edit a step on the first page", () => {
+        // Ensure the shift state is inactive and edit the second step: set probability down one level
+        sequencer.grid.shiftStateActive = false;
+        sequencer.grid.keyPress({y: 1, x: 4, s: 1});
+        expect(sequencer.daw.getActiveTrack().rhythm[4].probability).to.eq(0.875);
+      });
+
+      it("does not allow edits of steps that are not on the current page", () => {
+        // Ensure the shift state is inactive and attempt to edit the third step
+        sequencer.grid.shiftStateActive = false;
+        sequencer.grid.keyPress({y: 1, x: 5, s: 1});
+        expect(sequencer.daw.getActiveTrack().rhythm[5].probability).to.eq(1);
+      });
+
+      it("can edit a step on the second/shift page", () => {
+        // Ensure the shift state is active and edit the third step: set probability down one level
+        sequencer.grid.shiftStateActive = true;
+        sequencer.grid.keyPress({y: 1, x: 4, s: 1});
+        expect(sequencer.daw.getActiveTrack().rhythm[9].probability).to.eq(0.875);
+      });
+    });
   });
 });

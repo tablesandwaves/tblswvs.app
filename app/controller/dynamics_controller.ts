@@ -53,9 +53,20 @@ export class DynamicsController extends ApplicationController {
         gridPage.activeDynamic = "velocity";
 
     } else {
+      // Do not allow edits of steps that are not on the current page
+      if (!gridPage.grid.shiftStateActive && press.x >= gridPage.activeTrack.rhythmStepBreakpoint) return;
 
-      // Update the actual dynamics property itself
-      const stepIndex = press.x + (gridPage.grid.shiftStateActive ? 16 : 0);
+      let stepIndex;
+      if (gridPage.grid.shiftStateActive) {
+        stepIndex = gridPage.activeTrack.rhythmStepBreakpoint < 16 ?
+                    press.x + gridPage.activeTrack.rhythmStepBreakpoint :
+                    press.x + 16;
+      } else {
+        stepIndex = press.x;
+      }
+
+      // Once the step index is known check again: do not allow edits of steps that are not on the current page
+      if (stepIndex > gridPage.activeTrack.rhythmStepLength) return;
 
       // Only edit dynamics for steps that are active
       if (gridPage.activeTrack.rhythm[stepIndex].state == 1) {
