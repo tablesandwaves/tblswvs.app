@@ -98,6 +98,7 @@ export class AbletonTrack {
   vectorShiftsLength: number = 8;
   vectorShiftsActive: boolean = false;
 
+  hasRampSequencers: boolean = false;
   rampSequence0: RampSequence;
   rampSequence1: RampSequence;
   editableRampSequence: (0|1) = 0;
@@ -140,10 +141,9 @@ export class AbletonTrack {
 
     this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
 
-    if (config.rampSequencer) {
-      this.rampSequence0 = new RampSequence();
-      this.rampSequence1 = new RampSequence();
-    }
+    this.hasRampSequencers = config.rampSequencer;
+    this.rampSequence0 = new RampSequence();
+    this.rampSequence1 = new RampSequence();
 
     this.shiftRegister = new ShiftRegister();
   }
@@ -882,7 +882,7 @@ export class AbletonTrack {
 
   updateGuiRampSequence() {
     if (this.daw.sequencer.gui == undefined) return;
-    if (this.rampSequence0 == undefined) return;
+
     this.daw.sequencer.gui.webContents.send(
       "update-ramp-sequence",
       this.editableRampSequence == 0 ? this.rampSequence0.deviceData() : this.rampSequence1.deviceData(),
