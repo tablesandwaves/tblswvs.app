@@ -1,6 +1,6 @@
 import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { RhythmStep } from "../model/ableton/track";
+import { RhythmStep, defaultVelocities } from "../model/ableton/track";
 import { debounce }   from "../helpers/utils";
 
 
@@ -76,7 +76,17 @@ export class DynamicsController extends ApplicationController {
 
     for (let y = 0; y < 7; y++) {
       const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
-        const property = this.activeDynamic == "probability" ? step.probability : step.velocity;
+        let property;
+        if (this.activeDynamic == "probability") {
+          property = step.probability;
+        } else {
+          if (step.velocity) {
+            property = step.velocity;
+          } else {
+            property = defaultVelocities[x];
+          }
+        }
+
         return (step.state == 1 && this.matrix[y][x].value <= property) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
       });
 
