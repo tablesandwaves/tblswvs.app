@@ -618,7 +618,7 @@ export class AbletonTrack {
     }
 
     if (this.daw.sequencer.ghostNotes && (this.name == "Kick" || this.name == "Snare")) {
-      ghostNotesFor(this.#rhythm).forEach(abletonNote => {
+      ghostNotesFor(this.#rhythm.slice(0, this.#rhythmStepLength)).forEach(abletonNote => {
         if (!noteMap.has(abletonNote.midi)) noteMap.set(abletonNote.midi, []);
         noteMap.get(abletonNote.midi).push(abletonNote);
       });

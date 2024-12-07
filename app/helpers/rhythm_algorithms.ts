@@ -41,6 +41,7 @@ export const ghostNotesFor = (sourceRhythm: RhythmStep[]) => {
 
   const ghostNotes = new Array();
   const measureCount = Math.floor(CLIP_16N_COUNT / sourceRhythm.length);
+  const wholeNotesPerMeasure = Math.floor(sourceRhythm.length / 4);
 
   for (let measureIndex = 0; measureIndex < measureCount; measureIndex++) {
     const ghostNoteIndices = segmentRanges.reduce((ghostNotes, range, i) => {
@@ -53,7 +54,7 @@ export const ghostNotesFor = (sourceRhythm: RhythmStep[]) => {
 
     ghostNoteIndices.map(ghostNoteIndex => {
       // 16n within measure + timing offset + measure offset
-      const clipPosition = (ghostNoteIndex * 0.25) + (0.25 * 0.25) + (8 * measureIndex);
+      const clipPosition = (ghostNoteIndex * 0.25) + (0.25 * 0.25) + (wholeNotesPerMeasure * measureIndex);
       ghostNotes.push(new AbletonNote(60, clipPosition, 0.25, 30, 1));
     });
   }
