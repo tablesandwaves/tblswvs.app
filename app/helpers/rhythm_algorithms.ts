@@ -55,7 +55,7 @@ export const ghostNotesFor = (sourceRhythm: RhythmStep[]) => {
     ghostNoteIndices.map(ghostNoteIndex => {
       // 16n within measure + timing offset + measure offset
       const clipPosition = (ghostNoteIndex * 0.25) + (0.25 * 0.25) + (wholeNotesPerMeasure * measureIndex);
-      ghostNotes.push(new AbletonNote(60, clipPosition, 0.25, 30, 1));
+      ghostNotes.push(new AbletonNote(60, clipPosition, 0.25, 50, 1));
     });
   }
 
