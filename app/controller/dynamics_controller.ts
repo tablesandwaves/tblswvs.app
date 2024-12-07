@@ -72,10 +72,30 @@ export class DynamicsController extends ApplicationController {
 
 
   setGridDynamicsDisplay() {
-    const [rhythmStart, rhythmEnd] = this.grid.shiftStateActive ? [16, 32] : [0, 16];
+    this.getGridDynamicsMatrix().forEach((row, y) => {
+      this.grid.levelRow(0, y, row.slice(0, 8));
+      this.grid.levelRow(8, y, row.slice(8, 16));
+    });
+  }
+
+
+  getGridDynamicsMatrix() {
+    const matrix = new Array();
+
+    let rhythmSliceStart, rhythmSliceEnd;
+    if (this.grid.shiftStateActive) {
+      rhythmSliceStart = this.activeTrack.rhythmStepBreakpoint < 16 ? this.activeTrack.rhythmStepBreakpoint : 16;
+      rhythmSliceEnd   = this.activeTrack.rhythmStepBreakpoint < 16 ?
+                    this.activeTrack.rhythmStepLength :
+                    16;
+    } else {
+      rhythmSliceStart = 0;
+      rhythmSliceEnd   = this.activeTrack.rhythmStepBreakpoint < 16 ? this.activeTrack.rhythmStepBreakpoint : 16;
+    }
 
     for (let y = 0; y < 7; y++) {
-      const row = this.activeTrack.rhythm.slice(rhythmStart, rhythmEnd).map((step: RhythmStep, x) => {
+      const row = new Array(16).fill(INACTIVE_BRIGHTNESS);
+      this.activeTrack.rhythm.slice(rhythmSliceStart, rhythmSliceEnd).forEach((step: RhythmStep, x) => {
         let property;
         if (this.activeDynamic == "probability") {
           property = step.probability;
@@ -87,11 +107,13 @@ export class DynamicsController extends ApplicationController {
           }
         }
 
-        return (step.state == 1 && this.matrix[y][x].value <= property) ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+        if (step.state == 1 && this.matrix[y][x].value <= property)
+          row[x] = ACTIVE_BRIGHTNESS;
       });
 
-      this.grid.levelRow(0, y, row.slice(0, 8));
-      this.grid.levelRow(8, y, row.slice(8, 16));
+      matrix.push(row);
     }
+
+    return matrix;
   }
 }

@@ -1,7 +1,9 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { DynamicsController } from "../app/controller/dynamics_controller";
-import { configDirectory, patternForRhythmSteps, velocityWithinRange } from "./test_helpers";
+import { configDirectory, patternForRhythmSteps, velocityWithinRange,
+  getRhythmControllerMocks, rhythmStepsForPattern }
+from "./test_helpers";
 
 
 const testing = true;
@@ -71,5 +73,51 @@ describe("DynamicsController", () => {
       track.updateCurrentAbletonNotes();
       expect(velocityWithinRange(track.currentAbletonNotes[0].velocity, 105)).to.be.true;
     });
+  });
+
+
+  describe("displaying dynamics properties for rhythms with breakpoints", () => {
+    const [sequencer, track, controller] = getRhythmControllerMocks();
+      // Note this rhythm corresponds to index 0 for both rows 1 and 2 after the step length modifications
+      track.rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  1, 1, 0, 0,  0, 1, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      // Flush the track notes
+      track.updateCurrentAbletonNotes();
+      expect(track.currentAbletonNotes.length).to.eq(16);
+
+      // Press the shift key to edit the rhythm step length,
+      // then set the length for row 1 to 5, the length of row 2 to 7
+      // finally release the shift functionality
+      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+      sequencer.grid.keyPress({y: 0, x: 4, s: 1});
+      sequencer.grid.keyPress({y: 1, x: 6, s: 1});
+      // Release must happen after both presses
+      sequencer.grid.keyPress({y: 0, x: 4, s: 0});
+      sequencer.grid.keyPress({y: 1, x: 6, s: 0});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+
+      // Page over to the dynamics controller
+      sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+      const dController = sequencer.grid.activePage as DynamicsController;
+
+      it("should only display the first active step on shift page 1", () => {
+        dController.getGridDynamicsMatrix().forEach(row => {
+          expect(row).to.have.ordered.members([10, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+        });
+      });
+
+      it("should display the second active step on shift page 2", () => {
+        // Select and release the shift key to display the second half
+        sequencer.grid.keyPress({y: 7, x: 13, s: 1});
+        sequencer.grid.keyPress({y: 7, x: 13, s: 0});
+        dController.getGridDynamicsMatrix().forEach(row => {
+          expect(row).to.have.ordered.members([10, 0, 0, 0,  10, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+        });
+      });
   });
 });
