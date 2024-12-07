@@ -932,6 +932,9 @@ export class AbletonTrack {
       this.daw.rhythmSectionRhythm(),
       this.daw.harmonicSectionRhythm()
     );
+
+    if (this.daw.sequencer.activeBeatPattern)
+      this.daw.sequencer.gui.webContents.send("set-beat", this.daw.sequencer.activeBeatPattern.name);
   }
 
 

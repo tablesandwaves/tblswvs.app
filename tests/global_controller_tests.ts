@@ -1,5 +1,8 @@
+import * as fs from "fs";
+import * as yaml from "js-yaml";
+import * as path from "path";
 import { expect } from "chai";
-import { Sequencer } from "../app/model/sequencer";
+import { Sequencer, BeatSet } from "../app/model/sequencer";
 import { GlobalController } from "../app/controller/global_controller";
 import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
 
@@ -11,11 +14,39 @@ describe("GlobalController", () => {
   describe("when loading the global page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the rhythm page and page over two to the right
+    // Select the global page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     const controller = sequencer.grid.activePage as GlobalController;
 
     it("sets the active page to a globals page", () => expect(controller).to.be.instanceOf(GlobalController));
+  });
+
+
+  describe("setting a beat pattern", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    fs.readdirSync(sequencer.configDirectory).forEach(filename => {
+      if (filename.startsWith("patterns_beats")) {
+        const beatPatterns = yaml.load(fs.readFileSync( path.resolve(sequencer.configDirectory, filename), "utf8" ));
+        sequencer.setBeatPatterns(beatPatterns as BeatSet);
+      }
+    });
+
+    // Select the global page, then set a predefined beat
+    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 13, s: 1});
+
+    it("should set the step length for the rhythm tracks", () => {
+      sequencer.daw.tracks.slice(0, 3).forEach(track => {
+        expect(track.rhythmStepLength).to.eq(16);
+      });
+    });
+
+    it("should set the breakpoint to the step length for the rhythm tracks", () => {
+      sequencer.daw.tracks.slice(0, 3).forEach(track => {
+        expect(track.rhythmStepBreakpoint).to.eq(16);
+      });
+    });
   });
 
 

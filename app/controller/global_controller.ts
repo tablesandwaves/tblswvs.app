@@ -118,12 +118,12 @@ export class GlobalController extends ApplicationController {
     beat.button_xy = [press.x - 8, press.y];
 
     gridPage.grid.sequencer.activeBeatPattern = beat;
-    gridPage.grid.sequencer.gui.webContents.send("set-beat", beat.name);
 
     beat.voices.forEach(voice => {
       const track = gridPage.grid.sequencer.daw.tracks.find(t => t.name == voice.track);
-      track.rhythmStepLength = beat.length;
-      track.rhythmAlgorithm  = gridPage.matrix[press.y][press.x].value;
+      track.rhythmStepLength     = beat.length;
+      track.rhythmStepBreakpoint = beat.length;
+      track.rhythmAlgorithm      = gridPage.matrix[press.y][press.x].value;
 
       const rhythmSteps = new Array(32).fill(undefined)
                                        .map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined, timingOffset: 0}));
