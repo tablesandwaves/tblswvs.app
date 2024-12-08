@@ -6,6 +6,7 @@ import { before } from "mocha";
 import { HarmonicAutomaton } from "../app/model/automata/harmonic_automaton";
 import { RandomStateMachine } from "../app/model/automata/random_state_machine";
 import { NamedRandomStateMachine } from "../app/model/automata/named_random_state_machine";
+import { PatternStateMachine } from "../app/model/automata/pattern_state_machine";
 import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
 
 
@@ -45,6 +46,20 @@ describe("HarmonicAutomaton", () => {
 
       it("has named choices", () => {
         expect(automaton.duration.next("medium")).to.be.oneOf(["0.1.0", "0.2.0"])
+      });
+    });
+
+
+    describe("the velocity parameter", () => {
+      it("is a pattern state machine", () => {
+        expect(automaton.velocity).to.be.an.instanceOf(PatternStateMachine);
+      });
+
+      it("has cycling choices", () => {
+        expect(automaton.velocity.next()).to.eq(100);
+        expect(automaton.velocity.next()).to.eq(60);
+        expect(automaton.velocity.next()).to.eq(60);
+        expect(automaton.velocity.next()).to.eq(80);
       });
     });
   });

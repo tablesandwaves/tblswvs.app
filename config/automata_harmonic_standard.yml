@@ -24,7 +24,7 @@ parameters:
         - 2.0.0
   velocity:
     type: pattern
-    pattern: [100, 60, 60, 80, 60, 60, 100, 40]
+    choices: [100, 60, 60, 80, 60, 60, 100, 40]
   note_type:
     type: parameter set
     choices:
