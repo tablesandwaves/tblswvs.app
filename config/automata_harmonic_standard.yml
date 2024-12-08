@@ -1,14 +1,14 @@
 name: standard
 parameters:
   attack:
-    type: simple choice
+    type: random choice
     choices: [0, 0.25, 0.5, 0.5, 0.75, 0.75, 1, 1]
   filter_frequency:
     type: range
     min: 200
     max: 16000
   duration:
-    type: named choice
+    type: named random choice
     choices:
       small:
         - 0.0.120
@@ -22,9 +22,11 @@ parameters:
         - 1.0.0
         - 1.2.0
         - 2.0.0
-  velocity_pattern: [100, 60, 60, 80, 60, 60, 100, 40]
+  velocity:
+    type: pattern
+    pattern: [100, 60, 60, 80, 60, 60, 100, 40]
   note_type:
-    type: named choice
+    type: parameter set
     choices:
       melody:
         min_iterations: 20
@@ -47,17 +49,29 @@ parameters:
             degree: [1, 1, 5, [2, 3, 4, 6, 7]]
           next:
             small:
-              small: 0.4
-              medium: 0.2
-              large: 0.4
+              - small
+              - small
+              - small
+              - small
+              - medium
+              - medium
+              - large
+              - large
+              - large
+              - large
             medium:
-              small: 0.5
-              medium: 0.5
+              - small
+              - medium
             large:
-              small: 0.25
-              medium: 0.75
+              - small
+              - medium
+              - medium
+              - medium
       chord:
         min_iterations: 4
+        next_type:
+          - melody
+          - chord
         next_duration:
           - medium
           - medium
@@ -69,9 +83,6 @@ parameters:
           - large
           - large
           - large
-        next_type:
-          - melody
-          - chord
         midi_notes:
           initialize:
             root: [1, 1, 5, 5, 3]
