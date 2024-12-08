@@ -1,0 +1,127 @@
+name: standard
+parameters:
+  attack:
+    type: simple choice
+    choices: [0, 0.25, 0.5, 0.5, 0.75, 0.75, 1, 1]
+  filter_frequency:
+    type: range
+    min: 200
+    max: 16000
+  duration:
+    type: named choice
+    choices:
+      small:
+        - 0.0.120
+        - 0.0.240
+        - 0.0.240
+        - 0.0.240
+      medium:
+        - 0.1.0
+        - 0.2.0
+      large:
+        - 1.0.0
+        - 1.2.0
+        - 2.0.0
+  velocity_pattern: [100, 60, 60, 80, 60, 60, 100, 40]
+  note_type:
+    type: named choice
+    choices:
+      melody:
+        min_iterations: 20
+        next_type:
+          - melody
+          - chord
+        next_duration:
+          - small
+          - small
+          - small
+          - small
+          - small
+          - small
+          - small
+          - medium
+          - medium
+          - medium
+        midi_notes:
+          initialize:
+            degree: [1, 1, 5, [2, 3, 4, 6, 7]]
+          next:
+            small:
+              small: 0.4
+              medium: 0.2
+              large: 0.4
+            medium:
+              small: 0.5
+              medium: 0.5
+            large:
+              small: 0.25
+              medium: 0.75
+      chord:
+        min_iterations: 4
+        next_duration:
+          - medium
+          - medium
+          - medium
+          - medium
+          - medium
+          - medium
+          - large
+          - large
+          - large
+          - large
+        next_type:
+          - melody
+          - chord
+        midi_notes:
+          initialize:
+            root: [1, 1, 5, 5, 3]
+            type:
+              - type: triad
+              - type: triad
+              - type: triad
+              - type: triad
+              - type: dyad
+                distance: 8
+              - type: dyad
+                distance: 3
+              - type: dyad
+                distance: 4
+              - type: dyad
+                distance: 5
+              - type: dyad
+                distance: 6
+              - type: dyad
+                distance: 7
+          next:
+            dim:
+              type: triad
+              degree_offset: 2
+            M:
+              type: triad
+              degree_offset: -2
+            m:
+              type:
+                - type: dyad
+                  distance: 4
+                - type: dyad
+                  distance: 6
+              degree_offset: 0
+            default:
+              degree_offset: [-4, -3, -1, 0, 1, 2, 3, 4]
+              type:
+                - type: triad
+                - type: triad
+                - type: triad
+                - type: triad
+                - type: dyad
+                  distance: 8
+                - type: dyad
+                  distance: 3
+                - type: dyad
+                  distance: 4
+                - type: dyad
+                  distance: 5
+                - type: dyad
+                  distance: 6
+                - type: dyad
+                  distance: 7
