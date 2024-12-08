@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { RandomStateMachine } from "../app/model/automata/random_state_machine";
 import { NamedRandomStateMachine } from "../app/model/automata/named_random_state_machine";
+import { PatternStateMachine } from "../app/model/automata/pattern_state_machine";
 
 
 describe("RandomStateMachine", () => {
@@ -29,5 +30,23 @@ describe("NamedRandomStateMachine", () => {
 
   it("can return a next choice", () => {
     expect(nrsm.next("medium")).to.be.oneOf(["0.1.0", "0.2.0"]);
+  });
+});
+
+
+describe("PatternStateMachine", () => {
+  const psm = new PatternStateMachine([1, 2, 3]);
+
+  it("stores its pattern", () => {
+    expect(psm.pattern).to.have.ordered.members([1, 2, 3]);
+  });
+
+  it("cycles through the pattern", () => {
+    expect(psm.next()).to.eq(1);
+    expect(psm.next()).to.eq(2);
+    expect(psm.next()).to.eq(3);
+    expect(psm.next()).to.eq(1);
+    expect(psm.next()).to.eq(2);
+    expect(psm.next()).to.eq(3);
   });
 });
