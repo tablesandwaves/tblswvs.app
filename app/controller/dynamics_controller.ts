@@ -97,8 +97,8 @@ export class DynamicsController extends ApplicationController {
     if (this.grid.shiftStateActive) {
       rhythmSliceStart = this.activeTrack.rhythmStepBreakpoint < 16 ? this.activeTrack.rhythmStepBreakpoint : 16;
       rhythmSliceEnd   = this.activeTrack.rhythmStepBreakpoint < 16 ?
-                    this.activeTrack.rhythmStepLength :
-                    16;
+                         this.activeTrack.rhythmStepLength :
+                         32;
     } else {
       rhythmSliceStart = 0;
       rhythmSliceEnd   = this.activeTrack.rhythmStepBreakpoint < 16 ? this.activeTrack.rhythmStepBreakpoint : 16;
