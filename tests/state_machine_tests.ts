@@ -15,6 +15,17 @@ describe("RandomStateMachine", () => {
   it("can return a next choice", () => {
     expect(rsm.next()).to.be.oneOf([1, 2, 3]);
   });
+
+
+  describe("with nested array choices", () => {
+    const rsm = new RandomStateMachine([1, [2, 3]]);
+
+    it("returns flattened choice values", () => {
+      for (let i = 0; i < 100; i++) {
+        expect(rsm.next()).to.be.oneOf([1, 2, 3]);
+      }
+    });
+  });
 });
 
 

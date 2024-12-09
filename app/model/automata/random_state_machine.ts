@@ -7,7 +7,12 @@ export class RandomStateMachine {
   }
 
 
-  next() {
-    return this.choices[Math.floor(Math.random() * this.choices.length)];
+  next(choices: any[] = undefined): any {
+    const _choices = choices == undefined ? this.choices : choices;
+    const choice = _choices[Math.floor(Math.random() * _choices.length)];
+    if (Array.isArray(choice))
+      return this.next(choice);
+    else
+      return choice;
   }
 }
