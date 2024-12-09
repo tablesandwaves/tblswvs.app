@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { RandomStateMachine } from "../app/model/automata/random_state_machine";
 import { NamedRandomStateMachine } from "../app/model/automata/named_random_state_machine";
 import { PatternStateMachine } from "../app/model/automata/pattern_state_machine";
+import { RangeStateMachine } from "../app/model/automata/range_state_machine";
 
 
 describe("RandomStateMachine", () => {
@@ -48,5 +49,20 @@ describe("PatternStateMachine", () => {
     expect(psm.next()).to.eq(1);
     expect(psm.next()).to.eq(2);
     expect(psm.next()).to.eq(3);
+  });
+});
+
+
+describe("RangeStateMachine", () => {
+  const rsm = new RangeStateMachine(200, 16000);
+
+  it("stores min", () => expect(rsm.min).to.eq(200));
+  it("stores max", () => expect(rsm.max).to.eq(16000));
+
+  it("generates a random number within the range", () => {
+    for (let i = 0; i < 100; i++) {
+      expect(rsm.next()).to.greaterThanOrEqual(200);
+      expect(rsm.next()).to.lessThanOrEqual(16000);
+    }
   });
 });

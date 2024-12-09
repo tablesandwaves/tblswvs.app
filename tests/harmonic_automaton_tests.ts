@@ -7,10 +7,8 @@ import { HarmonicAutomaton } from "../app/model/automata/harmonic_automaton";
 import { RandomStateMachine } from "../app/model/automata/random_state_machine";
 import { NamedRandomStateMachine } from "../app/model/automata/named_random_state_machine";
 import { PatternStateMachine } from "../app/model/automata/pattern_state_machine";
-import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
-
-
-const testing = true;
+import { configDirectory } from "./test_helpers";
+import { RangeStateMachine } from "../app/model/automata/range_state_machine";
 
 
 describe("HarmonicAutomaton", () => {
@@ -60,6 +58,17 @@ describe("HarmonicAutomaton", () => {
         expect(automaton.velocity.next()).to.eq(60);
         expect(automaton.velocity.next()).to.eq(60);
         expect(automaton.velocity.next()).to.eq(80);
+      });
+    });
+
+
+    describe("the filter frequency parameter", () => {
+      it("is a range state machine", () => {
+        expect(automaton.filterFrequency).to.be.an.instanceOf(RangeStateMachine);
+      });
+
+      it("generates random frequencies within range", () => {
+        expect(automaton.filterFrequency.next()).to.be.within(200, 16000)
       });
     });
   });
