@@ -148,20 +148,20 @@ describe("HarmonicAutomaton", () => {
 
     describe("the chord parameter", () => {
       it("is a named random state machine", () => {
-        expect(automaton.chord).to.be.an.instanceOf(NamedRandomStateMachine);
+        expect(automaton.chords).to.be.an.instanceOf(NamedRandomStateMachine);
       });
 
       it("generates a specific chord when one is configured", () => {
-        expect(automaton.chord.next("dim")).to.have.property("type", "triad");
-        expect(automaton.chord.next("dim")).to.have.property("degreeOffset", 2);
+        expect(automaton.chords.next("dim")).to.have.property("type", "triad");
+        expect(automaton.chords.next("dim")).to.have.property("degreeOffset", 2);
       });
 
       it("generates a specific chord when multiple are configured", () => {
-        expect(automaton.chord.next("m").interval).to.be.oneOf([4, 6]);
+        expect(automaton.chords.next("m").interval).to.be.oneOf([4, 6]);
       });
 
       it("generates a random chord when no there is no other match", () => {
-        expect(automaton.chord.next("default")).to.haveOwnProperty("type").that.is.oneOf(["triad", "dyad"]);
+        expect(automaton.chords.next("default")).to.haveOwnProperty("type").that.is.oneOf(["triad", "dyad"]);
       });
     });
   });
@@ -218,10 +218,40 @@ describe("HarmonicAutomaton", () => {
         expect(automaton.iteration).to.eq(1);
       });
 
-      describe("the returned parameter data to send to Live", () => {
-        it("a two-dimentional array", () => {
-          expect(parameterData).to.be.an.instanceOf(Array);
-          parameterData.forEach(parameterSet => expect(parameterSet).to.be.an.instanceOf(Array));
+      it("the returned parameter data is a two-dimentional array", () => {
+        expect(parameterData).to.be.an.instanceOf(Array);
+        parameterData.forEach(parameterSet => expect(parameterSet).to.be.an.instanceOf(Array));
+      });
+
+
+      describe("when advancing past the first state", () => {
+        const counts: Record<string, number> = {};
+        const noteTypes: string[] = new Array();
+        let lastNoteType: string;
+
+        before(() => {
+          while(lastNoteType !== "melody") {
+            automaton.next();
+            if (automaton.noteType !== undefined) {
+              lastNoteType = automaton.noteType;
+              noteTypes.push(lastNoteType);
+            }
+          }
+
+          for (const noteType of noteTypes)
+            counts[noteType] = counts[noteType] ? counts[noteType] + 1 : 1;
+        });
+
+        it("will generate at least three more chords", () => {
+          expect(counts["chords"]).to.be.greaterThanOrEqual(3);
+        });
+
+        it("will eventually switch over to a melody", () => {
+          expect(lastNoteType).to.eq("melody");
+        });
+
+        it("resets the iteration count when it switches", () => {
+          expect(automaton.iteration).to.eq(1);
         });
       });
     });
