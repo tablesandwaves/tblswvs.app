@@ -225,33 +225,44 @@ describe("HarmonicAutomaton", () => {
 
 
       describe("when advancing past the first state", () => {
-        const counts: Record<string, number> = {};
-        const noteTypes: string[] = new Array();
-        let lastNoteType: string;
+        // 1 because the first note happened when it switched
+        let chordCount = 1;
 
         before(() => {
-          while(lastNoteType !== "melody") {
+          while(automaton.noteType !== "melody") {
             automaton.next();
-            if (automaton.noteType !== undefined) {
-              lastNoteType = automaton.noteType;
-              noteTypes.push(lastNoteType);
-            }
+            chordCount++;
           }
-
-          for (const noteType of noteTypes)
-            counts[noteType] = counts[noteType] ? counts[noteType] + 1 : 1;
         });
 
         it("will generate at least three more chords", () => {
-          expect(counts["chords"]).to.be.greaterThanOrEqual(3);
+          expect(chordCount).to.be.greaterThanOrEqual(3);
         });
 
         it("will eventually switch over to a melody", () => {
-          expect(lastNoteType).to.eq("melody");
+          expect(automaton.noteType).to.eq("melody");
         });
 
         it("resets the iteration count when it switches", () => {
           expect(automaton.iteration).to.eq(1);
+        });
+
+
+        describe("while cycling through a melody", () => {
+          // 1 because the first note happened when it switched
+          let melodicNoteCount = 1;
+          // let lastNoteType: string|undefined
+
+          before(() => {
+            while(automaton.noteType !== "chords") {
+              automaton.next();
+              melodicNoteCount++;
+            }
+          });
+
+          it("will generate a minimum number of melody notes", () => {
+            expect(melodicNoteCount).to.be.greaterThanOrEqual(20);
+          });
         });
       });
     });

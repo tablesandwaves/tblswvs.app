@@ -85,7 +85,7 @@ parameters:
         - medium
         - medium
         - medium
-  chord:
+  chords:
     type: named random choice
     choices:
       dim:

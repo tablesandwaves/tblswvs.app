@@ -28,6 +28,7 @@ export class HarmonicAutomaton {
   minMelodyIterations: number;
   minChordIterations: number;
   attacks: RandomStateMachine;
+  noteDistances: NamedRandomStateMachine;
   durations: NamedRandomStateMachine;
   velocities: PatternStateMachine;
   filterFrequencies: RangeStateMachine;
@@ -75,11 +76,9 @@ export class HarmonicAutomaton {
     this.chordStartRoot = new RandomStateMachine(automatonSpec.parameters.chordStartRoot.choices);
     this.chordStartQuality = new RandomStateMachine(automatonSpec.parameters.chordStartQuality.choices);
     this.melodyNoteDistance = new NamedRandomStateMachine(automatonSpec.parameters.melodyNoteDistance.choices);
-    this.chords = new NamedRandomStateMachine(automatonSpec.parameters.chord.choices);
+    this.chords = new NamedRandomStateMachine(automatonSpec.parameters.chords.choices);
 
-    this.scaleNoteCount        = this.key.scaleNotes.length;
-    this.fiveGreaterThanOctave = 5 + this.scaleNoteCount;
-    this.scaleHalfwayPoint     = Math.floor(this.scaleNoteCount / 2);
+    this.#generateNoteDistances();
   }
 
 
@@ -88,13 +87,13 @@ export class HarmonicAutomaton {
 
     if (this.noteType === undefined) {
       this.initialState === "chords" ? this.#startChord() : this.#startMelody();
-    } else if (this.noteType == "chords") {
+    } else if (this.noteType === "chords") {
       this.#advanceChordState();
-    } else if (this.noteType == "melody") {
-      // this.#advanceMelodyState();
+    } else if (this.noteType === "melody") {
+      this.#advanceMelodyState();
     }
-    this.degreeDistance = this.iteration == 0 ? 0 : this.degree - previousDegree;
 
+    this.degreeDistance  = this.iteration === 0 ? 0 : this.degree - previousDegree;
     this.duration        = this.noteType === "chords" ?
                            this.durations.next(this.chordDurationSize.next()) :
                            this.durations.next(this.melodyDurationSize.next());
@@ -187,6 +186,47 @@ export class HarmonicAutomaton {
   #startMelody() {
     this.noteType = "melody";
     this.iteration = 0;
+    this.degree = this.melodyStartDegree.next();
+  }
+
+
+  #advanceMelodyState() {
+    if (this.iteration < this.minMelodyIterations) {
+      this.#generateNextMelodicNote();
+      return;
+    }
+
+    if (Math.random() < 0.5) {
+      this.#generateNextMelodicNote();
+    } else {
+      this.#startChord();
+    }
+  }
+
+
+  #generateNextMelodicNote() {
+    const upOrDownRandom = Math.random() > 0.5 ? 1 : -1;
+    const nextDegreeDistance = this.melodyNoteDistance.next(this.#melodicDistanceSize());
+    this.degree = this.noteDistances.next(nextDegreeDistance) * upOrDownRandom;
+
+    // tblswvs.js scale degrees may not be 0
+    if (this.degree == 0)
+      this.degree = 1;
+    // Clamping: scale degrees should not be too far from the tonic
+    else if (this.degree < this.scaleNoteCount * -2 || this.degree > this.scaleNoteCount * 2)
+      this.degree = 1;
+  }
+
+
+  #melodicDistanceSize() {
+    const distance = Math.abs(this.degreeDistance);
+
+    if (distance <= this.scaleNoteCount / 2)
+      return "small";
+    else if (distance <= this.scaleNoteCount)
+      return "medium";
+    else
+      return "large";
   }
 
 
@@ -207,5 +247,21 @@ export class HarmonicAutomaton {
     } else {
       this.midiNotes = this.key.chord(this.degree, "T").midi;
     }
+  }
+
+
+  /**
+   * After the key has been set, generate note small, medium, large note distances
+   */
+  #generateNoteDistances() {
+    this.scaleNoteCount        = this.key.scaleNotes.length;
+    this.fiveGreaterThanOctave = 5 + this.scaleNoteCount;
+    this.scaleHalfwayPoint     = Math.floor(this.scaleNoteCount / 2);
+
+    this.noteDistances = new NamedRandomStateMachine({
+      small:  [...new Array(this.scaleHalfwayPoint).map((_, i) => i + 1)],
+      medium: [...new Array(this.scaleNoteCount - this.scaleHalfwayPoint).map((_, i) => i + this.scaleHalfwayPoint)],
+      large:  [...new Array(5).map((_, i) => i + this.scaleNoteCount)]
+    });
   }
 }
