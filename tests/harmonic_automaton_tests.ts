@@ -82,66 +82,66 @@ describe("HarmonicAutomaton", () => {
 
     describe("the melody duration size parameter", () => {
       it("is a random state machine", () => {
-        expect(automaton.melodyDurationSize).to.be.an.instanceOf(RandomStateMachine);
+        expect(automaton.melodyDurationSizes).to.be.an.instanceOf(RandomStateMachine);
       });
 
       it("generates random duration sizes", () => {
-        expect(automaton.melodyDurationSize.next()).to.be.oneOf(["small", "medium"]);
+        expect(automaton.melodyDurationSizes.next()).to.be.oneOf(["small", "medium"]);
       });
     });
 
 
     describe("the chord duration size parameter", () => {
       it("is a random state machine", () => {
-        expect(automaton.chordDurationSize).to.be.an.instanceOf(RandomStateMachine);
+        expect(automaton.chordDurationSizes).to.be.an.instanceOf(RandomStateMachine);
       });
 
       it("generates random duration sizes", () => {
-        expect(automaton.chordDurationSize.next()).to.be.oneOf(["medium", "large"]);
+        expect(automaton.chordDurationSizes.next()).to.be.oneOf(["medium", "large"]);
       });
     });
 
 
     describe("the melody start degree parameter", () => {
       it("is a random state machine", () => {
-        expect(automaton.melodyStartDegree).to.be.an.instanceOf(RandomStateMachine);
+        expect(automaton.melodyStartDegrees).to.be.an.instanceOf(RandomStateMachine);
       });
 
       it("generates random duration sizes", () => {
-        expect(automaton.melodyStartDegree.next()).to.be.oneOf([1, 2, 3, 4, 5, 6, 7]);
+        expect(automaton.melodyStartDegrees.next()).to.be.oneOf([1, 2, 3, 4, 5, 6, 7]);
       });
     });
 
 
     describe("the chord start root parameter", () => {
       it("is a random state machine", () => {
-        expect(automaton.chordStartRoot).to.be.an.instanceOf(RandomStateMachine);
+        expect(automaton.chordStartRoots).to.be.an.instanceOf(RandomStateMachine);
       });
 
       it("generates random duration sizes", () => {
-        expect(automaton.chordStartRoot.next()).to.be.oneOf([1, 3, 5]);
+        expect(automaton.chordStartRoots.next()).to.be.oneOf([1, 3, 5]);
       });
     });
 
 
     describe("the chord start quality parameter", () => {
       it("is a random state machine", () => {
-        expect(automaton.chordStartQuality).to.be.an.instanceOf(RandomStateMachine);
+        expect(automaton.chordStartQualities).to.be.an.instanceOf(RandomStateMachine);
       });
 
       it("generates a random chord type", () => {
-        expect(automaton.chordStartQuality.next()).to.haveOwnProperty("type").that.is.oneOf(["triad", "dyad"]);
+        expect(automaton.chordStartQualities.next()).to.haveOwnProperty("type").that.is.oneOf(["triad", "dyad"]);
       });
     });
 
 
     describe("the melody note distance parameter", () => {
       it("is a named random state machine", () => {
-        expect(automaton.melodyNoteDistance).to.be.an.instanceOf(NamedRandomStateMachine);
+        expect(automaton.melodyNotes).to.be.an.instanceOf(NamedRandomStateMachine);
       });
 
       it("generates a random melody note distance", () => {
-        expect(automaton.melodyNoteDistance.next("small")).to.be.oneOf(["small", "medium", "large"]);
+        expect(automaton.melodyNotes.next("small")).to.be.oneOf(["small", "medium", "large"]);
       });
     });
 

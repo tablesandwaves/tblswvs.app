@@ -32,12 +32,12 @@ export class HarmonicAutomaton {
   durations: NamedRandomStateMachine;
   velocities: PatternStateMachine;
   filterFrequencies: RangeStateMachine;
-  melodyDurationSize: RandomStateMachine;
-  chordDurationSize: RandomStateMachine;
-  melodyStartDegree: RandomStateMachine;
-  chordStartRoot: RandomStateMachine;
-  chordStartQuality: RandomStateMachine;
-  melodyNoteDistance: NamedRandomStateMachine;
+  melodyDurationSizes: RandomStateMachine;
+  chordDurationSizes: RandomStateMachine;
+  melodyStartDegrees: RandomStateMachine;
+  chordStartRoots: RandomStateMachine;
+  chordStartQualities: RandomStateMachine;
+  melodyNotes: NamedRandomStateMachine;
   chords: NamedRandomStateMachine;
 
   // Current State
@@ -63,19 +63,19 @@ export class HarmonicAutomaton {
     this.initialState = automatonSpec.initialState;
     this.minMelodyIterations = automatonSpec.parameters.minMelodyIterations;
     this.minChordIterations = automatonSpec.parameters.minChordIterations;
-    this.attacks = new RandomStateMachine(automatonSpec.parameters.attack.choices);
-    this.durations = new NamedRandomStateMachine(automatonSpec.parameters.duration.choices);
-    this.velocities = new PatternStateMachine(automatonSpec.parameters.velocity.choices);
+    this.attacks = new RandomStateMachine(automatonSpec.parameters.attacks.choices);
+    this.durations = new NamedRandomStateMachine(automatonSpec.parameters.durations.choices);
+    this.velocities = new PatternStateMachine(automatonSpec.parameters.velocities.choices);
     this.filterFrequencies = new RangeStateMachine(
-      automatonSpec.parameters.filterFrequency.min,
-      automatonSpec.parameters.filterFrequency.max
+      automatonSpec.parameters.filterFrequencies.min,
+      automatonSpec.parameters.filterFrequencies.max
     );
-    this.melodyDurationSize = new RandomStateMachine(automatonSpec.parameters.melodyDurationSize.choices);
-    this.chordDurationSize = new RandomStateMachine(automatonSpec.parameters.chordDurationSize.choices);
-    this.melodyStartDegree = new RandomStateMachine(automatonSpec.parameters.melodyStartDegree.choices);
-    this.chordStartRoot = new RandomStateMachine(automatonSpec.parameters.chordStartRoot.choices);
-    this.chordStartQuality = new RandomStateMachine(automatonSpec.parameters.chordStartQuality.choices);
-    this.melodyNoteDistance = new NamedRandomStateMachine(automatonSpec.parameters.melodyNoteDistance.choices);
+    this.melodyDurationSizes = new RandomStateMachine(automatonSpec.parameters.melodyDurationSizes.choices);
+    this.chordDurationSizes = new RandomStateMachine(automatonSpec.parameters.chordDurationSizes.choices);
+    this.melodyStartDegrees = new RandomStateMachine(automatonSpec.parameters.melodyStartDegrees.choices);
+    this.chordStartRoots = new RandomStateMachine(automatonSpec.parameters.chordStartRoots.choices);
+    this.chordStartQualities = new RandomStateMachine(automatonSpec.parameters.chordStartQualities.choices);
+    this.melodyNotes = new NamedRandomStateMachine(automatonSpec.parameters.melodyNotes.choices);
     this.chords = new NamedRandomStateMachine(automatonSpec.parameters.chords.choices);
 
     this.#generateNoteDistances();
@@ -95,8 +95,8 @@ export class HarmonicAutomaton {
 
     this.degreeDistance  = this.iteration === 0 ? 0 : this.degree - previousDegree;
     this.duration        = this.noteType === "chords" ?
-                           this.durations.next(this.chordDurationSize.next()) :
-                           this.durations.next(this.melodyDurationSize.next());
+                           this.durations.next(this.chordDurationSizes.next()) :
+                           this.durations.next(this.melodyDurationSizes.next());
     this.velocity        = this.velocities.next();
     this.attack          = this.attacks.next();
     this.filterFrequency = this.filterFrequencies.next();
@@ -121,8 +121,8 @@ export class HarmonicAutomaton {
     this.noteType = "chords";
     this.iteration = 0;
 
-    this.degree = this.chordStartRoot.next();
-    this.chordType = this.chordStartQuality.next();
+    this.degree = this.chordStartRoots.next();
+    this.chordType = this.chordStartQualities.next();
   }
 
 
@@ -186,7 +186,7 @@ export class HarmonicAutomaton {
   #startMelody() {
     this.noteType = "melody";
     this.iteration = 0;
-    this.degree = this.melodyStartDegree.next();
+    this.degree = this.melodyStartDegrees.next();
   }
 
 
@@ -206,7 +206,7 @@ export class HarmonicAutomaton {
 
   #generateNextMelodicNote() {
     const upOrDownRandom = Math.random() > 0.5 ? 1 : -1;
-    const nextDegreeDistance = this.melodyNoteDistance.next(this.#melodicDistanceSize());
+    const nextDegreeDistance = this.melodyNotes.next(this.#melodicDistanceSize());
     this.degree = this.noteDistances.next(nextDegreeDistance) * upOrDownRandom;
 
     // tblswvs.js scale degrees may not be 0
