@@ -3,13 +3,13 @@ import * as yaml from "js-yaml";
 import * as path from "path";
 import { expect } from "chai";
 import { before } from "mocha";
-import { HarmonicAutomaton, chordType } from "../app/model/automata/harmonic_automaton";
+import { HarmonicAutomaton, musicalEventData } from "../app/model/automata/harmonic_automaton";
 import { RandomStateMachine } from "../app/model/automata/random_state_machine";
 import { NamedRandomStateMachine } from "../app/model/automata/named_random_state_machine";
 import { PatternStateMachine } from "../app/model/automata/pattern_state_machine";
 import { configDirectory } from "./test_helpers";
 import { RangeStateMachine } from "../app/model/automata/range_state_machine";
-
+import { Key, Scale } from "tblswvs";
 
 describe("HarmonicAutomaton", () => {
   describe("loading an instance from a configuration file", () => {
@@ -17,58 +17,65 @@ describe("HarmonicAutomaton", () => {
 
     before(() => {
       automaton = new HarmonicAutomaton(
-        yaml.load(fs.readFileSync(path.resolve(configDirectory, "automata_harmonic_standard.yml"), "utf8"))
+        yaml.load(fs.readFileSync(path.resolve(configDirectory, "automata_harmonic_standard.yml"), "utf8")),
+        new Key(60, Scale.Minor)
       );
     });
 
     it("has a name", () => expect(automaton.name).to.eq("standard"));
+    it("has an initial note type", () => expect(automaton.noteType).to.be.undefined);
     it("has a min melody iterations", () => expect(automaton.minMelodyIterations).to.eq(20));
     it("has a min chord iterations", () => expect(automaton.minChordIterations).to.eq(4));
+
+    it("has a key", () => {
+      expect(automaton.key).to.be.an.instanceOf(Key);
+      expect(automaton.key.scale).to.eq(Scale.Minor);
+    });
 
 
     describe("the attack parameter", () => {
       it("is a random state machine", () => {
-        expect(automaton.attack).to.be.an.instanceOf(RandomStateMachine);
+        expect(automaton.attacks).to.be.an.instanceOf(RandomStateMachine);
       });
 
       it("has a list of choices", () => {
-        expect(automaton.attack.choices).to.have.ordered.members([0, 0.25, 0.5, 0.5, 0.75, 0.75, 1, 1]);
+        expect(automaton.attacks.choices).to.have.ordered.members([0, 0.25, 0.5, 0.5, 0.75, 0.75, 1, 1]);
       });
     });
 
 
     describe("the duration parameter", () => {
       it("is a named random state machine", () => {
-        expect(automaton.duration).to.be.an.instanceOf(NamedRandomStateMachine);
+        expect(automaton.durations).to.be.an.instanceOf(NamedRandomStateMachine);
       });
 
       it("has named choices", () => {
-        expect(automaton.duration.next("medium")).to.be.oneOf(["0.1.0", "0.2.0"])
+        expect(automaton.durations.next("medium")).to.be.oneOf(["0.1.0", "0.2.0"])
       });
     });
 
 
     describe("the velocity parameter", () => {
       it("is a pattern state machine", () => {
-        expect(automaton.velocity).to.be.an.instanceOf(PatternStateMachine);
+        expect(automaton.velocities).to.be.an.instanceOf(PatternStateMachine);
       });
 
       it("has cycling choices", () => {
-        expect(automaton.velocity.next()).to.eq(100);
-        expect(automaton.velocity.next()).to.eq(60);
-        expect(automaton.velocity.next()).to.eq(60);
-        expect(automaton.velocity.next()).to.eq(80);
+        expect(automaton.velocities.next()).to.eq(100);
+        expect(automaton.velocities.next()).to.eq(60);
+        expect(automaton.velocities.next()).to.eq(60);
+        expect(automaton.velocities.next()).to.eq(80);
       });
     });
 
 
     describe("the filter frequency parameter", () => {
       it("is a range state machine", () => {
-        expect(automaton.filterFrequency).to.be.an.instanceOf(RangeStateMachine);
+        expect(automaton.filterFrequencies).to.be.an.instanceOf(RangeStateMachine);
       });
 
       it("generates random frequencies within range", () => {
-        expect(automaton.filterFrequency.next()).to.be.within(200, 16000);
+        expect(automaton.filterFrequencies.next()).to.be.within(200, 16000);
       });
     });
 
@@ -155,6 +162,67 @@ describe("HarmonicAutomaton", () => {
 
       it("generates a random chord when no there is no other match", () => {
         expect(automaton.chord.next("default")).to.haveOwnProperty("type").that.is.oneOf(["triad", "dyad"]);
+      });
+    });
+  });
+
+
+  describe("advancing to the next state", () => {
+    let automaton: HarmonicAutomaton;
+
+    before(() => {
+      automaton = new HarmonicAutomaton(
+        yaml.load(fs.readFileSync(path.resolve(configDirectory, "automata_harmonic_standard.yml"), "utf8")),
+        new Key(60, Scale.Minor)
+      );
+    });
+
+    describe("when the automaton starts", () => {
+      let parameterData: musicalEventData;
+      before(() => parameterData = automaton.next());
+
+      it("begins as a chord", () => {
+        expect(automaton.noteType).to.eq("chords");
+      });
+
+      it("has a chord root from the initializing set of scale degrees", () => {
+        expect(automaton.degree).to.be.oneOf([1, 3, 5]);
+      });
+
+      it("has a previous degree distance", () => {
+        expect(automaton.degreeDistance).to.eq(0);
+      });
+
+      it("generates a duration", () => {
+        expect(automaton.duration).to.be.oneOf(["0.1.0", "0.2.0", "1.0.0", "1.2.0", "2.0.0"]);
+      });
+
+      it("generates a velocity", () => {
+        expect(automaton.velocity).to.eq(100);
+      });
+
+      it("generates an attack", () => {
+        expect(automaton.attack).to.be.oneOf([0, 0.25, 0.5, 0.75, 1]);
+      });
+
+      it("generates a filter frequency", () => {
+        expect(automaton.filterFrequency).to.be.within(200, 16000);
+      });
+
+      it("generates MIDI note numbers", () => {
+        expect(automaton.midiNotes).to.be.an.instanceOf(Array);
+        automaton.midiNotes.forEach(n => expect(typeof n).to.eq("number"));
+      });
+
+      it("advances the iteration counter", () => {
+        expect(automaton.iteration).to.eq(1);
+      });
+
+      describe("the returned parameter data to send to Live", () => {
+        it("a two-dimentional array", () => {
+          expect(parameterData).to.be.an.instanceOf(Array);
+          parameterData.forEach(parameterSet => expect(parameterSet).to.be.an.instanceOf(Array));
+        });
       });
     });
   });

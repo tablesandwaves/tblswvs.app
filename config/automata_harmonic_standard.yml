@@ -1,4 +1,5 @@
 name: standard
+initialState: chords
 parameters:
   attack:
     type: random choice
