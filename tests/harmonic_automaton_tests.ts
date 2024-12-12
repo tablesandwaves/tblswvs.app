@@ -27,9 +27,45 @@ describe("HarmonicAutomaton", () => {
     it("has a min melody iterations", () => expect(automaton.minMelodyIterations).to.eq(20));
     it("has a min chord iterations", () => expect(automaton.minChordIterations).to.eq(4));
 
-    it("has a key", () => {
-      expect(automaton.key).to.be.an.instanceOf(Key);
-      expect(automaton.key.scale).to.eq(Scale.Minor);
+
+    describe("the melodic key and related, derived data", () => {
+      it("has a key parameter", () => {
+        expect(automaton.key).to.be.an.instanceOf(Key);
+        expect(automaton.key.scale).to.eq(Scale.Minor);
+      });
+
+      it("derives the scale note count from the key", () => {
+        expect(automaton.scaleNoteCount).to.eq(7);
+      });
+
+      it("derives the scale halfway point from the key", () => {
+        expect(automaton.scaleHalfwayPoint).to.eq(3);
+      });
+
+      describe("the note distance parameter generated from the key", () => {
+        it("is a named random state machine", () => {
+          expect(automaton.noteDistances).to.be.an.instanceOf(NamedRandomStateMachine);
+        });
+
+        it("uses note distance sizes for names", () => {
+          expect(Object.keys(automaton.noteDistances.choices)).to.have.ordered.members(["small", "medium", "large"]);
+        });
+
+        it("has small note distances", () => {
+          for (let i = 0; i < 10; i++)
+            expect(automaton.noteDistances.next("small")).to.be.oneOf([1, 2, 3]);
+        });
+
+        it("has medium note distances", () => {
+          for (let i = 0; i < 10; i++)
+            expect(automaton.noteDistances.next("medium")).to.be.oneOf([4, 5, 6, 7]);
+        });
+
+        it("has large note distances", () => {
+          for (let i = 0; i < 10; i++)
+            expect(automaton.noteDistances.next("large")).to.be.oneOf([8, 9, 10, 11, 12]);
+        });
+      });
     });
 
 

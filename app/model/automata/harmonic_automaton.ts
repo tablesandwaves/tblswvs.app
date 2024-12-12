@@ -22,6 +22,7 @@ export type musicalEventData = parameter[][];
 
 export class HarmonicAutomaton {
   name: string;
+  logging: boolean = false;
 
   // Configuration
   initialState: "chords"|"melody";
@@ -103,6 +104,8 @@ export class HarmonicAutomaton {
 
     this.#updateMidi();
     this.iteration++;
+
+    if (this.logging) console.log(this.toString());
 
     return this.midiNotes.map(noteNumber => {
       return [
@@ -254,14 +257,24 @@ export class HarmonicAutomaton {
    * After the key has been set, generate note small, medium, large note distances
    */
   #generateNoteDistances() {
-    this.scaleNoteCount        = this.key.scaleNotes.length;
-    this.fiveGreaterThanOctave = 5 + this.scaleNoteCount;
-    this.scaleHalfwayPoint     = Math.floor(this.scaleNoteCount / 2);
+    this.scaleNoteCount    = this.key.scaleNotes.length;
+    this.scaleHalfwayPoint = Math.floor(this.scaleNoteCount / 2);
 
     this.noteDistances = new NamedRandomStateMachine({
-      small:  [...new Array(this.scaleHalfwayPoint).map((_, i) => i + 1)],
-      medium: [...new Array(this.scaleNoteCount - this.scaleHalfwayPoint).map((_, i) => i + this.scaleHalfwayPoint)],
-      large:  [...new Array(5).map((_, i) => i + this.scaleNoteCount)]
+      small:  [...new Array(this.scaleHalfwayPoint)].map((_, i) => i + 1),
+      medium: [...new Array(this.scaleNoteCount - this.scaleHalfwayPoint)].map((_, i) => i + this.scaleHalfwayPoint + 1),
+      large:  [...new Array(5)].map((_, i) => i + this.scaleNoteCount + 1)
     });
+  }
+
+
+  // For logging debugging
+  toString() {
+    return `MarkovState type: ${this.noteType}, ` +
+           `note type: ${this.degree}/${this.noteType == "melody" ? "note" : this.chordType.type}, ` +
+           `velocity: ${this.velocity} ` +
+           `prev dist: ${this.degreeDistance}, ` +
+           `iteration: ${this.iteration} ` +
+           `MIDI: ${this.midiNotes}`;
   }
 }
