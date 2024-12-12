@@ -1,6 +1,10 @@
 const OscEmitter  = require("osc-emitter");
 const OscReceiver = require("osc-receiver");
 const easymidi    = require("easymidi");
+import * as fs from "fs";
+import * as yaml from "js-yaml";
+import * as path from "path";
+
 
 import { Key, Scale, note } from "tblswvs";
 import { BrowserWindow } from "electron";
@@ -9,6 +13,7 @@ import { AbletonLive } from "./ableton/live";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
 import { INACTIVE_BRIGHTNESS } from "../controller/application_controller";
+import { HarmonicAutomaton } from "./automata/harmonic_automaton";
 
 
 export type BeatVoice = {
@@ -50,6 +55,7 @@ export class Sequencer {
   superMeasure: number = 4;
   gui: BrowserWindow;
   key: Key;
+  automaton: HarmonicAutomaton;
   queuedNotes: note[][] = new Array();
   testing: boolean;
   beatPatterns: BeatSet;
@@ -63,6 +69,18 @@ export class Sequencer {
   constructor(configDirectory: string, testing: boolean = false) {
     this.testing = testing;
 
+    this.configDirectory = configDirectory;
+    this.grid = new MonomeGrid(this, testing);
+    this.daw  = new AbletonLive(this);
+    this.key  = new Key(60, Scale.Minor);
+
+    this.automaton = new HarmonicAutomaton(
+      yaml.load(fs.readFileSync(path.resolve(configDirectory, "automata_harmonic_standard.yml"), "utf8")),
+      this.key
+    );
+    // Debug automata output to terminal console
+    // this.automaton.logging = true;
+
     if (!this.testing) {
 
       // To Live
@@ -75,16 +93,17 @@ export class Sequencer {
       this.receiver.on("/live/clips", (tIdx: number, cIdx: number) => this.#syncLiveTrackClip(tIdx, cIdx));
       this.receiver.on("/live/transport", (step: number) => this.transport(step));
 
+      // Receive Markovy requests for sending notes to Live
+      this.receiver.on("/next", () => {
+        this.automaton.next().forEach(noteData => this.emitter.emit("/note", ...noteData));
+      });
+
       // For debugging: all messages are logged.
       // this.receiver.on("message", this.#processLiveMessages);
-    }
-    this.configDirectory = configDirectory;
-    this.grid = new MonomeGrid(this, testing);
-    this.daw  = new AbletonLive(this);
-    this.key  = new Key(60, Scale.Minor);
 
-    this.midiOut = new easymidi.Output("tblswvs.app", true);
-    this.midiIn  = new easymidi.Input("tblswvs.app in", true);
+      this.midiOut = new easymidi.Output("tblswvs.app", true);
+      this.midiIn  = new easymidi.Input("tblswvs.app in", true);
+    }
   }
 
 
