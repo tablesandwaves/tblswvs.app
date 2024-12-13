@@ -128,3 +128,12 @@ rows:
     xStart: 15
     xLength: 1
     mapping: toggleMutations
+  -
+    name: Toggle Markovy
+    description: Turn Markovy messages on/off
+    group: mutation-controls
+    type: toggle
+    index: 1
+    xStart: 15
+    xLength: 1
+    mapping: toggleMarkovy

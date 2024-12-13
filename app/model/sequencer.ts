@@ -56,6 +56,7 @@ export class Sequencer {
   gui: BrowserWindow;
   key: Key;
   automaton: HarmonicAutomaton;
+  markovy: boolean = false;
   queuedNotes: note[][] = new Array();
   testing: boolean;
   beatPatterns: BeatSet;
@@ -187,6 +188,16 @@ export class Sequencer {
       if (data.value != 0) return;
       this.ticks = 0;
     });
+  }
+
+
+  startMarkovy() {
+    this.emitter.emit("/markovy_start");
+  }
+
+
+  stopMarkovy() {
+    this.emitter.emit("/markovy_stop");
   }
 
 

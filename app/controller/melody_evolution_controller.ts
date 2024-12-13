@@ -19,6 +19,7 @@ export class MelodyEvolutionController extends ApplicationController {
     this.functionMap.set("toggleMutatingVoice", this.toggleMutatingVoice);
     this.functionMap.set("toggleSoloingVoice", this.toggleSoloingVoice);
     this.functionMap.set("toggleMutations", this.toggleMutations);
+    this.functionMap.set("toggleMarkovy", this.toggleMarkovy);
   }
 
 
@@ -37,6 +38,7 @@ export class MelodyEvolutionController extends ApplicationController {
     this.setGridMutatingTracksDisplay();
     this.setGridSoloistMutatingTracksDisplay();
     this.setGridAccompanimentTracksDisplay();
+    this.setGridMarkovyButton();
   }
 
 
@@ -75,6 +77,11 @@ export class MelodyEvolutionController extends ApplicationController {
   }
 
 
+  setGridMarkovyButton() {
+    this.grid.levelSet(15, 1, this.gridMarkovyEnabledButton());
+  }
+
+
   toggleMutations(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     gridPage.grid.sequencer.daw.mutating = !gridPage.grid.sequencer.daw.mutating;
 
@@ -89,6 +96,19 @@ export class MelodyEvolutionController extends ApplicationController {
     }
 
     gridPage.setGridMutationsButton();
+  }
+
+
+  toggleMarkovy(gridPage: MelodyEvolutionController, press: GridKeyPress) {
+    gridPage.grid.sequencer.markovy = !gridPage.grid.sequencer.markovy;
+
+    if (gridPage.grid.sequencer.markovy) {
+      gridPage.grid.sequencer.startMarkovy();
+    } else {
+      gridPage.grid.sequencer.stopMarkovy();
+    }
+
+    gridPage.setGridMarkovyButton();
   }
 
 
@@ -189,5 +209,10 @@ export class MelodyEvolutionController extends ApplicationController {
 
   gridMutationsEnabledButton() {
     return this.grid.sequencer.daw.mutating ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+  }
+
+
+  gridMarkovyEnabledButton() {
+    return this.grid.sequencer.markovy ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
   }
 }
