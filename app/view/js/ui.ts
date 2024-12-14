@@ -60,7 +60,7 @@ window.parameters.updateFillsDuration((event: any, fillsDuration: string) => upd
 window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#rhythm-params #fill-measures span", fillMeasures));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updatePianoRollTransport(parseInt(superMeasure) * 16));
 window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
-window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("div#current-clip span", clipIndex));
+window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("li#current-clip span", clipIndex));
 
 
 window.parameters.updateMutations((event: any, mutations: string) => {
