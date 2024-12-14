@@ -97,7 +97,9 @@ export class GlobalController extends ApplicationController {
     const scale = configuredScales[gridPage.matrix[press.y][press.x].value].scale;
     gridPage.grid.sequencer.key = new Key(tonic, scale);
     gridPage.setGridScaleDisplay();
-    gridPage.grid.sequencer.gui.webContents.send("set-scale", `${notes[tonic % 12]} ${gridPage.grid.sequencer.key.scaleName}`);
+
+    if (!gridPage.grid.sequencer.testing)
+      gridPage.grid.sequencer.gui.webContents.send("set-scale", `${notes[tonic % 12]} ${gridPage.grid.sequencer.key.scaleName}`);
   }
 
 

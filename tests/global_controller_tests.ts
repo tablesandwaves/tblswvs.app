@@ -71,6 +71,27 @@ describe("GlobalController", () => {
         expect(sequencer.automaton.key.tonic).to.eq("A");
       });
     });
+
+
+    describe("changing the key's scale", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+
+      // Select the global page, then set the tonic to A
+      sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+      sequencer.grid.keyPress({y: 3, x: 13, s: 1});
+
+      it("updates the Key object's scale", () => {
+        expect(sequencer.key.scale).to.eq(Scale.WholeTone);
+      });
+
+      it("does not change the tonic", () => {
+        expect(sequencer.key.tonic).to.eq("C");
+      });
+
+      it("updates the harmonic automaton key", () => {
+        expect(sequencer.automaton.key.scale).to.eq(Scale.WholeTone);
+      });
+    });
   });
 
 
