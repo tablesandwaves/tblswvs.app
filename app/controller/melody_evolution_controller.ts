@@ -109,6 +109,7 @@ export class MelodyEvolutionController extends ApplicationController {
     }
 
     gridPage.setGridMarkovyButton();
+    gridPage.#setUiMarkovy();
   }
 
 
@@ -177,6 +178,11 @@ export class MelodyEvolutionController extends ApplicationController {
       "update-mutations",
       this.grid.sequencer.daw.mutations.filter(m => m.active).map(m => m.name)
     );
+  }
+
+
+  #setUiMarkovy() {
+    this.grid.sequencer.gui.webContents.send("markovy", this.grid.sequencer.markovy);
   }
 
 

@@ -324,9 +324,9 @@ div#chains-vector-evolution div#evolution div#mutations {
 
 
 div#chains-vector-evolution div#evolution div#mutations ul {
-  column-count: 3;
-  width: 320px;
-  margin: 0 48px 16px 16px;
+  column-count: 4;
+  width: 368px;
+  margin: 0 8px 8px 8px;
   padding: 0;
   list-style: none;
 }
@@ -336,13 +336,28 @@ div#chains-vector-evolution div#evolution div#mutations ul li {
   display: inline-block;
   margin: 8px 0 0 0;
   padding: 0 10px 0 0;
-  width: 106px;
+  width: 72px;
   color: #aaa;
   text-align: right;
+  text-wrap: nowrap;
 }
 
 
 div#chains-vector-evolution div#evolution div#mutations ul li.on {
+  color: #117733;
+}
+
+
+div#markovy {
+  width: 344px;
+  margin: auto 20px;
+  font-family: 'Courier New', Courier, monospace;
+  text-align: right;
+  font-weight: bold;
+}
+
+
+div#markovy.on {
   color: #117733;
 }
 

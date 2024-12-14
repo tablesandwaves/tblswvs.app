@@ -27,7 +27,8 @@ contextBridge.exposeInMainWorld("parameters", {
   updateRampSequence: (callback: any) => ipcRenderer.on("update-ramp-sequence", callback),
   setPianoRollNotes: (callback: any) => ipcRenderer.on("piano-roll-notes", callback),
   setDrumRackNotes: (callback: any) => ipcRenderer.on("drum-rack-notes", callback),
-  setTimingAlgorithms: (callback: any) => ipcRenderer.on("timing-algorithms", callback)
+  setTimingAlgorithms: (callback: any) => ipcRenderer.on("timing-algorithms", callback),
+  setMarkovy: (callback: any) => ipcRenderer.on("markovy", callback)
 });
 
 

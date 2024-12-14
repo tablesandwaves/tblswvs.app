@@ -97,6 +97,15 @@ window.parameters.setTimingAlgorithms((event: any, algorithms: boolean[]) => {
 });
 
 
+window.parameters.setMarkovy((event: any, isOn: boolean) => {
+  const markovy = document.querySelector("#markovy");
+  if (isOn)
+    markovy.classList.add("on");
+  else
+    markovy.classList.remove("on");
+});
+
+
 window.parameters.updateTrackEvolution((event: any, randomizingTracks: number[], mutatingTracks: number[], soloingTracks: number[]) => {
   toggleEvolutionIndicator("randomizing", randomizingTracks);
   toggleEvolutionIndicator("mutating", mutatingTracks);
