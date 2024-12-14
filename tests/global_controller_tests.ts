@@ -5,6 +5,7 @@ import { expect } from "chai";
 import { Sequencer, BeatSet } from "../app/model/sequencer";
 import { GlobalController } from "../app/controller/global_controller";
 import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
+import { Scale } from "tblswvs";
 
 
 const testing = true;
@@ -45,6 +46,29 @@ describe("GlobalController", () => {
     it("should set the breakpoint to the step length for the rhythm tracks", () => {
       sequencer.daw.tracks.slice(0, 3).forEach(track => {
         expect(track.rhythmStepBreakpoint).to.eq(16);
+      });
+    });
+  });
+
+
+  describe("setting a key", () => {
+    describe("changing the key's tonic", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+
+      // Select the global page, then set the tonic to A
+      sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+      sequencer.grid.keyPress({y: 3, x: 9, s: 1});
+
+      it("updates the Key object's tonic", () => {
+        expect(sequencer.key.tonic).to.eq("A");
+      });
+
+      it("does not change the scale", () => {
+        expect(sequencer.key.scale).to.eq(Scale.Minor);
+      });
+
+      it("updates the harmonic automaton key", () => {
+        expect(sequencer.automaton.key.tonic).to.eq("A");
       });
     });
   });

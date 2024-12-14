@@ -54,7 +54,7 @@ export class Sequencer {
   ticks: number = 0;
   superMeasure: number = 4;
   gui: BrowserWindow;
-  key: Key;
+  #key: Key;
   automaton: HarmonicAutomaton;
   markovy: boolean = false;
   queuedNotes: note[][] = new Array();
@@ -73,11 +73,11 @@ export class Sequencer {
     this.configDirectory = configDirectory;
     this.grid = new MonomeGrid(this, testing);
     this.daw  = new AbletonLive(this);
-    this.key  = new Key(60, Scale.Minor);
+    this.#key = new Key(60, Scale.Minor);
 
     this.automaton = new HarmonicAutomaton(
       yaml.load(fs.readFileSync(path.resolve(configDirectory, "automata_harmonic_standard.yml"), "utf8")),
-      this.key
+      this.#key
     );
     // Debug automata output to terminal console
     // this.automaton.logging = true;
@@ -105,6 +105,17 @@ export class Sequencer {
       this.midiOut = new easymidi.Output("tblswvs.app", true);
       this.midiIn  = new easymidi.Input("tblswvs.app in", true);
     }
+  }
+
+
+  get key() {
+    return this.#key;
+  }
+
+
+  set key(key: Key) {
+    this.#key = key;
+    this.automaton.key = key;
   }
 
 

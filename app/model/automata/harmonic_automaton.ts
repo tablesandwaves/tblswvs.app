@@ -42,7 +42,7 @@ export class HarmonicAutomaton {
   chords: NamedRandomStateMachine;
 
   // Current State
-  key: Key;
+  #key: Key;
   scaleNoteCount: number;
   fiveGreaterThanOctave: number;
   scaleHalfwayPoint: number;
@@ -59,7 +59,7 @@ export class HarmonicAutomaton {
 
 
   constructor(automatonSpec: any, key: Key) {
-    this.key = key;
+    this.#key = key;
     this.name = automatonSpec.name;
     this.initialState = automatonSpec.initialState;
     this.minMelodyIterations = automatonSpec.parameters.minMelodyIterations;
@@ -79,6 +79,17 @@ export class HarmonicAutomaton {
     this.melodyNotes = new NamedRandomStateMachine(automatonSpec.parameters.melodyNotes.choices);
     this.chords = new NamedRandomStateMachine(automatonSpec.parameters.chords.choices);
 
+    this.#generateNoteDistances();
+  }
+
+
+  get key() {
+    return this.#key;
+  }
+
+
+  set key(key: Key) {
+    this.#key = key;
     this.#generateNoteDistances();
   }
 
@@ -237,18 +248,18 @@ export class HarmonicAutomaton {
     if (this.noteType == "melody") {
 
       // MIDI data should always be an array for the potential for polyphany
-      this.midiNotes = [this.key.degree(this.degree).midi];
+      this.midiNotes = [this.#key.degree(this.degree).midi];
 
     } else if (this.chordType.type === "dyad") {
 
       let intervalNote = this.degree + this.chordType.interval == 0 ? 1 : this.degree + this.chordType.interval;
       this.midiNotes = [
-        this.key.degree(this.degree).midi,
-        this.key.degree(intervalNote).midi
+        this.#key.degree(this.degree).midi,
+        this.#key.degree(intervalNote).midi
       ];
 
     } else {
-      this.midiNotes = this.key.chord(this.degree, "T").midi;
+      this.midiNotes = this.#key.chord(this.degree, "T").midi;
     }
   }
 
@@ -257,7 +268,7 @@ export class HarmonicAutomaton {
    * After the key has been set, generate note small, medium, large note distances
    */
   #generateNoteDistances() {
-    this.scaleNoteCount    = this.key.scaleNotes.length;
+    this.scaleNoteCount    = this.#key.scaleNotes.length;
     this.scaleHalfwayPoint = Math.floor(this.scaleNoteCount / 2);
 
     this.noteDistances = new NamedRandomStateMachine({
