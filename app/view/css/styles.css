@@ -17,7 +17,7 @@ div.wrapper, ul.wrapper {
 div.nav {
   position: absolute;
   top: 0;
-  width: 96px;
+  width: 116px;
 }
 
 
@@ -72,9 +72,9 @@ div.nav ul li#docs.active {
 div#main {
   position: absolute;
   top: 0;
-  left: 96px;
+  left: 116px;
   width: 1344px;
-  height: 960px;
+  height: 915px;
   border-left: 1px solid #555;
   margin-left: -1px;
   display: block;
@@ -100,7 +100,7 @@ div#top-row div#harmonic-rhythm-circle {
 
 
 div#top-row div#track-rhythm-circle {
-  margin-left: 26px;
+  margin-left: 66px;
 }
 
 
@@ -262,11 +262,9 @@ h2 {
 }
 
 
-div#queued-notes,
-div#evolution,
 div#current-scale,
 div#current-beat {
-  width: 800px;
+  width: 640px;
 }
 
 
@@ -283,72 +281,74 @@ div#global-params {
 
 
 div#global-params div#global-note-data {
-  width: 912px;
+  width: 1280px;
   margin-right: 16px;
 }
 
 
-div#global-params div#evolution {
+div#chains-vector-evolution div#evolution {
   width: 384px;
 }
 
 
-div#global-params div#evolution div#randomizing-tracks,
-div#global-params div#evolution div#mutating-tracks,
-div#global-params div#evolution div#soloing-tracks {
+div#chains-vector-evolution div#evolution div#randomizing-tracks,
+div#chains-vector-evolution div#evolution div#mutating-tracks,
+div#chains-vector-evolution div#evolution div#soloing-tracks {
   margin: 2px auto;
+  width: 384px;
 }
 
 
-div#global-params div#evolution div.evolution-label {
-  width: 120px;
+div#chains-vector-evolution div#evolution div.evolution-label {
+  width: 130px;
   padding-right: 10px;
   float: left;
   text-align: right;
 }
 
 
-div#global-params div#evolution div#randomizing-tracks ol,
-div#global-params div#evolution div#mutating-tracks ol,
-div#global-params div#evolution div#soloing-tracks ol {
+div#chains-vector-evolution div#evolution div#randomizing-tracks ol,
+div#chains-vector-evolution div#evolution div#mutating-tracks ol,
+div#chains-vector-evolution div#evolution div#soloing-tracks ol {
   /* display: block; */
   padding-left: 0;
   margin: 0;
   float: left;
-  width: 254px;
+  width: 244px;
 }
 
 
-div#global-params div#evolution div#mutations {
+div#chains-vector-evolution div#evolution div#mutations {
   width: 384px;
 }
 
 
-div#global-params div#evolution div#mutations ul {
+div#chains-vector-evolution div#evolution div#mutations ul {
   column-count: 3;
   width: 320px;
-  margin: 0 16px 16px 48px;
+  margin: 0 48px 16px 16px;
   padding: 0;
   list-style: none;
 }
 
 
-div#global-params div#evolution div#mutations ul li {
+div#chains-vector-evolution div#evolution div#mutations ul li {
   display: inline-block;
   margin: 8px 0 0 0;
-  padding: 0;
-  width: 116px;
+  padding: 0 10px 0 0;
+  width: 106px;
   color: #aaa;
+  text-align: right;
 }
 
 
-div#global-params div#evolution div#mutations ul li.on {
+div#chains-vector-evolution div#evolution div#mutations ul li.on {
   color: #117733;
 }
 
 
 div#global-note-data div#queued-notes {
-  width: 100%;
+  width: 1280px;
   height: 100px;
   overflow: hidden;
 }
