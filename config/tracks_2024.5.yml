@@ -1,0 +1,156 @@
+live_tracks:
+  -
+    name: Kick
+    dawIndex: 1
+    rampSequencer: false
+    chains:
+      -
+        name: Kick Soft
+        type: drumsampler
+      -
+        name: Kick Flared Out
+        type: drumsampler
+  -
+    name: Snare
+    dawIndex: 2
+    rampSequencer: false
+    chains:
+      -
+        name: Snare DMX
+        type: drumsampler
+      -
+        name: Rim Glitcha
+        type: drumsampler
+  -
+    name: HiHat
+    dawIndex: 3
+    rampSequencer: false
+    chains:
+      -
+        name: Hihat 909 Closed
+        type: drumsampler
+      -
+        name: HH Perc Glitch Speak
+        type: drumsampler
+  -
+    name: Perc
+    dawIndex: 4
+    rampSequencer: false
+    chains:
+      -
+        name: Reverb Kick & Perc Choked Kit
+        type: drum rack
+        pads:
+          - Boom Kick
+          - Vocoder Perc
+          - Scatty Perc
+          - LF Tribe Token
+          - Low EDM Perc
+          - Gltch Prc 120
+          - Techno Perc
+          - LF Dstrt Snk
+          - Ambient Knock
+          - Scrape Shake
+          - Blop Token
+          - Broken Token 1
+          - Record Pullback
+          - Wood FX
+          - Asia Calls
+          - Weird Prc 100
+      -
+        name: Glitch & Roar
+        type: drum rack
+        pads:
+          - Kick Acid House RK
+          - Snare Mkit
+          - HiHat Closed
+          - Tokyo Perc
+          - FM Glass Perc
+          - Digital Hi Perc
+          - Digital Lo Perc
+      -
+        name: Chopped Breakin
+        type: drum rack
+        pads:
+          - slice 1
+          - slice 2
+          - slice 3
+          - slice 4
+          - slice 5
+          - slice 6
+          - slice 7
+          - slice 8
+          - slice 9
+          - slice 10
+          - slice 11
+          - slice 12
+          - slice 13
+          - slice 14
+          - slice 15
+          - slice 16
+      -
+        name: E-Perc BittyBot
+        type: sampler
+      -
+        name: Click Vinyl
+        type: sampler
+  -
+    name: Bass
+    dawIndex: 5
+    rampSequencer: true
+    chains:
+      -
+        name: King Dubby
+        type: synth
+      -
+        name: Basic FM8
+        type: synth
+      -
+        name: Reso 303 Bass
+        type: synth
+      -
+        name: squAErs
+        type: synth
+      -
+        name: early late bass
+        type: synth
+      -
+        name: Akoustique
+        type: synth
+      -
+        name: Percussive Bass
+        type: synth
+  -
+    name: Keys
+    dawIndex: 6
+    rampSequencer: true
+    chains:
+      -
+        name: Mindbender
+        type: synth
+      -
+        name: Full Circle Dub
+        type: synth
+      -
+        name: Faded Keys Dark
+        type: synth
+      -
+        name: Metaz
+        type: synth
+      -
+        name: Clarinet
+        type: synth
+      -
+        name: Glitch Dub
+        type: synth
+      -
+        name: Martyrdom
+        type: synth
+  -
+    name: Hydra
+    dawIndex: 7
+    rampSequencer: true
+    chains:
+      -
+        name: Hydrasynth
+        type: hardware
