@@ -87,7 +87,7 @@ window.parameters.updateTrackChains((event: any, chains: any[], activeChainIndex
 
 
 window.parameters.setTimingAlgorithms((event: any, algorithms: boolean[]) => {
-  const timingAlgoList = document.querySelectorAll("#global-timing-algorithms ul li");
+  const timingAlgoList = document.querySelectorAll("ul#timing-algorithms li");
   timingAlgoList.forEach((item, i) => {
     if (algorithms[i])
       item.classList.add("on");
