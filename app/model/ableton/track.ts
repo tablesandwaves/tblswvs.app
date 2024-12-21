@@ -339,6 +339,7 @@ export class AbletonTrack {
     } else {
       this.#sequence[rhythmStepIndex] = inputNotes;
       this.#rhythm[rhythmStepIndex].state = 1;
+      this.#rhythm[rhythmStepIndex].probability = this.defaultProbability;
     }
 
     this.updateDrumPadInputMelody();

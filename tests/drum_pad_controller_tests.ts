@@ -244,6 +244,45 @@ describe("DrumPadController", () => {
   });
 
 
+  describe("note recording when the default gate probability is changed", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+
+    // Select the rhythm page to load the drum pad controller, then change the track probability,
+    // then turn on recording (not editing), then add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 14, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+    const track = sequencer.daw.getActiveTrack();
+    track.updateCurrentAbletonNotes();
+
+    it("updates the track rhythm", () => {
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ])
+    });
+
+    it("uses the specified probability", () => {
+      expect(track.rhythm[0].probability).to.eq(0.875);
+    });
+
+    it("uses the specified probability in the Ableton notes", () => {
+      expect(track.currentAbletonNotes[0].probability).to.eq(0.875);
+      expect(track.currentAbletonNotes[1].probability).to.eq(0.875);
+      expect(track.currentAbletonNotes[2].probability).to.eq(0.875);
+      expect(track.currentAbletonNotes[3].probability).to.eq(0.875);
+    });
+  });
+
+
   describe("activating a pad for a rhythm step", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
