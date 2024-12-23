@@ -1,6 +1,6 @@
 {
   "name": "tblswvs",
-  "version": "0.30.0",
+  "version": "0.30.1",
   "description": "An experimental controller for electronic music.",
   "main": "dist/main.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "easymidi": "^3.1.0",
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
-    "tblswvs": "^0.20.1"
+    "tblswvs": "^0.20.3"
   },
   "overrides": {
     "semver": "^7.5.3"
