@@ -38,6 +38,46 @@ live_tracks:
     rampSequencer: false
     chains:
       -
+        name: Chopped Breakin
+        type: drum rack
+        pads:
+          - slice 1
+          - slice 2
+          - slice 3
+          - slice 4
+          - slice 5
+          - slice 6
+          - slice 7
+          - slice 8
+          - slice 9
+          - slice 10
+          - slice 11
+          - slice 12
+          - slice 13
+          - slice 14
+          - slice 15
+          - slice 16
+      -
+        name: Base Sounds 1
+        type: drum rack
+        pads:
+          - Kick 909 2
+          - Clap Wild Canvas
+          - Rim 3k Sharp
+          - Hihat Open Chop BIS
+          - Analog Wavetable 090
+          - Analog Wavetable 103
+          - Analog Wavetable 119
+          - Hihat Open Brim
+          - Harmonic Impact
+          - FatDomino Drums 05 73bpm
+          - Perc ER Fenk Short
+          - Pot Knock
+          - Boom Butter
+          - Chop MSX XTRA
+          - Modular Clatter
+          - FatDomino Drums 11
+      -
         name: Reverb Kick & Perc Choked Kit
         type: drum rack
         pads:
@@ -68,26 +108,6 @@ live_tracks:
           - FM Glass Perc
           - Digital Hi Perc
           - Digital Lo Perc
-      -
-        name: Chopped Breakin
-        type: drum rack
-        pads:
-          - slice 1
-          - slice 2
-          - slice 3
-          - slice 4
-          - slice 5
-          - slice 6
-          - slice 7
-          - slice 8
-          - slice 9
-          - slice 10
-          - slice 11
-          - slice 12
-          - slice 13
-          - slice 14
-          - slice 15
-          - slice 16
       -
         name: E-Perc BittyBot
         type: sampler
