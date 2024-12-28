@@ -118,14 +118,15 @@ export class HarmonicAutomaton {
 
     if (this.logging) console.log(this.toString());
 
-    return this.midiNotes.map(noteNumber => {
+    return this.midiNotes.map((noteNumber, i, arr) => {
       return [
-        {type: "string",  value: `${this.degree}/${this.noteType == "melody" ? "note" : this.chordType}`},
+        {type: "string",  value: `${this.degree}/${this.noteType == "melody" ? "note" : this.chordType.type}`},
         {type: "integer", value: noteNumber},
         {type: "integer", value: this.velocity},
         {type: "float",   value: this.filterFrequency},
         {type: "float",   value: this.attack},
-        {type: "string",  value: this.duration}
+        {type: "string",  value: this.duration},
+        {type: "string",  value: i == arr.length - 1 ? "done" : "continue"},
       ];
     });
   }
