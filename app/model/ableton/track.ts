@@ -904,6 +904,8 @@ export class AbletonTrack {
 
 
   updateGuiVectorDisplay() {
+    if (this.daw.sequencer.gui == undefined) return;
+
     this.daw.sequencer.gui.webContents.send(
       "update-note-vector",
       this.vectorShifts,
@@ -946,16 +948,19 @@ export class AbletonTrack {
 
 
   updateGuiNoteLength() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send("update-note-length", this.noteLength);
   }
 
 
   updateGuiFillsDuration() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send("update-fills-duration", this.fillDuration);
   }
 
 
   updateGuiCreateNewClip() {
+    if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send("toggle-create-clip", this.createNewClip);
   }
 
@@ -971,6 +976,8 @@ export class AbletonTrack {
 
 
   updateGuiFillMeasures() {
+    if (this.daw.sequencer.gui == undefined) return;
+
     this.daw.sequencer.gui.webContents.send(
       "update-fill-measures",
       this.fillMeasures.reduce((fillMeasures, measure, i) => {

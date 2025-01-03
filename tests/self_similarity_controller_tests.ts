@@ -27,9 +27,11 @@ describe("SelfSimilarityController", () => {
         ]);
       });
 
-      it("has the default algorithm row (self-similarity selected)", () => expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
-        0, 0, 0, 10,  0, 0, 0, 0
-      ]));
+      it("has the default algorithm row (self-similarity selected)", () => {
+        expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
+          0, 0, 0, 10,  0, 0, 0, 0
+        ])
+      });
     });
   });
 
@@ -38,22 +40,35 @@ describe("SelfSimilarityController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     const track = sequencer.daw.getActiveTrack();
-    sequencer.queuedNotes = [
-      [{ octave: 3, note: 'C',  midi: 60, scaleDegree: 1 }],
-      [{ octave: 3, note: 'D',  midi: 62, scaleDegree: 2 }],
-      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
-      [{ octave: 3, note: 'F',  midi: 65, scaleDegree: 4 }],
-      [{ octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }]
-    ];
 
-    // Select the note input page, then the self-similarity sub-page
+    // Select the note input page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 0});
+
+    // Add a simple sequence
+    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 1, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 3, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 
     it("include self-replication melodies", () => {
       // Select the self-replicating type, then advance
-      sequencer.grid.keyPress({y: 2, x: 0, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 3, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 3, s: 0});
       sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+      sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 
       const actual = track.outputNotes.flat().slice(0, 4).map(note => note.midi);
       expect(actual).to.have.ordered.members([ 60, 62, 62, 63 ]);
@@ -88,13 +103,38 @@ describe("SelfSimilarityController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     const track = sequencer.daw.getActiveTrack();
-    sequencer.queuedNotes = [
-      [{ octave: 3, note: 'C',  midi: 60, scaleDegree: 1 }, { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
-      [{ octave: 3, note: 'D',  midi: 62, scaleDegree: 2 }, { octave: 3, note: 'F',  midi: 65, scaleDegree: 4 }],
-      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }, { octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }],
-      [{ octave: 3, note: 'F',  midi: 65, scaleDegree: 4 }, { octave: 3, note: 'Ab', midi: 68, scaleDegree: 6 }],
-      [{ octave: 3, note: 'G',  midi: 67, scaleDegree: 5 }, { octave: 3, note: 'Bb', midi: 70, scaleDegree: 7 }]
-    ];
+
+    // Select the note input page
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 0});
+
+    // Add a chord sequence
+    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 1, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 3, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 5, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 3, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 5, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 6, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 3, x: 6, s: 0});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 
     // Select the note input page, then the self-similarity sub-page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});

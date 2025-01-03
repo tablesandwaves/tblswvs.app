@@ -36,6 +36,7 @@ export class InputNoteController extends ApplicationController {
   type = "InputNotes";
 
   recordingInputNotes = false;
+  newSequenceQueued   = false;
   keyPressCount       = 0;
   inputNotes: note[]  = new Array();
 
@@ -103,23 +104,32 @@ export class InputNoteController extends ApplicationController {
 
 
   advance(gridPage: InputNoteController, press: GridKeyPress) {
-    if (press.s == 1 && gridPage.grid.sequencer.queuedNotes.length > 0) {
+    if (press.s == 0) return;
+
+    if (gridPage.newSequenceQueued && gridPage.grid.sequencer.queuedNotes.length > 0) {
       gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.activeTrack.setGuiInputNotes();
+
+      if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
     }
+
+    gridPage.activeTrack.generateOutputNotes();
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.activeTrack.setGuiInputNotes();
   }
 
 
   toggleNoteRecording(gridPage: InputNoteController, press: GridKeyPress) {
-    if (press.s == 1) {
-      gridPage.recordingInputNotes = !gridPage.recordingInputNotes;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
-      if (gridPage.recordingInputNotes) {
-        gridPage.grid.sequencer.queuedNotes = new Array();
-        gridPage.setUiQueuedInputNotes();
-      }
+    if (press.s == 0) return;
+
+    gridPage.recordingInputNotes = !gridPage.recordingInputNotes;
+    gridPage.newSequenceQueued   = gridPage.recordingInputNotes && !gridPage.newSequenceQueued ? true : gridPage.newSequenceQueued;
+
+    if (gridPage.recordingInputNotes) {
+      gridPage.grid.sequencer.queuedNotes = new Array();
+      gridPage.setUiQueuedInputNotes();
     }
+
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
   }
 
 

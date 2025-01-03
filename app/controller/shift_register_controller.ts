@@ -25,14 +25,6 @@ export class ShiftRegisterController extends InputNoteController {
   }
 
 
-  advance(gridPage: ShiftRegisterController, press: GridKeyPress) {
-    if (press.s == 0) return;
-    gridPage.activeTrack.generateOutputNotes();
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.activeTrack.setGuiInputNotes();
-  }
-
-
   setShiftRegisterLength(gridPage: ShiftRegisterController, press: GridKeyPress) {
     if (press.s == 0) return;
 

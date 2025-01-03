@@ -28,15 +28,6 @@ export class SelfSimilarityController extends InputNoteController {
   }
 
 
-  advance(gridPage: SelfSimilarityController, press: GridKeyPress) {
-    // TODO: this should operate on the track's current notes, not the sequencer's queued progression
-    gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
-    gridPage.activeTrack.generateOutputNotes();
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.activeTrack.setGuiInputNotes();
-  }
-
-
   getGridSelfSimilarityTypeRow() {
     const row = blank8x1Row.slice();
 

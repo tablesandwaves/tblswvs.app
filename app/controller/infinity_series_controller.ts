@@ -38,13 +38,6 @@ export class InfinitySeriesController extends InputNoteController {
   }
 
 
-  advance(gridPage: InfinitySeriesController, press: GridKeyPress) {
-    gridPage.activeTrack.generateOutputNotes();
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-    gridPage.activeTrack.setGuiInputNotes();
-  }
-
-
   setGridInfinitySeriesDisplay() {
     this.getSeedRangeRows().forEach((row, i) => this.grid.levelRow(0, i + 2, row));
     this.grid.levelRow(8, 2, this.getRhythmRepetitionsRow());
