@@ -34,7 +34,7 @@ describe("DrumPadController", () => {
 
     // Go to the global page and set the chain to a synth/sampler, confirm the default synth input notes
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
-    sequencer.grid.keyPress({y: 3, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 1});
     expect(track.inputNotes[0][0].midi).to.eq(60);
 
     // Flip to a drum pad chain
@@ -56,7 +56,7 @@ describe("DrumPadController", () => {
 
     // Go to the global page and set the chain to a synth/sampler, confirm the default synth input notes
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
-    sequencer.grid.keyPress({y: 3, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 4, s: 1});
 
     it("sets the track's input notes to the lowest drum pad MIDI note", () => {
       expect(track.inputNotes[0][0].midi).to.eq(60);
