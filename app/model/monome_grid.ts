@@ -197,7 +197,8 @@ export class MonomeGrid {
 
   setActiveGridPage(pageType: string) {
     let updated = false, globalKeyIndex;
-    switch(pageType) {
+
+    switch(pageType === "InputNotes" ? this.#getInputNotesPageType() : pageType) {
       case "Rhythm":
         if (this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type == "drum rack")
           this.activePage = new DrumPadController(this.#loadConfig(`grid_page_drumpad.yml`) as GridConfig, this);
@@ -279,6 +280,22 @@ export class MonomeGrid {
       this.clearGridDisplay();
       this.activePage.refresh();
       this.#selectGlobalGridKey(7, 12, globalKeyIndex);
+    }
+  }
+
+
+  #getInputNotesPageType() {
+    switch(this.sequencer.daw.getActiveTrack().algorithm) {
+      case "simple":
+        return "InputNotes";
+      case "self_similarity":
+        return "SelfSimilarity";
+      case "shift_reg":
+        return "ShiftRegister";
+      case "inf_series":
+        return "InfinitySeries";
+      default:
+        return "InputNotes";
     }
   }
 

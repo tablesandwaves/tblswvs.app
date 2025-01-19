@@ -71,7 +71,7 @@ export class InputNoteController extends ApplicationController {
 
   setAlgorithm(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.setActiveGridPage(algorithmMapping[gridPage.activeTrack.algorithm].pageType)
+    gridPage.grid.setActiveGridPage(algorithmMapping[gridPage.activeTrack.algorithm].pageType);
   }
 
 

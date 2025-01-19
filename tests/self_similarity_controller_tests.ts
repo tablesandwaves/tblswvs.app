@@ -33,6 +33,17 @@ describe("SelfSimilarityController", () => {
         ])
       });
     });
+
+    describe("after paging right and then back", () => {
+      sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 15, s: 0});
+      sequencer.grid.keyPress({y: 7, x: 14, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 14, s: 0});
+
+      it("reloads the self-similarity page and not the (simple) input notes controller", () => {
+        expect(sequencer.grid.activePage).to.be.instanceOf(SelfSimilarityController);
+      });
+    });
   });
 
 
