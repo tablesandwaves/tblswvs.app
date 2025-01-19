@@ -1,4 +1,4 @@
-import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
+import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress } from "./application_controller";
 import { InputNoteController } from "./input_note_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
@@ -16,8 +16,7 @@ export class SelfSimilarityController extends InputNoteController {
 
 
   refresh() {
-    super.setGridRhythmGatesDisplay();
-    super.setGlobalAlgorithmControls();
+    super.refresh();
     this.grid.levelRow(8, 6, this.getGridSelfSimilarityTypeRow());
   }
 
