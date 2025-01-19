@@ -164,7 +164,7 @@ live_tracks:
         name: Akoustique
         type: synth
       -
-        name: Percussive Bass
+        name: Acid Land (SM)
         type: synth
   -
     name: Keys
@@ -178,7 +178,7 @@ live_tracks:
         name: Full Circle Dub
         type: synth
       -
-        name: Faded Keys Dark
+        name: Jun-6 Piano 2
         type: synth
       -
         name: Metaz
@@ -190,7 +190,7 @@ live_tracks:
         name: Glitch Dub
         type: synth
       -
-        name: Martyrdom
+        name: Jun-6 Jun's Vision
         type: synth
   -
     name: Hydra
