@@ -128,8 +128,19 @@ describe("GlobalController", () => {
         });
       });
 
-      it("does not humanize rhythm step 0", () => {
+      it("does not humanize rhythm step 0 for the kick", () => {
         expect(track.currentAbletonNotes[0].clipPosition).to.equal(0);
+      });
+
+      it("does not allow any track to have an Ableton note offset below 0 so it will never be played by Live", () => {
+        sequencer.daw.tracks.forEach(track => {
+          track.rhythm = rhythmStepsForPattern([
+            1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+            0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          ]);
+          track.updateCurrentAbletonNotes();
+          expect(track.currentAbletonNotes[0].clipPosition).to.be.greaterThanOrEqual(0);
+        });
       });
     });
 
