@@ -129,17 +129,24 @@ live_tracks:
           - Asia Calls
           - Weird Prc 100
       -
-        name: E-Perc BittyBot
+        name: eptieda kit
+        type: drum rack
+        pads:
+          - Sine Kick
+          - Lw High Nz Snare
+          - Sine Hat
+          - Beep
+          - Tom 1
+          - Tom 2
+          - Noise Click
+          - Noise Burst
+          - Echo Ping
+      -
+        name: E-Perc BittyBot / Vinyl Click
         type: sampler
       -
-        name: Atonal FM Perc (SM)
+        name: sm.atnl-fm-perc / sm.randres-pings
         type: synth
-      -
-        name: Rand Resn Pings (SM)
-        type: synth
-      -
-        name: Click Vinyl
-        type: sampler
   -
     name: Bass
     dawIndex: 5

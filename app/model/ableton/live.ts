@@ -104,7 +104,7 @@ export class AbletonLive {
   #loadConfig(): any {
     return yaml.load(
       fs.readFileSync(
-        path.resolve(this.sequencer.configDirectory, "tracks_2025.1.yml"),
+        path.resolve(this.sequencer.configDirectory, "tracks_2025.2.yml"),
         "utf8"
       )
     ) as TrackConfig;
