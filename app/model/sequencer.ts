@@ -173,7 +173,9 @@ export class Sequencer {
 
       this.daw.tracks.forEach(track => {
         if (track.accompaniment) {
-          const midiNoteNumber = this.key.degree(Math.round(Math.random() * 8 + 1)).midi;
+          const midiNoteNumber = this.key.degree(
+            Math.round(Math.random() * 15 + 1) * (Math.random() > 0.5 ? 1 : -1)
+          ).midi;
           this.midiOut.send("noteon", {
             note: midiNoteNumber,
             velocity: 64,
