@@ -5,6 +5,7 @@ import {
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { notes, blank8x1Row } from "../helpers/utils";
+import { RhythmStep } from "../model/ableton/track";
 
 
 const configuredScales: Record<string, {scale: Scale, index: number}> = {
@@ -129,8 +130,8 @@ export class GlobalController extends ApplicationController {
       track.rhythmStepBreakpoint = beat.length;
       track.rhythmAlgorithm      = gridPage.matrix[press.y][press.x].value;
 
-      const rhythmSteps = new Array(32).fill(undefined)
-                                       .map(_ => ({state: 0, probability: 1, fillRepeats: 0, velocity: undefined, timingOffset: 0}));
+      const rhythmSteps: RhythmStep[] = new Array(32).fill(undefined)
+                                                     .map(_ => ({state: 0, probability: 1, fillRepeats: 0, timingOffset: 0}));
       voice.hits.forEach((hit, i) => {
         rhythmSteps[hit].state = 1;
         rhythmSteps[hit].velocity = voice.velocities[i];
