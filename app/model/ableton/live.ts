@@ -4,6 +4,7 @@ import * as yaml from "js-yaml";
 import { note } from "tblswvs";
 import { AbletonNote, pulseRateMap } from "./note";
 import { AbletonTrack, TrackConfig } from "./track";
+import { DrumTrack } from "./drum_track";
 import { Sequencer } from "../sequencer";
 import { gcd, lcm } from "../../helpers/utils";
 
@@ -41,7 +42,9 @@ export class AbletonLive {
 
     this.#loadConfig().live_tracks.forEach((trackConfig: TrackConfig) => {
       this.dawIndices.push(trackConfig.dawIndex);
-      this.tracks.push(new AbletonTrack(this, trackConfig));
+      this.tracks.push(
+        trackConfig.type == "DrumTrack" ? new DrumTrack(this, trackConfig) : new AbletonTrack(this, trackConfig)
+      );
     });
   }
 
@@ -104,7 +107,7 @@ export class AbletonLive {
   #loadConfig(): any {
     return yaml.load(
       fs.readFileSync(
-        path.resolve(this.sequencer.configDirectory, "tracks_2025.2.yml"),
+        path.resolve(this.sequencer.configDirectory, "tracks_2025.3-beta.yml"),
         "utf8"
       )
     ) as TrackConfig;

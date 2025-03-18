@@ -11,6 +11,7 @@ import { scaleToRange } from "../../helpers/utils";
 
 export type TrackConfig = {
   name: string,
+  type: string,
   dawIndex: number,
   rampSequencer: boolean,
   chains?: ChainConfig[]
@@ -92,8 +93,6 @@ export class AbletonTrack {
   currentMutation: note[] = new Array();
   currentAbletonNotes: AbletonNote[] = new Array();
 
-  #sequence: note[][] = new Array(128);
-
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
   vectorShiftsActive: boolean = false;
@@ -133,10 +132,6 @@ export class AbletonTrack {
 
     for (let i = 0; i < this.rhythm.length; i++) {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
-    }
-
-    for (let i = 0; i < this.#sequence.length; i++) {
-      this.#sequence[i] = [];
     }
 
     this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
@@ -182,12 +177,13 @@ export class AbletonTrack {
   }
 
 
-  /**
-   * The output notes array should be accessible with a getter, but it should be set via the
-   * input note setter.
-   */
   get outputNotes() {
     return this.#outputNotes;
+  }
+
+
+  set outputNotes(notes: note[][]) {
+    this.#outputNotes = notes;
   }
 
 
@@ -208,21 +204,7 @@ export class AbletonTrack {
 
     if (notes.length > 0) {
       this.#outputNotes = notes;
-      this.generateSequence();
-    }
-  }
-
-
-  generateSequence() {
-    for (let seqIndex = 0, noteIndex = -1; seqIndex < this.#sequence.length; seqIndex++) {
-      const rhythmStep = this.#rhythm[seqIndex % this.#rhythmStepLength];
-      if (rhythmStep.state == 1) {
-        noteIndex++;
-        const noteArray = this.#outputNotes[noteIndex % this.#outputNotes.length];
-        this.#sequence[seqIndex] = noteArray;
-      } else {
-        this.#sequence[seqIndex] = [];
-      }
+      // this.generateSequence();
     }
   }
 
@@ -323,32 +305,7 @@ export class AbletonTrack {
   setInputNotes(inputNotes: note[][]) {
     this.#inputNotes = inputNotes;
     this.generateOutputNotes();
-    this.generateSequence();
-  }
-
-
-  get sequence() {
-    return this.#sequence;
-  }
-
-
-  setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
-    if (inputNotes == undefined) {
-      this.#sequence[rhythmStepIndex] = [];
-      this.#rhythm[rhythmStepIndex].state = 0;
-    } else {
-      this.#sequence[rhythmStepIndex] = inputNotes;
-      this.#rhythm[rhythmStepIndex].state = 1;
-      this.#rhythm[rhythmStepIndex].probability = this.defaultProbability;
-    }
-
-    this.updateDrumPadInputMelody();
-  }
-
-
-  updateDrumPadInputMelody() {
-    // Output notes is a compacted version of the drum rack sequence.
-    this.#outputNotes = this.#sequence.slice(0, this.#rhythmStepLength).filter(noteArray => noteArray.length > 0);
+    // this.generateSequence();
   }
 
 

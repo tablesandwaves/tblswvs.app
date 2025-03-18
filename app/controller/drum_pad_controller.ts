@@ -4,6 +4,7 @@ import {
   ApplicationController, GridConfig, GridKeyPress
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
+import { DrumTrack } from "../model/ableton/drum_track";
 
 
 const drumPadMatrix: Record<number, {coordinates: xyCoordinate, note: note}> = {
@@ -53,6 +54,11 @@ export class DrumPadController extends ApplicationController {
     this.functionMap.set("updateDefaultProbability", this.updateDefaultProbability);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
     this.functionMap.set("updatePulse", this.updatePulse);
+  }
+
+
+  get activeTrack() {
+    return this.grid.sequencer.daw.getActiveTrack() as DrumTrack;
   }
 
 

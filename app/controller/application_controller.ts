@@ -321,7 +321,7 @@ export class ApplicationController {
         }
         gridPage.activeGates = new Array();
 
-        if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
+        // if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
         gridPage.setGridRhythmGatesDisplay();
         gridPage.updateGuiRhythmDisplay();

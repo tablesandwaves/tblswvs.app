@@ -79,14 +79,14 @@ describe("InfinitySeriesController", () => {
       expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
     });
 
-    it("updates the track's sequence", () => {
-      const baseSequence = [
-        44, undefined, 45, undefined, 43, undefined, 46, undefined,
-        45, undefined, 44, undefined, 42, undefined, 47, undefined
-      ];
-      const expectedSequence = new Array(8).fill(baseSequence).flat();
-      const actualSequence   = track.sequence.map(step => step.length == 0 ? undefined : step[0].midi);
-      expect(actualSequence).to.have.ordered.members(expectedSequence);
-    });
+    // it("updates the track's sequence", () => {
+    //   const baseSequence = [
+    //     44, undefined, 45, undefined, 43, undefined, 46, undefined,
+    //     45, undefined, 44, undefined, 42, undefined, 47, undefined
+    //   ];
+    //   const expectedSequence = new Array(8).fill(baseSequence).flat();
+    //   const actualSequence   = track.sequence.map(step => step.length == 0 ? undefined : step[0].midi);
+    //   expect(actualSequence).to.have.ordered.members(expectedSequence);
+    // });
   });
 });
