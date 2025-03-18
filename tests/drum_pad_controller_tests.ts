@@ -23,45 +23,6 @@ describe("DrumPadController", () => {
   });
 
 
-  // describe("setting a track with a synth/sampler active chain to a drum rack active chain", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
-
-  //   // Select the Perc track
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   const track = sequencer.daw.getActiveTrack();
-
-  //   // Go to the global page and set the chain to a synth/sampler, confirm the default synth input notes
-  //   sequencer.grid.keyPress({y: 7, x: 12, s: 1});
-  //   sequencer.grid.keyPress({y: 3, x: 5, s: 1});
-  //   expect(track.inputNotes[0][0].midi).to.eq(60);
-
-  //   // Flip to a drum pad chain
-  //   sequencer.grid.keyPress({y: 3, x: 0, s: 1});
-
-  //   it("sets the track's input notes to the lowest drum pad MIDI note", () => {
-  //     expect(track.inputNotes[0][0].midi).to.eq(36);
-  //   });
-  // });
-
-
-  // describe("setting a track with a drum rack active chain to a synth/sampler active chain", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
-
-  //   // Select the Perc track
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   const track = sequencer.daw.getActiveTrack();
-  //   expect(track.inputNotes[0][0].midi).to.eq(36);
-
-  //   // Go to the global page and set the chain to a synth/sampler, confirm the default synth input notes
-  //   sequencer.grid.keyPress({y: 7, x: 12, s: 1});
-  //   sequencer.grid.keyPress({y: 3, x: 5, s: 1});
-
-  //   it("sets the track's input notes to the lowest drum pad MIDI note", () => {
-  //     expect(track.inputNotes[0][0].midi).to.eq(60);
-  //   });
-  // });
-
-
   // describe("toggling note editing when note recording is active", () => {
   //   const sequencer = new Sequencer(configDirectory, testing);
   //   sequencer.queuedNotes.push([{ octave: 1, note: 'C', midi: 36 }]);
