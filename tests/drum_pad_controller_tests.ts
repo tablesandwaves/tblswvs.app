@@ -8,21 +8,19 @@ const testing   = true;
 
 
 describe("DrumPadController", () => {
-  // describe("Selecting the initial drum controller page", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
+  describe("Selecting the initial drum controller page", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
 
-  //   // Select the Perc track with a drum rack, then set its drum rack chain
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   const track = sequencer.daw.getActiveTrack();
-  //   track.activeChain = 1;
+    // Select the Perc track with a drum rack, then set its drum rack chain
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
 
-  //   // Select the rhythm page
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    // Select the rhythm page
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
-  //   const activePage = sequencer.grid.activePage as DrumPadController;
+    const activePage = sequencer.grid.activePage as DrumPadController;
 
-  //   it("sets the active page to a drum pad page", () => expect(activePage).to.be.instanceOf(DrumPadController));
-  // });
+    it("sets the active page to a drum pad page", () => expect(activePage).to.be.instanceOf(DrumPadController));
+  });
 
 
   // describe("setting a track with a synth/sampler active chain to a drum rack active chain", () => {
