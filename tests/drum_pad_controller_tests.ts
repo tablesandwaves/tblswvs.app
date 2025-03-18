@@ -480,6 +480,7 @@ describe("DrumPadController", () => {
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
     ]);
     expect(track.outputNotes.length).to.eq(2);
+    expect(track.outputNotes.flatMap(noteArray => noteArray[0].midi)).to.have.ordered.members([36, 37]);
 
     // Shorten the track rhythm step length
     sequencer.grid.keyPress({y: 7, x: 13, s: 1});
