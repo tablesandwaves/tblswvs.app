@@ -44,6 +44,12 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
+  generateOutputNotes() {
+    super.generateOutputNotes();
+    this.generateSequence();
+  }
+
+
   generateSequence() {
     for (let seqIndex = 0, noteIndex = -1; seqIndex < this.#sequence.length; seqIndex++) {
       const rhythmStep = this.rhythm[seqIndex % this.rhythmStepLength];

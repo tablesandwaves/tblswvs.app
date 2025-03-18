@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
+import { DrumTrack } from "../app/model/ableton/drum_track";
 import { DrumPadController } from "../app/controller/drum_pad_controller";
 import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
@@ -23,184 +24,184 @@ describe("DrumPadController", () => {
   });
 
 
-  // describe("toggling note editing when note recording is active", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
-  //   sequencer.queuedNotes.push([{ octave: 1, note: 'C', midi: 36 }]);
+  describe("toggling note editing when note recording is active", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    sequencer.queuedNotes.push([{ octave: 1, note: 'C', midi: 36 }]);
 
-  //   // Select the Perc track with a drum rack
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    // Select the Perc track with a drum rack
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
 
-  //   // Select the rhythm page to load the drum pad controller
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-  //   const activePage = sequencer.grid.activePage as DrumPadController;
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const activePage = sequencer.grid.activePage as DrumPadController;
 
-  //   // Toggle note recording
-  //   sequencer.grid.keyPress({y: 4, x: 4, s: 1});
-  //   expect(activePage.noteRecordingActive).to.be.true;
+    // Toggle note recording
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+    expect(activePage.noteRecordingActive).to.be.true;
 
-  //   // Toggle note editing
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    // Toggle note editing
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
 
-  //   it("enables note editing", () => expect(activePage.noteEditingActive).to.be.true);
-  //   it("disables note recording", () => expect(activePage.noteRecordingActive).to.be.false);
-  //   it("clears the sequencer's queued melody", () => expect(sequencer.queuedNotes.length).to.eq(0));
-  // });
-
-
-  // describe("toggling note recording when note editing is active", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
-
-  //   // Select the Perc track with a drum rack
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   // const track = sequencer.daw.getActiveTrack();
-
-  //   // Select the rhythm page to load the drum pad controller
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-  //   const activePage = sequencer.grid.activePage as DrumPadController;
-
-  //   // Toggle note editing
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   expect(activePage.noteEditingActive).to.be.true;
-
-  //   // Toggle note recording
-  //   sequencer.grid.keyPress({y: 4, x: 4, s: 1});
-
-  //   it("enables note recording", () => expect(activePage.noteRecordingActive).to.be.true);
-  //   it("disables note editing", () => expect(activePage.noteEditingActive).to.be.false);
-  // });
+    it("enables note editing", () => expect(activePage.noteEditingActive).to.be.true);
+    it("disables note recording", () => expect(activePage.noteRecordingActive).to.be.false);
+    it("clears the sequencer's queued melody", () => expect(sequencer.queuedNotes.length).to.eq(0));
+  });
 
 
-  // describe("adding notes while in note editing mode", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
+  describe("toggling note recording when note editing is active", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
 
-  //   // Select the Perc track with a drum rack, select the rhythm controller
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    // Select the Perc track with a drum rack
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    // const track = sequencer.daw.getActiveTrack();
 
-  //   // Toggle note editing and press aa drum pad
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 0});
-  //   sequencer.grid.keyPress({y: 6, x: 0, s: 1});
-  //   sequencer.grid.keyPress({y: 6, x: 0, s: 0});
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const activePage = sequencer.grid.activePage as DrumPadController;
 
-  //   it("adds the corresponding note to the sequencer's queued chord progression", () => {
-  //     expect(sequencer.queuedNotes).to.deep.eq([[{ octave: 1, note: 'C', midi: 36 }]]);
-  //   });
-  // });
+    // Toggle note editing
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    expect(activePage.noteEditingActive).to.be.true;
 
+    // Toggle note recording
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
 
-  // describe("enabling note editing and adding notes", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
-
-  //   // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   const track = sequencer.daw.getActiveTrack();
-  //   track.rhythm = rhythmStepsForPattern([
-  //     1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //     1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //   ]);
-
-  //   // Select the rhythm page to load the drum pad controller
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-
-  //   // Toggle note editing and press two drum pads then toggle note editing again to flush
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 0});
-  //   sequencer.grid.keyPress({y: 6, x: 0, s: 1});
-  //   sequencer.grid.keyPress({y: 6, x: 0, s: 0});
-  //   sequencer.grid.keyPress({y: 6, x: 1, s: 1});
-  //   sequencer.grid.keyPress({y: 6, x: 1, s: 0});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 0});
-
-  //   it("sets the track output notes", () => {
-  //     const expected = [[{ octave: 1, note: 'C', midi: 36 }], [{ octave: 1, note: 'C#', midi: 37 }]];
-  //     expect(track.outputNotes).to.deep.eq(expected);
-  //   });
-
-  //   it("sets the sequence", () => {
-  //     expect(track.sequence[0]).to.deep.eq(  [{ octave: 1, note: 'C',  midi: 36 }]);
-  //     expect(track.sequence[16]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
-  //     expect(track.sequence[32]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
-  //     expect(track.sequence[48]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
-  //     expect(track.sequence[64]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
-  //     expect(track.sequence[80]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
-  //     expect(track.sequence[96]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
-  //     expect(track.sequence[112]).to.deep.eq([{ octave: 1, note: 'C#', midi: 37 }]);
-  //   });
-  // });
+    it("enables note recording", () => expect(activePage.noteRecordingActive).to.be.true);
+    it("disables note editing", () => expect(activePage.noteEditingActive).to.be.false);
+  });
 
 
-  // describe("enabling note editing and adding notes polyphonically", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
+  describe("adding notes while in note editing mode", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
 
-  //   // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-  //   const track = sequencer.daw.getActiveTrack();
-  //   track.rhythm = rhythmStepsForPattern([
-  //     1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //     0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //   ]);
+    // Select the Perc track with a drum rack, select the rhythm controller
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
-  //   // Select the rhythm page to load the drum pad controller
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    // Toggle note editing and press a drum pad
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
 
-  //   // Toggle note editing and press two drum pads then toggle note editing again to flush
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 0});
-
-  //   sequencer.grid.keyPress({y: 6, x: 0, s: 1}); // Press and hold 36
-  //   sequencer.grid.keyPress({y: 6, x: 2, s: 1}); // Press and hold 38
-  //   sequencer.grid.keyPress({y: 6, x: 0, s: 0}); // Release 36
-  //   sequencer.grid.keyPress({y: 6, x: 2, s: 0}); // Release 38
-  //   sequencer.grid.keyPress({y: 6, x: 1, s: 1}); // Press and hold 37
-  //   sequencer.grid.keyPress({y: 6, x: 1, s: 0}); // Release 37
-
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 0});
-
-  //   it("sets the track output notes", () => {
-  //     const expected = [
-  //       [{ octave: 1, note: 'C', midi: 36 }, { octave: 1, note: 'D', midi: 38 }],
-  //       [{ octave: 1, note: 'C#', midi: 37 }]
-  //     ];
-  //     expect(track.outputNotes).to.deep.eq(expected);
-  //   });
-
-  //   it("sets the sequence", () => {
-  //     expect(track.sequence[0]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
-  //     expect(track.sequence[2]).to.deep.eq( [{ octave: 1, note: 'C#',  midi: 37 }]);
-  //     expect(track.sequence[32]).to.deep.eq([{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
-  //     expect(track.sequence[34]).to.deep.eq([{ octave: 1, note: 'C#',  midi: 37 }]);
-  //     expect(track.sequence[64]).to.deep.eq([{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
-  //     expect(track.sequence[66]).to.deep.eq([{ octave: 1, note: 'C#',  midi: 37 }]);
-  //     expect(track.sequence[96]).to.deep.eq([{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
-  //     expect(track.sequence[98]).to.deep.eq([{ octave: 1, note: 'C#',  midi: 37 }]);
-  //   });
-  // });
+    it("adds the corresponding note to the sequencer's queued chord progression", () => {
+      expect(sequencer.queuedNotes).to.deep.eq([[{ octave: 1, note: 'C', midi: 36 }]]);
+    });
+  });
 
 
-  // describe("enabling note editing and toggling rhythm gates", () => {
-  //   const sequencer = new Sequencer(configDirectory, testing);
+  describe("enabling note editing and adding notes", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
 
-  //   // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
-  //   sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    // Select the Perc track with a drum rack
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack() as DrumTrack;
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
 
-  //   // Select the rhythm page to load the drum pad controller, then turn on editing, then add rhythm gates
-  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-  //   sequencer.grid.keyPress({y: 5, x: 4, s: 1});
-  //   sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-  //   sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
-  //   const track = sequencer.daw.getActiveTrack();
+    // Toggle note editing and press two drum pads then toggle note editing again to flush
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 0});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
 
-  //   it("updates the track rhythm", () => {
-  //     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-  //       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //     ])
-  //   });
-  // });
+    it("sets the track output notes", () => {
+      const expected = [[{ octave: 1, note: 'C', midi: 36 }], [{ octave: 1, note: 'C#', midi: 37 }]];
+      expect(track.outputNotes).to.deep.eq(expected);
+    });
+
+    it("sets the sequence", () => {
+      expect(track.sequence[0]).to.deep.eq(  [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[16]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
+      expect(track.sequence[32]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[48]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
+      expect(track.sequence[64]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[80]).to.deep.eq( [{ octave: 1, note: 'C#', midi: 37 }]);
+      expect(track.sequence[96]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }]);
+      expect(track.sequence[112]).to.deep.eq([{ octave: 1, note: 'C#', midi: 37 }]);
+    });
+  });
+
+
+  describe("enabling note editing and adding notes polyphonically", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack() as DrumTrack;
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+
+    // Select the rhythm page to load the drum pad controller
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    // Toggle note editing and press two drum pads then toggle note editing again to flush
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
+
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1}); // Press and hold 36
+    sequencer.grid.keyPress({y: 6, x: 2, s: 1}); // Press and hold 38
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0}); // Release 36
+    sequencer.grid.keyPress({y: 6, x: 2, s: 0}); // Release 38
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1}); // Press and hold 37
+    sequencer.grid.keyPress({y: 6, x: 1, s: 0}); // Release 37
+
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 0});
+
+    it("sets the track output notes", () => {
+      const expected = [
+        [{ octave: 1, note: 'C', midi: 36 }, { octave: 1, note: 'D', midi: 38 }],
+        [{ octave: 1, note: 'C#', midi: 37 }]
+      ];
+      expect(track.outputNotes).to.deep.eq(expected);
+    });
+
+    it("sets the sequence", () => {
+      expect(track.sequence[0]).to.deep.eq( [{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
+      expect(track.sequence[2]).to.deep.eq( [{ octave: 1, note: 'C#',  midi: 37 }]);
+      expect(track.sequence[32]).to.deep.eq([{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
+      expect(track.sequence[34]).to.deep.eq([{ octave: 1, note: 'C#',  midi: 37 }]);
+      expect(track.sequence[64]).to.deep.eq([{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
+      expect(track.sequence[66]).to.deep.eq([{ octave: 1, note: 'C#',  midi: 37 }]);
+      expect(track.sequence[96]).to.deep.eq([{ octave: 1, note: 'C',  midi: 36 }, { octave: 1, note: 'D', midi: 38 }]);
+      expect(track.sequence[98]).to.deep.eq([{ octave: 1, note: 'C#',  midi: 37 }]);
+    });
+  });
+
+
+  describe("enabling note editing and toggling rhythm gates", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack, then set its drum rack chain, and add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+
+    // Select the rhythm page to load the drum pad controller, then turn on editing, then add rhythm gates
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 5, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+    const track = sequencer.daw.getActiveTrack();
+
+    it("updates the track rhythm", () => {
+      expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ])
+    });
+  });
 
 
   // describe("note recording when the default gate probability is changed", () => {

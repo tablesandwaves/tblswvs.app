@@ -204,7 +204,6 @@ export class AbletonTrack {
 
     if (notes.length > 0) {
       this.#outputNotes = notes;
-      // this.generateSequence();
     }
   }
 
