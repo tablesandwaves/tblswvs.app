@@ -200,7 +200,7 @@ export class MonomeGrid {
 
     switch(pageType === "InputNotes" ? this.#getInputNotesPageType() : pageType) {
       case "Rhythm":
-        if (this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type == "drum rack")
+        if (this.sequencer.daw.getActiveTrack().type == "DrumTrack")
           this.activePage = new DrumPadController(this.#loadConfig(`grid_page_drumpad.yml`) as GridConfig, this);
         else
           this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_0.yml`) as GridConfig, this);

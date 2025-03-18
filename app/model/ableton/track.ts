@@ -11,7 +11,7 @@ import { scaleToRange } from "../../helpers/utils";
 
 export type TrackConfig = {
   name: string,
-  type: string,
+  type: ("MelodicTrack"|"DrumTrack"),
   dawIndex: number,
   rampSequencer: boolean,
   chains?: ChainConfig[]
@@ -67,6 +67,7 @@ export const CLIP_16N_COUNT = 128;
 
 export class AbletonTrack {
   name: string;
+  type: ("MelodicTrack"|"DrumTrack");
 
   #rhythm: RhythmStep[] = new Array(32);
   defaultProbability: number = 1;
@@ -120,6 +121,7 @@ export class AbletonTrack {
   constructor(daw: AbletonLive, config: TrackConfig) {
     this.daw      = daw;
     this.name     = config.name;
+    this.type     = config.type;
     this.dawIndex = config.dawIndex;
 
     if (config.chains) {
