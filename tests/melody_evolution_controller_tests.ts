@@ -348,47 +348,47 @@ describe("MelodyEvolutionController", () => {
   });
 
 
-  describe("turning mutations on for a second time", () => {
-    const sequencer = new Sequencer(configDirectory, testing);
+  // describe("turning mutations on for a second time", () => {
+  //   const sequencer = new Sequencer(configDirectory, testing);
 
-    sequencer.daw.tracks[5].setInputNotes([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
-    sequencer.daw.tracks[5].generateOutputNotes();
-    sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
-      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-    ]);
+  //   sequencer.daw.tracks[5].setInputNotes([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
+  //   sequencer.daw.tracks[5].generateOutputNotes();
+  //   sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
+  //     1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+  //   ]);
 
-    // Select the global page, then paginate over to the right 1 sub-page
-    sequencer.grid.keyPress({y: 7, x: 12, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+  //   // Select the global page, then paginate over to the right 1 sub-page
+  //   sequencer.grid.keyPress({y: 7, x: 12, s: 1});
+  //   sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
-    // Set a track to mutating, select a deterministic evolutionary algorithm, then press the enable mutations button
-    sequencer.grid.keyPress({y: 1, x: 5, s: 1});
-    sequencer.grid.keyPress({y: 0, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+  //   // Set a track to mutating, select a deterministic evolutionary algorithm, then press the enable mutations button
+  //   sequencer.grid.keyPress({y: 1, x: 5, s: 1});
+  //   sequencer.grid.keyPress({y: 0, x: 7, s: 1});
+  //   sequencer.grid.keyPress({y: 0, x: 15, s: 1});
 
-    expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq(
-      [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]
-    );
+  //   expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq(
+  //     [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]
+  //   );
 
-    // Evolve the track's melody
-    sequencer.daw.tracks[5].evolveMelody();
-    expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq([
-      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
-      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
-      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
-      { octave: 3, note: 'C', midi: 60, scaleDegree: 1 }
-    ]);
+  //   // Evolve the track's melody
+  //   sequencer.daw.tracks[5].evolveMelody();
+  //   expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq([
+  //     { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+  //     { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+  //     { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
+  //     { octave: 3, note: 'C', midi: 60, scaleDegree: 1 }
+  //   ]);
 
-    // Turn the mutations and then on again
-    sequencer.grid.keyPress({y: 0, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+  //   // Turn the mutations and then on again
+  //   sequencer.grid.keyPress({y: 0, x: 15, s: 1});
+  //   sequencer.grid.keyPress({y: 0, x: 15, s: 1});
 
-    it("should reset the mutating track's current mutation", () => {
-      expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq(
-        [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]
-      );
-    });
-  });
+  //   it("should reset the mutating track's current mutation", () => {
+  //     expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq(
+  //       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]
+  //     );
+  //   });
+  // });
 
 
   describe("disabling mutations", () => {

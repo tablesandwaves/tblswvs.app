@@ -128,10 +128,6 @@ export class AbletonTrack {
       this.chains = config.chains.map(c => new AbletonChain(c));
     }
 
-    if (this.chains[this.#activeChain] && this.chains[this.#activeChain].type == "drum rack") {
-      this.#inputNotes = [[{ octave: 1, note: 'C', midi: 36 }]];
-    }
-
     for (let i = 0; i < this.rhythm.length; i++) {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
     }
@@ -152,16 +148,7 @@ export class AbletonTrack {
 
 
   set activeChain(chainIndex: number) {
-    const previousChainType = this.chains[this.#activeChain].type;
-    this.#activeChain       = chainIndex;
-    const newChainType      = this.chains[this.#activeChain].type;
-
-    if (newChainType == "drum rack" && previousChainType != "drum rack") {
-      this.#inputNotes = [[{ octave: 1, note: 'C', midi: 36 }]];
-    } else if (newChainType != "drum rack" && previousChainType == "drum rack") {
-      this.#inputNotes = [[{ octave: 3, note: 'C', midi: 60 }]];
-    }
-
+    this.#activeChain = chainIndex;
     this.daw.sequencer.setTrackChain(this);
   }
 

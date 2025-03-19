@@ -215,6 +215,8 @@ export class Sequencer {
 
 
   setNotesInLive(track: AbletonTrack) {
+    track.updateCurrentAbletonNotes();
+
     if (this.testing) return;
 
     if (track.createNewClip) {
@@ -232,7 +234,6 @@ export class Sequencer {
     const clipIndex = this.daw.mutating && (track.mutating || track.randomizing || track.soloing) ?
                       AbletonLive.EVOLUTION_SCENE_INDEX :
                       track.currentClip;
-    track.updateCurrentAbletonNotes();
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,

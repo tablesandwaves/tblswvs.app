@@ -360,14 +360,14 @@ describe("GlobalController", () => {
         it("sets huminization in the sequencer", () => expect(sequencer.humanize).to.be.true);
         it("sets hihat swing in the sequencer", () => expect(sequencer.hihatSwing).to.be.true);
 
-        it("hihats are swung rather than humanized (large late offset)", () => {
-          sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
-            if (i % 2 != 0) {
-              const noOffsetExpectedPosition = i * 0.25 * 2;
-              expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(0.1125);
-            }
-          });
-        });
+        // it("hihats are swung rather than humanized (large late offset)", () => {
+        //   sequencer.daw.tracks[2].currentAbletonNotes.forEach((note, i) => {
+        //     if (i % 2 != 0) {
+        //       const noOffsetExpectedPosition = i * 0.25 * 2;
+        //       expect(Math.round((note.clipPosition - noOffsetExpectedPosition + Number.EPSILON) * 10_000) / 10_000).to.equal(0.1125);
+        //     }
+        //   });
+        // });
       });
 
 

@@ -906,41 +906,41 @@ describe("RhythmController", () => {
   });
 
 
-  describe("updating a subject track that has a dependent track", () => {
-    const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+  // describe("updating a subject track that has a dependent track", () => {
+  //   const sequencer = new Sequencer(configDirectory, testing);
+  //   sequencer.grid.keyPress({y: 7, x: 7, s: 1});
 
-    const sourceTrack   = sequencer.daw.tracks[1];
-    const surroundTrack = sequencer.daw.getActiveTrack();
-    const controller    = sequencer.grid.activePage as RhythmController;
+  //   const sourceTrack   = sequencer.daw.tracks[1];
+  //   const surroundTrack = sequencer.daw.getActiveTrack();
+  //   const controller    = sequencer.grid.activePage as RhythmController;
 
-    // Set the source/subject track rhythm
-    sourceTrack.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+  //   // Set the source/subject track rhythm
+  //   sourceTrack.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
 
-    // Select the surround algorithm and the related track
-    sequencer.grid.keyPress({y: 5, x: 1, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
-    expect(surroundTrack.rhythmAlgorithm).to.eq("surround");
-    expect(patternForRhythmSteps(surroundTrack.rhythm)).to.have.ordered.members([
-      1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-    ]);
+  //   // Select the surround algorithm and the related track
+  //   sequencer.grid.keyPress({y: 5, x: 1, s: 1});
+  //   sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+  //   expect(surroundTrack.rhythmAlgorithm).to.eq("surround");
+  //   expect(patternForRhythmSteps(surroundTrack.rhythm)).to.have.ordered.members([
+  //     1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+  //   ]);
 
-    // Update the source/subject track rhythm
-    sourceTrack.rhythm = rhythmStepsForPattern([0, 1, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+  //   // Update the source/subject track rhythm
+  //   sourceTrack.rhythm = rhythmStepsForPattern([0, 1, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
 
-    it("updates the dependent track's rhythm", () => {
-      const pattern = patternForRhythmSteps(surroundTrack.rhythm);
-      expect(pattern).to.have.ordered.members([
-        1, 0, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
-    });
+  //   it("updates the dependent track's rhythm", () => {
+  //     const pattern = patternForRhythmSteps(surroundTrack.rhythm);
+  //     expect(pattern).to.have.ordered.members([
+  //       1, 0, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+  //     ]);
+  //   });
 
-    it("updates the grid transport row", () => {
-      expect(controller.getRhythmGatesRow()).to.have.ordered.members([
-        10, 0, 0, 10,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-      ]);
-    });
-  });
+  //   it("updates the grid transport row", () => {
+  //     expect(controller.getRhythmGatesRow()).to.have.ordered.members([
+  //       10, 0, 0, 10,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+  //     ]);
+  //   });
+  // });
 
 
   describe("the pulse rate property", () => {

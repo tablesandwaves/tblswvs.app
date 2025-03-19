@@ -135,7 +135,6 @@ export class ApplicationController {
     if (this.grid.shiftStateActive && this.matrix[press.y][press.x].shiftMapping != undefined) {
       this.functionMap.get(this.matrix[press.y][press.x].shiftMapping)(this, press);
     } else {
-      // console.log(this.matrix[press.y][press.x].mapping)
       this.functionMap.get(this.matrix[press.y][press.x].mapping)(this, press);
     }
   }
@@ -321,7 +320,6 @@ export class ApplicationController {
         }
         gridPage.activeGates = new Array();
 
-        // if (updateDrumPadMelody) gridPage.activeTrack.updateDrumPadInputMelody();
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
         gridPage.setGridRhythmGatesDisplay();
         gridPage.updateGuiRhythmDisplay();

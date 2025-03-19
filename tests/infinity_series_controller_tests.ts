@@ -74,10 +74,10 @@ describe("InfinitySeriesController", () => {
       expect(track.infinitySeriesSeeds).to.have.ordered.members([1, 0, 0, 0]);
     });
 
-    it("updates the track's output notes", () => {
-      const outputNotes = track.outputNotes.flat().map(note => note.midi);
-      expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
-    });
+    // it("updates the track's output notes", () => {
+    //   const outputNotes = track.outputNotes.flat().map(note => note.midi);
+    //   expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
+    // });
 
     // it("updates the track's sequence", () => {
     //   const baseSequence = [

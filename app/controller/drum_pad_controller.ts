@@ -32,7 +32,6 @@ export class DrumPadController extends ApplicationController {
 
   notePlayingActive    = false;
   noteRecordingActive  = false;
-  noteEditingActive    = false;
   heldGate:     number = undefined;
   heldDrumPads: number = 0;
   disableGate: boolean = false;
@@ -50,7 +49,6 @@ export class DrumPadController extends ApplicationController {
     this.functionMap.set("updateStepLength", this.updateStepLength);
     this.functionMap.set("toggleNotePlaying", this.toggleNotePlaying);
     this.functionMap.set("toggleNoteRecording", this.toggleNoteRecording);
-    this.functionMap.set("toggleNoteEditing", this.toggleNoteEditing);
     this.functionMap.set("updateDefaultProbability", this.updateDefaultProbability);
     this.functionMap.set("updateNoteLength", this.updateNoteLength);
     this.functionMap.set("updatePulse", this.updatePulse);
@@ -101,12 +99,10 @@ export class DrumPadController extends ApplicationController {
 
       if (gridPage.notePlayingActive) gridPage.#playNote(press);
       if (gridPage.noteRecordingActive) gridPage.activeDrumPads.push(press);
-      if (gridPage.noteEditingActive) gridPage.#updateEditedNoteSequence(press);
 
     } else {
       gridPage.heldDrumPads--;
 
-      if (gridPage.noteEditingActive && gridPage.heldDrumPads == 0) gridPage.#flushEditedNoteSequence();
       if (gridPage.noteRecordingActive && gridPage.heldGate != undefined && gridPage.heldDrumPads == 0)
         gridPage.#flushRecordedNotes();
     }
@@ -130,21 +126,6 @@ export class DrumPadController extends ApplicationController {
   }
 
 
-  #flushEditedNoteSequence() {
-    this.grid.sequencer.queuedNotes.push(this.padNotes.sort((a,b) => a.midi - b.midi));
-    this.padNotes = new Array();
-  }
-
-
-  #updateEditedNoteSequence(press: GridKeyPress) {
-    this.padNotes.push(
-      Object.values(drumPadMatrix).find(obj => {
-        return obj.coordinates.x == press.x && obj.coordinates.y == press.y;
-      }).note
-    );
-  }
-
-
   #playNote(press: GridKeyPress) {
     this.grid.sequencer.midiOut.send("noteon", {
       note: this.matrix[press.y][press.x].value,
@@ -163,24 +144,20 @@ export class DrumPadController extends ApplicationController {
 
 
   selectGate(gridPage: DrumPadController, press: GridKeyPress) {
-    if (gridPage.noteEditingActive) {
-      super.updateRhythm(gridPage, press);
+    const stepIndex = press.x + (16 * press.y);
+    if (press.s == 1) {
+      gridPage.heldGate = stepIndex;
+      // Will stay true while note recording is active unless a drum pad is pressed before the gate is released
+      if (gridPage.noteRecordingActive) gridPage.disableGate = true;
     } else {
-      const stepIndex = press.x + (16 * press.y);
-      if (press.s == 1) {
-        gridPage.heldGate = stepIndex;
-        // Will stay true while note recording is active unless a drum pad is pressed before the gate is released
-        if (gridPage.noteRecordingActive) gridPage.disableGate = true;
-      } else {
-        gridPage.heldGate = undefined;
-        if (gridPage.noteRecordingActive && gridPage.disableGate) {
-          gridPage.activeTrack.setDrumPadStep(stepIndex, undefined);
-          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-          gridPage.setGridDrumPadDisplay();
-          gridPage.updateGuiRhythmDisplay();
-        }
-        gridPage.disableGate = false;
+      gridPage.heldGate = undefined;
+      if (gridPage.noteRecordingActive && gridPage.disableGate) {
+        gridPage.activeTrack.setDrumPadStep(stepIndex, undefined);
+        gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+        gridPage.setGridDrumPadDisplay();
+        gridPage.updateGuiRhythmDisplay();
       }
+      gridPage.disableGate = false;
     }
   }
 
@@ -195,33 +172,7 @@ export class DrumPadController extends ApplicationController {
 
   toggleNoteRecording(gridPage: DrumPadController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.noteEditingActive = false;
       gridPage.noteRecordingActive = !gridPage.noteRecordingActive;
-      gridPage.setGridDrumPadDisplay();
-    }
-  }
-
-
-  toggleNoteEditing(gridPage: DrumPadController, press: GridKeyPress) {
-    if (press.s == 1) {
-      gridPage.noteRecordingActive = false;
-      gridPage.noteEditingActive = !gridPage.noteEditingActive;
-      gridPage.setGridDrumPadDisplay();
-
-      if (gridPage.noteEditingActive) {
-        // When note editing is still active, queue up notes
-        gridPage.grid.sequencer.queuedNotes = new Array();
-        gridPage.setUiQueuedInputNotes();
-      } else {
-        // When note editing is turned off, flush the notes from the queued melody to the track
-        // unless there are no queued notes (due to inadvertent button press).
-        if (gridPage.grid.sequencer.queuedNotes.length > 0) {
-          gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
-          gridPage.activeTrack.generateOutputNotes();
-          gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-          gridPage.activeTrack.setGuiInputNotes();
-        }
-      }
       gridPage.setGridDrumPadDisplay();
     }
   }
@@ -239,7 +190,6 @@ export class DrumPadController extends ApplicationController {
     // Drum Pad Controls
     this.grid.levelSet(4, 3, this.notePlayingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     this.grid.levelSet(4, 4, this.noteRecordingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
-    this.grid.levelSet(4, 5, this.noteEditingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 
