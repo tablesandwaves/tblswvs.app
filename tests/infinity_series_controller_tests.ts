@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { InfinitySeriesController } from "../app/controller/infinity_series_controller";
 import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
+import { DrumTrack } from "../app/model/ableton/drum_track";
 
 
 const testing = true;
@@ -56,7 +57,7 @@ describe("InfinitySeriesController", () => {
 
     // Choose the percussion track, update the rhythm
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
-    const track = sequencer.daw.getActiveTrack();
+    const track = sequencer.daw.getActiveTrack() as DrumTrack;
     track.rhythmStepLength = 16;
     track.rhythm = rhythmStepsForPattern([1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0]);
 
@@ -68,25 +69,13 @@ describe("InfinitySeriesController", () => {
     sequencer.grid.keyPress({y: 2, x: 0, s: 1});
     sequencer.grid.keyPress({y: 6, x: 15, s: 1});
 
-    const activePage = sequencer.grid.activePage as InfinitySeriesController;
-
     it("updates the track's infinity series seeds", () => {
       expect(track.infinitySeriesSeeds).to.have.ordered.members([1, 0, 0, 0]);
     });
 
-    // it("updates the track's output notes", () => {
-    //   const outputNotes = track.outputNotes.flat().map(note => note.midi);
-    //   expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
-    // });
-
-    // it("updates the track's sequence", () => {
-    //   const baseSequence = [
-    //     44, undefined, 45, undefined, 43, undefined, 46, undefined,
-    //     45, undefined, 44, undefined, 42, undefined, 47, undefined
-    //   ];
-    //   const expectedSequence = new Array(8).fill(baseSequence).flat();
-    //   const actualSequence   = track.sequence.map(step => step.length == 0 ? undefined : step[0].midi);
-    //   expect(actualSequence).to.have.ordered.members(expectedSequence);
-    // });
+    it("updates the track's output notes", () => {
+      const outputNotes = track.outputNotes.flat().map(note => note.midi);
+      expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
+    });
   });
 });
