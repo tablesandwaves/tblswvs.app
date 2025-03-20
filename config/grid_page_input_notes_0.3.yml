@@ -39,8 +39,8 @@ rows:
     mapping: setAlgorithm
     values:
       - simple
-      - shift_reg
       - inf_series
+      - shift_reg
       - self_similarity
   -
     name: Algorithm types

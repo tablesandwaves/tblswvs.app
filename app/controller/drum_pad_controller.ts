@@ -60,31 +60,10 @@ export class DrumPadController extends ApplicationController {
   }
 
 
-  setGridRhythmGatesDisplay(highlightIndex?: number, pianoRollHighlightIndex?: number) {
-    // Display the transport row
-    super.setGridRhythmGatesDisplay(highlightIndex);
-
-    // Reset any drum pads brightened from the previous sequencer step
-    this.previousCoordinates.forEach(coordinate => {
-      this.grid.levelSet(coordinate.x, coordinate.y, 1);
-    });
-    this.previousCoordinates = new Array();
-
-    if (pianoRollHighlightIndex == undefined) return;
-
-    // Brighten any drum pads that have hits for the current step
-    const step = this.activeTrack.sequence[pianoRollHighlightIndex];
-    step.forEach(note => {
-      if (note && drumPadMatrix[note.midi]) {
-        this.grid.levelSet(
-          drumPadMatrix[note.midi].coordinates.x,
-          drumPadMatrix[note.midi].coordinates.y,
-          ACTIVE_BRIGHTNESS
-        );
-        this.previousCoordinates.push(drumPadMatrix[note.midi].coordinates);
-      }
-    });
-  }
+  // setGridRhythmGatesDisplay(highlightIndex?: number, pianoRollHighlightIndex?: number) {
+  //   // Display the transport row
+  //   super.setGridRhythmGatesDisplay(highlightIndex);
+  // }
 
 
   refresh() {
@@ -194,7 +173,7 @@ export class DrumPadController extends ApplicationController {
 
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    this.setGridRhythmGatesDisplay(highlightIndex, pianoRollHighlightIndex);
-    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+    this.setGridRhythmGatesDisplay(highlightIndex);
+    this.updateGuiRhythmTransport(pianoRollHighlightIndex);
   }
 }

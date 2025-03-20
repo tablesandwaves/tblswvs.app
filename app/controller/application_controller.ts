@@ -400,7 +400,7 @@ export class ApplicationController {
   // Overridden on the RhythmController, InputNoteController, DrumPadController
   // where the grid's transport row also needs to be updated.
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
-    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+    this.updateGuiRhythmTransport(pianoRollHighlightIndex);
   }
 
 
@@ -410,10 +410,10 @@ export class ApplicationController {
   }
 
 
-  updateGuiRhythmTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
+  updateGuiRhythmTransport(pianoRollHighlightIndex: number) {
     if (this.grid.sequencer.testing || !this.grid.sequencer.gui.webContents) return;
 
-    this.grid.sequencer.gui.webContents.send("transport", highlightIndex, pianoRollHighlightIndex);
+    this.grid.sequencer.gui.webContents.send("transport", pianoRollHighlightIndex);
   }
 
 

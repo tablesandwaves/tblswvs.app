@@ -115,7 +115,7 @@ export class RhythmController extends ApplicationController {
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     super.setGridRhythmGatesDisplay(highlightIndex);
-    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+    this.updateGuiRhythmTransport(pianoRollHighlightIndex);
   }
 
 

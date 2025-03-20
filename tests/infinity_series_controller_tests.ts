@@ -13,7 +13,7 @@ describe("InfinitySeriesController", () => {
 
     // Select the note input page, then the infinity series sub-page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
     const activePage = sequencer.grid.activePage as InfinitySeriesController;
 
     it("the infinity series controller can be selected", () => {
@@ -34,7 +34,7 @@ describe("InfinitySeriesController", () => {
       });
 
       it("has the default algorithm row (infinity series selected)", () => expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
-        0, 0, 10, 0,  0, 0, 0, 0
+        0, 10, 0, 0,  0, 0, 0, 0
       ]));
     });
 
@@ -62,7 +62,7 @@ describe("InfinitySeriesController", () => {
 
     // Select the note input page, then the infinity series sub-page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
 
     // Set the seed and advance
     sequencer.grid.keyPress({y: 2, x: 0, s: 1});

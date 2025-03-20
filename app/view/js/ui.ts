@@ -34,7 +34,7 @@ window.documentation.displayResourcesPath((event: any, path: string) => {
 });
 
 
-window.stepSequencer.transport((event: any, currentStep: number, currentPianoRollStep: number) => updateTransport(currentStep, currentPianoRollStep));
+window.stepSequencer.transport((event: any, currentPianoRollStep: number) => updateTransport(currentPianoRollStep));
 
 
 window.parameters.activateTrackNav((event: any, trackName: string) => {
@@ -486,7 +486,7 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
 });
 
 
-const updateTransport = (currentStep: number, currentPianoRollStep: number) => {
+const updateTransport = (currentPianoRollStep: number) => {
   if (document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`))
     document.querySelector(`#pianoroll-transport #pianoroll-step-${previousPianoRollStep}`).classList.remove("current");
   if (document.querySelector(`#pianoroll-transport #pianoroll-step-${currentPianoRollStep}`))

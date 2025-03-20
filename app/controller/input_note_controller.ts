@@ -26,8 +26,8 @@ export type algorithmMapping = {
 
 export const algorithmMapping: Record<string, algorithmMapping> = {
   "simple":          {button: 0, pageType: "InputNotes"},
-  "shift_reg":       {button: 1, pageType: "ShiftRegister"},
-  "inf_series":      {button: 2, pageType: "InfinitySeries"},
+  "inf_series":      {button: 1, pageType: "InfinitySeries"},
+  "shift_reg":       {button: 2, pageType: "ShiftRegister"},
   "self_similarity": {button: 3, pageType: "SelfSimilarity"}
 }
 
@@ -65,7 +65,7 @@ export class InputNoteController extends ApplicationController {
 
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     this.setGridRhythmGatesDisplay(highlightIndex);
-    this.updateGuiRhythmTransport(highlightIndex, pianoRollHighlightIndex);
+    this.updateGuiRhythmTransport(pianoRollHighlightIndex);
   }
 
 

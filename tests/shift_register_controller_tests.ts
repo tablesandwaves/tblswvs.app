@@ -13,7 +13,7 @@ describe("ShiftRegisterController", () => {
 
     // Select the note input page, then the shift register sub-page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
     const activePage = sequencer.grid.activePage as ShiftRegisterController;
 
     it("the shift register controller can be selected", () => {
@@ -34,7 +34,7 @@ describe("ShiftRegisterController", () => {
       ]));
 
       it("has the default algorithm row (shift register selected)", () => expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
-        0, 10, 0, 0,  0, 0, 0, 0
+        0, 0, 10, 0,  0, 0, 0, 0
       ]));
     });
 
@@ -57,7 +57,7 @@ describe("ShiftRegisterController", () => {
 
     // Select the note input page, then the shift register sub-page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 2, s: 1});
     const activePage = sequencer.grid.activePage as ShiftRegisterController;
 
     it("can update the track's shift register length", () => {
