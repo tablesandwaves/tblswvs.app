@@ -590,12 +590,12 @@ export class AbletonTrack {
 
     if (this.name == "Snare" && this.daw.sequencer.drunk && i % 4 == 0) {
       return Math.random() > 0.5 ? -0.45 : -0.25;
-    } else if (this.name == "HiHat" && this.daw.sequencer.drunk) {
+    } else if (this.name == "Perc 1" && this.daw.sequencer.drunk) {
       // Coin flips for both small to medium offset and early or late offset
       return Math.random() > 0.5 ?
              (i == 0 ? 0.1 : Math.random() > 0.5 ? 0.1  : -0.1) :
              (i == 0 ? 0.1 : Math.random() > 0.5 ? 0.25 : -0.25);
-    } else if (this.name == "HiHat" && this.daw.sequencer.hihatSwing && i % 2 == 0) {
+    } else if (this.name == "Perc 1" && this.daw.sequencer.hihatSwing && i % 2 == 0) {
       return 0.45;
     } else if (this.daw.sequencer.humanize) {
       return i == 0 ? 0.1 : Math.random() > 0.5 ? 0.1 : -0.1;
