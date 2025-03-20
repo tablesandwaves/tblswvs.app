@@ -4,6 +4,7 @@ import { AbletonTrack } from "../app/model/ableton/track";
 import { Sequencer } from "../app/model/sequencer";
 import { AbletonLive } from "../app/model/ableton/live";
 import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern, velocityWithinRange } from "./test_helpers";
+import { DrumTrack } from "../app/model/ableton/drum_track";
 
 
 const testing   = true;
@@ -236,32 +237,42 @@ describe("AbletonTrack", () => {
       });
     });
 
-    // describe("updating the subject track observed by a dependent track", () => {
-    //   const daw   = new AbletonLive(sequencer);
-    //   const perc  = daw.tracks[3];
-    //   const hihat = daw.tracks[2];
 
-    //   // Set the first state
-    //   perc.rhythm = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-    //   hihat.rhythmAlgorithm = "surround";
-    //   hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+    describe("updating the subject track observed by a dependent track", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
 
-    //   expect(patternForRhythmSteps(perc.rhythm)).to.have.ordered.members([
-    //     0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-    //   ]);
-    //   expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
-    //     1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-    //   ]);
+      // Set the first state
+      perc.rhythm = rhythmStepsForPattern([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
 
-    //   // Change the subject to a new state
-    //   perc.rhythm = rhythmStepsForPattern([0, 1, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
+      expect(patternForRhythmSteps(perc.rhythm)).to.have.ordered.members([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      ]);
 
-    //   it("causes the dependent track to be updated", () => {
-    //     expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
-    //       1, 0, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-    //     ]);
-    //   });
-    // });
+      // Change the subject to a new state
+      perc.rhythm = rhythmStepsForPattern([
+        0, 1, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 1, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      it("causes the dependent track to be updated", () => {
+        expect(patternForRhythmSteps(hihat.rhythm)).to.have.ordered.members([
+          1, 0, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          1, 0, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+    });
 
     describe("unsetting the related rhythm track for a surround rhythm algorithm", () => {
       const daw   = new AbletonLive(sequencer);
@@ -299,21 +310,24 @@ describe("AbletonTrack", () => {
       });
     });
 
-    // describe("when a surrounding track's subject track has its pulse rate updated", () => {
-    //   const daw   = new AbletonLive(sequencer);
-    //   const perc  = daw.tracks[3];
-    //   const hihat = daw.tracks[2];
-    //   expect(hihat.pulseRate).to.eq("16n");
+    describe("when a surrounding track's subject track has its pulse rate updated", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.pulseRate).to.eq("16n");
 
-    //   perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-    //   hihat.rhythmAlgorithm = "surround";
-    //   hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
-    //   perc.pulseRate = "8n";
+      perc.rhythm = rhythmStepsForPattern([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      perc.pulseRate = "8n";
 
-    //   it("updates the surrounding track's pulse rate", () => {
-    //     expect(hihat.pulseRate).to.eq("8n");
-    //   });
-    // });
+      it("updates the surrounding track's pulse rate", () => {
+        expect(hihat.pulseRate).to.eq("8n");
+      });
+    });
 
     describe("a surrounding track's rhythm", () => {
       const daw   = new AbletonLive(sequencer);
@@ -336,22 +350,25 @@ describe("AbletonTrack", () => {
       });
     });
 
-    // describe("a surrounding track's pulse rate", () => {
-    //   const daw   = new AbletonLive(sequencer);
-    //   const perc  = daw.tracks[3];
-    //   const hihat = daw.tracks[2];
-    //   expect(hihat.pulseRate).to.eq("16n");
+    describe("a surrounding track's pulse rate", () => {
+      const daw   = new AbletonLive(sequencer);
+      const perc  = daw.tracks[3];
+      const hihat = daw.tracks[2];
+      expect(hihat.pulseRate).to.eq("16n");
 
-    //   perc.rhythm    = rhythmStepsForPattern([0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0]);
-    //   hihat.rhythmAlgorithm = "surround";
-    //   hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
-    //   perc.pulseRate = "8n";
-    //   hihat.pulseRate = "4n";
+      perc.rhythm    = rhythmStepsForPattern([
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      hihat.rhythmAlgorithm = "surround";
+      hihat.relatedRhythmTrackDawIndex = perc.dawIndex;
+      perc.pulseRate = "8n";
+      hihat.pulseRate = "4n";
 
-    //   it("cannot be updated through itself", () => {
-    //     expect(hihat.pulseRate).to.eq("8n");
-    //   });
-    // });
+      it("cannot be updated through itself", () => {
+        expect(hihat.pulseRate).to.eq("8n");
+      });
+    });
 
     describe("when a track is set to surround another, the dependent track will inherit the rhythm step length", () => {
       const daw   = new AbletonLive(sequencer);
@@ -646,130 +663,109 @@ describe("AbletonTrack", () => {
   });
 
 
-  // describe("a drum pad note sequence", () => {
-  //   describe("setting a single step", () => {
-  //     const track = new AbletonTrack(daw, {name: "Perc", type: "MelodicTrack", dawIndex: 4, rampSequencer: false});
-  //     track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
+  describe("a drum pad note sequence", () => {
+    describe("setting a single step", () => {
+      const track = new DrumTrack(daw, {name: "Perc", type: "MelodicTrack", dawIndex: 4, rampSequencer: false});
+      track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
 
-  //     it("should update the rhythm", () => {
-  //       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-  //         1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //       ]);
-  //     });
+      it("should update the rhythm", () => {
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
 
-  //     it("should update the input melody", () => {
-  //       expect(track.outputNotes[0][0].octave).to.eq(1);
-  //       expect(track.outputNotes[0][0].note).to.eq("C");
-  //       expect(track.outputNotes[0][0].midi).to.eq(36);
-  //     });
-  //   });
-
-
-  //   describe("setting a single step with polyphony", () => {
-  //     const track = new AbletonTrack(daw, {name: "Perc 2", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
-  //     track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}, {octave: 1, note: "D", midi: 38}]);
-
-  //     it("should update the rhythm", () => {
-  //       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-  //         1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //       ]);
-  //     });
-
-  //     it("should update the input melody", () => {
-  //       expect(track.outputNotes[0][0].octave).to.eq(1);
-  //       expect(track.outputNotes[0][0].note).to.eq("C");
-  //       expect(track.outputNotes[0][0].midi).to.eq(36);
-  //       expect(track.outputNotes[0][1].octave).to.eq(1);
-  //       expect(track.outputNotes[0][1].note).to.eq("D");
-  //       expect(track.outputNotes[0][1].midi).to.eq(38);
-  //     });
-  //   });
+      it("should update the input melody", () => {
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("C");
+        expect(track.outputNotes[0][0].midi).to.eq(36);
+      });
+    });
 
 
-  //   describe("setting multiple steps", () => {
-  //     const track = new AbletonTrack(daw, {name: "Perc", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
-  //     track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
-  //     track.setDrumPadStep(8, [{octave: 1, note: "Eb", midi: 39}]);
+    describe("setting a single step with polyphony", () => {
+      const track = new DrumTrack(daw, {name: "Perc 2", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
+      track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}, {octave: 1, note: "D", midi: 38}]);
 
-  //     it("should update the rhythm", () => {
-  //       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-  //         1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
-  //         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //       ]);
-  //     });
+      it("should update the rhythm", () => {
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
 
-  //     it("should update the input melody", () => {
-  //       expect(track.outputNotes[0][0].octave).to.eq(1);
-  //       expect(track.outputNotes[0][0].note).to.eq("C");
-  //       expect(track.outputNotes[0][0].midi).to.eq(36);
-  //       expect(track.outputNotes[1][0].octave).to.eq(1);
-  //       expect(track.outputNotes[1][0].note).to.eq("Eb");
-  //       expect(track.outputNotes[1][0].midi).to.eq(39);
-  //     });
-  //   });
-
-
-  //   describe("removing a step", () => {
-  //     const track = new AbletonTrack(daw, {name: "Perc 2", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
-  //     track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
-  //     track.setDrumPadStep(8, [{octave: 1, note: "Eb", midi: 39}]);
-  //     track.setDrumPadStep(0, undefined);
-
-  //     it("should update the rhythm", () => {
-  //       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-  //         0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
-  //         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //       ]);
-  //     });
-
-  //     it("should update the input melody", () => {
-  //       expect(track.outputNotes[0][0].octave).to.eq(1);
-  //       expect(track.outputNotes[0][0].note).to.eq("Eb");
-  //       expect(track.outputNotes[0][0].midi).to.eq(39);
-  //     });
-  //   });
+      it("should update the input melody", () => {
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("C");
+        expect(track.outputNotes[0][0].midi).to.eq(36);
+        expect(track.outputNotes[0][1].octave).to.eq(1);
+        expect(track.outputNotes[0][1].note).to.eq("D");
+        expect(track.outputNotes[0][1].midi).to.eq(38);
+      });
+    });
 
 
-  //   describe("removing one note from a step with multiple notes", () => {
-  //     const track = new AbletonTrack(daw, {name: "Perc", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
-  //     track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}, {octave: 1, note: "D", midi: 38}]);
-  //     track.setDrumPadStep(0, [{octave: 1, note: "D", midi: 38}]);
+    describe("setting multiple steps", () => {
+      const track = new DrumTrack(daw, {name: "Perc", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
+      track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
+      track.setDrumPadStep(8, [{octave: 1, note: "Eb", midi: 39}]);
 
-  //     it("should update the rhythm", () => {
-  //       expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-  //         1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-  //       ]);
-  //     });
+      it("should update the rhythm", () => {
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
 
-  //     it("should update the input melody", () => {
-  //       expect(track.outputNotes[0][0].octave).to.eq(1);
-  //       expect(track.outputNotes[0][0].note).to.eq("D");
-  //       expect(track.outputNotes[0][0].midi).to.eq(38);
-  //     });
-  //   });
-  // });
+      it("should update the input melody", () => {
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("C");
+        expect(track.outputNotes[0][0].midi).to.eq(36);
+        expect(track.outputNotes[1][0].octave).to.eq(1);
+        expect(track.outputNotes[1][0].note).to.eq("Eb");
+        expect(track.outputNotes[1][0].midi).to.eq(39);
+      });
+    });
 
 
-  // describe("editing the rhythm step length", () => {
-  //   const track = new AbletonTrack(daw, {name: "Perc", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
-  //   track.rhythmStepLength = 16;
-  //   track.rhythm = rhythmStepsForPattern([
-  //     1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //     0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
-  //   ]);
-  //   track.generateOutputNotes();
-  //   expect(track.sequence[0].length).to.eq(1);
-  //   expect(track.sequence[16].length).to.eq(1);
-  //   expect(track.sequence[20].length).to.eq(0);
+    describe("removing a step", () => {
+      const track = new DrumTrack(daw, {name: "Perc 2", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
+      track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}]);
+      track.setDrumPadStep(8, [{octave: 1, note: "Eb", midi: 39}]);
+      track.setDrumPadStep(0, undefined);
 
-  //   it("should update the track's sequence of notes", () => {
-  //     track.rhythmStepLength = 20;
-  //     expect(track.sequence[0].length).to.eq(1);
-  //     expect(track.sequence[16].length).to.eq(0);
-  //     expect(track.sequence[20].length).to.eq(1);
-  //   });
-  // });
+      it("should update the rhythm", () => {
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("should update the input melody", () => {
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("Eb");
+        expect(track.outputNotes[0][0].midi).to.eq(39);
+      });
+    });
+
+
+    describe("removing one note from a step with multiple notes", () => {
+      const track = new DrumTrack(daw, {name: "Perc", type: "DrumTrack", dawIndex: 4, rampSequencer: false});
+      track.setDrumPadStep(0, [{octave: 1, note: "C", midi: 36}, {octave: 1, note: "D", midi: 38}]);
+      track.setDrumPadStep(0, [{octave: 1, note: "D", midi: 38}]);
+
+      it("should update the rhythm", () => {
+        expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+          1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+          0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+        ]);
+      });
+
+      it("should update the input melody", () => {
+        expect(track.outputNotes[0][0].octave).to.eq(1);
+        expect(track.outputNotes[0][0].note).to.eq("D");
+        expect(track.outputNotes[0][0].midi).to.eq(38);
+      });
+    });
+  });
 });
