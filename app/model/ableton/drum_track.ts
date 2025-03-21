@@ -21,6 +21,22 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
+  get rhythmStepLength() {
+    return super.rhythmStepLength;
+  }
+
+
+  /**
+   * Override the setter for this parent class field because the output notes need to be regenerated for
+   * drum tracks when the rhythm step length changes. This also requires that this subclass overrides
+   * the getter method for the field.
+   */
+  set rhythmStepLength(stepLength: number) {
+    super.rhythmStepLength = stepLength;
+    this.generateOutputNotes();
+  }
+
+
   setDrumPadStep(rhythmStepIndex: number, inputNotes: note[]|undefined) {
     if (inputNotes == undefined) {
       this.#sequence[rhythmStepIndex] = [];

@@ -143,7 +143,8 @@ export class MelodyEvolutionController extends ApplicationController {
 
     // Seed the initial mutating melody from the first soloist
     if (gridPage.grid.sequencer.daw.soloists.length == 1) {
-      track.generateOutputNotes();
+      // TODO: This should not be necessary. If no problems reveal themselves, remove.
+      // track.generateOutputNotes();
       gridPage.grid.sequencer.daw.currentSoloistMelody = track.outputNotes.flat();
     }
 

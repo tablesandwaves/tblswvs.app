@@ -293,7 +293,6 @@ export class AbletonTrack {
   setInputNotes(inputNotes: note[][]) {
     this.#inputNotes = inputNotes;
     this.generateOutputNotes();
-    // this.generateSequence();
   }
 
 
@@ -318,7 +317,6 @@ export class AbletonTrack {
   set rhythmStepLength(stepLength: number) {
     if (this.#relatedRhythmTrackDawIndex == undefined) {
       this.#rhythmStepLength = stepLength;
-      this.generateOutputNotes();
       this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
     }
   }

@@ -107,12 +107,17 @@ export class InputNoteController extends ApplicationController {
     if (press.s == 0) return;
 
     if (gridPage.newSequenceQueued && gridPage.grid.sequencer.queuedNotes.length > 0) {
+      // When notes are queued, they need to be flushed via AbletonTrack.setInputNotes(),
+      // which will also make a call to AbletonTrack.generateOutputNotes().
       gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
 
       if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
+    } else {
+      // Otherwise, only call AbletonTrack.generateOutputNotes() for cases like the infinity series
+      // algorithm, which will create a note sequence not based on the track's input notes.
+      gridPage.activeTrack.generateOutputNotes();
     }
 
-    gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.setGuiInputNotes();
   }

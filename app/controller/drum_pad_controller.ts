@@ -7,26 +7,6 @@ import { MonomeGrid } from "../model/monome_grid";
 import { DrumTrack } from "../model/ableton/drum_track";
 
 
-const drumPadMatrix: Record<number, {coordinates: xyCoordinate, note: note}> = {
-  36: {coordinates: {x: 0, y: 6}, note: {midi: 36, note: "C",  octave: 1}},
-  37: {coordinates: {x: 1, y: 6}, note: {midi: 37, note: "C#", octave: 1}},
-  38: {coordinates: {x: 2, y: 6}, note: {midi: 38, note: "D",  octave: 1}},
-  39: {coordinates: {x: 3, y: 6}, note: {midi: 39, note: "D#", octave: 1}},
-  40: {coordinates: {x: 0, y: 5}, note: {midi: 40, note: "E",  octave: 1}},
-  41: {coordinates: {x: 1, y: 5}, note: {midi: 41, note: "F",  octave: 1}},
-  42: {coordinates: {x: 2, y: 5}, note: {midi: 42, note: "F#", octave: 1}},
-  43: {coordinates: {x: 3, y: 5}, note: {midi: 43, note: "G",  octave: 1}},
-  44: {coordinates: {x: 0, y: 4}, note: {midi: 44, note: "G#", octave: 1}},
-  45: {coordinates: {x: 1, y: 4}, note: {midi: 45, note: "A",  octave: 1}},
-  46: {coordinates: {x: 2, y: 4}, note: {midi: 46, note: "A#", octave: 1}},
-  47: {coordinates: {x: 3, y: 4}, note: {midi: 47, note: "B",  octave: 1}},
-  48: {coordinates: {x: 0, y: 3}, note: {midi: 48, note: "C",  octave: 2}},
-  49: {coordinates: {x: 1, y: 3}, note: {midi: 49, note: "C#", octave: 2}},
-  50: {coordinates: {x: 2, y: 3}, note: {midi: 50, note: "D",  octave: 2}},
-  51: {coordinates: {x: 3, y: 3}, note: {midi: 51, note: "D#", octave: 2}}
-}
-
-
 export class DrumPadController extends ApplicationController {
   type = "Rhythm";
 
@@ -58,12 +38,6 @@ export class DrumPadController extends ApplicationController {
   get activeTrack() {
     return this.grid.sequencer.daw.getActiveTrack() as DrumTrack;
   }
-
-
-  // setGridRhythmGatesDisplay(highlightIndex?: number, pianoRollHighlightIndex?: number) {
-  //   // Display the transport row
-  //   super.setGridRhythmGatesDisplay(highlightIndex);
-  // }
 
 
   refresh() {
