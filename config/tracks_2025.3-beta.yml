@@ -38,12 +38,12 @@ live_tracks:
     dawIndex: 3
     rampSequencer: false
     chains:
-      # -
-      #   name: Hihat 909 Closed
-      #   type: drumsampler
-      # -
-      #   name: HH Perc Glitch Speak
-      #   type: drumsampler
+      -
+        name: HiHat Rack
+        type: drum rack
+        pads:
+          - HiHat 909 Closed
+          - Perc Glitch Speak
       -
         name: Akoustic Dr Solo Rack
         type: drum rack

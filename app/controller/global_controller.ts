@@ -6,6 +6,7 @@ import {
 import { MonomeGrid } from "../model/monome_grid";
 import { notes, blank8x1Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
+import { DrumTrack } from "../model/ableton/drum_track";
 
 
 const configuredScales: Record<string, {scale: Scale, index: number}> = {
@@ -130,13 +131,21 @@ export class GlobalController extends ApplicationController {
       track.rhythmStepBreakpoint = beat.length;
       track.rhythmAlgorithm      = gridPage.matrix[press.y][press.x].value;
 
-      const rhythmSteps: RhythmStep[] = new Array(32).fill(undefined)
-                                                     .map(_ => ({state: 0, probability: 1, fillRepeats: 0, timingOffset: 0}));
-      voice.hits.forEach((hit, i) => {
-        rhythmSteps[hit].state = 1;
-        rhythmSteps[hit].velocity = voice.velocities[i];
-      });
-      track.rhythm = rhythmSteps;
+      if (track.type == "DrumTrack" && (track as DrumTrack).sequence.flat().length == 0) {
+        (track as DrumTrack).sequence = new Array(32);
+        voice.hits.forEach((hit, i) => {
+          (track as DrumTrack).setDrumPadStep(hit, [{octave: 1, note: "C", midi: 36}]);
+          track.rhythm[hit].velocity = voice.velocities[i];
+        });
+      } else {
+        const rhythmSteps: RhythmStep[] = new Array(32).fill(undefined)
+                                                        .map(_ => ({state: 0, probability: 1, fillRepeats: 0, timingOffset: 0}));
+        voice.hits.forEach((hit, i) => {
+          rhythmSteps[hit].state = 1;
+          rhythmSteps[hit].velocity = voice.velocities[i];
+        });
+        track.rhythm = rhythmSteps;
+      }
       gridPage.grid.sequencer.setNotesInLive(track);
     });
 

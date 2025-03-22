@@ -21,6 +21,11 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
+  set sequence(sequence: note[][]) {
+    this.#sequence = sequence;
+  }
+
+
   get rhythmStepLength() {
     return super.rhythmStepLength;
   }
