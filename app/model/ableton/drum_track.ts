@@ -62,4 +62,25 @@ export class DrumTrack extends AbletonTrack {
     else
       super.generateOutputNotes();
   }
+
+
+  getSequenceCenterNote() {
+    const padCount  = this.chains[this.activeChain].pads.length;
+    const midiNotes = [...new Array(padCount)].map((_, i) => i + 36);
+    return (padCount % 2 == 0) ? midiNotes[padCount / 2] : midiNotes[(padCount + 1) / 2];
+  }
+
+
+  updateGuiPianoRoll() {
+    if (this.daw.sequencer.gui == undefined) return;
+
+    this.daw.sequencer.gui.webContents.send(
+      "drum-rack-notes",
+      this.currentAbletonNotes.map(n => n.toPianoRollNote()),
+      this.chains[this.activeChain].pads,
+      this.daw.sequencer.superMeasure,
+      this.rhythmStepLength,
+      this.rhythmStepBreakpoint
+    )
+  }
 }

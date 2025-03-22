@@ -19,6 +19,7 @@ import { DrumPadController } from "../controller/drum_pad_controller";
 import { ShiftRegisterController } from "../controller/shift_register_controller";
 import { InfinitySeriesController } from "../controller/infinity_series_controller";
 import { SelfSimilarityController } from "../controller/self_similarity_controller";
+import { DrumTrack } from "./ableton/drum_track";
 
 
 export type DeviceConfig = {
@@ -180,11 +181,14 @@ export class MonomeGrid {
   #setActiveTrack(press: GridKeyPress) {
     this.sequencer.daw.activeTrack = press.x;
 
-    const activeChainType = this.sequencer.daw.getActiveTrack().chains[this.sequencer.daw.getActiveTrack().activeChain].type;
-    if ((this.activePage && this.activePage instanceof RhythmController  && activeChainType == "drum rack") ||
-        (this.activePage && this.activePage instanceof DrumPadController && activeChainType != "drum rack")) {
+    if (this.activePage && this.activePage instanceof RhythmController ||
+        this.activePage && this.activePage instanceof DrumPadController) {
+      // When switching to a new track while on a Rhythm type controller (rhythm or drum pad controller)
+      // reset the active page to cover the case where the grid needs to display the other rhythm type.
       this.setActiveGridPage(this.activePage.type);
     } else if (this.activePage && this.activePage instanceof InputNoteController) {
+      // Similarly, the new track for the input notes pages may be using a different algorithm, also
+      // requiring a new grid display.
       this.setActiveGridPage(algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm].pageType);
     }
     if (this.activePage) this.activePage.refresh();

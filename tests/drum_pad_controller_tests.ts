@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { DrumTrack } from "../app/model/ableton/drum_track";
 import { DrumPadController } from "../app/controller/drum_pad_controller";
+import { RhythmController } from "../app/controller/rhythm_controller";
 import { baselineDrumPadActivation, configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
 
@@ -9,18 +10,29 @@ const testing   = true;
 
 
 describe("DrumPadController", () => {
-  describe("Selecting the initial drum controller page", () => {
+  describe("selecting the initial drum controller page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Select the Perc track with a drum rack, then set its drum rack chain
-    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1}); // then select the rhythm page.
 
-    // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    it("sets the active page to a drum pad page", () => expect(sequencer.grid.activePage).to.be.instanceOf(DrumPadController));
+  });
 
-    const activePage = sequencer.grid.activePage as DrumPadController;
 
-    it("sets the active page to a drum pad page", () => expect(activePage).to.be.instanceOf(DrumPadController));
+  describe("selecting a drum rack track while on the rhythm page should load a drum controller", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1}); // Select the rhythm page FIRST, then
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track with a drum rack
+
+    it("sets the active page to a drum pad page", () => {
+      expect(sequencer.grid.activePage).to.be.instanceOf(DrumPadController);
+    });
+
+    it("is not a rhythm page", () => {
+      expect(sequencer.grid.activePage).not.to.be.instanceOf(RhythmController);
+    });
   });
 
 

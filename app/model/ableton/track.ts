@@ -257,9 +257,7 @@ export class AbletonTrack {
 
   #getInfinitySeries() {
     const notes: note[][] = new Array();
-    const sequenceCenter = (this.chains[this.activeChain].type == "drum rack") ?
-      this.#getDrumRackCenterNote() :
-      this.daw.sequencer.key.midiTonic + 60;
+    const sequenceCenter = this.getSequenceCenterNote();
 
     this.infinitySeriesSeeds.forEach(seed => {
       if (seed == 0) return;
@@ -278,10 +276,8 @@ export class AbletonTrack {
   }
 
 
-  #getDrumRackCenterNote() {
-    const padCount  = this.chains[this.#activeChain].pads.length;
-    const midiNotes = [...new Array(padCount)].map((_, i) => i + 36);
-    return (padCount % 2 == 0) ? midiNotes[padCount / 2] : midiNotes[(padCount + 1) / 2];
+  getSequenceCenterNote() {
+    return this.daw.sequencer.key.midiTonic + 60;
   }
 
 
@@ -788,25 +784,14 @@ export class AbletonTrack {
   updateGuiPianoRoll() {
     if (this.daw.sequencer.gui == undefined) return;
 
-    if (this.chains[this.activeChain].type == "drum rack") {
-      this.daw.sequencer.gui.webContents.send(
-        "drum-rack-notes",
-        this.currentAbletonNotes.map(n => n.toPianoRollNote()),
-        this.chains[this.activeChain].pads,
-        this.daw.sequencer.superMeasure,
-        this.rhythmStepLength,
-        this.rhythmStepBreakpoint
-      )
-    } else {
-      this.daw.sequencer.gui.webContents.send(
-        "piano-roll-notes",
-        this.currentAbletonNotes.map(n => n.toPianoRollNote()),
-        this.daw.sequencer.key.midiTonic,
-        this.daw.sequencer.superMeasure,
-        this.rhythmStepLength,
-        this.rhythmStepBreakpoint
-      );
-    }
+    this.daw.sequencer.gui.webContents.send(
+      "piano-roll-notes",
+      this.currentAbletonNotes.map(n => n.toPianoRollNote()),
+      this.daw.sequencer.key.midiTonic,
+      this.daw.sequencer.superMeasure,
+      this.rhythmStepLength,
+      this.rhythmStepBreakpoint
+    );
   }
 
 
