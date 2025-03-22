@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { DrumTrack } from "../app/model/ableton/drum_track";
 import { DrumPadController } from "../app/controller/drum_pad_controller";
-import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { baselineDrumPadActivation, configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing   = true;
@@ -69,7 +69,6 @@ describe("DrumPadController", () => {
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
     const track = sequencer.daw.getActiveTrack();
-    track.activeChain = 1;
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -104,7 +103,6 @@ describe("DrumPadController", () => {
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
     const track = sequencer.daw.getActiveTrack();
-    track.activeChain = 1;
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -144,7 +142,6 @@ describe("DrumPadController", () => {
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
     const track = sequencer.daw.getActiveTrack();
-    track.activeChain = 1;
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -189,7 +186,6 @@ describe("DrumPadController", () => {
     // Select the Perc track with a drum rack, then set its drum rack chain
     sequencer.grid.keyPress({y: 7, x: 3, s: 1});
     const track = sequencer.daw.getActiveTrack();
-    track.activeChain = 1;
 
     // Select the rhythm page
     sequencer.grid.keyPress({y: 7, x: 7, s: 1});
@@ -233,45 +229,8 @@ describe("DrumPadController", () => {
 
   describe("activating steps and then changing the step length", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-
-    // Select the Perc track with a drum rack, then set its drum rack chain
-    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    baselineDrumPadActivation(sequencer);
     const track = sequencer.daw.getActiveTrack() as DrumTrack;
-    track.activeChain = 1;
-
-    // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-
-    // Turn on note recording
-    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
-
-    // Press and hold a gate, then select a drum pad: step 0, midi note 36
-    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
-    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
-    // Press and hold a gate, then select a drum pad: step 12, midi note 37
-    sequencer.grid.keyPress({y: 0, x: 12, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});
-    sequencer.grid.keyPress({y: 6, x: 1, s: 0});
-    sequencer.grid.keyPress({y: 0, x: 12, s: 0});
-
-    expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
-      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0,
-      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
-    ]);
-    expect(track.outputNotes.length).to.eq(2);
-    expect(track.outputNotes.flatMap(noteArray => noteArray[0].midi)).to.have.ordered.members([36, 37]);
-    const stepsWithBeats = track.sequence.reduce((indices: number[], step, i) => {
-      if (step.length > 0) indices.push(i);
-      return indices;
-    }, []);
-    expect(stepsWithBeats).to.have.ordered.members([0, 12]);
-
-    const pad36Positions = track.currentAbletonNotes.filter(note => note.midiNote == 36).map(note => note.clipPosition);
-    const pad37Positions = track.currentAbletonNotes.filter(note => note.midiNote == 37).map(note => note.clipPosition);
-    expect(pad36Positions).to.have.ordered.members([0, 8, 16, 24]);
-    expect(pad37Positions).to.have.ordered.members([3, 11, 19, 27]);
 
     // Shorten the track rhythm step length
     sequencer.grid.keyPress({y: 7, x: 13, s: 1});
@@ -305,6 +264,32 @@ describe("DrumPadController", () => {
       const pad37Positions = track.currentAbletonNotes.filter(note => note.midiNote == 37).map(note => note.clipPosition);
       expect(pad36Positions).to.have.ordered.members([0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30]);
       expect(pad37Positions.length).to.eq(0);
+    });
+  });
+
+
+  describe("setting a drum pad to the infinity series and then back to the simple algorithm", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+    baselineDrumPadActivation(sequencer);
+    const track = sequencer.daw.getActiveTrack() as DrumTrack;
+
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});  // Select the input note page,
+    sequencer.grid.keyPress({y: 6, x: 1, s: 1});  // set the note algorithm to infinity series
+    sequencer.grid.keyPress({y: 2, x: 0, s: 1});  // set the seed,
+    sequencer.grid.keyPress({y: 2, x: 11, s: 1}); // set the algo repetitions
+    sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // and advance/activate.
+
+    const outputNotes = track.outputNotes.flat().map(note => note.midi);
+    expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
+
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});  // Set the note algorithm to simple
+    sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // and advance.
+
+    it("restores the original sequence pattern", () => {
+      const pad36Positions = track.currentAbletonNotes.filter(note => note.midiNote == 36).map(note => note.clipPosition);
+      const pad37Positions = track.currentAbletonNotes.filter(note => note.midiNote == 37).map(note => note.clipPosition);
+      expect(pad36Positions).to.have.ordered.members([0, 8, 16, 24]);
+      expect(pad37Positions).to.have.ordered.members([3, 11, 19, 27]);
     });
   });
 });
