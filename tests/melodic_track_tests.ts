@@ -1,18 +1,16 @@
 import { expect } from "chai";
-import { AbletonTrack } from "../app/model/ableton/track";
 import { Sequencer } from "../app/model/sequencer";
 import { AbletonLive } from "../app/model/ableton/live";
-import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern, velocityWithinRange } from "./test_helpers";
+import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
 import { MelodicTrack } from "../app/model/ableton/melodic_track";
 
 
 const testing   = true;
 const sequencer = new Sequencer(configDirectory, testing);
 const daw       = new AbletonLive(sequencer);
-// const track     = daw.tracks[6] as MelodicTrack;
 
 
-describe("AbletonTrack", () => {
+describe("MelodicTrack", () => {
   describe("generating output notes", () => {
     const track = daw.tracks[6] as MelodicTrack;
 
