@@ -12,7 +12,7 @@ describe("InputNoteController", () => {
   describe("Selecting the initial input note controller page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 5, s: 1});
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 

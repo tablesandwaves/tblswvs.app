@@ -11,6 +11,7 @@ import { DynamicsController } from "../controller/dynamics_controller";
 import { TimingController } from "../controller/timing_controller";
 import { FillsController } from "../controller/fills_controller";
 import { InputNoteController, algorithmMapping } from "../controller/input_note_controller";
+import { DrumInputNoteController } from "../controller/drum_input_note_controller";
 import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
 import { NoteVectorController } from "../controller/note_vector_controller";
 import { blank16x16Row } from "../helpers/utils";
@@ -231,7 +232,10 @@ export class MonomeGrid {
         this.pageIndex = 3;
         break;
       case "InputNotes":
-        this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0.yml`) as GridConfig, this);
+        if (this.sequencer.daw.getActiveTrack().type == "DrumTrack")
+          this.activePage = new DrumInputNoteController(this.#loadConfig(`grid_page_input_notes_0.0-drumpads.yml`) as GridConfig, this);
+        else
+          this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         this.pageIndex = 0;

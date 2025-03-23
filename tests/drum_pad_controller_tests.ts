@@ -6,7 +6,7 @@ import { RhythmController } from "../app/controller/rhythm_controller";
 import { baselineDrumPadActivation, configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
 
 
-const testing   = true;
+const testing = true;
 
 
 describe("DrumPadController", () => {

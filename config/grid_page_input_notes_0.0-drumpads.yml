@@ -1,0 +1,105 @@
+name: "Drum Pad Input Notes"
+description: Add input notes to the active drum track.
+matrices:
+  -
+    name: Rhythm Pattern / Step Length
+    description: Turn rhythm gate steps on/off; when shift key is on, sets the rhythm step length
+    group: rhythm-pattern
+    type: toggle / meter
+    rowStart: 0
+    rowEnd: 1
+    columnStart: 0
+    columnEnd: 15
+    mapping: updateRhythm
+    shiftMapping: updateStepLength
+  -
+    name: Drum Pads
+    description: Each button corresponds to a drum rack voice.
+    group: drum-pad
+    type: momentary
+    rowStart: 2
+    rowEnd: 5
+    columnStart: 0
+    columnEnd: 3
+    mapping: addNotes
+    rowValues:
+      -
+        - 48
+        - 49
+        - 50
+        - 51
+      -
+        - 44
+        - 45
+        - 46
+        - 47
+      -
+        - 40
+        - 41
+        - 42
+        - 43
+      -
+        - 36
+        - 37
+        - 38
+        - 39
+rows:
+  -
+    name: Algorithms
+    description: select the current algorithm
+    group: algorithms
+    type: radio
+    index: 6
+    xStart: 0
+    xLength: 4
+    mapping: setAlgorithm
+    values:
+      - simple
+      - inf_series
+      - shift_reg
+      - self_similarity
+  -
+    name: Toggle Note Recording
+    description: Turn note recording on/off; when turning on, the queued input notes are cleared
+    group: note-input-controls
+    index: 2
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: toggleNoteRecording
+  -
+    name: Remove Last Notes
+    description: Remove the last notes from the currently queued input notes
+    group: note-input-controls
+    index: 3
+    xStart: 15
+    xLength: 1
+    type: momentary
+    mapping: removeLastNotes
+  -
+    name: Toggle Vector Shifts
+    description: When on, after processing by the melody algorithm, it will be processed by the melodic vector shifts
+    group: melody-recording-controls
+    type: toggle
+    index: 4
+    xStart: 15
+    xLength: 1
+    mapping: toggleVectorShifts
+  -
+    name: Toggle Create Clip Mode
+    description: When on, will add the input notes to the next clip
+    group: note-input-controls
+    index: 5
+    xStart: 15
+    xLength: 1
+    type: toggle
+    mapping: toggleNewClipCreation
+  -
+    name: Advance
+    description: advance the current algorithm 1 iteration
+    group: advance
+    type: momentary
+    index: 6
+    xStart: 15
+    xLength: 1
+    mapping: advance
