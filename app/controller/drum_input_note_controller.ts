@@ -33,6 +33,7 @@ export class DrumInputNoteController extends ApplicationController {
 
   refresh() {
     this.setGridRhythmGatesDisplay();
+    this.setGridDrumPadDisplay();
     this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.setGlobalAlgorithmControls();
@@ -128,12 +129,6 @@ export class DrumInputNoteController extends ApplicationController {
   }
 
 
-  setRhythmRepetitions(gridPage: DrumInputNoteController, press: GridKeyPress) {
-    gridPage.activeTrack.algorithmRhythmRepetitions = press.x - 7;
-    gridPage.grid.levelRow(8, 2, gridPage.getRhythmRepetitionsRow());
-  }
-
-
   setGlobalAlgorithmControls() {
     this.grid.levelRow(0, 6, this.getGridAlgorithmRow());
   }
@@ -146,7 +141,20 @@ export class DrumInputNoteController extends ApplicationController {
   }
 
 
-  getRhythmRepetitionsRow() {
-    return blank8x1Row.map((_, i) => i < this.activeTrack.algorithmRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+  setGridDrumPadDisplay() {
+    this.getGridDrumPadRows().forEach((row, i) => {
+      this.grid.levelRow(0, i + 2, row);
+    });
+  }
+
+
+  getGridDrumPadRows() {
+    const rows = [...new Array(4)].fill([...new Array(8)].fill(0));
+
+    for (let y = 0; y <= 3; y++)
+      for (let x = 0; x < 4; x++)
+        rows[y][x] = 1;
+
+    return rows;
   }
 }

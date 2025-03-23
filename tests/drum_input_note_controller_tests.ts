@@ -14,6 +14,14 @@ describe("DrumInputNoteController", () => {
     sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
     sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the input notes page.
 
-    it("sets the active page to a drum pad page", () => expect(sequencer.grid.activePage).to.be.instanceOf(DrumInputNoteController));
+    it("sets the active page to a drum pad page", () => {
+      expect(sequencer.grid.activePage).to.be.instanceOf(DrumInputNoteController);
+    });
+
+    it("generates the drum pad matrix for the grid", () => {
+      (sequencer.grid.activePage as DrumInputNoteController).getGridDrumPadRows().forEach(row => {
+        expect(row).to.have.ordered.members([1, 1, 1, 1,  0, 0, 0, 0]);
+      });
+    });
   });
 });

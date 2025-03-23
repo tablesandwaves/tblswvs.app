@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { InputNoteController } from "../app/controller/input_note_controller";
-import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory } from "./test_helpers";
 import { MelodicTrack } from "../app/model/ableton/melodic_track";
 
 
