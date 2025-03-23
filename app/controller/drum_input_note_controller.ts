@@ -1,21 +1,20 @@
-import { note } from "tblswvs";
+import { note, noteData } from "tblswvs";
 import {
   GridConfig, GridKeyPress, ApplicationController,
   ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { blank8x1Row } from "../helpers/utils";
-import { MelodicTrack } from "../model/ableton/melodic_track";
 import { algorithmMapping } from "./input_note_controller";
+import { DrumTrack } from "../model/ableton/drum_track";
 
 
 export class DrumInputNoteController extends ApplicationController {
   type = "InputNotes";
 
-  recordingInputNotes = false;
-  newSequenceQueued   = false;
-  keyPressCount       = 0;
-  inputNotes: note[]  = new Array();
+  recordingInputNotes  = false;
+  keyPressCount        = 0;
+  inputNoteStepIndex   = 0
+  inputNotes: note[][] = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -28,6 +27,11 @@ export class DrumInputNoteController extends ApplicationController {
     this.functionMap.set("advance",               this.advance);
     this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
     this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
+  }
+
+
+  get activeTrack() {
+    return this.grid.sequencer.daw.getActiveTrack() as DrumTrack;
   }
 
 
@@ -53,22 +57,21 @@ export class DrumInputNoteController extends ApplicationController {
 
 
   addNotes(gridPage: DrumInputNoteController, press: GridKeyPress) {
-    // if (gridPage.recordingInputNotes) {
-    //   if (press.s == 0) {
-    //     gridPage.keyPressCount--;
+    if (gridPage.recordingInputNotes) {
+      if (press.s == 0) {
+        gridPage.keyPressCount--;
+        if (gridPage.inputNotes[gridPage.inputNoteStepIndex] === undefined)
+          gridPage.inputNotes[gridPage.inputNoteStepIndex] = new Array();
+        gridPage.inputNotes[gridPage.inputNoteStepIndex].push(noteData[gridPage.matrix[press.y][press.x].value]);
 
-    //     let octaveTranspose = octaveTransposeMapping[press.y];
-    //     gridPage.inputNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
-
-    //     if (gridPage.keyPressCount == 0) {
-    //       gridPage.grid.sequencer.queuedNotes.push(gridPage.inputNotes.sort((a,b) => a.midi - b.midi));
-    //       gridPage.inputNotes = new Array();
-    //       gridPage.setUiQueuedInputNotes();
-    //     }
-    //   } else {
-    //     gridPage.keyPressCount++;
-    //   }
-    // }
+        if (gridPage.keyPressCount == 0) {
+          gridPage.inputNoteStepIndex++;
+          gridPage.setUiQueuedInputNotes();
+        }
+      } else {
+        gridPage.keyPressCount++;
+      }
+    }
   }
 
 
@@ -83,19 +86,17 @@ export class DrumInputNoteController extends ApplicationController {
   advance(gridPage: DrumInputNoteController, press: GridKeyPress) {
     if (press.s == 0) return;
 
-    if (gridPage.newSequenceQueued && gridPage.grid.sequencer.queuedNotes.length > 0) {
-      // When notes are queued, they need to be flushed via AbletonTrack.setInputNotes(),
-      // which will also make a call to AbletonTrack.generateOutputNotes().
-      if (gridPage.activeTrack instanceof MelodicTrack)
-        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.grid.sequencer.queuedNotes);
-
-      if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
-    } else {
-      // Otherwise, only call AbletonTrack.generateOutputNotes() for cases like the infinity series
-      // algorithm, which will create a note sequence not based on the track's input notes.
-      gridPage.activeTrack.generateOutputNotes();
+    if (gridPage.inputNotes.length > 0) {
+      let inputNoteIndex = 0;
+      gridPage.activeTrack.rhythm.slice(0, gridPage.activeTrack.rhythmStepLength).forEach((step, i) => {
+        if (step.state == 1) {
+          gridPage.activeTrack.sequence[i] = gridPage.inputNotes[inputNoteIndex % gridPage.inputNotes.length];
+          inputNoteIndex++;
+        } else
+          gridPage.activeTrack.sequence[i] = [];
+      });
     }
-
+    gridPage.activeTrack.generateOutputNotes();
     gridPage.grid.sequencer.daw.updateActiveTrackNotes();
     gridPage.activeTrack.setGuiInputNotes();
   }
@@ -105,9 +106,10 @@ export class DrumInputNoteController extends ApplicationController {
     if (press.s == 0) return;
 
     gridPage.recordingInputNotes = !gridPage.recordingInputNotes;
-    gridPage.newSequenceQueued   = gridPage.recordingInputNotes && !gridPage.newSequenceQueued ? true : gridPage.newSequenceQueued;
 
     if (gridPage.recordingInputNotes) {
+      gridPage.inputNoteStepIndex = 0;
+      gridPage.inputNotes = new Array();
       gridPage.grid.sequencer.queuedNotes = new Array();
       gridPage.setUiQueuedInputNotes();
     }

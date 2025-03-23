@@ -23,6 +23,7 @@ export class DrumTrack extends AbletonTrack {
 
   set sequence(sequence: note[][]) {
     this.#sequence = sequence;
+    this.generateOutputNotes();
   }
 
 

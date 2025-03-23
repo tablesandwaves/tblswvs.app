@@ -4,6 +4,7 @@ import { Sequencer } from "../app/model/sequencer";
 import { AbletonTrack, RhythmStep } from "../app/model/ableton/track";
 import { RhythmController } from "../app/controller/rhythm_controller";
 import { DrumTrack } from "../app/model/ableton/drum_track";
+import { GridKeyPress } from "../app/controller/application_controller";
 
 
 export const configDirectory = path.join(__dirname, "..", "config");
@@ -92,4 +93,18 @@ export const baselineDrumPadActivation = (sequencer: Sequencer) => {
   const pad37Positions = track.currentAbletonNotes.filter(note => note.midiNote == 37).map(note => note.clipPosition);
   expect(pad36Positions).to.have.ordered.members([0, 8, 16, 24]);
   expect(pad37Positions).to.have.ordered.members([3, 11, 19, 27]);
+}
+
+
+export const mockDrumNoteRecording = (sequencer: Sequencer, rhythmKeyPresses: GridKeyPress[], noteKeyPresses: GridKeyPress[]) => {
+  sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
+  sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the input notes page.
+
+  // Add rhythm gates
+  rhythmKeyPresses.forEach(keyPress => sequencer.grid.keyPress(keyPress));
+
+  sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn on note recording
+  noteKeyPresses.forEach(keyPress => sequencer.grid.keyPress(keyPress)); // Add notes
+  sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn off note recording
+  sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // Advance
 }

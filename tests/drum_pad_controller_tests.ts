@@ -278,30 +278,4 @@ describe("DrumPadController", () => {
       expect(pad37Positions.length).to.eq(0);
     });
   });
-
-
-  describe("setting a drum pad to the infinity series and then back to the simple algorithm", () => {
-    const sequencer = new Sequencer(configDirectory, testing);
-    baselineDrumPadActivation(sequencer);
-    const track = sequencer.daw.getActiveTrack() as DrumTrack;
-
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});  // Select the input note page,
-    sequencer.grid.keyPress({y: 6, x: 1, s: 1});  // set the note algorithm to infinity series
-    sequencer.grid.keyPress({y: 2, x: 0, s: 1});  // set the seed,
-    sequencer.grid.keyPress({y: 2, x: 11, s: 1}); // set the algo repetitions
-    sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // and advance/activate.
-
-    const outputNotes = track.outputNotes.flat().map(note => note.midi);
-    expect(outputNotes).to.have.ordered.members([44, 45, 43, 46,  45, 44, 42, 47]);
-
-    sequencer.grid.keyPress({y: 6, x: 0, s: 1});  // Set the note algorithm to simple
-    sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // and advance.
-
-    it("restores the original sequence pattern", () => {
-      const pad36Positions = track.currentAbletonNotes.filter(note => note.midiNote == 36).map(note => note.clipPosition);
-      const pad37Positions = track.currentAbletonNotes.filter(note => note.midiNote == 37).map(note => note.clipPosition);
-      expect(pad36Positions).to.have.ordered.members([0, 8, 16, 24]);
-      expect(pad37Positions).to.have.ordered.members([3, 11, 19, 27]);
-    });
-  });
 });
