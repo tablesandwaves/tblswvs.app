@@ -233,9 +233,9 @@ export class MonomeGrid {
         break;
       case "InputNotes":
         if (this.sequencer.daw.getActiveTrack().type == "DrumTrack")
-          this.activePage = new DrumInputNoteController(this.#loadConfig(`grid_page_input_notes_0.0-drumpads.yml`) as GridConfig, this);
+          this.activePage = new DrumInputNoteController(this.#loadConfig(`grid_page_input_notes_0.0-drumtrack.yml`) as GridConfig, this);
         else
-          this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0.yml`) as GridConfig, this);
+          this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0-melodictrack.yml`) as GridConfig, this);
         updated = true;
         globalKeyIndex = 8;
         this.pageIndex = 0;
