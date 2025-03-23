@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { MelodyEvolutionController } from "../app/controller/melody_evolution_controller";
 import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
+import { MelodicTrack } from "../app/model/ableton/melodic_track";
 
 
 const testing   = true;
@@ -261,36 +262,40 @@ describe("MelodyEvolutionController", () => {
 
   describe("setting tracks to mutating", () => {
     const sequencer = new Sequencer(configDirectory, testing);
+
+    sequencer.grid.keyPress({y: 7, x: 6, s: 1}); // Set the active track to a melodic track.
+    const track = sequencer.daw.getActiveTrack() as MelodicTrack;
+
     const melodyNotes = [
       [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
       [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
     ];
-    sequencer.daw.tracks[1].setInputNotes(melodyNotes);
+    track.setInputNotes(melodyNotes);
 
     // Select the global page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
-    // Set the snare and keys track to mutating
-    sequencer.grid.keyPress({y: 1, x: 1, s: 1});
+    // Set the keys and hydra tracks to mutating
     sequencer.grid.keyPress({y: 1, x: 5, s: 1});
+    sequencer.grid.keyPress({y: 1, x: 6, s: 1});
 
     it("enables the tracks' mutating mode", () => {
       expect(sequencer.daw.tracks.map(t => t.mutating)).to.have.ordered.members(
-        [false, true, false, false, false, true, false]
+        [false, false, false, false, false, true, true]
       );
     });
 
     it("updates the mutating row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 10, 0]
+        [0, 0, 0, 0,  0, 10, 10]
       );
     });
 
     it("sets the track's current mutation to the flattened output notes", () => {
-      expect(sequencer.daw.tracks[1].currentMutation).to.deep.eq([
+      expect(track.currentMutation).to.deep.eq([
         { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
         { octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 },
         { octave: 3, note: 'G', midi: 67, scaleDegree: 5 }
@@ -301,29 +306,33 @@ describe("MelodyEvolutionController", () => {
 
   describe("setting tracks to soloing", () => {
     const sequencer = new Sequencer(configDirectory, testing);
+
+    sequencer.grid.keyPress({y: 7, x: 5, s: 1}); // Set the active track to a melodic track.
+    const track = sequencer.daw.getActiveTrack() as MelodicTrack;
+
     const melodyNotes = [
       [{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }],
       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }],
       [{ octave: 3, note: 'G', midi: 67, scaleDegree: 5 }]
     ];
-    sequencer.daw.tracks[1].setInputNotes(melodyNotes);
+    track.setInputNotes(melodyNotes);
 
     // Select the global page, then paginate over to the right 1 sub-page
     sequencer.grid.keyPress({y: 7, x: 12, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const evolutionPage = sequencer.grid.activePage as MelodyEvolutionController;
 
-    // Set the snare and keys track to soloing
-    sequencer.grid.keyPress({y: 2, x: 1, s: 1});
+    // Set the keys and hydra tracks to soloing
     sequencer.grid.keyPress({y: 2, x: 5, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 6, s: 1});
 
     it("adds the tracks' DAW indices to the soloists list", () => {
-      expect(sequencer.daw.soloists).to.have.ordered.members([2, 6]);
+      expect(sequencer.daw.soloists).to.have.ordered.members([6, 7]);
     });
 
     it("updates the soloing row", () => {
       expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 10, 0]
+        [0, 0, 0, 0,  0, 10, 10]
       );
     });
 
@@ -351,9 +360,12 @@ describe("MelodyEvolutionController", () => {
   describe("turning mutations on for a second time", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    sequencer.daw.tracks[5].setInputNotes([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
-    sequencer.daw.tracks[5].generateOutputNotes();
-    sequencer.daw.tracks[5].rhythm = rhythmStepsForPattern([
+    sequencer.grid.keyPress({y: 7, x: 6, s: 1}); // Set the active track to a melodic track.
+    const track = sequencer.daw.getActiveTrack() as MelodicTrack;
+
+    track.setInputNotes([[{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]]);
+    // track.generateOutputNotes();
+    track.rhythm = rhythmStepsForPattern([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
       0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
     ]);
@@ -363,17 +375,17 @@ describe("MelodyEvolutionController", () => {
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
 
     // Set a track to mutating, select a deterministic evolutionary algorithm, then press the enable mutations button
-    sequencer.grid.keyPress({y: 1, x: 5, s: 1});
+    sequencer.grid.keyPress({y: 1, x: 6, s: 1});
     sequencer.grid.keyPress({y: 0, x: 7, s: 1});
     sequencer.grid.keyPress({y: 0, x: 15, s: 1});
 
-    expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq(
+    expect(track.currentMutation).to.deep.eq(
       [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]
     );
 
     // Evolve the track's melody
-    sequencer.daw.tracks[5].evolveMelody();
-    expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq([
+    track.evolveMelody();
+    expect(track.currentMutation).to.deep.eq([
       { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
       { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
       { octave: 3, note: 'C', midi: 60, scaleDegree: 1 },
@@ -385,7 +397,7 @@ describe("MelodyEvolutionController", () => {
     sequencer.grid.keyPress({y: 0, x: 15, s: 1});
 
     it("should reset the mutating track's current mutation", () => {
-      expect(sequencer.daw.tracks[5].currentMutation).to.deep.eq(
+      expect(track.currentMutation).to.deep.eq(
         [{ octave: 3, note: 'Eb', midi: 63, scaleDegree: 3 }]
       );
     });

@@ -7,6 +7,7 @@ import { AbletonTrack, TrackConfig } from "./track";
 import { DrumTrack } from "./drum_track";
 import { Sequencer } from "../sequencer";
 import { gcd, lcm } from "../../helpers/utils";
+import { MelodicTrack } from "./melodic_track";
 
 
 export class AbletonLive {
@@ -43,7 +44,7 @@ export class AbletonLive {
     this.#loadConfig().live_tracks.forEach((trackConfig: TrackConfig) => {
       this.dawIndices.push(trackConfig.dawIndex);
       this.tracks.push(
-        trackConfig.type == "DrumTrack" ? new DrumTrack(this, trackConfig) : new AbletonTrack(this, trackConfig)
+        trackConfig.type == "DrumTrack" ? new DrumTrack(this, trackConfig) : new MelodicTrack(this, trackConfig)
       );
     });
   }

@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { InputNoteController } from "../app/controller/input_note_controller";
 import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { MelodicTrack } from "../app/model/ableton/melodic_track";
 
 
 const testing   = true;
@@ -33,28 +34,27 @@ describe("InputNoteController", () => {
   describe("adding a vector melody to an existing note sequence", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    // Add a gate so the Ableton notes will be updated
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 7, x: 6, s: 1}); // Set the active track to a melodic track.
+    const track = sequencer.daw.getActiveTrack() as MelodicTrack;
 
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
-    const track = sequencer.daw.getActiveTrack();
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1}); // Go to the rhythm page.
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1}); // Add a gate so the Ableton
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0}); // notes will be updated.
 
-    // Go to the melody page, add a simple sequence
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});  // Go to the melody page, add a simple sequence
     sequencer.grid.keyPress({y: 7, x: 8, s: 0});
-    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn on note recording
     sequencer.grid.keyPress({y: 2, x: 15, s: 0});
-    sequencer.grid.keyPress({y: 3, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 0, s: 1});  // First note.
     sequencer.grid.keyPress({y: 3, x: 0, s: 0});
-    sequencer.grid.keyPress({y: 3, x: 1, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 1, s: 1});  // Second note.
     sequencer.grid.keyPress({y: 3, x: 1, s: 0});
-    sequencer.grid.keyPress({y: 3, x: 2, s: 1});
+    sequencer.grid.keyPress({y: 3, x: 2, s: 1});  // Third note.
     sequencer.grid.keyPress({y: 3, x: 2, s: 0});
-    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn off note recording
     sequencer.grid.keyPress({y: 2, x: 15, s: 0});
-    sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // Flush notes with call to advance()
     sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 
     track.updateCurrentAbletonNotes();

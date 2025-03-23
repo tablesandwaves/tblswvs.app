@@ -5,6 +5,7 @@ import {
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
+import { MelodicTrack } from "../model/ableton/melodic_track";
 
 
 export const octaveTransposeMapping: Record<number, number> = {
@@ -109,7 +110,8 @@ export class InputNoteController extends ApplicationController {
     if (gridPage.newSequenceQueued && gridPage.grid.sequencer.queuedNotes.length > 0) {
       // When notes are queued, they need to be flushed via AbletonTrack.setInputNotes(),
       // which will also make a call to AbletonTrack.generateOutputNotes().
-      gridPage.activeTrack.setInputNotes(gridPage.grid.sequencer.queuedNotes);
+      if (gridPage.activeTrack instanceof MelodicTrack)
+        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.grid.sequencer.queuedNotes);
 
       if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
     } else {
