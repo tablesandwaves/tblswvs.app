@@ -3,6 +3,7 @@ import { Sequencer } from "../app/model/sequencer";
 import { DrumInputNoteController } from "../app/controller/drum_input_note_controller";
 import { DrumTrack } from "../app/model/ableton/drum_track";
 import { configDirectory, baselineDrumPadActivation, mockDrumNoteRecording } from "./test_helpers";
+import { GridKeyPress } from "../app/controller/application_controller";
 
 
 const testing = true;
@@ -34,7 +35,47 @@ describe("DrumInputNoteController", () => {
 
 
   describe("adding notes", () => {
-    // describe("when no rhythm gates are active")
+    describe("when no rhythm gates are active", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+      const rhythmKeyPresses: GridKeyPress[] = [];
+      const noteKeyPresses = [
+        {y: 5, x: 0, s: 1}, {y: 5, x: 0, s: 0}, // Add first note
+        {y: 5, x: 2, s: 1}, {y: 5, x: 2, s: 0}, // Add second note
+        {y: 5, x: 0, s: 1}, {y: 5, x: 0, s: 0}, // Add third note
+        {y: 5, x: 2, s: 1}, {y: 5, x: 2, s: 0}  // Add fourth note
+      ];
+      mockDrumNoteRecording(sequencer, rhythmKeyPresses, noteKeyPresses);
+      const track = sequencer.daw.getActiveTrack() as DrumTrack;
+
+      it("loads the queued sequence in the controller's input notes field", () => {
+        expect((sequencer.grid.activePage as DrumInputNoteController).inputNotes).to.deep.eq([
+          [{octave: 1, note: "C", midi: 36}],
+          [{octave: 1, note: "D", midi: 38}],
+          [{octave: 1, note: "C", midi: 36}],
+          [{octave: 1, note: "D", midi: 38}]
+        ]);
+      });
+
+      it("does not set the drum track's sequence", () => {
+        expect(track.sequence[0].map(n => n.midi)).to.have.ordered.members([]);
+        expect(track.sequence[4].map(n => n.midi)).to.have.ordered.members([]);
+        expect(track.sequence[8].map(n => n.midi)).to.have.ordered.members([]);
+        expect(track.sequence[12].map(n => n.midi)).to.have.ordered.members([]);
+      });
+
+      it("does not set the drum track's output notes", () => {
+        expect(track.outputNotes).to.have.ordered.members([]);
+      });
+
+      it("sets the drum track's Ableton notes", () => {
+        const pad36Positions = track.currentAbletonNotes.filter(note => note.midiNote == 36).map(note => note.clipPosition);
+        const pad38Positions = track.currentAbletonNotes.filter(note => note.midiNote == 38).map(note => note.clipPosition);
+        expect(pad36Positions).to.have.ordered.members([]);
+        expect(pad38Positions).to.have.ordered.members([]);
+      });
+    });
+
+
     describe("when rhythm gates are active", () => {
       const sequencer = new Sequencer(configDirectory, testing);
       const rhythmKeyPresses = [
