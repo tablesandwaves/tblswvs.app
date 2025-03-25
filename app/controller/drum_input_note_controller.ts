@@ -77,7 +77,7 @@ export class DrumInputNoteController extends ApplicationController {
 
   removeLastNotes(gridPage: DrumInputNoteController, press: GridKeyPress) {
     if (gridPage.recordingInputNotes && press.s == 1) {
-      gridPage.grid.sequencer.queuedNotes.pop();
+      gridPage.inputNotes.pop();
       gridPage.setUiQueuedInputNotes();
     }
   }

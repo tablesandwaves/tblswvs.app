@@ -10,7 +10,7 @@ const testing = true;
 
 
 describe("DrumInputNoteController", () => {
-  describe("selecting the initial drum controller page", () => {
+  describe("selecting the initial drum input note controller page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
@@ -123,6 +123,33 @@ describe("DrumInputNoteController", () => {
         const pad38Positions = track.currentAbletonNotes.filter(note => note.midiNote == 38).map(note => note.clipPosition);
         expect(pad36Positions).to.have.ordered.members([0, 2, 8, 10, 16, 18, 24, 26]);
         expect(pad38Positions).to.have.ordered.members([1, 3, 9, 11, 17, 19, 25, 27]);
+      });
+    });
+
+
+    describe("and then removing the last input step", () => {
+      const sequencer = new Sequencer(configDirectory, testing);
+      const noteKeyPresses = [
+        {y: 5, x: 0, s: 1}, {y: 5, x: 0, s: 0}, // Add first note
+        {y: 5, x: 2, s: 1}, {y: 5, x: 2, s: 0}, // Add second note
+      ];
+
+      sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
+      sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the input notes page.
+      sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn on note recording
+      noteKeyPresses.forEach(keyPress => sequencer.grid.keyPress(keyPress)); // Add notes
+      expect((sequencer.grid.activePage as DrumInputNoteController).inputNotes).to.deep.eq([
+        [{octave: 1, note: "C", midi: 36}],
+        [{octave: 1, note: "D", midi: 38}],
+      ]);
+
+      // Remove the last step
+      sequencer.grid.keyPress({y: 3, x: 15, s: 1});
+
+      it("removes the last step from the controller's queued input notes", () => {
+        expect((sequencer.grid.activePage as DrumInputNoteController).inputNotes).to.deep.eq([
+          [{octave: 1, note: "C", midi: 36}]
+        ]);
       });
     });
   });
