@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { TimingController } from "../app/controller/timing_controller";
-import { configDirectory, patternForRhythmSteps, rhythmStepsForPattern, velocityWithinRange } from "./test_helpers";
+import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
 
 
 const testing = true;

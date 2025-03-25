@@ -20,7 +20,6 @@ import { DrumPadController } from "../controller/drum_pad_controller";
 import { ShiftRegisterController } from "../controller/shift_register_controller";
 import { InfinitySeriesController } from "../controller/infinity_series_controller";
 import { SelfSimilarityController } from "../controller/self_similarity_controller";
-import { DrumTrack } from "./ableton/drum_track";
 
 
 export type DeviceConfig = {

@@ -3,7 +3,8 @@ import { before } from "mocha";
 import { Sequencer } from "../app/model/sequencer";
 import { RhythmController } from "../app/controller/rhythm_controller";
 import {
-  configDirectory, patternForRhythmSteps, rhythmStepsForPattern, getRhythmControllerMocks, velocityWithinRange
+  configDirectory, patternForRhythmSteps, rhythmStepsForPattern,
+  getRhythmControllerMocks, velocityWithinRange
 } from "./test_helpers";
 
 

@@ -1,6 +1,6 @@
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
-import { defaultVelocities, RhythmStep } from "../model/ableton/track";
+import { RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
 import { detect } from "@tonaljs/chord-detect";
 import { note } from "tblswvs";

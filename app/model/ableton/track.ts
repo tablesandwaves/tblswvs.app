@@ -1,4 +1,3 @@
-import { detect } from "@tonaljs/chord-detect";
 import { Melody, Mutation, ShiftRegister, note, noteData, unique } from "tblswvs";
 import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note";

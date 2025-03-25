@@ -1,5 +1,7 @@
 import { RampSegment, RAMP_SEQ_RANGE_STEPS } from "../model/ableton/ramp_sequence";
-import { GridConfig, GridKeyPress, ApplicationController, ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS } from "./application_controller";
+import { GridConfig, GridKeyPress, ApplicationController,
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS
+} from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 
 

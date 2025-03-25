@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { SelfSimilarityController } from "../app/controller/self_similarity_controller";
-import { configDirectory, rhythmStepsForPattern } from "./test_helpers";
+import { configDirectory } from "./test_helpers";
 
 
 const testing = true;

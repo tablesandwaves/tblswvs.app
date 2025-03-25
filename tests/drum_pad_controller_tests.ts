@@ -3,7 +3,7 @@ import { Sequencer } from "../app/model/sequencer";
 import { DrumTrack } from "../app/model/ableton/drum_track";
 import { DrumPadController } from "../app/controller/drum_pad_controller";
 import { RhythmController } from "../app/controller/rhythm_controller";
-import { baselineDrumPadActivation, configDirectory, patternForRhythmSteps, rhythmStepsForPattern } from "./test_helpers";
+import { baselineDrumPadActivation, configDirectory, patternForRhythmSteps } from "./test_helpers";
 
 
 const testing = true;

@@ -1,7 +1,7 @@
 import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
 import { InputNoteController } from "./input_note_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { blank8x1Row, scaleToRange } from "../helpers/utils";
+import { blank8x1Row } from "../helpers/utils";
 
 
 export class ShiftRegisterController extends InputNoteController {

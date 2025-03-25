@@ -1,5 +1,5 @@
 import { detect } from "@tonaljs/chord-detect";
-import { Melody, Mutation, ShiftRegister, note, noteData, unique } from "tblswvs";
+import { Melody, note } from "tblswvs";
 import { AbletonTrack, TrackConfig } from "./track";
 import { AbletonLive } from "./live";
 

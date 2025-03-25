@@ -1,4 +1,7 @@
-import { ACTIVE_BRIGHTNESS, ApplicationController, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from "./application_controller";
+import {
+  ACTIVE_BRIGHTNESS, ApplicationController, GridConfig,
+  GridKeyPress, INACTIVE_BRIGHTNESS
+} from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { RhythmStep, defaultVelocities } from "../model/ableton/track";
 import { debounce }   from "../helpers/utils";

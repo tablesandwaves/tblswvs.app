@@ -1,9 +1,10 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { DynamicsController } from "../app/controller/dynamics_controller";
-import { configDirectory, patternForRhythmSteps, velocityWithinRange,
-  getRhythmControllerMocks, rhythmStepsForPattern }
-from "./test_helpers";
+import {
+  configDirectory, patternForRhythmSteps, velocityWithinRange,
+  getRhythmControllerMocks, rhythmStepsForPattern
+} from "./test_helpers";
 
 
 const testing = true;
