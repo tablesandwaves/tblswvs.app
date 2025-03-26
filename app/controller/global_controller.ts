@@ -20,7 +20,7 @@ const configuredScales: Record<string, {scale: Scale, index: number}> = {
   "MajPentatonic": {scale: Scale.MajPentatonic, index: 7},
   "MinPentatonic": {scale: Scale.MinPentatonic, index: 8},
   "WholeTone":     {scale: Scale.WholeTone,     index: 9},
-  "GS":            {scale: Scale.GS,            index: 10},
+  "Diminished":    {scale: Scale.Diminished,    index: 10},
   "Chromatic":     {scale: Scale.Chromatic,     index: 11},
 }
 

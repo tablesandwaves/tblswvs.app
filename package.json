@@ -44,7 +44,7 @@
     "easymidi": "^3.1.0",
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
-    "tblswvs": "^0.20.3"
+    "tblswvs": "^0.21.0"
   },
   "overrides": {
     "semver": "^7.5.3"

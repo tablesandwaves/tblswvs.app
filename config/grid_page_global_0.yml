@@ -96,7 +96,7 @@ matrices:
       -
         - MinPentatonic
         - WholeTone
-        - GS
+        - Diminished
         - Chromatic
   -
     name: Beats
