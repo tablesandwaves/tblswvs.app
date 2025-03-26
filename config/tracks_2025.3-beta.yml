@@ -43,7 +43,41 @@ live_tracks:
         type: drum rack
         pads:
           - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat 909 Closed
+          - HiHat Closed Bull Whip
+          - HiHat Closed Click
+          - HiHat Closed Crink
+          - HiHat Closed Delay SP
+          - HiHat Closed Loose Dirty
+          - HiHat Closed Low Chop
+          - HiHat Closed Metallic Char
+          - HiHat Closed Modular Salient 1
+      -
+        name: Perc Rack
+        type: drum rack
+        pads:
           - Perc Glitch Speak
+          - Perc Glitch Speak
+          - Perc Glitch Speak
+          - Perc Glitch Speak
+          - Perc Abstract 5
+          - Perc Abstract Token
+          - Perc African MPC 1
+          - Perc Alpha 3
+          - Perc Analog Night
+          - Perc Analog Token 1
+          - Perc Broken Melt
+          - Perc Broken Millimetrik
+          - Perc Broken Tada
+          - Perc Klang
+          - Perc Digital Tada
+          - Perc Dull Sonar
       -
         name: Akoustic Dr Solo Rack
         type: drum rack
@@ -91,6 +125,19 @@ live_tracks:
           - slice 15
           - slice 16
       -
+        name: eptieda kit
+        type: drum rack
+        pads:
+          - Sine Kick
+          - Lw High Nz Snare
+          - Sine Hat
+          - Beep
+          - Tom 1
+          - Tom 2
+          - Noise Click
+          - Noise Burst
+          - Echo Ping
+      -
         name: nd.rsh-note-echo-beats
         type: drum rack
         pads:
@@ -119,38 +166,11 @@ live_tracks:
           - Modular Clatter
           - FatDomino Drums 11
       -
-        name: Reverb Kick & Perc Choked Kit
+        name: Atonal FM Percs
         type: drum rack
         pads:
-          - Boom Kick
-          - Vocoder Perc
-          - Scatty Perc
-          - LF Tribe Token
-          - Low EDM Perc
-          - Gltch Prc 120
-          - Techno Perc
-          - LF Dstrt Snk
-          - Ambient Knock
-          - Scrape Shake
-          - Blop Token
-          - Broken Token 1
-          - Record Pullback
-          - Wood FX
-          - Asia Calls
-          - Weird Prc 100
-      -
-        name: eptieda kit
-        type: drum rack
-        pads:
-          - Sine Kick
-          - Lw High Nz Snare
-          - Sine Hat
-          - Beep
-          - Tom 1
-          - Tom 2
-          - Noise Click
-          - Noise Burst
-          - Echo Ping
+          - Unstable Noise Bangs DS FM
+          - Random Klangs Meld
   -
     name: Bass
     type: MelodicTrack
