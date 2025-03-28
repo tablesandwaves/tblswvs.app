@@ -4,7 +4,7 @@ import {
   ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
-import { algorithmMapping } from "./input_note_controller";
+import { algorithmMappings } from "./input_note_controller";
 import { DrumTrack } from "../model/ableton/drum_track";
 
 
@@ -52,7 +52,7 @@ export class DrumInputNoteController extends ApplicationController {
 
   setAlgorithm(gridPage: DrumInputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.setActiveGridPage(algorithmMapping[gridPage.activeTrack.algorithm].pageType);
+    gridPage.grid.setActiveGridPage(algorithmMappings[gridPage.activeTrack.algorithm].pageType);
   }
 
 
@@ -138,7 +138,7 @@ export class DrumInputNoteController extends ApplicationController {
 
   getGridAlgorithmRow() {
     const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
-    algorithmRow[algorithmMapping[this.activeTrack.algorithm].button] = ACTIVE_BRIGHTNESS;
+    algorithmRow[algorithmMappings[this.activeTrack.algorithm].button] = ACTIVE_BRIGHTNESS;
     return algorithmRow;
   }
 

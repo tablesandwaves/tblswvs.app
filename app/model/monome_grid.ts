@@ -10,7 +10,7 @@ import { RhythmController } from "../controller/rhythm_controller";
 import { DynamicsController } from "../controller/dynamics_controller";
 import { TimingController } from "../controller/timing_controller";
 import { FillsController } from "../controller/fills_controller";
-import { InputNoteController, algorithmMapping } from "../controller/input_note_controller";
+import { InputNoteController, algorithmMappings } from "../controller/input_note_controller";
 import { DrumInputNoteController } from "../controller/drum_input_note_controller";
 import { MelodyEvolutionController } from "../controller/melody_evolution_controller";
 import { NoteVectorController } from "../controller/note_vector_controller";
@@ -106,8 +106,8 @@ export class MonomeGrid {
       if (press.x <= 6 && press.s == 1) {
         this.#setActiveTrack(press);
       } else if (press.s == 1 && press.x == 8) {
-        if (algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm])
-          this.setActiveGridPage(algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm].pageType);
+        if (algorithmMappings[this.sequencer.daw.getActiveTrack().algorithm])
+          this.setActiveGridPage(algorithmMappings[this.sequencer.daw.getActiveTrack().algorithm].pageType);
         else
           this.setActiveGridPage("InputNotes");
       } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
@@ -186,10 +186,11 @@ export class MonomeGrid {
       // When switching to a new track while on a Rhythm type controller (rhythm or drum pad controller)
       // reset the active page to cover the case where the grid needs to display the other rhythm type.
       this.setActiveGridPage(this.activePage.type);
-    } else if (this.activePage && this.activePage instanceof InputNoteController) {
+    } else if (this.activePage && this.activePage instanceof InputNoteController ||
+               this.activePage && this.activePage instanceof DrumInputNoteController) {
       // Similarly, the new track for the input notes pages may be using a different algorithm, also
       // requiring a new grid display.
-      this.setActiveGridPage(algorithmMapping[this.sequencer.daw.getActiveTrack().algorithm].pageType);
+      this.setActiveGridPage(algorithmMappings[this.sequencer.daw.getActiveTrack().algorithm].pageType);
     }
     if (this.activePage) this.activePage.refresh();
 

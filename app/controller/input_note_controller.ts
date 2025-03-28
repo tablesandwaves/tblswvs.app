@@ -25,7 +25,7 @@ export type algorithmMapping = {
 }
 
 
-export const algorithmMapping: Record<string, algorithmMapping> = {
+export const algorithmMappings: Record<string, algorithmMapping> = {
   "simple":          {button: 0, pageType: "InputNotes"},
   "inf_series":      {button: 1, pageType: "InfinitySeries"},
   "shift_reg":       {button: 2, pageType: "ShiftRegister"},
@@ -72,7 +72,7 @@ export class InputNoteController extends ApplicationController {
 
   setAlgorithm(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.setActiveGridPage(algorithmMapping[gridPage.activeTrack.algorithm].pageType);
+    gridPage.grid.setActiveGridPage(algorithmMappings[gridPage.activeTrack.algorithm].pageType);
   }
 
 
@@ -166,7 +166,7 @@ export class InputNoteController extends ApplicationController {
 
   getGridAlgorithmRow() {
     const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
-    algorithmRow[algorithmMapping[this.activeTrack.algorithm].button] = ACTIVE_BRIGHTNESS;
+    algorithmRow[algorithmMappings[this.activeTrack.algorithm].button] = ACTIVE_BRIGHTNESS;
     return algorithmRow;
   }
 

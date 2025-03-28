@@ -3,13 +3,14 @@ import { Sequencer } from "../app/model/sequencer";
 import { InputNoteController } from "../app/controller/input_note_controller";
 import { configDirectory } from "./test_helpers";
 import { MelodicTrack } from "../app/model/ableton/melodic_track";
+import { DrumInputNoteController } from "../app/controller/drum_input_note_controller";
 
 
 const testing   = true;
 
 
 describe("InputNoteController", () => {
-  describe("Selecting the initial input note controller page", () => {
+  describe("selecting the initial input note controller page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.grid.keyPress({y: 7, x: 5, s: 1});
@@ -19,14 +20,27 @@ describe("InputNoteController", () => {
     // Select the chord page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
-    const activePage = sequencer.grid.activePage as InputNoteController;
-
-    it("sets the active page to a chord page", () => expect(activePage).to.be.instanceOf(InputNoteController));
+    it("sets the active page to a chord page", () => expect(sequencer.grid.activePage).to.be.instanceOf(InputNoteController));
 
     it("has the default algorithm row (simple selected)", () => {
-      expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([
+      expect((sequencer.grid.activePage as InputNoteController).getGridAlgorithmRow()).to.have.ordered.members([
         10, 0, 0, 0,  0, 0, 0, 0
       ]);
+    });
+  });
+
+
+  describe("switching from a drum track to a melodic track while on the input note controller pages", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select a drum track
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // Select a the input note page
+    expect(sequencer.grid.activePage).to.be.instanceOf(DrumInputNoteController);
+
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1}); // Select a melodic track
+
+    it("loads the (melodic) input note controller", () => {
+      expect(sequencer.grid.activePage).to.be.instanceOf(InputNoteController);
     });
   });
 
