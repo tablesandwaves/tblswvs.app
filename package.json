@@ -29,12 +29,12 @@
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
-    "electron-squirrel-startup": "^1.0.1",
     "@types/chai": "^4.3.4",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.9",
     "chai": "^4.5.0",
     "electron": "^33.2.0",
+    "electron-squirrel-startup": "^1.0.1",
     "mocha": "^10.8.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
@@ -44,7 +44,7 @@
     "easymidi": "^3.1.0",
     "js-yaml": "^4.1.0",
     "serialosc": "^1.0.0",
-    "tblswvs": "^0.21.0"
+    "tblswvs": "^0.21.1"
   },
   "overrides": {
     "semver": "^7.5.3"
