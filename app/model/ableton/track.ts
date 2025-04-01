@@ -105,7 +105,6 @@ export class AbletonTrack {
 
   clips: AbletonClip[];
   currentClip: number = 0;
-  createNewClip: boolean = false;
 
   #randomizing:   boolean = false;
   #mutating:      boolean = false;
@@ -725,7 +724,6 @@ export class AbletonTrack {
     this.setGuiInputNotes();
     this.updateGuiFillsDuration();
     this.updateGuiFillMeasures();
-    this.updateGuiCreateNewClip();
     this.updateGuiRandomizeMelody();
     this.updateGuiCurrentClip();
     this.updateGuiChains();
@@ -838,12 +836,6 @@ export class AbletonTrack {
   updateGuiFillsDuration() {
     if (this.daw.sequencer.gui == undefined) return;
     this.daw.sequencer.gui.webContents.send("update-fills-duration", this.fillDuration);
-  }
-
-
-  updateGuiCreateNewClip() {
-    if (this.daw.sequencer.gui == undefined) return;
-    this.daw.sequencer.gui.webContents.send("toggle-create-clip", this.createNewClip);
   }
 
 

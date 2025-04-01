@@ -140,15 +140,6 @@ export class ApplicationController {
   }
 
 
-  toggleNewClipCreation(gridPage: ApplicationController, press: GridKeyPress) {
-    if (press.s == 1) {
-      gridPage.activeTrack.createNewClip = !gridPage.activeTrack.createNewClip;
-      gridPage.grid.levelSet(press.x, press.y, (gridPage.activeTrack.createNewClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
-      gridPage.activeTrack.updateGuiCreateNewClip();
-    }
-  }
-
-
   setGridRhythmGatesDisplay(highlightIndex?: number) {
     // Transport rows 1 (steps 1-16) and 2 (steps 17-32)
     const transportRow = this.grid.shiftStateActive ? this.getRhythmStepLengthRow() : this.getRhythmGatesRow();

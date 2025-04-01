@@ -219,18 +219,6 @@ export class Sequencer {
 
     if (this.testing) return;
 
-    if (track.createNewClip) {
-      track.currentClip = (track.currentClip + 1) % 4;
-      this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/create`, 32);
-      // Redundant for existing tracks, but need to set the loop end for newly created clip
-      setTimeout(() => this.updateSuperMeasure(), 100);
-      this.daw.stagedClipChangeTracks.push(track.dawIndex);
-
-      track.createNewClip = false;
-      this.grid.levelSet(15, 2, INACTIVE_BRIGHTNESS);
-      track.updateGuiCreateNewClip();
-    }
-
     const clipIndex = this.daw.mutating && (track.mutating || track.randomizing || track.soloing) ?
                       AbletonLive.EVOLUTION_SCENE_INDEX :
                       track.currentClip;
@@ -321,6 +309,12 @@ export class Sequencer {
   }
 
 
+  /**
+   * Sync tblswvs.app to clip changes that were triggered in Live itself.
+   *
+   * Live has clip/scene observers (including stop all clips) and will send a message over OSC
+   * so that this app can know which clips are active.
+   */
   #syncLiveTrackClip(trackIndex: number, clipIndex: number) {
     // Only sync track indices that were loaded by tracks.yml and clip scenes 1-4 (index 0-3).
     // Clip scene 5 is for melodic mutations.

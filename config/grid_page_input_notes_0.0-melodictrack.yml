@@ -20,13 +20,28 @@ matrices:
     rowStart: 2
     rowEnd: 5
     columnStart: 0
-    columnEnd: 14
+    columnEnd: 13
     mapping: addNotes
     columnValues:
       - 4
       - 3
       - 2
       - 1
+  -
+    name: Active Clip Scene
+    description: Button represents the active Ableton Live scene
+    group: clip-scenes
+    type: toggle
+    rowStart: 2
+    rowEnd: 5
+    columnStart: 14
+    columnEnd: 14
+    mapping: setClipScene
+    columnValues:
+      - 0
+      - 1
+      - 2
+      - 3
 rows:
   -
     name: Algorithms
@@ -69,15 +84,6 @@ rows:
     xStart: 15
     xLength: 1
     mapping: toggleVectorShifts
-  -
-    name: Toggle Create Clip Mode
-    description: When on, will add the input notes to the next clip
-    group: note-input-controls
-    index: 5
-    xStart: 15
-    xLength: 1
-    type: toggle
-    mapping: toggleNewClipCreation
   -
     name: Advance
     description: advance the current algorithm 1 iteration

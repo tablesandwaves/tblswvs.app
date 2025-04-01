@@ -48,18 +48,18 @@ export class InputNoteController extends ApplicationController {
     this.functionMap.set("setAlgorithm",          this.setAlgorithm);
     this.functionMap.set("addNotes",              this.addNotes);
     this.functionMap.set("removeLastNotes",       this.removeLastNotes);
-    this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
     this.functionMap.set("advance",               this.advance);
     this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
     this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
     this.functionMap.set("setRhythmRepetitions",  this.setRhythmRepetitions);
+    this.functionMap.set("setClipScene", this.setClipScene);
   }
 
 
   refresh() {
     this.setGridRhythmGatesDisplay();
-    this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+    this.setCurrentClipGridDisplay();
     this.setGlobalAlgorithmControls();
   }
 
@@ -73,6 +73,16 @@ export class InputNoteController extends ApplicationController {
   setAlgorithm(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.setActiveGridPage(algorithmMappings[gridPage.activeTrack.algorithm].pageType);
+  }
+
+
+  setClipScene(gridPage: InputNoteController, press: GridKeyPress) {
+    if (press.s == 1) {
+      // Update the clip in the track, queue the clip firing in the DAW, update the grid button UI.
+      gridPage.activeTrack.currentClip = gridPage.matrix[press.y][press.x].value;
+      gridPage.grid.sequencer.daw.stagedClipChangeTracks.push(gridPage.activeTrack.dawIndex);
+      gridPage.setCurrentClipGridDisplay();
+    }
   }
 
 
@@ -156,6 +166,12 @@ export class InputNoteController extends ApplicationController {
   setRhythmRepetitions(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithmRhythmRepetitions = press.x - 7;
     gridPage.grid.levelRow(8, 2, gridPage.getRhythmRepetitionsRow());
+  }
+
+
+  setCurrentClipGridDisplay() {
+    for (let y = 2; y < 6; y++)
+      this.grid.levelSet(14, y, y - 2 == this.activeTrack.currentClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
   }
 
 

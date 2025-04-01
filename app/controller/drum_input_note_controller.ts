@@ -23,7 +23,6 @@ export class DrumInputNoteController extends ApplicationController {
     this.functionMap.set("setAlgorithm",          this.setAlgorithm);
     this.functionMap.set("addNotes",              this.addNotes);
     this.functionMap.set("removeLastNotes",       this.removeLastNotes);
-    this.functionMap.set("toggleNewClipCreation", this.toggleNewClipCreation);
     this.functionMap.set("advance",               this.advance);
     this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
     this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
@@ -38,7 +37,6 @@ export class DrumInputNoteController extends ApplicationController {
   refresh() {
     this.setGridRhythmGatesDisplay();
     this.setGridDrumPadDisplay();
-    this.grid.levelSet(15, 5, (this.activeTrack.createNewClip      ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.setGlobalAlgorithmControls();
   }

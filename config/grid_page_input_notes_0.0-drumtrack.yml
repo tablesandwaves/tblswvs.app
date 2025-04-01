@@ -86,15 +86,6 @@ rows:
     xLength: 1
     mapping: toggleVectorShifts
   -
-    name: Toggle Create Clip Mode
-    description: When on, will add the input notes to the next clip
-    group: note-input-controls
-    index: 5
-    xStart: 15
-    xLength: 1
-    type: toggle
-    mapping: toggleNewClipCreation
-  -
     name: Advance
     description: advance the current algorithm 1 iteration
     group: advance
