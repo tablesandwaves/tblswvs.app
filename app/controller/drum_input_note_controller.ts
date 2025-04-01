@@ -108,7 +108,7 @@ export class DrumInputNoteController extends ApplicationController {
     if (gridPage.recordingInputNotes) {
       gridPage.inputNoteStepIndex = 0;
       gridPage.inputNotes = new Array();
-      gridPage.grid.sequencer.queuedNotes = new Array();
+      gridPage.activeTrack.queuedNotes = new Array();
       gridPage.setUiQueuedInputNotes();
     }
 

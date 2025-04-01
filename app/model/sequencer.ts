@@ -57,7 +57,6 @@ export class Sequencer {
   #key: Key;
   automaton: HarmonicAutomaton;
   markovy: boolean = false;
-  queuedNotes: note[][] = new Array();
   testing: boolean;
   beatPatterns: BeatSet;
   activeBeatPattern: Beat = undefined;

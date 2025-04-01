@@ -88,6 +88,7 @@ export class AbletonTrack {
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Using a 2-dimensional array to accommodate polyphony.
+  queuedNotes: note[][] = new Array();
   #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
   currentAbletonNotes: AbletonNote[] = new Array();

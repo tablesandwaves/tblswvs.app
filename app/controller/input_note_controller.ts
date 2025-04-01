@@ -95,7 +95,7 @@ export class InputNoteController extends ApplicationController {
         gridPage.inputNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
 
         if (gridPage.keyPressCount == 0) {
-          gridPage.grid.sequencer.queuedNotes.push(gridPage.inputNotes.sort((a,b) => a.midi - b.midi));
+          gridPage.activeTrack.queuedNotes.push(gridPage.inputNotes.sort((a,b) => a.midi - b.midi));
           gridPage.inputNotes = new Array();
           gridPage.setUiQueuedInputNotes();
         }
@@ -108,7 +108,7 @@ export class InputNoteController extends ApplicationController {
 
   removeLastNotes(gridPage: InputNoteController, press: GridKeyPress) {
     if (gridPage.recordingInputNotes && press.s == 1) {
-      gridPage.grid.sequencer.queuedNotes.pop();
+      gridPage.activeTrack.queuedNotes.pop();
       gridPage.setUiQueuedInputNotes();
     }
   }
@@ -117,11 +117,11 @@ export class InputNoteController extends ApplicationController {
   advance(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 0) return;
 
-    if (gridPage.newSequenceQueued && gridPage.grid.sequencer.queuedNotes.length > 0) {
+    if (gridPage.newSequenceQueued && gridPage.activeTrack.queuedNotes.length > 0) {
       // When notes are queued, they need to be flushed via AbletonTrack.setInputNotes(),
       // which will also make a call to AbletonTrack.generateOutputNotes().
       if (gridPage.activeTrack instanceof MelodicTrack)
-        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.grid.sequencer.queuedNotes);
+        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.activeTrack.queuedNotes);
 
       if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
     } else {
@@ -142,7 +142,7 @@ export class InputNoteController extends ApplicationController {
     gridPage.newSequenceQueued   = gridPage.recordingInputNotes && !gridPage.newSequenceQueued ? true : gridPage.newSequenceQueued;
 
     if (gridPage.recordingInputNotes) {
-      gridPage.grid.sequencer.queuedNotes = new Array();
+      gridPage.activeTrack.queuedNotes = new Array();
       gridPage.setUiQueuedInputNotes();
     }
 

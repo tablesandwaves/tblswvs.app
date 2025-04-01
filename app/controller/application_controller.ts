@@ -413,7 +413,7 @@ export class ApplicationController {
 
     this.grid.sequencer.gui.webContents.send(
       "update-queued-notes",
-      this.grid.sequencer.queuedNotes.flatMap((queuedNotes: note[]) => {
+      this.activeTrack.queuedNotes.flatMap((queuedNotes: note[]) => {
         let notes = queuedNotes.map(n => n.note + n.octave).join("-");
         let namedChord = detect(queuedNotes.map(n => n.note))[0];
         notes += namedChord == undefined ? "" : " (" + namedChord + ")";
