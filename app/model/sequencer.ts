@@ -224,13 +224,13 @@ export class Sequencer {
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
-        ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote())
+        ...track.clips[track.currentClip].currentAbletonNotes.flatMap(note => note.toOscAddedNote())
       );
     } catch (e) {
       console.error(e.name, e.message, `while sending ${track.name} notes to Live:`);
       console.error("algorithm:", track.algorithm);
-      console.error("input notes:", track.currentAbletonNotes);
-      console.error("OSC mapped notes", ...track.currentAbletonNotes.flatMap(note => note.toOscAddedNote()));
+      console.error("input notes:", track.clips[track.currentClip].currentAbletonNotes);
+      console.error("OSC mapped notes", ...track.clips[track.currentClip].currentAbletonNotes.flatMap(note => note.toOscAddedNote()));
       console.error("trackIndex", track.dawIndex, "mutating", track.mutating, "randomizing", track.randomizing);
       console.error("Current track mutation", track.currentMutation);
     }

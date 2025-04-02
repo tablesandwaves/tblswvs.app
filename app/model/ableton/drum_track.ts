@@ -77,7 +77,7 @@ export class DrumTrack extends AbletonTrack {
 
     this.daw.sequencer.gui.webContents.send(
       "drum-rack-notes",
-      this.currentAbletonNotes.map(n => n.toPianoRollNote()),
+      this.clips[this.currentClip].currentAbletonNotes.map(n => n.toPianoRollNote()),
       this.chains[this.activeChain].pads,
       this.daw.sequencer.superMeasure,
       this.rhythmStepLength,

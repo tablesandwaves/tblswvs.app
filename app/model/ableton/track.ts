@@ -89,9 +89,9 @@ export class AbletonTrack {
 
   // Using a 2-dimensional array to accommodate polyphony.
   queuedNotes: note[][] = new Array();
-  #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
+  // #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
-  currentAbletonNotes: AbletonNote[] = new Array();
+  // currentAbletonNotes: AbletonNote[] = new Array();
 
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
@@ -130,7 +130,7 @@ export class AbletonTrack {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
     }
 
-    this.clips = [ new AbletonClip() ];
+    this.clips = [ new AbletonClip(), new AbletonClip(), new AbletonClip(), new AbletonClip() ];
 
     this.hasRampSequencers = config.rampSequencer;
     this.rampSequence0 = new RampSequence();
@@ -165,12 +165,17 @@ export class AbletonTrack {
 
 
   get outputNotes() {
-    return this.#outputNotes;
+    return this.clips[this.currentClip].outputNotes;
   }
 
 
   set outputNotes(notes: note[][]) {
-    this.#outputNotes = notes;
+    this.clips[this.currentClip].outputNotes = notes;
+  }
+
+
+  get currentAbletonNotes() {
+    return this.clips[this.currentClip].currentAbletonNotes;
   }
 
 
@@ -184,7 +189,7 @@ export class AbletonTrack {
     }
 
     if (notes.length > 0) {
-      this.#outputNotes = notes;
+      this.outputNotes = notes;
     }
   }
 
@@ -434,7 +439,7 @@ export class AbletonTrack {
 
     // If there notes yet?
     if (sourceNotes.length == 0) {
-      this.currentAbletonNotes = new Array();
+      this.clips[this.currentClip].currentAbletonNotes = new Array();
       return;
     }
 
@@ -529,7 +534,7 @@ export class AbletonTrack {
       });
     }
 
-    this.currentAbletonNotes = [...noteMap.values()].flat();
+    this.clips[this.currentClip].currentAbletonNotes = [...noteMap.values()].flat();
   }
 
 
@@ -583,7 +588,7 @@ export class AbletonTrack {
       return this.daw.currentSoloistMelody.map(n => [n]);
     }
 
-    return this.#outputNotes;
+    return this.outputNotes;
   }
 
 
@@ -660,7 +665,7 @@ export class AbletonTrack {
 
     for (let i = 0; i < this.daw.sequencer.superMeasure; i++) {
       // Start with a unique list of sorted notes
-      let sortedNotes = this.#outputNotes.flat().filter(unique).sort((a, b) => a.midi - b.midi);
+      let sortedNotes = this.outputNotes.flat().filter(unique).sort((a, b) => a.midi - b.midi);
       let tunedRandomNoteIndices = new Array();
 
       // Choose a note (by index) at random
@@ -739,7 +744,7 @@ export class AbletonTrack {
 
     this.daw.sequencer.gui.webContents.send(
       "piano-roll-notes",
-      this.currentAbletonNotes.map(n => n.toPianoRollNote()),
+      this.clips[this.currentClip].currentAbletonNotes.map(n => n.toPianoRollNote()),
       this.daw.sequencer.key.midiTonic,
       this.daw.sequencer.superMeasure,
       this.rhythmStepLength,
