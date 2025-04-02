@@ -130,7 +130,7 @@ export class AbletonTrack {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
     }
 
-    this.clips = [ new AbletonClip(this.daw.sequencer.superMeasure) ];
+    this.clips = [ new AbletonClip() ];
 
     this.hasRampSequencers = config.rampSequencer;
     this.rampSequence0 = new RampSequence();
