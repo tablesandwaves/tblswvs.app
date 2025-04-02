@@ -1,15 +1,24 @@
 import { detect } from "@tonaljs/chord-detect";
-import { Melody, note } from "tblswvs";
+import { Melody, note, ShiftRegister } from "tblswvs";
 import { AbletonTrack, TrackConfig } from "./track";
 import { AbletonLive } from "./live";
+import { scaleToRange } from "../../helpers/utils";
+
+
+const SHIFT_REG_OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
 
 
 export class MelodicTrack extends AbletonTrack {
   #inputNotes:  note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
 
+  shiftRegister: ShiftRegister;
+  shiftRegisterOctaveRange: number[] = [0, 1, 1, 0];
+
 
   constructor(daw: AbletonLive, config: TrackConfig) {
     super(daw, config);
+
+    this.shiftRegister = new ShiftRegister();
   }
 
 
@@ -18,27 +27,28 @@ export class MelodicTrack extends AbletonTrack {
   }
 
 
-  setInputNotes(inputNotes: note[][]) {
+  setInputNotes(inputNotes: note[][], clip?: number) {
     this.#inputNotes = inputNotes;
-    this.generateOutputNotes();
+    this.generateOutputNotes(clip);
   }
 
 
-  generateOutputNotes() {
-
-    let notes: note[][];
-
-    // When simple, simply use the input note array; otherwise, generate by algorithm.
-    if (this.algorithm == "simple") {
-      notes = this.#inputNotes;
-    } else if (this.algorithm == "self_similarity") {
-      notes = this.#getSelfSimilarMelody();
+  generateOutputNotes(clip?: number) {
+    if (this.algorithm == "inf_series") {
+      super.generateOutputNotes(clip);
     } else {
-      super.generateOutputNotes();
-    }
+      let notes: note[][];
 
-    if (notes.length > 0) {
-      this.outputNotes = notes;
+      if (this.algorithm == "simple") {
+        notes = this.#inputNotes;
+      } else if (this.algorithm == "self_similarity") {
+        notes = this.#getSelfSimilarMelody();
+      } else if (this.algorithm == "shift_reg") {
+        notes = this.#getShiftRegisterSequence();
+      }
+
+      if (notes.length > 0)
+        this.setOutputNotes(notes, clip);
     }
   }
 
@@ -68,6 +78,37 @@ export class MelodicTrack extends AbletonTrack {
       return index == undefined ? [undefined] : this.#inputNotes[index];
     });
   }
+
+
+  #getShiftRegisterSequence() {
+      let stepCount = 0;
+      for (let i = 0; i < this.daw.sequencer.superMeasure * 16; i++)
+        stepCount += this.rhythm[i % this.rhythmStepLength].state;
+      const shiftRegisterSequence = [...new Array(stepCount)].map(_ => this.shiftRegister.step());
+
+      const scaleDegrees     = this.daw.sequencer.key.scaleNotes.map((_, j) => j + 1);
+      const scaleDegreeRange = this.shiftRegisterOctaveRange.reduce((accum, octaveRange, i) => {
+        if (octaveRange == 1) {
+          let offset = SHIFT_REG_OCTAVE_RANGE_OFFSETS[i] * scaleDegrees.length;
+          if (offset >= 0) offset++;
+          for (let degree = offset; degree < offset + scaleDegrees.length; degree++) {
+            accum.push(degree);
+          }
+        }
+        return accum;
+      }, new Array());
+
+      // Add three more scale degrees so it is possible to get the next tonic
+      scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+      scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+      scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
+
+      return shiftRegisterSequence.map(step => {
+        const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
+        const scaleDeg      = scaleDegreeRange[scaleDegIndex];
+        return [this.daw.sequencer.key.degree(scaleDeg)];
+      });
+    }
 
 
   setGuiInputNotes() {

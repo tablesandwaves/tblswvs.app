@@ -27,6 +27,21 @@ matrices:
       - 3
       - 2
       - 1
+  -
+    name: Active Clip Scene
+    description: Button represents the active Ableton Live scene
+    group: clip-scenes
+    type: toggle
+    rowStart: 2
+    rowEnd: 5
+    columnStart: 14
+    columnEnd: 14
+    mapping: setClip
+    columnValues:
+      - 0
+      - 1
+      - 2
+      - 3
 rows:
   -
     name: Algorithms

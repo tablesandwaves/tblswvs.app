@@ -5,6 +5,8 @@ import { AbletonTrack, RhythmStep } from "../app/model/ableton/track";
 import { RhythmController } from "../app/controller/rhythm_controller";
 import { DrumTrack } from "../app/model/ableton/drum_track";
 import { GridKeyPress } from "../app/controller/application_controller";
+import { MelodicTrack } from "../app/model/ableton/melodic_track";
+import { InputNoteController } from "../app/controller/input_note_controller";
 
 
 export const configDirectory = path.join(__dirname, "..", "config");
@@ -107,4 +109,16 @@ export const mockDrumNoteRecording = (sequencer: Sequencer, rhythmKeyPresses: Gr
   noteKeyPresses.forEach(keyPress => sequencer.grid.keyPress(keyPress)); // Add notes
   sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn off note recording
   sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // Advance
+}
+
+
+export const getInputRecordingMocks = (): [Sequencer, AbletonTrack, InputNoteController] => {
+  const sequencer = new Sequencer(configDirectory, true);
+  sequencer.grid.keyPress({y: 7, x: 6, s: 1}); // Set the active track to a melodic track.
+  sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // Select the note input page
+
+  const track = sequencer.daw.getActiveTrack() as MelodicTrack;
+  const controller = sequencer.grid.activePage as InputNoteController;
+
+  return [sequencer, track, controller];
 }

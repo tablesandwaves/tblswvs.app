@@ -5,7 +5,6 @@ import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 import { RampSequence } from "./ramp_sequence";
 import { surroundRhythm, acceleratingBeatPositions, ghostNotesFor } from "../../helpers/rhythm_algorithms";
-import { scaleToRange } from "../../helpers/utils";
 
 
 export type TrackConfig = {
@@ -58,9 +57,6 @@ export const rhythmAlgorithms: Record<string, number> = {
 }
 
 
-const SHIFT_REG_OCTAVE_RANGE_OFFSETS = [-2, -1, 0, 1];
-
-
 export const CLIP_16N_COUNT = 128;
 
 
@@ -82,16 +78,12 @@ export class AbletonTrack {
 
   algorithm: string = "simple";
   algorithmRhythmRepetitions: number = 1;
-  shiftRegister: ShiftRegister;
-  shiftRegisterOctaveRange: number[] = [0, 1, 1, 0];
   infinitySeriesSeeds: number[] = [0, 0, 0, 0];
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Using a 2-dimensional array to accommodate polyphony.
   queuedNotes: note[][] = new Array();
-  // #outputNotes: note[][] = [[{ octave: 3, note: 'C', midi: 60, scaleDegree: 1 }]];
   currentMutation: note[] = new Array();
-  // currentAbletonNotes: AbletonNote[] = new Array();
 
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
   vectorShiftsLength: number = 8;
@@ -135,8 +127,6 @@ export class AbletonTrack {
     this.hasRampSequencers = config.rampSequencer;
     this.rampSequence0 = new RampSequence();
     this.rampSequence1 = new RampSequence();
-
-    this.shiftRegister = new ShiftRegister();
   }
 
 
@@ -169,8 +159,8 @@ export class AbletonTrack {
   }
 
 
-  set outputNotes(notes: note[][]) {
-    this.clips[this.currentClip].outputNotes = notes;
+  setOutputNotes(notes: note[][], clip?: number) {
+    this.clips[clip ? clip : this.currentClip].outputNotes = notes;
   }
 
 
@@ -179,49 +169,15 @@ export class AbletonTrack {
   }
 
 
-  generateOutputNotes() {
-    let notes: note[][];
-
-    if (this.algorithm == "shift_reg") {
-      notes = this.#getShiftRegisterSequence();
-    } else if (this.algorithm == "inf_series") {
-      notes = this.#getInfinitySeries();
+  /**
+   * The infinity series algorithm is shared by DrumTracks and MelodicTracks.
+   */
+  generateOutputNotes(clip?: number) {
+    if (this.algorithm == "inf_series") {
+      const notes = this.#getInfinitySeries();
+      if (notes.length > 0)
+        this.setOutputNotes(notes, clip);
     }
-
-    if (notes.length > 0) {
-      this.outputNotes = notes;
-    }
-  }
-
-
-  #getShiftRegisterSequence() {
-    let stepCount = 0;
-    for (let i = 0; i < this.daw.sequencer.superMeasure * 16; i++)
-      stepCount += this.rhythm[i % this.rhythmStepLength].state;
-    const shiftRegisterSequence = [...new Array(stepCount)].map(_ => this.shiftRegister.step());
-
-    const scaleDegrees     = this.daw.sequencer.key.scaleNotes.map((_, j) => j + 1);
-    const scaleDegreeRange = this.shiftRegisterOctaveRange.reduce((accum, octaveRange, i) => {
-      if (octaveRange == 1) {
-        let offset = SHIFT_REG_OCTAVE_RANGE_OFFSETS[i] * scaleDegrees.length;
-        if (offset >= 0) offset++;
-        for (let degree = offset; degree < offset + scaleDegrees.length; degree++) {
-          accum.push(degree);
-        }
-      }
-      return accum;
-    }, new Array());
-
-    // Add three more scale degrees so it is possible to get the next tonic
-    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
-    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
-    scaleDegreeRange.push(scaleDegreeRange.at(-1) + 1);
-
-    return shiftRegisterSequence.map(step => {
-      const scaleDegIndex = Math.floor(scaleToRange(step, [0, 1], [0, scaleDegreeRange.length - 1]));
-      const scaleDeg      = scaleDegreeRange[scaleDegIndex];
-      return [this.daw.sequencer.key.degree(scaleDeg)];
-    });
   }
 
 
@@ -434,12 +390,12 @@ export class AbletonTrack {
   }
 
 
-  updateCurrentAbletonNotes() {
-    const sourceNotes = this.#getSourceNotes();
+  updateCurrentAbletonNotes(clip?: number) {
+    const sourceNotes = this.#getSourceNotes(clip);
 
     // If there notes yet?
     if (sourceNotes.length == 0) {
-      this.clips[this.currentClip].currentAbletonNotes = new Array();
+      this.clips[clip ? clip : this.currentClip].currentAbletonNotes = new Array();
       return;
     }
 
@@ -534,7 +490,7 @@ export class AbletonTrack {
       });
     }
 
-    this.clips[this.currentClip].currentAbletonNotes = [...noteMap.values()].flat();
+    this.clips[clip ? clip : this.currentClip].currentAbletonNotes = [...noteMap.values()].flat();
   }
 
 
@@ -579,7 +535,7 @@ export class AbletonTrack {
    * 2. The current track's evolving/mutating note list
    * 3. The soloing tracks' shared evolving/mutating note list
    */
-  #getSourceNotes(): note[][] {
+  #getSourceNotes(clip?: number): note[][] {
     if (this.daw.mutating && (this.mutating || this.randomizing)) {
       return this.currentMutation.map(n => [n]);
     }
@@ -588,7 +544,7 @@ export class AbletonTrack {
       return this.daw.currentSoloistMelody.map(n => [n]);
     }
 
-    return this.outputNotes;
+    return this.clips[clip ? clip : this.currentClip].outputNotes;
   }
 
 

@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { ShiftRegisterController } from "../app/controller/shift_register_controller";
 import { configDirectory } from "./test_helpers";
+import { MelodicTrack } from "../app/model/ableton/melodic_track";
 
 
 const testing   = true;
@@ -53,7 +54,7 @@ describe("ShiftRegisterController", () => {
 
   describe("Updating shift register parameters", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    const track = sequencer.daw.getActiveTrack();
+    const track = sequencer.daw.getActiveTrack() as MelodicTrack;
 
     // Select the note input page, then the shift register sub-page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});

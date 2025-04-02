@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Sequencer } from "../app/model/sequencer";
 import { InputNoteController } from "../app/controller/input_note_controller";
-import { configDirectory } from "./test_helpers";
+import { configDirectory, getInputRecordingMocks, rhythmStepsForPattern } from "./test_helpers";
 import { MelodicTrack } from "../app/model/ableton/melodic_track";
 import { DrumInputNoteController } from "../app/controller/drum_input_note_controller";
 
@@ -17,10 +17,10 @@ describe("InputNoteController", () => {
     const track = sequencer.daw.getActiveTrack();
     track.activeChain = 1;
 
-    // Select the chord page
+    // Select the melodic note input page
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
-    it("sets the active page to a chord page", () => expect(sequencer.grid.activePage).to.be.instanceOf(InputNoteController));
+    it("sets the active page to a melodic note page", () => expect(sequencer.grid.activePage).to.be.instanceOf(InputNoteController));
 
     it("has the default algorithm row (simple selected)", () => {
       expect((sequencer.grid.activePage as InputNoteController).getGridAlgorithmRow()).to.have.ordered.members([
@@ -112,6 +112,55 @@ describe("InputNoteController", () => {
 
     it("updates the track's Ableton notes", () => {
       expect(track.currentAbletonNotes[0].midiNote).to.eq(72);
+    });
+  });
+
+
+  describe("setting the editable clip", () => {
+    describe("when note recording is off", () => {
+      const [sequencer, track, controller] = getInputRecordingMocks();
+      track.rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+
+      controller.recordingInputNotes = false;
+      sequencer.grid.keyPress({y: 3, x: 14, s: 1}); // Press the button for the second clip
+
+      it("does not set the editable clip property in the controller", () => {
+        expect(controller.editableClip).to.be.undefined;
+      });
+    });
+
+
+    describe("when note recording is on", () => {
+      const [sequencer, track, controller] = getInputRecordingMocks();
+      track.rhythm = rhythmStepsForPattern([
+        1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+        0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+      ]);
+      sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Press the button for note recording
+      sequencer.grid.keyPress({y: 3, x: 14, s: 1}); // Press the button for the second clip (index 1)
+      sequencer.grid.keyPress({y: 3, x: 1, s: 1});  // Add a note
+      sequencer.grid.keyPress({y: 3, x: 1, s: 0});
+      sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // Flush notes with call to advance()
+      sequencer.grid.keyPress({y: 6, x: 15, s: 0});
+
+      it("sets the editable clip property in the controller", () => {
+        expect(controller.editableClip).to.eq(1);
+      });
+
+      it("does not update the actively playing clip notes", () => {
+        expect(track.currentAbletonNotes.length).to.eq(0);
+      });
+
+      it("updates the editing clip output notes", () => {
+        expect(track.clips[1].outputNotes[0][0].midi).to.eq(62);
+      });
+
+      it("updates the editing clip's current Ableton notes", () => {
+        expect(track.clips[1].currentAbletonNotes[0].midiNote).to.eq(62);
+      });
     });
   });
 });

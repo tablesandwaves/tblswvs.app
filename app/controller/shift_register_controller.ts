@@ -2,6 +2,7 @@ import { ACTIVE_BRIGHTNESS, GridConfig, GridKeyPress, INACTIVE_BRIGHTNESS } from
 import { InputNoteController } from "./input_note_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
+import { MelodicTrack } from "../model/ableton/melodic_track";
 
 
 export class ShiftRegisterController extends InputNoteController {
@@ -22,6 +23,11 @@ export class ShiftRegisterController extends InputNoteController {
   refresh() {
     super.refresh();
     this.setGridShiftRegisterDisplay();
+  }
+
+
+  get activeTrack(): MelodicTrack {
+    return super.activeTrack as MelodicTrack;
   }
 
 
@@ -89,7 +95,7 @@ export class ShiftRegisterController extends InputNoteController {
   getShiftRegisterRangeRow() {
     const row   = blank8x1Row.slice();
 
-    row.splice(0, 4, ...this.activeTrack.shiftRegisterOctaveRange.map(octave => {
+    row.splice(0, 4, ...this.activeTrack.shiftRegisterOctaveRange.map((octave: number) => {
       return octave == 1 ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
     }));
 

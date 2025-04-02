@@ -36,6 +36,8 @@ export const algorithmMappings: Record<string, algorithmMapping> = {
 export class InputNoteController extends ApplicationController {
   type = "InputNotes";
 
+
+  editableClip: (undefined|number);
   recordingInputNotes = false;
   newSequenceQueued   = false;
   keyPressCount       = 0;
@@ -52,7 +54,7 @@ export class InputNoteController extends ApplicationController {
     this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
     this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
     this.functionMap.set("setRhythmRepetitions",  this.setRhythmRepetitions);
-    this.functionMap.set("setClipScene", this.setClipScene);
+    this.functionMap.set("setClip",               this.setClip);
   }
 
 
@@ -76,12 +78,18 @@ export class InputNoteController extends ApplicationController {
   }
 
 
-  setClipScene(gridPage: InputNoteController, press: GridKeyPress) {
+  setClip(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
-      // Update the clip in the track, queue the clip firing in the DAW, update the grid button UI.
-      gridPage.activeTrack.currentClip = gridPage.matrix[press.y][press.x].value;
-      gridPage.grid.sequencer.daw.stagedClipChangeTracks.push(gridPage.activeTrack.dawIndex);
-      gridPage.setCurrentClipGridDisplay();
+      if (gridPage.recordingInputNotes) {
+        gridPage.editableClip = gridPage.editableClip === undefined ?
+                                gridPage.matrix[press.y][press.x].value :
+                                undefined;
+      } else {
+        // Update the clip in the track, queue the clip firing in the DAW, update the grid button UI.
+        gridPage.activeTrack.currentClip = gridPage.matrix[press.y][press.x].value;
+        gridPage.grid.sequencer.daw.stagedClipChangeTracks.push(gridPage.activeTrack.dawIndex);
+        gridPage.setCurrentClipGridDisplay();
+      }
     }
   }
 
@@ -121,16 +129,16 @@ export class InputNoteController extends ApplicationController {
       // When notes are queued, they need to be flushed via AbletonTrack.setInputNotes(),
       // which will also make a call to AbletonTrack.generateOutputNotes().
       if (gridPage.activeTrack instanceof MelodicTrack)
-        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.activeTrack.queuedNotes);
+        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.activeTrack.queuedNotes, gridPage.editableClip);
 
       if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
     } else {
       // Otherwise, only call AbletonTrack.generateOutputNotes() for cases like the infinity series
       // algorithm, which will create a note sequence not based on the track's input notes.
-      gridPage.activeTrack.generateOutputNotes();
+      gridPage.activeTrack.generateOutputNotes(gridPage.editableClip);
     }
 
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.editableClip);
     gridPage.activeTrack.setGuiInputNotes();
   }
 
