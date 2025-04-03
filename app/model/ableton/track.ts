@@ -1,4 +1,4 @@
-import { Melody, Mutation, ShiftRegister, note, noteData, unique } from "tblswvs";
+import { Melody, Mutation, note, noteData, unique } from "tblswvs";
 import { AbletonClip } from "./clip";
 import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note";
 import { AbletonLive } from "./live";

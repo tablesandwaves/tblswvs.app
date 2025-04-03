@@ -1,7 +1,7 @@
 import { note } from "tblswvs";
 import {
   GridConfig, GridKeyPress, ApplicationController,
-  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, SECONDARY_BRIGHTNESS
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
@@ -88,8 +88,8 @@ export class InputNoteController extends ApplicationController {
         // Update the clip in the track, queue the clip firing in the DAW, update the grid button UI.
         gridPage.activeTrack.currentClip = gridPage.matrix[press.y][press.x].value;
         gridPage.grid.sequencer.daw.stagedClipChangeTracks.push(gridPage.activeTrack.dawIndex);
-        gridPage.setCurrentClipGridDisplay();
       }
+      gridPage.setCurrentClipGridDisplay();
     }
   }
 
@@ -152,6 +152,10 @@ export class InputNoteController extends ApplicationController {
     if (gridPage.recordingInputNotes) {
       gridPage.activeTrack.queuedNotes = new Array();
       gridPage.setUiQueuedInputNotes();
+    } else {
+      // Always reset the editable clip when turning off note recording.
+      gridPage.editableClip = undefined;
+      gridPage.setCurrentClipGridDisplay();
     }
 
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
@@ -179,7 +183,12 @@ export class InputNoteController extends ApplicationController {
 
   setCurrentClipGridDisplay() {
     for (let y = 2; y < 6; y++)
-      this.grid.levelSet(14, y, y - 2 == this.activeTrack.currentClip ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+      if (y - 2 == this.activeTrack.currentClip)
+        this.grid.levelSet(14, y, ACTIVE_BRIGHTNESS);
+      else if (y - 2 == this.editableClip)
+        this.grid.levelSet(14, y, SECONDARY_BRIGHTNESS);
+      else
+        this.grid.levelSet(14, y, INACTIVE_BRIGHTNESS);
   }
 
 

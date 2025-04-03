@@ -37,6 +37,7 @@ export type GridButton = {
 
 
 export const ACTIVE_BRIGHTNESS    = 10;
+export const SECONDARY_BRIGHTNESS = 1;
 export const INACTIVE_BRIGHTNESS  = 0;
 export const HIGHLIGHT_BRIGHTNESS = 15;
 
