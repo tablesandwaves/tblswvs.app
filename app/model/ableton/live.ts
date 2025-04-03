@@ -18,7 +18,6 @@ export class AbletonLive {
   dawIndices: number[] = new Array();
   sequencer: Sequencer;
   activeTrack: number = 0;
-  stagedClipChangeTracks: number[] = new Array();
 
   // Melodic Evolution
   mutating: boolean = false;

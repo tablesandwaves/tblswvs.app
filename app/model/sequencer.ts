@@ -6,13 +6,12 @@ import * as yaml from "js-yaml";
 import * as path from "path";
 
 
-import { Key, Scale, note } from "tblswvs";
+import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./monome_grid";
 import { AbletonLive } from "./ableton/live";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
-import { INACTIVE_BRIGHTNESS } from "../controller/application_controller";
 import { HarmonicAutomaton } from "./automata/harmonic_automaton";
 
 
@@ -43,6 +42,12 @@ export type BeatSet = {
 }
 
 
+export type StagedClipChange = {
+  dawIndex: number,
+  clipIndex: number
+}
+
+
 export class Sequencer {
   configDirectory: string;
   emitter: any;
@@ -64,6 +69,7 @@ export class Sequencer {
   hihatSwing: boolean = false;
   drunk: boolean = false;
   ghostNotes: boolean = false;
+  stagedClipChangeTracks: StagedClipChange[] = new Array();
 
 
   constructor(configDirectory: string, testing: boolean = false) {
@@ -224,13 +230,13 @@ export class Sequencer {
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
-        ...track.clips[track.currentClip].currentAbletonNotes.flatMap(note => note.toOscAddedNote())
+        ...track.clips[clipIndex].currentAbletonNotes.flatMap(note => note.toOscAddedNote())
       );
     } catch (e) {
       console.error(e.name, e.message, `while sending ${track.name} notes to Live:`);
       console.error("algorithm:", track.algorithm);
-      console.error("input notes:", track.clips[track.currentClip].currentAbletonNotes);
-      console.error("OSC mapped notes", ...track.clips[track.currentClip].currentAbletonNotes.flatMap(note => note.toOscAddedNote()));
+      console.error("input notes:", track.clips[clipIndex].currentAbletonNotes);
+      console.error("OSC mapped notes", ...track.clips[clipIndex].currentAbletonNotes.flatMap(note => note.toOscAddedNote()));
       console.error("trackIndex", track.dawIndex, "mutating", track.mutating, "randomizing", track.randomizing);
       console.error("Current track mutation", track.currentMutation);
     }
@@ -360,14 +366,11 @@ export class Sequencer {
     }
 
     // Look for any tracks that have added new clips in the current super measure
-    if (this.daw.stagedClipChangeTracks.length > 0) {
-      this.daw.tracks.forEach(track => {
-        if (this.daw.stagedClipChangeTracks.includes(track.dawIndex)) {
-          this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/fire`);
-        }
-      });
-      this.daw.stagedClipChangeTracks = new Array();
-    }
+    this.stagedClipChangeTracks.forEach(stagedClipChange => {
+      this.emitter.emit(`/tracks/${stagedClipChange.dawIndex}/clips/${stagedClipChange.clipIndex}/fire`);
+      this.daw.tracks.find(t => t.dawIndex == stagedClipChange.dawIndex).currentClip = stagedClipChange.clipIndex;
+    });
+    this.stagedClipChangeTracks = new Array();
   }
 
 

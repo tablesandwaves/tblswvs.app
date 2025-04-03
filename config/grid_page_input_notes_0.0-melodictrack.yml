@@ -36,7 +36,7 @@ matrices:
     rowEnd: 5
     columnStart: 14
     columnEnd: 14
-    mapping: setClip
+    mapping: setEditableClip
     columnValues:
       - 0
       - 1
@@ -93,3 +93,12 @@ rows:
     xStart: 15
     xLength: 1
     mapping: advance
+  -
+    name: Queue Clip
+    description: Queue the currently editable clip to launch at the next super measure
+    group: queue-clip
+    type: momentary
+    index: 6
+    xStart: 14
+    xLength: 1
+    mapping: queueClipForLaunch

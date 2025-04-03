@@ -127,8 +127,8 @@ describe("InputNoteController", () => {
       controller.recordingInputNotes = false;
       sequencer.grid.keyPress({y: 3, x: 14, s: 1}); // Press the button for the second clip
 
-      it("does not set the editable clip property in the controller", () => {
-        expect(controller.editableClip).to.be.undefined;
+      it("sets the editable clip property in the controller for queueing launch", () => {
+        expect(controller.editableClip).to.eq(1);
       });
     });
 
@@ -160,19 +160,6 @@ describe("InputNoteController", () => {
 
       it("updates the editing clip's current Ableton notes", () => {
         expect(track.clips[1].currentAbletonNotes[0].midiNote).to.eq(62);
-      });
-    });
-
-
-    describe("and then turning off note recording", () => {
-      const [sequencer, _, controller] = getInputRecordingMocks();
-      sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Press the button for note recording
-      sequencer.grid.keyPress({y: 3, x: 14, s: 1}); // Press the button for the second clip (index 1)
-      expect(controller.editableClip).to.eq(1);
-      sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Press the button for note recording again to turn it off
-
-      it("resets the editable clip property in the controller", () => {
-        expect(controller.editableClip).to.be.undefined;
       });
     });
   });

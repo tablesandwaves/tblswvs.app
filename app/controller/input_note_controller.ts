@@ -47,14 +47,15 @@ export class InputNoteController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
-    this.functionMap.set("setAlgorithm",          this.setAlgorithm);
-    this.functionMap.set("addNotes",              this.addNotes);
-    this.functionMap.set("removeLastNotes",       this.removeLastNotes);
-    this.functionMap.set("advance",               this.advance);
-    this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
-    this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
-    this.functionMap.set("setRhythmRepetitions",  this.setRhythmRepetitions);
-    this.functionMap.set("setClip",               this.setClip);
+    this.functionMap.set("setAlgorithm",         this.setAlgorithm);
+    this.functionMap.set("addNotes",             this.addNotes);
+    this.functionMap.set("removeLastNotes",      this.removeLastNotes);
+    this.functionMap.set("advance",              this.advance);
+    this.functionMap.set("toggleNoteRecording",  this.toggleNoteRecording);
+    this.functionMap.set("toggleVectorShifts",   this.toggleVectorShifts);
+    this.functionMap.set("setRhythmRepetitions", this.setRhythmRepetitions);
+    this.functionMap.set("setEditableClip",      this.setEditableClip);
+    this.functionMap.set("queueClipForLaunch",   this.queueClipForLaunch);
   }
 
 
@@ -78,18 +79,22 @@ export class InputNoteController extends ApplicationController {
   }
 
 
-  setClip(gridPage: InputNoteController, press: GridKeyPress) {
+  setEditableClip(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
-      if (gridPage.recordingInputNotes) {
-        gridPage.editableClip = gridPage.editableClip === undefined ?
-                                gridPage.matrix[press.y][press.x].value :
-                                undefined;
-      } else {
-        // Update the clip in the track, queue the clip firing in the DAW, update the grid button UI.
-        gridPage.activeTrack.currentClip = gridPage.matrix[press.y][press.x].value;
-        gridPage.grid.sequencer.daw.stagedClipChangeTracks.push(gridPage.activeTrack.dawIndex);
-      }
+      gridPage.editableClip = gridPage.editableClip === undefined ?
+                              gridPage.matrix[press.y][press.x].value :
+                              undefined;
       gridPage.setCurrentClipGridDisplay();
+    }
+  }
+
+
+  queueClipForLaunch(gridPage: InputNoteController, press: GridKeyPress) {
+    if (press.s == 1 && gridPage.editableClip !== undefined) {
+      gridPage.grid.sequencer.stagedClipChangeTracks.push({
+        dawIndex: gridPage.activeTrack.dawIndex,
+        clipIndex: gridPage.editableClip
+      });
     }
   }
 
@@ -153,8 +158,6 @@ export class InputNoteController extends ApplicationController {
       gridPage.activeTrack.queuedNotes = new Array();
       gridPage.setUiQueuedInputNotes();
     } else {
-      // Always reset the editable clip when turning off note recording.
-      gridPage.editableClip = undefined;
       gridPage.setCurrentClipGridDisplay();
     }
 
