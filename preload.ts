@@ -18,7 +18,6 @@ contextBridge.exposeInMainWorld("parameters", {
   updatePulseRate: (callback: any) => ipcRenderer.on("update-pulse-rate", callback),
   updateFillsDuration: (callback: any) => ipcRenderer.on("update-fills-duration", callback),
   updateFillMeasures: (callback: any) => ipcRenderer.on("update-fill-measures", callback),
-  toggleCreateClip: (callback: any) => ipcRenderer.on("toggle-create-clip", callback),
   updateActiveClip: (callback: any) => ipcRenderer.on("update-active-clip", callback),
   updateMutations: (callback: any) => ipcRenderer.on("update-mutations", callback),
   updateTrackEvolution: (callback: any) => ipcRenderer.on("update-track-evolution", callback),

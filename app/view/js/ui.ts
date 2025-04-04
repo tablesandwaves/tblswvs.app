@@ -58,7 +58,6 @@ window.parameters.updatePulseRate((event: any, pulse: string) => updateText("#rh
 window.parameters.updateFillsDuration((event: any, fillsDuration: string) => updateText("#rhythm-params #fills-duration span", fillsDuration));
 window.parameters.updateFillMeasures((event: any, fillMeasures: string) => updateText("#rhythm-params #fill-measures span", fillMeasures));
 window.parameters.updateSuperMeasure((event: any, superMeasure: string) => updatePianoRollTransport(parseInt(superMeasure) * 16));
-window.parameters.toggleCreateClip((event: any, state: boolean) => toggleIndicator("#create-clip span", state));
 window.parameters.updateActiveClip((event: any, clipIndex: string) => updateText("li#current-clip span", clipIndex));
 
 
@@ -139,13 +138,6 @@ window.parameters.updateNoteVector((event: any, vector: number[], activeLength: 
 
 const updateText = (selector: string, text: string) => {
   document.querySelector(selector).textContent = text
-}
-
-const toggleIndicator = (selector: string, state: boolean) => {
-  if (state)
-    document.querySelector(selector).classList.add("on");
-  else
-    document.querySelector(selector).classList.remove("on");
 }
 
 
