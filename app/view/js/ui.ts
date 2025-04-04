@@ -29,7 +29,6 @@ window.documentation.pageDocumentation((event: any, page: any) => {
 window.documentation.setNoteData((event: any, _noteData: any[]) => noteData = _noteData);
 
 window.documentation.displayResourcesPath((event: any, path: string) => {
-  // console.log(path)
   updateText("#resources-path", path);
 });
 
@@ -381,7 +380,7 @@ window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[
 
 
 window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: number, superMeasureLength: number,
-  rhythmStepLength: number, rhythmStepBreakpoint: number) => {
+  rhythmStepLength: number, rhythmStepBreakpoint: number, activeClip: boolean) => {
   let low: number, high: number;
   if (notes.length == 0) {
     low  = 60;
@@ -451,9 +450,9 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
     const xPos = ((note[1] / 0.25) * stepWidth) + pianoRollMargin.left;
     const yPos = (high - note[0]) * keyHeight;
     const dur  = (note[2] / 0.25) * stepWidth;
-    ctx.fillStyle = `rgba(17, 119, 51, ${note[3] / 127})`;
+    ctx.fillStyle = activeClip ? `rgba(17, 119, 51, ${note[3] / 127})` : `rgba(17, 65, 119, ${note[3] / 127})`;
     ctx.fillRect(xPos, yPos, dur, keyHeight);
-    ctx.strokeStyle = "#5be88a";
+    ctx.strokeStyle = activeClip ? "#5be88a" : "#5ba9e8";
 
     ctx.beginPath();
     ctx.moveTo(xPos + dur, yPos);

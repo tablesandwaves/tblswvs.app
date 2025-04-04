@@ -82,7 +82,6 @@ export class AbletonTrack {
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
   // Using a 2-dimensional array to accommodate polyphony.
-  queuedNotes: note[][] = new Array();
   currentMutation: note[] = new Array();
 
   vectorShifts: number[] = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0];
@@ -695,16 +694,17 @@ export class AbletonTrack {
   }
 
 
-  updateGuiPianoRoll() {
+  updateGuiPianoRoll(clip?: number) {
     if (this.daw.sequencer.gui == undefined) return;
 
     this.daw.sequencer.gui.webContents.send(
       "piano-roll-notes",
-      this.clips[this.currentClip].currentAbletonNotes.map(n => n.toPianoRollNote()),
+      this.clips[clip === undefined ? this.currentClip : clip].currentAbletonNotes.map(n => n.toPianoRollNote()),
       this.daw.sequencer.key.midiTonic,
       this.daw.sequencer.superMeasure,
       this.rhythmStepLength,
-      this.rhythmStepBreakpoint
+      this.rhythmStepBreakpoint,
+      clip === undefined ? true : clip === this.currentClip ? true : false
     );
   }
 

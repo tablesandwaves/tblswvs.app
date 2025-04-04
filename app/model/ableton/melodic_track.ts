@@ -28,7 +28,7 @@ export class MelodicTrack extends AbletonTrack {
 
 
   setInputNotes(inputNotes: note[][], clip?: number) {
-    this.#inputNotes = inputNotes;
+    if (inputNotes.length > 0) this.#inputNotes = inputNotes;
     this.generateOutputNotes(clip);
   }
 

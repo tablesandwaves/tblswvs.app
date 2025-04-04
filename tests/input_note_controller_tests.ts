@@ -55,7 +55,6 @@ describe("InputNoteController", () => {
     sequencer.grid.keyPress({y: 0, x: 0, s: 1}); // Add a gate so the Ableton
     sequencer.grid.keyPress({y: 0, x: 0, s: 0}); // notes will be updated.
 
-
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});  // Go to the melody page, add a simple sequence
     sequencer.grid.keyPress({y: 7, x: 8, s: 0});
     sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn on note recording
@@ -80,28 +79,18 @@ describe("InputNoteController", () => {
     ]);
     expect(track.currentAbletonNotes[0].midiNote).to.eq(60);
 
-    // Queue up a different sequence, but do not flush it to the track
-    sequencer.grid.keyPress({y: 2, x: 15, s: 1});
-    sequencer.grid.keyPress({y: 2, x: 15, s: 0});
-    sequencer.grid.keyPress({y: 3, x: 2, s: 1});
-    sequencer.grid.keyPress({y: 3, x: 2, s: 0});
-    sequencer.grid.keyPress({y: 3, x: 1, s: 1});
-    sequencer.grid.keyPress({y: 3, x: 1, s: 0});
-    sequencer.grid.keyPress({y: 3, x: 0, s: 1});
-    sequencer.grid.keyPress({y: 3, x: 0, s: 0});
-
     // Page right to the vector melody page, add an offset, return and apply it
-    sequencer.grid.keyPress({y: 7, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 15, s: 1}); // Page right to note vector controller
     sequencer.grid.keyPress({y: 7, x: 15, s: 0});
-    sequencer.grid.keyPress({y: 1, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 1, x: 15, s: 1}); // Set vector length
     sequencer.grid.keyPress({y: 1, x: 15, s: 0});
-    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});  // Add 7 scale degree vector offset
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
-    sequencer.grid.keyPress({y: 7, x: 14, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 14, s: 1}); // Page left back to the input note controller
     sequencer.grid.keyPress({y: 7, x: 14, s: 0});
-    sequencer.grid.keyPress({y: 4, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 15, s: 1}); // Turn on vector melodies
     sequencer.grid.keyPress({y: 4, x: 15, s: 0});
-    sequencer.grid.keyPress({y: 6, x: 15, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // Advance/flush
     sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 
     track.updateCurrentAbletonNotes();

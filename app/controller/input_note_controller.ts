@@ -1,3 +1,4 @@
+import { detect } from "@tonaljs/chord-detect";
 import { note } from "tblswvs";
 import {
   GridConfig, GridKeyPress, ApplicationController,
@@ -39,9 +40,11 @@ export class InputNoteController extends ApplicationController {
 
   editableClip: (undefined|number);
   recordingInputNotes = false;
-  newSequenceQueued   = false;
   keyPressCount       = 0;
-  inputNotes: note[]  = new Array();
+  // The current button press notes for a single step. An array to accommodate chords/polyphony.
+  stepNotes: note[]  = new Array();
+  // The currently accumulated sequence of notes for multiple steps. 2D array to accommmodate per step chords/polyphony.
+  queuedNotes: note[][] = new Array();
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -81,10 +84,14 @@ export class InputNoteController extends ApplicationController {
 
   setEditableClip(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.editableClip = gridPage.editableClip === undefined ?
-                              gridPage.matrix[press.y][press.x].value :
-                              undefined;
+      const editableClip = gridPage.matrix[press.y][press.x].value;
+
+      gridPage.editableClip = editableClip === gridPage.activeTrack.currentClip || editableClip === gridPage.editableClip ?
+                              undefined :
+                              editableClip;
+
       gridPage.setCurrentClipGridDisplay();
+      gridPage.activeTrack.updateGuiPianoRoll(gridPage.editableClip);
     }
   }
 
@@ -105,11 +112,11 @@ export class InputNoteController extends ApplicationController {
         gridPage.keyPressCount--;
 
         let octaveTranspose = octaveTransposeMapping[press.y];
-        gridPage.inputNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
+        gridPage.stepNotes.push({ ...gridPage.grid.sequencer.key.degree(press.x + 1, octaveTranspose) });
 
         if (gridPage.keyPressCount == 0) {
-          gridPage.activeTrack.queuedNotes.push(gridPage.inputNotes.sort((a,b) => a.midi - b.midi));
-          gridPage.inputNotes = new Array();
+          gridPage.queuedNotes.push(gridPage.stepNotes.sort((a,b) => a.midi - b.midi));
+          gridPage.stepNotes = new Array();
           gridPage.setUiQueuedInputNotes();
         }
       } else {
@@ -121,7 +128,7 @@ export class InputNoteController extends ApplicationController {
 
   removeLastNotes(gridPage: InputNoteController, press: GridKeyPress) {
     if (gridPage.recordingInputNotes && press.s == 1) {
-      gridPage.activeTrack.queuedNotes.pop();
+      gridPage.queuedNotes.pop();
       gridPage.setUiQueuedInputNotes();
     }
   }
@@ -130,13 +137,10 @@ export class InputNoteController extends ApplicationController {
   advance(gridPage: InputNoteController, press: GridKeyPress) {
     if (press.s == 0) return;
 
-    if (gridPage.newSequenceQueued && gridPage.activeTrack.queuedNotes.length > 0) {
+    if (gridPage.activeTrack instanceof MelodicTrack) {
       // When notes are queued, they need to be flushed via AbletonTrack.setInputNotes(),
       // which will also make a call to AbletonTrack.generateOutputNotes().
-      if (gridPage.activeTrack instanceof MelodicTrack)
-        (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.activeTrack.queuedNotes, gridPage.editableClip);
-
-      if (!gridPage.recordingInputNotes) gridPage.newSequenceQueued = false;
+      (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.queuedNotes, gridPage.editableClip);
     } else {
       // Otherwise, only call AbletonTrack.generateOutputNotes() for cases like the infinity series
       // algorithm, which will create a note sequence not based on the track's input notes.
@@ -152,10 +156,9 @@ export class InputNoteController extends ApplicationController {
     if (press.s == 0) return;
 
     gridPage.recordingInputNotes = !gridPage.recordingInputNotes;
-    gridPage.newSequenceQueued   = gridPage.recordingInputNotes && !gridPage.newSequenceQueued ? true : gridPage.newSequenceQueued;
 
     if (gridPage.recordingInputNotes) {
-      gridPage.activeTrack.queuedNotes = new Array();
+      gridPage.queuedNotes = new Array();
       gridPage.setUiQueuedInputNotes();
     } else {
       gridPage.setCurrentClipGridDisplay();
@@ -175,6 +178,21 @@ export class InputNoteController extends ApplicationController {
       );
       gridPage.activeTrack.updateGuiVectorDisplay();
     }
+  }
+
+
+  setUiQueuedInputNotes() {
+    if (this.grid.sequencer.testing) return;
+
+    this.grid.sequencer.gui.webContents.send(
+      "update-queued-notes",
+      this.queuedNotes.flatMap((queuedNotes: note[]) => {
+        let notes = queuedNotes.map(n => n.note + n.octave).join("-");
+        let namedChord = detect(queuedNotes.map(n => n.note))[0];
+        notes += namedChord == undefined ? "" : " (" + namedChord + ")";
+        return notes;
+      }).join("; ")
+    );
   }
 
 

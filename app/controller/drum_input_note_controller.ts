@@ -64,7 +64,6 @@ export class DrumInputNoteController extends ApplicationController {
 
         if (gridPage.keyPressCount == 0) {
           gridPage.inputNoteStepIndex++;
-          gridPage.setUiQueuedInputNotes();
         }
       } else {
         gridPage.keyPressCount++;
@@ -76,7 +75,6 @@ export class DrumInputNoteController extends ApplicationController {
   removeLastNotes(gridPage: DrumInputNoteController, press: GridKeyPress) {
     if (gridPage.recordingInputNotes && press.s == 1) {
       gridPage.inputNotes.pop();
-      gridPage.setUiQueuedInputNotes();
     }
   }
 
@@ -108,8 +106,6 @@ export class DrumInputNoteController extends ApplicationController {
     if (gridPage.recordingInputNotes) {
       gridPage.inputNoteStepIndex = 0;
       gridPage.inputNotes = new Array();
-      gridPage.activeTrack.queuedNotes = new Array();
-      gridPage.setUiQueuedInputNotes();
     }
 
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));

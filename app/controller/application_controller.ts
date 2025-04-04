@@ -2,8 +2,6 @@ import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
-import { detect } from "@tonaljs/chord-detect";
-import { note } from "tblswvs";
 
 
 export type xyCoordinate = {
@@ -29,8 +27,6 @@ export type GridConfig = {
 export type GridButton = {
   mapping: string,
   shiftMapping?: string,
-  // type: string,
-  // group?: string,
   value?: any,
   shiftValue?: any
 }
@@ -406,21 +402,6 @@ export class ApplicationController {
     if (this.grid.sequencer.testing || !this.grid.sequencer.gui.webContents) return;
 
     this.grid.sequencer.gui.webContents.send("transport", pianoRollHighlightIndex);
-  }
-
-
-  setUiQueuedInputNotes() {
-    if (this.grid.sequencer.testing) return;
-
-    this.grid.sequencer.gui.webContents.send(
-      "update-queued-notes",
-      this.activeTrack.queuedNotes.flatMap((queuedNotes: note[]) => {
-        let notes = queuedNotes.map(n => n.note + n.octave).join("-");
-        let namedChord = detect(queuedNotes.map(n => n.note))[0];
-        notes += namedChord == undefined ? "" : " (" + namedChord + ")";
-        return notes;
-      }).join("; ")
-    );
   }
 
 
