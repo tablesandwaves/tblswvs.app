@@ -13,6 +13,7 @@ import { AbletonLive } from "./ableton/live";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
 import { HarmonicAutomaton } from "./automata/harmonic_automaton";
+import { InputNoteController } from "../controller/input_note_controller";
 
 
 export type BeatVoice = {
@@ -368,7 +369,17 @@ export class Sequencer {
     // Look for any tracks that have added new clips in the current super measure
     this.stagedClipChangeTracks.forEach(stagedClipChange => {
       this.emitter.emit(`/tracks/${stagedClipChange.dawIndex}/clips/${stagedClipChange.clipIndex}/fire`);
-      this.daw.tracks.find(t => t.dawIndex == stagedClipChange.dawIndex).currentClip = stagedClipChange.clipIndex;
+
+      const track = this.daw.tracks.find(t => t.dawIndex == stagedClipChange.dawIndex);
+
+      track.currentClip = stagedClipChange.clipIndex;
+
+      if (this.daw.getActiveTrack().dawIndex == track.dawIndex)
+        track.updateGuiPianoRoll();
+
+      if (this.grid.activePage instanceof InputNoteController)
+        (this.grid.activePage as InputNoteController).setCurrentClipGridDisplay();
+
     });
     this.stagedClipChangeTracks = new Array();
   }
