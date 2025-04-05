@@ -43,6 +43,21 @@ matrices:
         - 37
         - 38
         - 39
+  -
+    name: Clip Scenes
+    description: Button represents the active Ableton Live scene
+    group: clip-scenes
+    type: toggle
+    rowStart: 2
+    rowEnd: 5
+    columnStart: 14
+    columnEnd: 14
+    mapping: setEditableClip
+    columnValues:
+      - 0
+      - 1
+      - 2
+      - 3
 rows:
   -
     name: Algorithms
@@ -94,3 +109,12 @@ rows:
     xStart: 15
     xLength: 1
     mapping: advance
+  -
+    name: Queue Clip
+    description: Queue the currently editable clip to launch at the next super measure
+    group: queue-clip
+    type: momentary
+    index: 6
+    xStart: 14
+    xLength: 1
+    mapping: queueClipForLaunch

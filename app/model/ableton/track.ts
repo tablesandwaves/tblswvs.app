@@ -709,18 +709,10 @@ export class AbletonTrack {
   }
 
 
+  /**
+   * Placeholder to be overridden by sub-classes.
+   */
   updateGuiPianoRoll(clip?: number) {
-    if (this.daw.sequencer.gui == undefined) return;
-
-    this.daw.sequencer.gui.webContents.send(
-      "piano-roll-notes",
-      this.clips[clip === undefined ? this.currentClip : clip].currentAbletonNotes.map(n => n.toPianoRollNote()),
-      this.daw.sequencer.key.midiTonic,
-      this.daw.sequencer.superMeasure,
-      this.rhythmStepLength,
-      this.rhythmStepBreakpoint,
-      clip === undefined ? true : clip === this.currentClip ? true : false
-    );
   }
 
 

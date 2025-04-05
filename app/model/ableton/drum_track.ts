@@ -21,7 +21,7 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
-  set sequence(sequence: note[][]) {
+  setSequence(sequence: note[][], clip?: number) {
     this.#sequence = sequence;
     this.generateOutputNotes();
   }
@@ -57,11 +57,11 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
-  generateOutputNotes() {
+  generateOutputNotes(clip?: number) {
     if (this.algorithm == "simple")
-      this.setOutputNotes(this.#sequence.slice(0, this.rhythmStepLength).filter(noteArray => noteArray.length > 0));
+      this.setOutputNotes(this.#sequence.slice(0, this.rhythmStepLength).filter(noteArray => noteArray.length > 0), clip);
     else
-      super.generateOutputNotes();
+      super.generateOutputNotes(clip);
   }
 
 
@@ -72,16 +72,19 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
-  updateGuiPianoRoll() {
+  updateGuiPianoRoll(clip?: number) {
     if (this.daw.sequencer.gui == undefined) return;
+
+    console.log("DrumTrack.updateGuiPianoRoll()", clip)
 
     this.daw.sequencer.gui.webContents.send(
       "drum-rack-notes",
-      this.clips[this.currentClip].currentAbletonNotes.map(n => n.toPianoRollNote()),
+      this.clips[clip === undefined ? this.currentClip : clip].currentAbletonNotes.map(n => n.toPianoRollNote()),
       this.chains[this.activeChain].pads,
       this.daw.sequencer.superMeasure,
       this.rhythmStepLength,
-      this.rhythmStepBreakpoint
+      this.rhythmStepBreakpoint,
+      clip === undefined ? true : clip === this.currentClip ? true : false
     )
   }
 }

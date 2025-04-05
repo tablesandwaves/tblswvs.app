@@ -2,6 +2,8 @@ import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 import { RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
+import { InputNoteController } from "./input_note_controller";
+import { DrumInputNoteController } from "./drum_input_note_controller";
 
 
 export type xyCoordinate = {
@@ -46,6 +48,7 @@ export class ApplicationController {
   keyReleaseFunctionality: boolean = true;
   keyPressCount                    = 0;
   activeGates: GridKeyPress[]      = new Array();
+  editableClip: (undefined|number);
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
@@ -364,6 +367,41 @@ export class ApplicationController {
       gridPage.grid.sequencer.daw.updateActiveTrackNotes();
       if (!gridPage.grid.sequencer.testing) gridPage.activeTrack.updateGuiNoteLength();
     }
+  }
+
+
+  setEditableClip(gridPage: (InputNoteController|DrumInputNoteController), press: GridKeyPress) {
+    if (press.s == 1) {
+      const editableClip = gridPage.matrix[press.y][press.x].value;
+
+      gridPage.editableClip = editableClip === gridPage.activeTrack.currentClip || editableClip === gridPage.editableClip ?
+                              undefined :
+                              editableClip;
+
+      gridPage.setCurrentClipGridDisplay();
+      gridPage.activeTrack.updateGuiPianoRoll(gridPage.editableClip);
+    }
+  }
+
+
+  queueClipForLaunch(gridPage: (InputNoteController|DrumInputNoteController), press: GridKeyPress) {
+    if (press.s == 1 && gridPage.editableClip !== undefined) {
+      gridPage.grid.sequencer.stagedClipChangeTracks.push({
+        dawIndex: gridPage.activeTrack.dawIndex,
+        clipIndex: gridPage.editableClip
+      });
+    }
+  }
+
+
+  setCurrentClipGridDisplay() {
+    for (let y = 2; y < 6; y++)
+      if (y - 2 == this.activeTrack.currentClip)
+        this.grid.levelSet(14, y, ACTIVE_BRIGHTNESS);
+      else if (y - 2 == this.editableClip)
+        this.grid.levelSet(14, y, SECONDARY_BRIGHTNESS);
+      else
+        this.grid.levelSet(14, y, INACTIVE_BRIGHTNESS);
   }
 
 

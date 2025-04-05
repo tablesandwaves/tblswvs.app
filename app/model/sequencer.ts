@@ -14,6 +14,7 @@ import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
 import { HarmonicAutomaton } from "./automata/harmonic_automaton";
 import { InputNoteController } from "../controller/input_note_controller";
+import { DrumInputNoteController } from "../controller/drum_input_note_controller";
 
 
 export type BeatVoice = {
@@ -377,7 +378,7 @@ export class Sequencer {
       if (this.daw.getActiveTrack().dawIndex == track.dawIndex)
         track.updateGuiPianoRoll();
 
-      if (this.grid.activePage instanceof InputNoteController)
+      if (this.grid.activePage instanceof InputNoteController || this.grid.activePage instanceof DrumInputNoteController)
         (this.grid.activePage as InputNoteController).setCurrentClipGridDisplay();
 
     });

@@ -293,7 +293,7 @@ window.parameters.updateRampSequence((event: any, rampSequence: number[], superM
 
 
 window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[], superMeasureLength: number,
-  rhythmStepLength: number, rhythmStepBreakpoint: number) => {
+  rhythmStepLength: number, rhythmStepBreakpoint: number, activeClip: boolean) => {
   const lowPadMidiNote = 36;
   const noteSpan = [...new Array(pads.length)].map((_, i) => i + lowPadMidiNote);
   const canvasWidth = 1312;
@@ -357,9 +357,9 @@ window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[
     const xPos = ((note[1] / 0.25) * stepWidth) + pianoRollMargin.left;
     const yPos = (lowPadMidiNote + pads.length - 1 - note[0]) * keyHeight;
     const dur  = (note[2] / 0.25) * stepWidth;
-    context.fillStyle = "#117733";
+    context.fillStyle = activeClip ? `rgba(17, 119, 51, ${note[3] / 127})` : `rgba(17, 65, 119, ${note[3] / 127})`;
     context.fillRect(xPos, yPos, dur, keyHeight);
-    context.strokeStyle = "#5be88a";
+    context.strokeStyle = activeClip ? "#5be88a" : "#5ba9e8";
 
     context.beginPath();
     context.moveTo(xPos + dur, yPos);

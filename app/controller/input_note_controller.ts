@@ -38,7 +38,6 @@ export class InputNoteController extends ApplicationController {
   type = "InputNotes";
 
 
-  editableClip: (undefined|number);
   recordingInputNotes = false;
   keyPressCount       = 0;
   // The current button press notes for a single step. An array to accommodate chords/polyphony.
@@ -79,30 +78,6 @@ export class InputNoteController extends ApplicationController {
   setAlgorithm(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
     gridPage.grid.setActiveGridPage(algorithmMappings[gridPage.activeTrack.algorithm].pageType);
-  }
-
-
-  setEditableClip(gridPage: InputNoteController, press: GridKeyPress) {
-    if (press.s == 1) {
-      const editableClip = gridPage.matrix[press.y][press.x].value;
-
-      gridPage.editableClip = editableClip === gridPage.activeTrack.currentClip || editableClip === gridPage.editableClip ?
-                              undefined :
-                              editableClip;
-
-      gridPage.setCurrentClipGridDisplay();
-      gridPage.activeTrack.updateGuiPianoRoll(gridPage.editableClip);
-    }
-  }
-
-
-  queueClipForLaunch(gridPage: InputNoteController, press: GridKeyPress) {
-    if (press.s == 1 && gridPage.editableClip !== undefined) {
-      gridPage.grid.sequencer.stagedClipChangeTracks.push({
-        dawIndex: gridPage.activeTrack.dawIndex,
-        clipIndex: gridPage.editableClip
-      });
-    }
   }
 
 
@@ -199,17 +174,6 @@ export class InputNoteController extends ApplicationController {
   setRhythmRepetitions(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithmRhythmRepetitions = press.x - 7;
     gridPage.setGridAlgorithmRepetitionRow();
-  }
-
-
-  setCurrentClipGridDisplay() {
-    for (let y = 2; y < 6; y++)
-      if (y - 2 == this.activeTrack.currentClip)
-        this.grid.levelSet(14, y, ACTIVE_BRIGHTNESS);
-      else if (y - 2 == this.editableClip)
-        this.grid.levelSet(14, y, SECONDARY_BRIGHTNESS);
-      else
-        this.grid.levelSet(14, y, INACTIVE_BRIGHTNESS);
   }
 
 

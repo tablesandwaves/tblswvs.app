@@ -20,12 +20,13 @@ export class DrumInputNoteController extends ApplicationController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
-    this.functionMap.set("setAlgorithm",          this.setAlgorithm);
-    this.functionMap.set("addNotes",              this.addNotes);
-    this.functionMap.set("removeLastNotes",       this.removeLastNotes);
-    this.functionMap.set("advance",               this.advance);
-    this.functionMap.set("toggleNoteRecording",   this.toggleNoteRecording);
-    this.functionMap.set("toggleVectorShifts",    this.toggleVectorShifts);
+    this.functionMap.set("setAlgorithm",        this.setAlgorithm);
+    this.functionMap.set("addNotes",            this.addNotes);
+    this.functionMap.set("removeLastNotes",     this.removeLastNotes);
+    this.functionMap.set("advance",             this.advance);
+    this.functionMap.set("toggleNoteRecording", this.toggleNoteRecording);
+    this.functionMap.set("setEditableClip",     this.setEditableClip);
+    this.functionMap.set("queueClipForLaunch",  this.queueClipForLaunch);
   }
 
 
@@ -39,6 +40,7 @@ export class DrumInputNoteController extends ApplicationController {
     this.setGridDrumPadDisplay();
     this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.setGlobalAlgorithmControls();
+    this.setCurrentClipGridDisplay();
   }
 
 
@@ -92,8 +94,8 @@ export class DrumInputNoteController extends ApplicationController {
           gridPage.activeTrack.sequence[i] = [];
       });
     }
-    gridPage.activeTrack.generateOutputNotes();
-    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.activeTrack.generateOutputNotes(gridPage.editableClip);
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes(gridPage.editableClip);
     gridPage.activeTrack.setGuiInputNotes();
   }
 
@@ -109,19 +111,6 @@ export class DrumInputNoteController extends ApplicationController {
     }
 
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
-  }
-
-
-  toggleVectorShifts(gridPage: DrumInputNoteController, press: GridKeyPress) {
-    if (press.s == 1) {
-      gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
-      gridPage.grid.levelSet(
-        press.x,
-        press.y,
-        (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS)
-      );
-      gridPage.activeTrack.updateGuiVectorDisplay();
-    }
   }
 
 

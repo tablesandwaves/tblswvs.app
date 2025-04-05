@@ -132,7 +132,7 @@ export class GlobalController extends ApplicationController {
       track.rhythmAlgorithm      = gridPage.matrix[press.y][press.x].value;
 
       if (track.type == "DrumTrack" && (track as DrumTrack).sequence.flat().length == 0) {
-        (track as DrumTrack).sequence = new Array(32);
+        (track as DrumTrack).setSequence(new Array(32));
         voice.hits.forEach((hit, i) => {
           (track as DrumTrack).setDrumPadStep(hit, [{octave: 1, note: "C", midi: 36}]);
           track.rhythm[hit].velocity = voice.velocities[i];
