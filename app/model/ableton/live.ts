@@ -10,9 +10,10 @@ import { gcd, lcm } from "../../helpers/utils";
 import { MelodicTrack } from "./melodic_track";
 
 
-export class AbletonLive {
-  static EVOLUTION_SCENE_INDEX = 4;
+export const EVOLUTION_SCENE_INDEX = 4;
 
+
+export class AbletonLive {
   fetchedNotes: AbletonNote[] = new Array();
   tracks: AbletonTrack[] = new Array();
   dawIndices: number[] = new Array();

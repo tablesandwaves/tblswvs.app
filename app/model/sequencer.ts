@@ -9,7 +9,7 @@ import * as path from "path";
 import { Key, Scale } from "tblswvs";
 import { BrowserWindow } from "electron";
 import { MonomeGrid } from "./monome_grid";
-import { AbletonLive } from "./ableton/live";
+import { AbletonLive, EVOLUTION_SCENE_INDEX } from "./ableton/live";
 import { AbletonTrack } from "./ableton/track";
 import { pulseRateMap } from "./ableton/note";
 import { HarmonicAutomaton } from "./automata/harmonic_automaton";
@@ -222,13 +222,14 @@ export class Sequencer {
 
 
   setNotesInLive(track: AbletonTrack, clip?: number) {
-    track.updateCurrentAbletonNotes(clip);
+    const clipIndex = this.daw.mutating && (track.mutating || track.randomizing || track.soloing) ?
+                      EVOLUTION_SCENE_INDEX :
+                      clip ? clip : track.currentClip;
+
+    track.updateCurrentAbletonNotes(clipIndex);
 
     if (this.testing) return;
 
-    const clipIndex = this.daw.mutating && (track.mutating || track.randomizing || track.soloing) ?
-                      AbletonLive.EVOLUTION_SCENE_INDEX :
-                      clip ? clip : track.currentClip;
     try {
       this.emitter.emit(
         `/tracks/${track.dawIndex}/clips/${clipIndex}/notes`,
@@ -392,7 +393,7 @@ export class Sequencer {
 
     this.daw.tracks.forEach(track => {
       if (track.randomizing || track.mutating) {
-        this.emitter.emit(`/tracks/${track.dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
+        this.emitter.emit(`/tracks/${track.dawIndex}/clips/${EVOLUTION_SCENE_INDEX}/fire`);
       }
     });
   }
@@ -407,7 +408,7 @@ export class Sequencer {
       this.daw.tracks.find(t => t.dawIndex == soloingTrackDawIndex).evolve(true);
       this.daw.soloists.forEach(dawIndex => {
         if (dawIndex == soloingTrackDawIndex) {
-          this.emitter.emit(`/tracks/${dawIndex}/clips/${AbletonLive.EVOLUTION_SCENE_INDEX}/fire`);
+          this.emitter.emit(`/tracks/${dawIndex}/clips/${EVOLUTION_SCENE_INDEX}/fire`);
         } else {
           this.emitter.emit(`/tracks/${dawIndex}/clips/stop`);
         }

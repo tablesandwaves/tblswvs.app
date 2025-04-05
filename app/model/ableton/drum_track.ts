@@ -75,8 +75,6 @@ export class DrumTrack extends AbletonTrack {
   updateGuiPianoRoll(clip?: number) {
     if (this.daw.sequencer.gui == undefined) return;
 
-    console.log("DrumTrack.updateGuiPianoRoll()", clip)
-
     this.daw.sequencer.gui.webContents.send(
       "drum-rack-notes",
       this.clips[clip === undefined ? this.currentClip : clip].currentAbletonNotes.map(n => n.toPianoRollNote()),

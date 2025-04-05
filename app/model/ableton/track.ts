@@ -121,7 +121,7 @@ export class AbletonTrack {
       this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
     }
 
-    this.clips = [ new AbletonClip(), new AbletonClip(), new AbletonClip(), new AbletonClip() ];
+    this.clips = [ new AbletonClip(), new AbletonClip(), new AbletonClip(), new AbletonClip(), new AbletonClip() ];
 
     this.hasRampSequencers = config.rampSequencer;
     this.rampSequence0 = new RampSequence();
@@ -625,7 +625,10 @@ export class AbletonTrack {
     this.daw.sequencer.setNotesInLive(this);
 
     if (this.daw.getActiveTrack().dawIndex == this.dawIndex) {
-      this.updateGuiPianoRoll();
+      // There is some class inheritance issue that occurs at transpilation time that means
+      // the EVOLUTION_SCENE_INDEX const exported from live.ts cannot be used here.
+      const clipIndex = 4;
+      this.updateGuiPianoRoll(clipIndex);
     }
   }
 
@@ -658,7 +661,10 @@ export class AbletonTrack {
     this.daw.sequencer.setNotesInLive(this);
 
     if (this.daw.getActiveTrack().dawIndex == this.dawIndex) {
-      this.updateGuiPianoRoll();
+      // There is some class inheritance issue that occurs at transpilation time that means
+      // the EVOLUTION_SCENE_INDEX const exported from live.ts cannot be used here.
+      const clipIndex = 4;
+      this.updateGuiPianoRoll(clipIndex);
     }
   }
 
