@@ -64,8 +64,9 @@ function osc_message() {
   var superMeasureMatch = a[0].match(superMeasurePattern);
   if (superMeasureMatch) {
     for (var trackIndex = 0; trackIndex < 8; trackIndex++) {
-      new LiveAPI("live_set tracks " + trackIndex + " clip_slots " + activeTrackClips[trackIndex] + " clip")
-          .set("loop_end", parseInt(a[1]) * 4);
+      for (var clipIndex = 0; clipIndex < 4; clipIndex++) {
+        new LiveAPI("live_set tracks " + trackIndex + " clip_slots " + clipIndex + " clip").set("loop_end", parseInt(a[1]) * 4);
+      }
     }
     outlet(2, parseInt(a[1]) * 16);
   }

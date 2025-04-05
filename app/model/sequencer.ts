@@ -308,6 +308,7 @@ export class Sequencer {
 
   updateSuperMeasure() {
     if (this.testing) return;
+
     try {
       this.emitter.emit(`/set/super_measure`, this.superMeasure);
     } catch (e) {
