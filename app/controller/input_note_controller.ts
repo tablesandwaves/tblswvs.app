@@ -118,7 +118,8 @@ export class InputNoteController extends ApplicationController {
       (gridPage.activeTrack as MelodicTrack).setInputNotes(gridPage.queuedNotes, gridPage.editableClip);
     } else {
       // Otherwise, only call AbletonTrack.generateOutputNotes() for cases like the infinity series
-      // algorithm, which will create a note sequence not based on the track's input notes.
+      // algorithm, which will create a note sequence not based on the track's input notes. Note that
+      // a drum track can load the InfinitySeriesController, which is a sub-class.
       gridPage.activeTrack.generateOutputNotes(gridPage.editableClip);
     }
 
