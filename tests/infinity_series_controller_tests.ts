@@ -29,8 +29,8 @@ describe("InfinitySeriesController", () => {
       });
 
       it("has the default repetitions row", () => {
-        expect(activePage.getRhythmRepetitionsRow()).to.have.ordered.members([
-          10, 0, 0, 0,  0, 0, 0, 0
+        expect(activePage.getGridAlgorithmRepetitionRow()).to.have.ordered.members([
+          10, 0, 0, 0,  0, 0
         ]);
       });
 

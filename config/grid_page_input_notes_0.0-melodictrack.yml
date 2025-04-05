@@ -28,7 +28,7 @@ matrices:
       - 2
       - 1
   -
-    name: Active Clip Scene
+    name: Clip Scenes
     description: Button represents the active Ableton Live scene
     group: clip-scenes
     type: toggle

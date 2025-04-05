@@ -31,7 +31,7 @@ describe("ShiftRegisterController", () => {
       ]));
 
       it("has the default shift register range row", () => expect(activePage.getShiftRegisterRangeRow()).to.have.ordered.members([
-        0, 10, 10, 0,  0, 0, 0, 0
+        0, 10, 10, 0
       ]));
 
       it("has the default algorithm row (shift register selected)", () => expect(activePage.getGridAlgorithmRow()).to.have.ordered.members([

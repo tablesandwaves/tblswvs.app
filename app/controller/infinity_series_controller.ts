@@ -11,13 +11,16 @@ export class InfinitySeriesController extends InputNoteController {
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
 
-    this.functionMap.set("addSeedRange", this.addSeedRange);
+    this.functionMap.set("addSeedRange",       this.addSeedRange);
+    this.functionMap.set("setEditableClip",    this.setEditableClip);
+    this.functionMap.set("queueClipForLaunch", this.queueClipForLaunch);
   }
 
 
   refresh() {
     super.refresh();
     this.setGridInfinitySeriesDisplay();
+    super.setCurrentClipGridDisplay();
   }
 
 
@@ -40,7 +43,7 @@ export class InfinitySeriesController extends InputNoteController {
 
   setGridInfinitySeriesDisplay() {
     this.getSeedRangeRows().forEach((row, i) => this.grid.levelRow(0, i + 2, row));
-    this.grid.levelRow(8, 2, this.getRhythmRepetitionsRow());
+    super.setGridAlgorithmRepetitionRow();
   }
 
 

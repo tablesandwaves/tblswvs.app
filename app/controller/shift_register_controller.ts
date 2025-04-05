@@ -16,13 +16,16 @@ export class ShiftRegisterController extends InputNoteController {
 
     this.functionMap.set("setShiftRegisterLength", this.setShiftRegisterLength);
     this.functionMap.set("setShiftRegisterChance", this.setShiftRegisterChance);
-    this.functionMap.set("setOctaveRange", this.setOctaveRange);
+    this.functionMap.set("setOctaveRange",         this.setOctaveRange);
+    this.functionMap.set("setEditableClip",        this.setEditableClip);
+    this.functionMap.set("queueClipForLaunch",     this.queueClipForLaunch);
   }
 
 
   refresh() {
     super.refresh();
     this.setGridShiftRegisterDisplay();
+    super.setCurrentClipGridDisplay();
   }
 
 
@@ -65,7 +68,7 @@ export class ShiftRegisterController extends InputNoteController {
         });
 
         gridPage.activeGates = new Array();
-        gridPage.grid.levelRow(8, 2, gridPage.getShiftRegisterRangeRow());
+        gridPage.setGridShiftRegisterRangeRow();
       }
     }
   }
@@ -73,8 +76,15 @@ export class ShiftRegisterController extends InputNoteController {
 
   setGridShiftRegisterDisplay() {
     this.grid.levelRow(0, 2, this.getShiftRegisterLengthRow());
-    this.grid.levelRow(8, 2, this.getShiftRegisterRangeRow());
     this.grid.levelRow(0, 3, this.getShiftRegisterChanceRow());
+    this.setGridShiftRegisterRangeRow();
+  }
+
+
+  setGridShiftRegisterRangeRow() {
+    this.getShiftRegisterRangeRow().forEach((button, i) => {
+      this.grid.levelSet(8 + i, 2, button);
+    });
   }
 
 
@@ -93,7 +103,7 @@ export class ShiftRegisterController extends InputNoteController {
 
 
   getShiftRegisterRangeRow() {
-    const row   = blank8x1Row.slice();
+    const row = blank8x1Row.slice(0, 4);
 
     row.splice(0, 4, ...this.activeTrack.shiftRegisterOctaveRange.map((octave: number) => {
       return octave == 1 ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;

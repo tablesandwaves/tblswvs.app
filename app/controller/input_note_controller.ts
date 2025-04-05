@@ -198,7 +198,7 @@ export class InputNoteController extends ApplicationController {
 
   setRhythmRepetitions(gridPage: InputNoteController, press: GridKeyPress) {
     gridPage.activeTrack.algorithmRhythmRepetitions = press.x - 7;
-    gridPage.grid.levelRow(8, 2, gridPage.getRhythmRepetitionsRow());
+    gridPage.setGridAlgorithmRepetitionRow();
   }
 
 
@@ -225,7 +225,19 @@ export class InputNoteController extends ApplicationController {
   }
 
 
-  getRhythmRepetitionsRow() {
-    return blank8x1Row.map((_, i) => i < this.activeTrack.algorithmRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+  setGridAlgorithmRepetitionRow() {
+    this.getGridAlgorithmRepetitionRow().forEach((button, i) => {
+      this.grid.levelSet(8 + i, 2, button);
+    });
+  }
+
+
+  getGridAlgorithmRepetitionRow() {
+    const row = blank8x1Row.slice(0, 6);
+
+    for (let i = 0; i < 6; i++)
+      row[i] = i < this.activeTrack.algorithmRhythmRepetitions ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS;
+
+    return row;
   }
 }

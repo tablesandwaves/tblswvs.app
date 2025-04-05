@@ -77,7 +77,7 @@ export class AbletonTrack {
   acceleratingGateCount = 10;
 
   algorithm: string = "simple";
-  algorithmRhythmRepetitions: number = 1;
+  #algorithmRhythmRepetitions: number = 1;
   infinitySeriesSeeds: number[] = [0, 0, 0, 0];
   selfSimilarityType: ("self_replicate"|"counted"|"zig_zag") = "self_replicate";
 
@@ -165,6 +165,21 @@ export class AbletonTrack {
 
   get currentAbletonNotes() {
     return this.clips[this.currentClip].currentAbletonNotes;
+  }
+
+
+  get algorithmRhythmRepetitions() {
+    return this.#algorithmRhythmRepetitions;
+  }
+
+
+  set algorithmRhythmRepetitions(algorithmRhythmRepetitions: number) {
+    if (algorithmRhythmRepetitions < 1)
+      this.#algorithmRhythmRepetitions = 1;
+    else if (algorithmRhythmRepetitions > 6)
+      this.#algorithmRhythmRepetitions = 6;
+    else
+      this.#algorithmRhythmRepetitions = algorithmRhythmRepetitions;
   }
 
 

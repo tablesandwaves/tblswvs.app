@@ -12,12 +12,15 @@ export class SelfSimilarityController extends InputNoteController {
     super(config, grid);
 
     this.functionMap.set("setSelfSimilaryType", this.setSelfSimilaryType);
+    this.functionMap.set("setEditableClip",     this.setEditableClip);
+    this.functionMap.set("queueClipForLaunch",  this.queueClipForLaunch);
   }
 
 
   refresh() {
     super.refresh();
     this.grid.levelRow(8, 6, this.getGridSelfSimilarityTypeRow());
+    super.setCurrentClipGridDisplay();
   }
 
 
