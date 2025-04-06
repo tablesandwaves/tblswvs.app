@@ -137,7 +137,9 @@ export class MelodicTrack extends AbletonTrack {
       this.daw.sequencer.superMeasure,
       this.rhythmStepLength,
       this.rhythmStepBreakpoint,
-      clip === undefined ? true : clip === this.currentClip ? true : false
+      this.daw.mutating && (this.mutating || this.randomizing || this.soloing) ? "mutation" :
+          clip === undefined ? "active" :
+          clip === this.currentClip ? "active" : "inactive"
     );
   }
 }

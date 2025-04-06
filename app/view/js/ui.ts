@@ -13,6 +13,20 @@ const RAMP_SEQ_STEP_WIDTH = 50;
 const TOTAL_STEPS         = 32;
 const STEPS_PER_ROW       = 16;
 
+type ClipNoteType = "active" | "inactive" | "mutation";
+
+type ClipNoteColorSet = {
+  fillRed: number,
+  fillGreen: number,
+  fillBlue: number,
+  strokeStyle: string;
+}
+
+const clipNoteColorMap: Record<ClipNoteType, ClipNoteColorSet> = {
+  "active":   {fillRed: 17, fillGreen: 119, fillBlue: 51, strokeStyle: "#5be88a"},
+  "inactive": {fillRed: 17, fillGreen: 65, fillBlue: 119, strokeStyle: "#5ba9e8"},
+  "mutation": {fillRed: 119, fillGreen: 17, fillBlue: 78, strokeStyle: "#ed219c"},
+}
 
 window.documentation.pageDocumentation((event: any, page: any) => {
   pageDocumentation[page.name] = page;
@@ -293,7 +307,7 @@ window.parameters.updateRampSequence((event: any, rampSequence: number[], superM
 
 
 window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[], superMeasureLength: number,
-  rhythmStepLength: number, rhythmStepBreakpoint: number, activeClip: boolean) => {
+  rhythmStepLength: number, rhythmStepBreakpoint: number, clipNoteType: ClipNoteType) => {
   const lowPadMidiNote = 36;
   const noteSpan = [...new Array(pads.length)].map((_, i) => i + lowPadMidiNote);
   const canvasWidth = 1312;
@@ -357,10 +371,15 @@ window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[
     const xPos = ((note[1] / 0.25) * stepWidth) + pianoRollMargin.left;
     const yPos = (lowPadMidiNote + pads.length - 1 - note[0]) * keyHeight;
     const dur  = (note[2] / 0.25) * stepWidth;
-    context.fillStyle = activeClip ? `rgba(17, 119, 51, ${note[3] / 127})` : `rgba(17, 65, 119, ${note[3] / 127})`;
-    context.fillRect(xPos, yPos, dur, keyHeight);
-    context.strokeStyle = activeClip ? "#5be88a" : "#5ba9e8";
 
+    context.fillStyle = `rgba(` +
+      `${clipNoteColorMap[clipNoteType].fillRed},` +
+      `${clipNoteColorMap[clipNoteType].fillGreen},` +
+      `${clipNoteColorMap[clipNoteType].fillBlue},` +
+      `${note[3] / 127})`;
+    context.fillRect(xPos, yPos, dur, keyHeight);
+
+    context.strokeStyle = clipNoteColorMap[clipNoteType].strokeStyle;
     context.beginPath();
     context.moveTo(xPos + dur, yPos);
     context.lineTo(xPos + dur, yPos + keyHeight);
@@ -372,7 +391,7 @@ window.parameters.setDrumRackNotes((event: any, notes: number[][], pads: string[
 
 
 window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: number, superMeasureLength: number,
-  rhythmStepLength: number, rhythmStepBreakpoint: number, activeClip: boolean) => {
+  rhythmStepLength: number, rhythmStepBreakpoint: number, clipNoteType: ClipNoteType) => {
   let low: number, high: number;
   if (notes.length == 0) {
     low  = 60;
@@ -442,10 +461,15 @@ window.parameters.setPianoRollNotes((event: any, notes: number[][], midiTonic: n
     const xPos = ((note[1] / 0.25) * stepWidth) + pianoRollMargin.left;
     const yPos = (high - note[0]) * keyHeight;
     const dur  = (note[2] / 0.25) * stepWidth;
-    ctx.fillStyle = activeClip ? `rgba(17, 119, 51, ${note[3] / 127})` : `rgba(17, 65, 119, ${note[3] / 127})`;
-    ctx.fillRect(xPos, yPos, dur, keyHeight);
-    ctx.strokeStyle = activeClip ? "#5be88a" : "#5ba9e8";
 
+    ctx.fillStyle = `rgba(` +
+      `${clipNoteColorMap[clipNoteType].fillRed},` +
+      `${clipNoteColorMap[clipNoteType].fillGreen},` +
+      `${clipNoteColorMap[clipNoteType].fillBlue},` +
+      `${note[3] / 127})`;
+    ctx.fillRect(xPos, yPos, dur, keyHeight);
+
+    ctx.strokeStyle = clipNoteColorMap[clipNoteType].strokeStyle;
     ctx.beginPath();
     ctx.moveTo(xPos + dur, yPos);
     ctx.lineTo(xPos + dur, yPos + keyHeight);
