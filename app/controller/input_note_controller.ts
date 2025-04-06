@@ -7,6 +7,7 @@ import {
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 import { MelodicTrack } from "../model/ableton/melodic_track";
+import { noteLengthMap } from "../model/ableton/note";
 
 
 export const octaveTransposeMapping: Record<number, number> = {
@@ -108,11 +109,14 @@ export class InputNoteController extends ApplicationController {
     let octaveTranspose = octaveTransposeMapping[press.y];
     const note = this.grid.sequencer.key.degree(press.x + 1, octaveTranspose);
 
+    // Note on
     this.grid.sequencer.midiOut.send("noteon", {note: note.midi, velocity: 64, channel: this.activeTrack.dawIndex});
 
+    // Note off. Duration via timeout is a multiple of the active track's noteLength property.
+    // Currently a 16n translates to 100ms.
     setTimeout(() => {
       this.grid.sequencer.midiOut.send("noteoff", {note: note.midi, velocity: 64, channel: this.activeTrack.dawIndex});
-    }, 100);
+    }, noteLengthMap[this.activeTrack.noteLength].size * 400);
   }
 
 
