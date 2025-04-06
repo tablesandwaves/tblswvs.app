@@ -88,8 +88,8 @@ describe("InputNoteController", () => {
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     sequencer.grid.keyPress({y: 7, x: 14, s: 1}); // Page left back to the input note controller
     sequencer.grid.keyPress({y: 7, x: 14, s: 0});
-    sequencer.grid.keyPress({y: 4, x: 15, s: 1}); // Turn on vector melodies
-    sequencer.grid.keyPress({y: 4, x: 15, s: 0});
+    sequencer.grid.keyPress({y: 5, x: 15, s: 1}); // Turn on vector melodies
+    sequencer.grid.keyPress({y: 5, x: 15, s: 0});
     sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // Advance/flush
     sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 

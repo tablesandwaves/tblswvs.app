@@ -2,7 +2,7 @@ import { detect } from "@tonaljs/chord-detect";
 import { note } from "tblswvs";
 import {
   GridConfig, GridKeyPress, ApplicationController,
-  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, SECONDARY_BRIGHTNESS
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
@@ -37,7 +37,7 @@ export const algorithmMappings: Record<string, algorithmMapping> = {
 export class InputNoteController extends ApplicationController {
   type = "InputNotes";
 
-
+  notePlayingActive   = false;
   recordingInputNotes = false;
   keyPressCount       = 0;
   // The current button press notes for a single step. An array to accommodate chords/polyphony.
@@ -54,6 +54,7 @@ export class InputNoteController extends ApplicationController {
     this.functionMap.set("removeLastNotes",      this.removeLastNotes);
     this.functionMap.set("advance",              this.advance);
     this.functionMap.set("toggleNoteRecording",  this.toggleNoteRecording);
+    this.functionMap.set("toggleNotePlaying",    this.toggleNotePlaying);
     this.functionMap.set("toggleVectorShifts",   this.toggleVectorShifts);
     this.functionMap.set("setRhythmRepetitions", this.setRhythmRepetitions);
     this.functionMap.set("setEditableClip",      this.setEditableClip);
@@ -82,6 +83,8 @@ export class InputNoteController extends ApplicationController {
 
 
   addNotes(gridPage: InputNoteController, press: GridKeyPress) {
+    if (press.s == 1 && gridPage.notePlayingActive) gridPage.#playNote(press);
+
     if (gridPage.recordingInputNotes) {
       if (press.s == 0) {
         gridPage.keyPressCount--;
@@ -98,6 +101,18 @@ export class InputNoteController extends ApplicationController {
         gridPage.keyPressCount++;
       }
     }
+  }
+
+
+  #playNote(press: GridKeyPress) {
+    let octaveTranspose = octaveTransposeMapping[press.y];
+    const note = this.grid.sequencer.key.degree(press.x + 1, octaveTranspose);
+
+    this.grid.sequencer.midiOut.send("noteon", {note: note.midi, velocity: 64, channel: this.activeTrack.dawIndex});
+
+    setTimeout(() => {
+      this.grid.sequencer.midiOut.send("noteoff", {note: note.midi, velocity: 64, channel: this.activeTrack.dawIndex});
+    }, 100);
   }
 
 
@@ -141,6 +156,14 @@ export class InputNoteController extends ApplicationController {
     }
 
     gridPage.grid.levelSet(press.x, press.y, (gridPage.recordingInputNotes ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+  }
+
+
+  toggleNotePlaying(gridPage: InputNoteController, press: GridKeyPress) {
+    if (press.s == 0) return;
+
+    gridPage.notePlayingActive = !gridPage.notePlayingActive;
+    gridPage.grid.levelSet(press.x, press.y, (gridPage.notePlayingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
   }
 
 
