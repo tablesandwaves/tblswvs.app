@@ -724,7 +724,7 @@ describe("RhythmController", () => {
     // then set the algorithm to accelerating,
     sequencer.grid.keyPress({y: 6, x: 2, s: 1});
     // then set the accelerating gate count to 8.
-    sequencer.grid.keyPress({y: 3, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 2, x: 7, s: 1});
 
     const controller = sequencer.grid.activePage as RhythmController;
     const track = sequencer.daw.getActiveTrack();
