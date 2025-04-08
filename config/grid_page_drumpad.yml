@@ -43,6 +43,21 @@ matrices:
         - 37
         - 38
         - 39
+  -
+    name: Rhythm Algorithms
+    description: Set the current rhythm algorithm
+    group: rhythm-algorithm
+    type: radio
+    rowStart: 3
+    rowEnd: 6
+    columnStart: 5
+    columnEnd: 5
+    mapping: updateRhythmAlgorithm
+    columnValues:
+      - manual
+      - accelerating
+      - undefined
+      - undefined
 rows:
   -
     shiftName: Update Rhythm Parameters

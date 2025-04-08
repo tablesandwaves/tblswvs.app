@@ -33,6 +33,8 @@ export class DrumPadController extends ApplicationController {
     this.functionMap.set("updateNoteLength",         this.updateNoteLength);
     this.functionMap.set("updatePulse",              this.updatePulse);
     this.functionMap.set("clearAllGates",            this.clearAllGates);
+    this.functionMap.set("updateRhythmAlgorithm",    this.updateRhythmAlgorithm);
+    this.functionMap.set("updateRhythmParameters",   this.updateRhythmParameters);
   }
 
 
@@ -43,7 +45,22 @@ export class DrumPadController extends ApplicationController {
 
   refresh() {
     this.setGridDrumPadDisplay();
+    this.setGridRhythmAlgorithmDisplay();
     super.setGridSharedRhythmParametersDisplay();
+  }
+
+
+  updateRhythmAlgorithm(gridPage: DrumPadController, press: GridKeyPress) {
+    if (press.s === 0) return;
+
+    gridPage.activeTrack.rhythmAlgorithm = gridPage.matrix[press.y][press.x].value === "undefined" ?
+                                           "manual" :
+                                           gridPage.matrix[press.y][press.x].value;
+
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+    gridPage.setGridRhythmAlgorithmDisplay();
+    gridPage.grid.levelRow(0, 2, gridPage.getGridRhythmParameterRow().slice(0, 8));
+    gridPage.grid.levelRow(8, 2, gridPage.getGridRhythmParameterRow().slice(8, 16));
   }
 
 
@@ -144,6 +161,17 @@ export class DrumPadController extends ApplicationController {
     // Drum Pad Controls
     this.grid.levelSet(4, 3, this.notePlayingActive   ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
     this.grid.levelSet(4, 4, this.noteRecordingActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS);
+  }
+
+
+  setGridRhythmAlgorithmDisplay() {
+    if (this.activeTrack.rhythmAlgorithm === "manual") {
+      this.grid.levelSet(5, 3, ACTIVE_BRIGHTNESS);
+      this.grid.levelSet(5, 4, INACTIVE_BRIGHTNESS);
+    } else {
+      this.grid.levelSet(5, 3, INACTIVE_BRIGHTNESS);
+      this.grid.levelSet(5, 4, ACTIVE_BRIGHTNESS);
+    }
   }
 
 
