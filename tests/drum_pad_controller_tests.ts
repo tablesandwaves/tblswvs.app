@@ -192,6 +192,47 @@ describe("DrumPadController", () => {
   });
 
 
+  describe("clearing all rhythm gates", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the Perc track with a drum rack
+    sequencer.grid.keyPress({y: 7, x: 3, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+
+    // Select the rhythm page
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+
+    // Turn on note recording
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+
+    // Press and hold a gate, then select a drum pad
+    sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
+    sequencer.grid.keyPress({y: 0, x: 0, s: 0});
+
+    expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+    expect(track.outputNotes[0][0].octave).to.eq(1);
+    expect(track.outputNotes[0][0].note).to.eq("C");
+    expect(track.outputNotes[0][0].midi).to.eq(36);
+
+    // Clear all gates
+    sequencer.grid.keyPress({y: 3, x: 15, s: 1});
+
+    it("sets all rhythm steps to the off state", () => {
+      const onGateCount = track.rhythm.reduce((accum, step) => accum += step.state, 0)
+      expect(onGateCount).to.eq(0);
+    });
+
+    it("clears the track's active clip's current Ableton notes", () => {
+      expect(track.clips[track.currentClip].currentAbletonNotes.length).to.eq(0);
+    });
+  });
+
+
   describe("deactivating a rhythm step when note recording is not on", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 

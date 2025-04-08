@@ -28,18 +28,6 @@ export class RhythmController extends ApplicationController {
   }
 
 
-  clearAllGates(gridPage: RhythmController, press: GridKeyPress) {
-    if (press.s == 0) return;
-
-    gridPage.activeTrack.resetRhythmSteps();
-    gridPage.grid.sequencer.setNotesInLive(gridPage.activeTrack);
-
-    gridPage.setGridRhythmGatesDisplay();
-    gridPage.updateGuiRhythmDisplay();
-    gridPage.activeTrack.updateGuiPianoRoll();
-  }
-
-
   updateNoteLength(gridPage: RhythmController, press: GridKeyPress): void {
     if (press.s != 1) return;
 

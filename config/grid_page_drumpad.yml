@@ -52,33 +52,14 @@ rows:
     xStart: 0
     xLength: 16
     mapping: updateRhythmParameters
-  #   displayValues:
-  #     - 1
-  #     - 2
-  #     - 3
-  #     - 4
-  #     - 5
-  #     - 6
-  #     - 7
-  #     - 8
-  # -
-  #   shiftName: Fill Duration
-  #   shiftDescription: The length of time in which to spread a rhythmic fill.
-  #   shiftGroup: fill-duration
-  #   shiftType: meter
-  #   index: 2
-  #   xStart: 8
-  #   xLength: 8
-  #   mapping: setFillDuration
-  #   values:
-  #     - 16n
-  #     - 16nd
-  #     - 8n
-  #     - 8nd
-  #     - 4n
-  #     - 4nd
-  #     - 2n
-  #     - 2nd
+  -
+    name: Clear All Gates
+    description: Remove all active gates (clear rhythm)
+    group: clear-gates
+    index: 3
+    xStart: 15
+    xLength: 1
+    mapping: clearAllGates
   -
     name: Toggle Note Playing
     description: When enabled, when the pad buttons are pressed, the note will be played in Live

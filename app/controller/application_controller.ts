@@ -284,6 +284,18 @@ export class ApplicationController {
   }
 
 
+  clearAllGates(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 0) return;
+
+    gridPage.activeTrack.resetRhythmSteps();
+    gridPage.grid.sequencer.setNotesInLive(gridPage.activeTrack);
+
+    gridPage.setGridRhythmGatesDisplay();
+    gridPage.updateGuiRhythmDisplay();
+    gridPage.activeTrack.updateGuiPianoRoll();
+  }
+
+
   getNoteLengthRow() {
     let selectedIndex;
     if (this.activeGates.length > 0) {
