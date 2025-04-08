@@ -14,13 +14,21 @@ matrices:
     shiftMapping: updateStepLength
 rows:
   -
-    shiftName: Update Rhythm Parameters
-    shiftDescription: Set parameters based on the current rhythm algorithm
-    shiftGroup: rhythm-algorithms
+    name: Update Rhythm Parameters
+    description: Set parameters based on the current rhythm algorithm
+    group: rhythm-algorithms
     index: 2
     xStart: 0
     xLength: 16
     mapping: updateRhythmParameters
+  -
+    name: Clear All Gates
+    description: Remove all active gates (clear rhythm)
+    group: clear-gates
+    index: 3
+    xStart: 15
+    xLength: 1
+    mapping: clearAllGates
   -
     name: Rhythm Algorithms
     description: Set the current rhythm algorithm

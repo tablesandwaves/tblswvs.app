@@ -18,12 +18,25 @@ export class RhythmController extends ApplicationController {
     this.functionMap.set("updateRhythmAlgorithm",    this.updateRhythmAlgorithm);
     this.functionMap.set("updateRelatedRhythmTrack", this.updateRelatedRhythmTrack);
     this.functionMap.set("updateRhythmParameters",   this.updateRhythmParameters);
+    this.functionMap.set("clearAllGates",            this.clearAllGates);
   }
 
 
   refresh() {
     super.setGridRhythmGatesDisplay();
     this.setGridRhythmParameterDisplay();
+  }
+
+
+  clearAllGates(gridPage: RhythmController, press: GridKeyPress) {
+    if (press.s == 0) return;
+
+    gridPage.activeTrack.resetRhythmSteps();
+    gridPage.grid.sequencer.setNotesInLive(gridPage.activeTrack);
+
+    gridPage.setGridRhythmGatesDisplay();
+    gridPage.updateGuiRhythmDisplay();
+    gridPage.activeTrack.updateGuiPianoRoll();
   }
 
 

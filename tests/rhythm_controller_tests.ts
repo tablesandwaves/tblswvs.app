@@ -41,6 +41,33 @@ describe("RhythmController", () => {
   });
 
 
+  describe("clearing all rhythm gates", () => {
+    const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select the rhythm page, add a rhythm
+    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    const track = sequencer.daw.getActiveTrack();
+    track.rhythm = rhythmStepsForPattern([
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+      1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0
+    ]);
+    track.updateCurrentAbletonNotes();
+    expect(track.clips[track.currentClip].currentAbletonNotes.length).to.eq(8);
+
+    // Clear all gates
+    sequencer.grid.keyPress({y: 3, x: 15, s: 1});
+
+    it("sets all rhythm steps to the off state", () => {
+      const onGateCount = track.rhythm.reduce((accum, step) => accum += step.state, 0)
+      expect(onGateCount).to.eq(0);
+    });
+
+    it("clears the track's active clip's current Ableton notes", () => {
+      expect(track.clips[track.currentClip].currentAbletonNotes.length).to.eq(0);
+    });
+  });
+
+
   describe("adding notes to an existing rhythm", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
@@ -756,7 +783,7 @@ describe("RhythmController", () => {
     });
 
     it("has a grid parameter row equal to the accelerating gate count", () => {
-      expect(controller.getGridParameterRow()).to.have.ordered.members([
+      expect(controller.getGridRhythmParameterRow()).to.have.ordered.members([
         10, 10, 10, 10,  10, 10, 10, 10,  0, 0, 0, 0,  0, 0, 0, 0
       ]);
     });
