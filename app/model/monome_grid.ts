@@ -103,6 +103,11 @@ export class MonomeGrid {
     // Bottom row: global controls
     if (press.y == 7) {
 
+      // TMP: clear the active track envelopes
+      if (press.s == 1 && press.x == 11) {
+        this.sequencer.clearClipEnvelopes();
+      }
+
       if (press.x <= 6 && press.s == 1) {
         this.#setActiveTrack(press);
       } else if (press.s == 1 && press.x == 8) {
