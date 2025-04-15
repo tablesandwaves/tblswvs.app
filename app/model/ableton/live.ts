@@ -28,7 +28,6 @@ export class AbletonLive {
     {name: "rev",     function: "reverse",         active: 0},
     {name: "rot-3",   function: "rotateLeftThree", active: 0},
     {name: "sort",    function: "sort",            active: 0},
-    {name: "-sort",   function: "reverseSort",     active: 0},
     {name: "inv",     function: "invert",          active: 0},
     {name: "inv-rev", function: "invertReverse",   active: 0},
     {name: "bitflip", function: "bitFlip",         active: 0},

@@ -150,7 +150,7 @@ export class MelodyEvolutionController extends ApplicationController {
 
 
   toggleMutationAlgorithm(gridPage: MelodyEvolutionController, press: GridKeyPress) {
-    const offset = 7;
+    const offset = 8;
     const currentState = gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
     gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - currentState;
     gridPage.refresh();

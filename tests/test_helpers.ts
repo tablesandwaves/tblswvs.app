@@ -27,7 +27,7 @@ export const patternForRhythmSteps = (rhythmSteps: RhythmStep[]): number[] => {
 export const getRhythmControllerMocks = (): [Sequencer, AbletonTrack, RhythmController] => {
   const testing = true;
   const sequencer = new Sequencer(configDirectory, testing);
-  sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+  sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
   const track      = sequencer.daw.getActiveTrack();
   const controller = sequencer.grid.activePage as RhythmController;
@@ -63,7 +63,7 @@ export const baselineDrumPadActivation = (sequencer: Sequencer) => {
   const track = sequencer.daw.getActiveTrack() as DrumTrack;
 
   // Select the rhythm page
-  sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+  sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
   // Turn on note recording
   sequencer.grid.keyPress({y: 4, x: 4, s: 1});
@@ -100,7 +100,7 @@ export const baselineDrumPadActivation = (sequencer: Sequencer) => {
 
 export const mockDrumNoteRecording = (sequencer: Sequencer, rhythmKeyPresses: GridKeyPress[], noteKeyPresses: GridKeyPress[]) => {
   sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
-  sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the input notes page.
+  sequencer.grid.keyPress({y: 7, x: 9, s: 1}); // then select the input notes page.
 
   // Add rhythm gates
   rhythmKeyPresses.forEach(keyPress => sequencer.grid.keyPress(keyPress));
@@ -115,7 +115,7 @@ export const mockDrumNoteRecording = (sequencer: Sequencer, rhythmKeyPresses: Gr
 export const getInputRecordingMocks = (): [Sequencer, AbletonTrack, InputNoteController] => {
   const sequencer = new Sequencer(configDirectory, true);
   sequencer.grid.keyPress({y: 7, x: 6, s: 1}); // Set the active track to a melodic track.
-  sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // Select the note input page
+  sequencer.grid.keyPress({y: 7, x: 9, s: 1}); // Select the note input page
 
   const track = sequencer.daw.getActiveTrack() as MelodicTrack;
   const controller = sequencer.grid.activePage as InputNoteController;

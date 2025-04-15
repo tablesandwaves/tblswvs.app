@@ -32,19 +32,19 @@ describe("MelodyEvolutionController", () => {
 
     it("has a a blank randomizing row", () => {
       expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
 
     it("has a blank independent mutations row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
 
     it("has a blank trading solos row", () => {
       expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
 
@@ -70,13 +70,13 @@ describe("MelodyEvolutionController", () => {
 
     it("enables the tracks' accompaniment mode", () => {
       expect(sequencer.daw.tracks.map(t => t.accompaniment)).to.have.ordered.members(
-        [false, true, false, false, false, true, false]
+        [false, true, false, false, false, true, false, false]
       );
     });
 
     it("updates the accompaniment row", () => {
       expect(evolutionPage.gridAccopmanimentTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 10, 0]
+        [0, 10, 0, 0,  0, 10, 0, 0]
       );
     });
   });
@@ -93,7 +93,7 @@ describe("MelodyEvolutionController", () => {
     // Set the snare track to randomizing
     sequencer.grid.keyPress({y: 0, x: 1, s: 1});
     expect(sequencer.daw.tracks[1].randomizing).to.be.true;
-    expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+    expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0, 0]);
 
     // Then set it to accompaniment
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
@@ -108,13 +108,13 @@ describe("MelodyEvolutionController", () => {
 
     it("updates the randomizing row", () => {
       expect(evolutionPage.gridAccopmanimentTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 0, 0]
+        [0, 10, 0, 0,  0, 0, 0, 0]
       );
     });
 
     it("updates the mutating row", () => {
       expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
   });
@@ -134,13 +134,13 @@ describe("MelodyEvolutionController", () => {
 
     it("enables the tracks' randomization mode", () => {
       expect(sequencer.daw.tracks.map(t => t.randomizing)).to.have.ordered.members(
-        [false, true, false, false, false, true, false]
+        [false, true, false, false, false, true, false, false]
       );
     });
 
     it("updates the randomizing row", () => {
       expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 10, 0]
+        [0, 10, 0, 0,  0, 10, 0, 0]
       );
     });
   });
@@ -157,7 +157,7 @@ describe("MelodyEvolutionController", () => {
     // Set the snare track to mutating
     sequencer.grid.keyPress({y: 1, x: 1, s: 1});
     expect(sequencer.daw.tracks[1].mutating).to.be.true;
-    expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+    expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0, 0]);
 
     // Then set it to randomizing
     sequencer.grid.keyPress({y: 0, x: 1, s: 1});
@@ -172,13 +172,13 @@ describe("MelodyEvolutionController", () => {
 
     it("updates the randomizing row", () => {
       expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 0, 0]
+        [0, 10, 0, 0,  0, 0, 0, 0]
       );
     });
 
     it("updates the mutating row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
   });
@@ -195,7 +195,7 @@ describe("MelodyEvolutionController", () => {
     // Set the snare track to randomizing
     sequencer.grid.keyPress({y: 0, x: 1, s: 1});
     expect(sequencer.daw.tracks[1].randomizing).to.be.true;
-    expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+    expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0, 0]);
 
     // Then set it to mutating
     sequencer.grid.keyPress({y: 1, x: 1, s: 1});
@@ -210,13 +210,13 @@ describe("MelodyEvolutionController", () => {
 
     it("updates the mutating row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 0, 0]
+        [0, 10, 0, 0,  0, 0, 0, 0]
       );
     });
 
     it("updates the randomizing row", () => {
       expect(evolutionPage.gridRandomizingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
   });
@@ -233,7 +233,7 @@ describe("MelodyEvolutionController", () => {
     // Set the snare track to soloing
     sequencer.grid.keyPress({y: 2, x: 1, s: 1});
     expect(sequencer.daw.soloists).to.include(2);
-    expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0]);
+    expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0, 0]);
 
     // Then set it to mutating
     sequencer.grid.keyPress({y: 1, x: 1, s: 1});
@@ -248,13 +248,13 @@ describe("MelodyEvolutionController", () => {
 
     it("updates the mutating row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
-        [0, 10, 0, 0,  0, 0, 0]
+        [0, 10, 0, 0,  0, 0, 0, 0]
       );
     });
 
     it("updates the soloists row", () => {
       expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0, 0]
       );
     });
   });
@@ -284,13 +284,13 @@ describe("MelodyEvolutionController", () => {
 
     it("enables the tracks' mutating mode", () => {
       expect(sequencer.daw.tracks.map(t => t.mutating)).to.have.ordered.members(
-        [false, false, false, false, false, true, true]
+        [false, false, false, false, false, true, true, false]
       );
     });
 
     it("updates the mutating row", () => {
       expect(evolutionPage.gridMutatingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 10, 10]
+        [0, 0, 0, 0,  0, 10, 10, 0]
       );
     });
 
@@ -332,7 +332,7 @@ describe("MelodyEvolutionController", () => {
 
     it("updates the soloing row", () => {
       expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 10, 10]
+        [0, 0, 0, 0,  0, 10, 10, 0]
       );
     });
 
@@ -376,7 +376,7 @@ describe("MelodyEvolutionController", () => {
 
     // Set a track to mutating, select a deterministic evolutionary algorithm, then press the enable mutations button
     sequencer.grid.keyPress({y: 1, x: 6, s: 1});
-    sequencer.grid.keyPress({y: 0, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 0, x: 8, s: 1});
     sequencer.grid.keyPress({y: 0, x: 15, s: 1});
 
     expect(track.currentMutation).to.deep.eq(

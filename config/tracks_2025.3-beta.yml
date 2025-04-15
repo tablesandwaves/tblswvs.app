@@ -98,6 +98,14 @@ live_tracks:
           - slice 14
           - slice 15
           - slice 16
+      -
+        name: Meld Sample Pack Kit
+        type: drum rack
+        pads:
+          - DS Kick
+          - DS Snare
+          - DS Hat
+          - Mld Smpl Pck
   -
     name: Perc 2
     type: DrumTrack
@@ -205,10 +213,7 @@ live_tracks:
     rampSequencer: true
     chains:
       -
-        name: Mindbender
-        type: synth
-      -
-        name: Jun-6 Jun's Vision
+        name: Meld Dirty Keys 2
         type: synth
       -
         name: Full Circle Dub
@@ -217,21 +222,33 @@ live_tracks:
         name: Jun-6 Piano 2
         type: synth
       -
-        name: Metaz
-        type: synth
-      -
-        name: eptieda pad
-        type: synth
-      -
         name: Glitch Dub
         type: synth
       -
         name: Dirty Bells
         type: synth
   -
-    name: Hydra
+    name: Pad
     type: MelodicTrack
     dawIndex: 7
+    rampSequencer: true
+    chains:
+      -
+        name: Mindbender
+        type: synth
+      -
+        name: Jun-6 Jun's Vision
+        type: synth
+      -
+        name: Metaz
+        type: synth
+      -
+        name: eptieda pad
+        type: synth
+  -
+    name: Hydra
+    type: MelodicTrack
+    dawIndex: 8
     rampSequencer: true
     chains:
       -

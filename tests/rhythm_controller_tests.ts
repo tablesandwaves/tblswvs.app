@@ -16,7 +16,7 @@ describe("RhythmController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     const track = sequencer.daw.getActiveTrack();
 
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -45,7 +45,7 @@ describe("RhythmController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page, add a rhythm
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     const track = sequencer.daw.getActiveTrack();
     track.rhythm = rhythmStepsForPattern([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
@@ -72,7 +72,7 @@ describe("RhythmController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     const track = sequencer.daw.getActiveTrack();
 
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -724,7 +724,7 @@ describe("RhythmController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     const controller = sequencer.grid.activePage as RhythmController;
     const track = sequencer.daw.getActiveTrack();
     expect(track.rhythmAlgorithm).to.eq("manual");
@@ -744,7 +744,7 @@ describe("RhythmController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page,
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     // then add a step,
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
@@ -794,7 +794,7 @@ describe("RhythmController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     const controller = sequencer.grid.activePage as RhythmController;
     const track = sequencer.daw.getActiveTrack();
     expect(track.rhythmAlgorithm).to.eq("manual");
@@ -812,7 +812,7 @@ describe("RhythmController", () => {
 
   describe("setting the surround rhythm and then a related rhythm track", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     const sourceTrack   = sequencer.daw.tracks[1];
     const surroundTrack = sequencer.daw.getActiveTrack();
@@ -845,7 +845,7 @@ describe("RhythmController", () => {
 
   describe("a surround rhythm for a track with a shortened length", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     const surroundTrack = sequencer.daw.getActiveTrack();
     const sourceTrack   = sequencer.daw.tracks[1];
@@ -872,7 +872,7 @@ describe("RhythmController", () => {
 
   describe("changing a surround rhythm's source track's length", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     const surroundTrack = sequencer.daw.getActiveTrack();
     const sourceTrack   = sequencer.daw.tracks[1];
@@ -903,7 +903,7 @@ describe("RhythmController", () => {
 
   describe("setting a related rhythm track and then the surround rhythm", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     const sourceTrack   = sequencer.daw.tracks[1];
     const surroundTrack = sequencer.daw.getActiveTrack();
@@ -936,7 +936,7 @@ describe("RhythmController", () => {
 
   describe("updating a subject track that has a dependent track", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     const sourceTrack   = sequencer.daw.tracks[1];
     const surroundTrack = sequencer.daw.getActiveTrack();
@@ -1148,7 +1148,7 @@ describe("RhythmController", () => {
 
     describe("when a non-manual algorithm is selected and gate buttons are pressed", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+      sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
       const track      = sequencer.daw.getActiveTrack();
       const controller = sequencer.grid.activePage as RhythmController;

@@ -18,7 +18,7 @@ describe("InputNoteController", () => {
     track.activeChain = 1;
 
     // Select the melodic note input page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
 
     it("sets the active page to a melodic note page", () => expect(sequencer.grid.activePage).to.be.instanceOf(InputNoteController));
 
@@ -34,7 +34,7 @@ describe("InputNoteController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select a drum track
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // Select a the input note page
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1}); // Select a the input note page
     expect(sequencer.grid.activePage).to.be.instanceOf(DrumInputNoteController);
 
     sequencer.grid.keyPress({y: 7, x: 4, s: 1}); // Select a melodic track
@@ -51,12 +51,12 @@ describe("InputNoteController", () => {
     sequencer.grid.keyPress({y: 7, x: 6, s: 1}); // Set the active track to a melodic track.
     const track = sequencer.daw.getActiveTrack() as MelodicTrack;
 
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1}); // Go to the rhythm page.
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // Go to the rhythm page.
     sequencer.grid.keyPress({y: 0, x: 0, s: 1}); // Add a gate so the Ableton
     sequencer.grid.keyPress({y: 0, x: 0, s: 0}); // notes will be updated.
 
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});  // Go to the melody page, add a simple sequence
-    sequencer.grid.keyPress({y: 7, x: 8, s: 0});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});  // Go to the melody page, add a simple sequence
+    sequencer.grid.keyPress({y: 7, x: 9, s: 0});
     sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn on note recording
     sequencer.grid.keyPress({y: 2, x: 15, s: 0});
     sequencer.grid.keyPress({y: 3, x: 0, s: 1});  // First note.

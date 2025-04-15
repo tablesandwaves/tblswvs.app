@@ -14,7 +14,7 @@ describe("DrumInputNoteController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the input notes page.
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1}); // then select the input notes page.
 
     it("sets the active page to a drum pad page", () => {
       expect(sequencer.grid.activePage).to.be.instanceOf(DrumInputNoteController);
@@ -135,7 +135,7 @@ describe("DrumInputNoteController", () => {
       ];
 
       sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
-      sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the input notes page.
+      sequencer.grid.keyPress({y: 7, x: 9, s: 1}); // then select the input notes page.
       sequencer.grid.keyPress({y: 2, x: 15, s: 1}); // Turn on note recording
       noteKeyPresses.forEach(keyPress => sequencer.grid.keyPress(keyPress)); // Add notes
       expect((sequencer.grid.activePage as DrumInputNoteController).inputNotes).to.deep.eq([
@@ -160,7 +160,7 @@ describe("DrumInputNoteController", () => {
     baselineDrumPadActivation(sequencer);
     const track = sequencer.daw.getActiveTrack() as DrumTrack;
 
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});  // Select the input note page,
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});  // Select the input note page,
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});  // set the note algorithm to infinity series
     sequencer.grid.keyPress({y: 2, x: 0, s: 1});  // set the seed,
     sequencer.grid.keyPress({y: 2, x: 11, s: 1}); // set the algo repetitions

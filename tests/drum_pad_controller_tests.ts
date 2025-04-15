@@ -14,7 +14,7 @@ describe("DrumPadController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track, which is a drum rack,
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1}); // then select the rhythm page.
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // then select the rhythm page.
 
     it("sets the active page to a drum pad page", () => expect(sequencer.grid.activePage).to.be.instanceOf(DrumPadController));
   });
@@ -23,7 +23,7 @@ describe("DrumPadController", () => {
   describe("selecting a drum rack track while on the rhythm page should load a drum controller", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1}); // Select the rhythm page FIRST, then
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1}); // Select the rhythm page FIRST, then
     sequencer.grid.keyPress({y: 7, x: 3, s: 1}); // Select the Perc track with a drum rack
 
     it("sets the active page to a drum pad page", () => {
@@ -44,7 +44,7 @@ describe("DrumPadController", () => {
 
     // Select the rhythm page to load the drum pad controller, then change the track probability,
     // then turn on recording, then add rhythm gates
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 4, x: 4, s: 1});
     sequencer.grid.keyPress({y: 6, x: 14, s: 1});
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
@@ -83,7 +83,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     // Turn on note recording
     sequencer.grid.keyPress({y: 4, x: 4, s: 1});
@@ -117,7 +117,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     // Turn on note recording
     sequencer.grid.keyPress({y: 4, x: 4, s: 1});
@@ -156,7 +156,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     // Turn on note recording
     sequencer.grid.keyPress({y: 4, x: 4, s: 1});
@@ -200,7 +200,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     // Turn on note recording
     sequencer.grid.keyPress({y: 4, x: 4, s: 1});
@@ -241,7 +241,7 @@ describe("DrumPadController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
 
     // Toggle note recording on
     sequencer.grid.keyPress({y: 4, x: 4, s: 1});

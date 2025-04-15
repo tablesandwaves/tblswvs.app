@@ -13,7 +13,7 @@ describe("ShiftRegisterController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the note input page, then the shift register sub-page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 2, s: 1});
     const activePage = sequencer.grid.activePage as ShiftRegisterController;
 
@@ -57,7 +57,7 @@ describe("ShiftRegisterController", () => {
     const track = sequencer.daw.getActiveTrack() as MelodicTrack;
 
     // Select the note input page, then the shift register sub-page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 2, s: 1});
     const activePage = sequencer.grid.activePage as ShiftRegisterController;
 

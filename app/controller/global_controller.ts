@@ -61,7 +61,7 @@ export class GlobalController extends ApplicationController {
     this.setGridBeatPatternDisplay();
     this.setGridTimingAlgorithmDisplay();
 
-    for (let i = 0; i < 6; i++)
+    for (let i = 0; i < 7; i++)
       this.setGridChainRow(i);
   }
 
