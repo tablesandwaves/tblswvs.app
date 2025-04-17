@@ -50,7 +50,7 @@ describe("MelodyEvolutionController", () => {
 
     it("has a blank active mutations row", () => {
       expect(evolutionPage.gridActiveMutationsRow()).to.have.ordered.members(
-        [0, 0, 0, 0,  0, 0, 0, 0]
+        [0, 0, 0, 0,  0, 0, 0]
       );
     });
   });
