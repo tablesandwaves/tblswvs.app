@@ -12,7 +12,7 @@ describe("SelfSimilarityController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the note input page, then the self-similarity sub-page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 3, s: 1});
     const activePage = sequencer.grid.activePage as SelfSimilarityController;
 
@@ -53,8 +53,8 @@ describe("SelfSimilarityController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the note input page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 8, s: 0});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 0});
 
     // Add a simple sequence
     sequencer.grid.keyPress({y: 2, x: 15, s: 1});
@@ -116,8 +116,8 @@ describe("SelfSimilarityController", () => {
     const track = sequencer.daw.getActiveTrack();
 
     // Select the note input page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
-    sequencer.grid.keyPress({y: 7, x: 8, s: 0});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 0});
 
     // Add a chord sequence
     sequencer.grid.keyPress({y: 2, x: 15, s: 1});
@@ -148,7 +148,7 @@ describe("SelfSimilarityController", () => {
     sequencer.grid.keyPress({y: 6, x: 15, s: 0});
 
     // Select the note input page, then the self-similarity sub-page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 3, s: 1});
 
     it("include self-replication melodies", () => {

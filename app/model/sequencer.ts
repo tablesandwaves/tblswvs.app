@@ -298,6 +298,7 @@ export class Sequencer {
 
   setTrackChain(track: AbletonTrack) {
     if (this.testing) return;
+
     try {
       this.emitter.emit(`/tracks/${track.dawIndex}/chains/${track.activeChain}`);
     } catch (e) {
@@ -314,6 +315,19 @@ export class Sequencer {
       this.emitter.emit(`/set/super_measure`, this.superMeasure);
     } catch (e) {
       console.error(e.name, e.message, "while updating the super measure in Live:");
+    }
+  }
+
+
+  clearClipEnvelopes() {
+    if (this.testing) return;
+
+    const track = this.daw.getActiveTrack();
+    try {
+      this.emitter.emit(`/tracks/${track.dawIndex}/clips/${track.currentClip}/envelopes/clear`);
+    } catch (e) {
+      console.error(e.name, e.message, "while clearing the clip envelopes in Live:");
+      console.error("trackIndex", track.dawIndex, "clipIndex", track.currentClip);
     }
   }
 
@@ -392,8 +406,9 @@ export class Sequencer {
     if (!this.daw.mutating) return;
 
     this.daw.tracks.forEach(track => {
-      if (track.randomizing || track.mutating) {
+      if ((track.randomizing || track.mutating) && track.evolvingQueued) {
         this.emitter.emit(`/tracks/${track.dawIndex}/clips/${EVOLUTION_SCENE_INDEX}/fire`);
+        track.evolvingQueued = false;
       }
     });
   }

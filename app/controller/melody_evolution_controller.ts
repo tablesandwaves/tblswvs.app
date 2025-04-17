@@ -14,8 +14,8 @@ export class MelodyEvolutionController extends ApplicationController {
     super(config, grid);
 
     this.functionMap.set("toggleMutationAlgorithm", this.toggleMutationAlgorithm);
-    this.functionMap.set("toggleRandomizingVoice", this.toggleRandomizingVoice);
     this.functionMap.set("toggleRandomAccompanimentVoice", this.toggleRandomAccompanimentVoice);
+    this.functionMap.set("toggleRandomizingVoice", this.toggleRandomizingVoice);
     this.functionMap.set("toggleMutatingVoice", this.toggleMutatingVoice);
     this.functionMap.set("toggleSoloingVoice", this.toggleSoloingVoice);
     this.functionMap.set("toggleMutations", this.toggleMutations);
@@ -89,9 +89,10 @@ export class MelodyEvolutionController extends ApplicationController {
       // Flag for resetting all tracks to their current clips at the next super measure boundary
       gridPage.grid.sequencer.daw.stopMutationQueued = true;
     } else {
-      // Reset all mutating tracks' current mutation melodies
+      // Reset all mutating tracks' current mutation melodies, set evolving queue
       gridPage.grid.sequencer.daw.tracks.forEach(track => {
         if (track.mutating) track.currentMutation = track.outputNotes.flat();
+        if (track.mutating || track.randomizing) track.evolvingQueued = true;
       });
     }
 
@@ -116,6 +117,7 @@ export class MelodyEvolutionController extends ApplicationController {
   toggleRandomizingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.randomizing = !track.randomizing;
+    if (track.randomizing) track.evolvingQueued = true;
 
     gridPage.refresh();
   }
@@ -132,7 +134,10 @@ export class MelodyEvolutionController extends ApplicationController {
   toggleMutatingVoice(gridPage: MelodyEvolutionController, press: GridKeyPress) {
     const track = gridPage.grid.sequencer.daw.tracks[press.x];
     track.mutating = !track.mutating;
-    if (track.mutating) track.currentMutation = track.outputNotes.flat();
+    if (track.mutating) {
+      track.currentMutation = track.outputNotes.flat();
+      track.evolvingQueued = true;
+    }
     gridPage.refresh();
   }
 
@@ -150,7 +155,7 @@ export class MelodyEvolutionController extends ApplicationController {
 
 
   toggleMutationAlgorithm(gridPage: MelodyEvolutionController, press: GridKeyPress) {
-    const offset = 7;
+    const offset = 8;
     const currentState = gridPage.grid.sequencer.daw.mutations[press.x - offset].active;
     gridPage.grid.sequencer.daw.mutations[press.x - offset].active = 1 - currentState;
     gridPage.refresh();

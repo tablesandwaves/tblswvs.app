@@ -8,20 +8,17 @@ import { rhythmAlgorithms } from "../model/ableton/track";
 
 export class RhythmController extends ApplicationController {
   type = "Rhythm";
-  customNoteLength: "16n"|"8n"|"8nd"|"4n"|"4nd"|"2n"|"2nd"|"1n" = undefined;
 
 
   constructor(config: GridConfig, grid: MonomeGrid) {
     super(config, grid);
     this.functionMap.set("updateDefaultProbability", this.updateDefaultProbability);
-    this.functionMap.set("toggleFillMeasure", this.toggleFillMeasure);
-    this.functionMap.set("setFillDuration", this.setFillDuration);
-    this.functionMap.set("updateNoteLength", this.updateNoteLength);
-    this.functionMap.set("updatePulse", this.updatePulse);
-    this.functionMap.set("updateRhythmAlgorithm", this.updateRhythmAlgorithm);
+    this.functionMap.set("updateNoteLength",         this.updateNoteLength);
+    this.functionMap.set("updatePulse",              this.updatePulse);
+    this.functionMap.set("updateRhythmAlgorithm",    this.updateRhythmAlgorithm);
     this.functionMap.set("updateRelatedRhythmTrack", this.updateRelatedRhythmTrack);
-    this.functionMap.set("updateRhythmParameter", this.updateRhythmParameter);
-    this.functionMap.set("updateAlternateRhythmParameter", this.updateAlternateRhythmParameter);
+    this.functionMap.set("updateRhythmParameters",   this.updateRhythmParameters);
+    this.functionMap.set("clearAllGates",            this.clearAllGates);
   }
 
 
@@ -62,7 +59,7 @@ export class RhythmController extends ApplicationController {
 
   updateRhythmAlgorithm(gridPage: RhythmController, press: GridKeyPress) {
     if (press.s == 1) {
-      const algorithm = gridPage.matrix[press.y][press.x].value == "undefined" ?
+      const algorithm = gridPage.matrix[press.y][press.x].value === "undefined" ?
                         "manual" :
                         gridPage.matrix[press.y][press.x].value;
       gridPage.activeTrack.rhythmAlgorithm = algorithm;
@@ -94,25 +91,6 @@ export class RhythmController extends ApplicationController {
   }
 
 
-  updateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {
-    if (press.s == 1) {
-      if (gridPage.activeTrack.rhythmAlgorithm == "accelerating") {
-        gridPage.activeTrack.acceleratingGateCount = press.x + 1;
-      }
-
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.grid.levelRow(0, 3, gridPage.getGridParameterRow().slice(0, 8));
-      gridPage.grid.levelRow(8, 3, gridPage.getGridParameterRow().slice(8, 16));
-    }
-  }
-
-
-  // Placeholder
-  updateAlternateRhythmParameter(gridPage: RhythmController, press: GridKeyPress) {
-
-  }
-
-
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     super.setGridRhythmGatesDisplay(highlightIndex);
     this.updateGuiRhythmTransport(pianoRollHighlightIndex);
@@ -123,8 +101,6 @@ export class RhythmController extends ApplicationController {
     super.setGridSharedRhythmParametersDisplay();
 
     // Parameter rows used by this page/controller, not by drum pad page/controller
-    this.grid.levelRow(0, 3, this.getGridParameterRow().slice(0, 8));
-    this.grid.levelRow(8, 3, this.getGridParameterRow().slice(8, 16));
     this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
   }
@@ -149,17 +125,5 @@ export class RhythmController extends ApplicationController {
       if (trackIndex != -1) relatedTrackRow[trackIndex] = ACTIVE_BRIGHTNESS;
     }
     return relatedTrackRow;
-  }
-
-  getGridParameterRow() {
-    const parameterRow = new Array(16).fill(INACTIVE_BRIGHTNESS);
-
-    if (this.activeTrack.rhythmAlgorithm == "accelerating") {
-      for (let i = 0; i < this.activeTrack.acceleratingGateCount; i++) {
-        parameterRow[i] = ACTIVE_BRIGHTNESS;
-      }
-    }
-
-    return parameterRow;
   }
 }

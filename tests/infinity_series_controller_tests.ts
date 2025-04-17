@@ -13,7 +13,7 @@ describe("InfinitySeriesController", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
     // Select the note input page, then the infinity series sub-page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
     const activePage = sequencer.grid.activePage as InfinitySeriesController;
 
@@ -62,7 +62,7 @@ describe("InfinitySeriesController", () => {
     track.rhythm = rhythmStepsForPattern([1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0]);
 
     // Select the note input page, then the infinity series sub-page
-    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 1, s: 1});
 
     // Set the seed and advance

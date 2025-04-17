@@ -34,6 +34,18 @@ export type GridButton = {
 }
 
 
+const fillDurationButtonMap: Record<number, string> = {
+  8: "16n",
+  9: "16nd",
+  10: "8n",
+  11: "8nd",
+  12: "4n",
+  13: "4nd",
+  14: "2n",
+  15: "2nd"
+}
+
+
 export const ACTIVE_BRIGHTNESS    = 10;
 export const SECONDARY_BRIGHTNESS = 1;
 export const INACTIVE_BRIGHTNESS  = 0;
@@ -157,6 +169,9 @@ export class ApplicationController {
     this.toggleRadioButton(8, 4, pulseRateMap[this.activeTrack.pulseRate].index);
     this.updateGridRowMeter(8, 5, noteLengthMap[this.activeTrack.noteLength].index);
     this.updateGridRowMeter(8, 6, (this.activeTrack.defaultProbability / 0.125) - 1);
+    // Parameter row to display either fill measures and length, or accelerating rhythm
+    this.grid.levelRow(0, 2, this.getGridRhythmParameterRow().slice(0, 8));
+    this.grid.levelRow(8, 2, this.getGridRhythmParameterRow().slice(8, 16));
   }
 
 
@@ -269,6 +284,18 @@ export class ApplicationController {
   }
 
 
+  clearAllGates(gridPage: ApplicationController, press: GridKeyPress) {
+    if (press.s == 0) return;
+
+    gridPage.activeTrack.resetRhythmSteps();
+    gridPage.grid.sequencer.setNotesInLive(gridPage.activeTrack);
+
+    gridPage.setGridRhythmGatesDisplay();
+    gridPage.updateGuiRhythmDisplay();
+    gridPage.activeTrack.updateGuiPianoRoll();
+  }
+
+
   getNoteLengthRow() {
     let selectedIndex;
     if (this.activeGates.length > 0) {
@@ -319,23 +346,40 @@ export class ApplicationController {
   }
 
 
-  toggleFillMeasure(gridPage: ApplicationController, press: GridKeyPress) {
+  updateRhythmParameters(gridPage: ApplicationController, press: GridKeyPress) {
+    if (gridPage.activeTrack.rhythmAlgorithm == "accelerating") {
+      gridPage.activeTrack.acceleratingGateCount = press.x + 1;
+    } else {
+      if (press.x >= 8)
+        gridPage.setFillDuration(press);
+      else
+        gridPage.toggleFillMeasure(press);
+    }
+
+    gridPage.grid.sequencer.daw.updateActiveTrackNotes();
+
+    gridPage.grid.levelRow(0, 2, gridPage.getGridRhythmParameterRow().slice(0, 8));
+    gridPage.grid.levelRow(8, 2, gridPage.getGridRhythmParameterRow().slice(8, 16));
+  }
+
+
+  toggleFillMeasure(press: GridKeyPress) {
     if (press.s == 1) {
-      const currentState = gridPage.activeTrack.fillMeasures[press.x];
-      gridPage.activeTrack.fillMeasures[press.x] = currentState == 0 ? 1 : 0;
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.setGridFillParametersDisplay();
-      gridPage.activeTrack.updateGuiFillMeasures();
+      const currentState = this.activeTrack.fillMeasures[press.x];
+      this.activeTrack.fillMeasures[press.x] = currentState == 0 ? 1 : 0;
+      this.grid.sequencer.daw.updateActiveTrackNotes();
+      this.setGridFillParametersDisplay();
+      this.activeTrack.updateGuiFillMeasures();
     }
   }
 
 
-  setFillDuration(gridPage: ApplicationController, press: GridKeyPress) {
+  setFillDuration(press: GridKeyPress) {
     if (press.s == 1) {
-      gridPage.activeTrack.fillDuration = gridPage.matrix[press.y][press.x].value;
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.setGridFillParametersDisplay();
-      gridPage.activeTrack.updateGuiFillsDuration();
+      this.activeTrack.fillDuration = fillDurationButtonMap[press.x]; // this.matrix[press.y][press.x].value;
+      this.grid.sequencer.daw.updateActiveTrackNotes();
+      this.setGridFillParametersDisplay();
+      this.activeTrack.updateGuiFillsDuration();
     }
   }
 
@@ -440,6 +484,28 @@ export class ApplicationController {
     if (this.grid.sequencer.testing || !this.grid.sequencer.gui.webContents) return;
 
     this.grid.sequencer.gui.webContents.send("transport", pianoRollHighlightIndex);
+  }
+
+
+  getGridRhythmParameterRow() {
+    const parameterRow = new Array(16).fill(INACTIVE_BRIGHTNESS);
+
+    if (this.activeTrack.rhythmAlgorithm == "accelerating") {
+      for (let i = 0; i < this.activeTrack.acceleratingGateCount; i++)
+        parameterRow[i] = ACTIVE_BRIGHTNESS;
+    } else {
+      // Set the fill measures, then...
+      for (let i = 0; i < 8; i++)
+        if (this.activeTrack.fillMeasures[i] === 1)
+          parameterRow[i] = ACTIVE_BRIGHTNESS;
+
+      // set the fill duration meter.
+      for (let i = 0; i < 8; i++)
+        if (i <= fillLengthMap[this.grid.sequencer.daw.getActiveTrack().fillDuration].index)
+          parameterRow[i + 8] = ACTIVE_BRIGHTNESS;
+    }
+
+    return parameterRow;
   }
 
 

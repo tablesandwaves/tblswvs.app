@@ -1,14 +1,15 @@
 outlets = 3;
 
 
-var selectTrackPattern  = /\/tracks\/(\d+)/;
-var trackChainPattern   = /\/tracks\/(\d+)\/chains\/(\d+)/;
-var notesPattern        = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
-var clipFirePattern     = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
-var newClipPattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
-var stopAllClipsPattern = /\/tracks\/(\d+)\/clips\/stop/;
-var rampSeqPattern      = /\/tracks\/(\d+)\/ramp_seq\/(\d+)/;
-var superMeasurePattern = /\/set\/super_measure/
+var selectTrackPattern   = /\/tracks\/(\d+)/;
+var trackChainPattern    = /\/tracks\/(\d+)\/chains\/(\d+)/;
+var notesPattern         = /\/tracks\/(\d+)\/clips\/(\d+)\/notes/;
+var clipFirePattern      = /\/tracks\/(\d+)\/clips\/(\d+)\/fire/;
+var clearClipEnvsPattern = /\/tracks\/(\d+)\/clips\/(\d+)\/envelopes\/clear/
+var newClipPattern       = /\/tracks\/(\d+)\/clips\/(\d+)\/create/;
+var stopAllClipsPattern  = /\/tracks\/(\d+)\/clips\/stop/;
+var rampSeqPattern       = /\/tracks\/(\d+)\/ramp_seq\/(\d+)/;
+var superMeasurePattern  = /\/set\/super_measure/
 
 var activeTrackClips = [-1, 0, 0, 0, 0, 0, 0, 0];
 
@@ -33,6 +34,13 @@ function osc_message() {
   if (fireMatch) {
     fireClipSlot(fireMatch[1], fireMatch[2]);
     activeTrackClips[fireMatch[1]] = fireMatch[2];
+  }
+
+  var clearClipEnvsMatch = a[0].match(clearClipEnvsPattern);
+  if (clearClipEnvsMatch) {
+    new LiveAPI(
+      "live_set tracks " + clearClipEnvsMatch[1] + " clip_slots " + clearClipEnvsMatch[2] +
+      " clip").call("clear_all_envelopes");
   }
 
   var stopClipMatch = a[0].match(stopAllClipsPattern);
@@ -63,9 +71,11 @@ function osc_message() {
 
   var superMeasureMatch = a[0].match(superMeasurePattern);
   if (superMeasureMatch) {
-    for (var trackIndex = 0; trackIndex < 8; trackIndex++) {
-      for (var clipIndex = 0; clipIndex < 4; clipIndex++) {
-        new LiveAPI("live_set tracks " + trackIndex + " clip_slots " + clipIndex + " clip").set("loop_end", parseInt(a[1]) * 4);
+    for (var trackIndex = 1; trackIndex < 9; trackIndex++) {
+      for (var clipIndex = 0; clipIndex < 5; clipIndex++) {
+        new LiveAPI(
+          "live_set tracks " + trackIndex + " clip_slots " + clipIndex +
+          " clip").set("loop_end", parseInt(a[1]) * 4);
       }
     }
     outlet(2, parseInt(a[1]) * 16);

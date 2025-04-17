@@ -16,7 +16,7 @@ describe("DynamicsController", () => {
     const track     = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page and set a step
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
@@ -44,7 +44,7 @@ describe("DynamicsController", () => {
     const track     = sequencer.daw.getActiveTrack();
 
     // Select the rhythm page and set a step
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([

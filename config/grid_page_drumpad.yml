@@ -43,43 +43,38 @@ matrices:
         - 37
         - 38
         - 39
+  -
+    name: Rhythm Algorithms
+    description: Set the current rhythm algorithm
+    group: rhythm-algorithm
+    type: radio
+    rowStart: 3
+    rowEnd: 6
+    columnStart: 5
+    columnEnd: 5
+    mapping: updateRhythmAlgorithm
+    columnValues:
+      - manual
+      - accelerating
+      - undefined
+      - undefined
 rows:
   -
-    shiftName: Toggle Fills for Measure
-    shiftDescription: The sub-measures of the super measure on which the fill will happen.
-    shiftGroup: fill-measures
-    shiftType: toggle
+    shiftName: Update Rhythm Parameters
+    shiftDescription: Set parameters based on the current rhythm algorithm
+    shiftGroup: rhythm-algorithms
     index: 2
     xStart: 0
-    xLength: 8
-    mapping: toggleFillMeasure
-    displayValues:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
+    xLength: 16
+    mapping: updateRhythmParameters
   -
-    shiftName: Fill Duration
-    shiftDescription: The length of time in which to spread a rhythmic fill.
-    shiftGroup: fill-duration
-    shiftType: meter
-    index: 2
-    xStart: 8
-    xLength: 8
-    mapping: setFillDuration
-    values:
-      - 16n
-      - 16nd
-      - 8n
-      - 8nd
-      - 4n
-      - 4nd
-      - 2n
-      - 2nd
+    name: Clear All Gates
+    description: Remove all active gates (clear rhythm)
+    group: clear-gates
+    index: 3
+    xStart: 15
+    xLength: 1
+    mapping: clearAllGates
   -
     name: Toggle Note Playing
     description: When enabled, when the pad buttons are pressed, the note will be played in Live

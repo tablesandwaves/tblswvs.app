@@ -76,11 +76,20 @@ rows:
     type: momentary
     mapping: removeLastNotes
   -
+    name: Toggle Note Playing
+    description: When enabled, when the pad buttons are pressed, the note will be played in Live
+    group: melody-recording-controls
+    type: toggle
+    index: 4
+    xStart: 15
+    xLength: 1
+    mapping: toggleNotePlaying
+  -
     name: Toggle Vector Shifts
     description: When on, after processing by the melody algorithm, it will be processed by the melodic vector shifts
     group: melody-recording-controls
     type: toggle
-    index: 4
+    index: 5
     xStart: 15
     xLength: 1
     mapping: toggleVectorShifts

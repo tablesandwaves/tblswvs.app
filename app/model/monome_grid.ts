@@ -28,9 +28,9 @@ export type DeviceConfig = {
 
 
 const globalKeyPageTypeMap: Record<number, string> = {
-  7:  "Rhythm",
-  8:  "InputNotes",
-  9:  "RampSequence",
+  8:  "Rhythm",
+  9:  "InputNotes",
+  10: "RampSequence",
   12: "Global"
 }
 
@@ -103,14 +103,19 @@ export class MonomeGrid {
     // Bottom row: global controls
     if (press.y == 7) {
 
-      if (press.x <= 6 && press.s == 1) {
+      // TMP: clear the active track envelopes
+      if (press.s == 1 && press.x == 11) {
+        this.sequencer.clearClipEnvelopes();
+      }
+
+      if (press.x <= 7 && press.s == 1) {
         this.#setActiveTrack(press);
-      } else if (press.s == 1 && press.x == 8) {
+      } else if (press.s == 1 && press.x == 9) {
         if (algorithmMappings[this.sequencer.daw.getActiveTrack().algorithm])
           this.setActiveGridPage(algorithmMappings[this.sequencer.daw.getActiveTrack().algorithm].pageType);
         else
           this.setActiveGridPage("InputNotes");
-      } else if (press.s == 1 && press.x >= 7 && press.x <= 12) {
+      } else if (press.s == 1 && press.x >= 8 && press.x <= 12) {
         this.setActiveGridPage(globalKeyPageTypeMap[press.x]);
       } else if (press.x == 13 && press.s == 1) {
         this.shiftKeyHeld = true;
@@ -194,7 +199,7 @@ export class MonomeGrid {
     }
     if (this.activePage) this.activePage.refresh();
 
-    this.#selectGlobalGridKey(0, 6, press.x);
+    this.#selectGlobalGridKey(0, 7, press.x);
     this.sequencer.daw.getActiveTrack().updateGui();
     this.sequencer.selectActiveTrack(this.sequencer.daw.getActiveTrack());
   }
@@ -210,25 +215,25 @@ export class MonomeGrid {
         else
           this.activePage = new RhythmController(this.#loadConfig(`grid_page_rhythm_0.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 7;
+        globalKeyIndex = 8;
         this.pageIndex = 0;
         break;
       case "Dynamics":
         this.activePage = new DynamicsController(this.#loadConfig(`grid_page_rhythm_1.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 7;
+        globalKeyIndex = 8;
         this.pageIndex = 1;
         break;
       case "Timing":
         this.activePage = new TimingController(this.#loadConfig(`grid_page_rhythm_2.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 7;
+        globalKeyIndex = 8;
         this.pageIndex = 2;
         break;
       case "Fills":
         this.activePage = new FillsController(this.#loadConfig(`grid_page_rhythm_3.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 7;
+        globalKeyIndex = 8;
         this.pageIndex = 3;
         break;
       case "InputNotes":
@@ -237,37 +242,37 @@ export class MonomeGrid {
         else
           this.activePage = new InputNoteController(this.#loadConfig(`grid_page_input_notes_0.0-melodictrack.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         this.pageIndex = 0;
         break;
       case "ShiftRegister":
         this.activePage = new ShiftRegisterController(this.#loadConfig(`grid_page_input_notes_0.1.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         this.pageIndex = 0;
         break;
       case "InfinitySeries":
         this.activePage = new InfinitySeriesController(this.#loadConfig(`grid_page_input_notes_0.2.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         this.pageIndex = 0;
         break;
       case "SelfSimilarity":
         this.activePage = new SelfSimilarityController(this.#loadConfig(`grid_page_input_notes_0.3.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         this.pageIndex = 0;
         break;
       case "NoteVector":
         this.activePage = new NoteVectorController(this.#loadConfig(`grid_page_input_notes_1.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 8;
+        globalKeyIndex = 9;
         this.pageIndex = 1;
         break;
       case "RampSequence":
         this.activePage = new RampSequenceController(this.#loadConfig(`grid_page_ramps_0.yml`) as GridConfig, this);
         updated = true;
-        globalKeyIndex = 9;
+        globalKeyIndex = 10;
         this.pageIndex = 0;
         break;
       case "Global":
@@ -287,7 +292,7 @@ export class MonomeGrid {
     if (updated) {
       this.clearGridDisplay();
       this.activePage.refresh();
-      this.#selectGlobalGridKey(7, 12, globalKeyIndex);
+      this.#selectGlobalGridKey(8, 12, globalKeyIndex);
     }
   }
 

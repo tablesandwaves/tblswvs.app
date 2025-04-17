@@ -98,10 +98,11 @@ export class AbletonTrack {
   clips: AbletonClip[];
   currentClip: number = 0;
 
-  #randomizing:   boolean = false;
-  #mutating:      boolean = false;
-  #soloing:       boolean = false;
-  #accompaniment: boolean = false;
+  #evolvingQueued: boolean = false;
+  #randomizing:    boolean = false;
+  #mutating:       boolean = false;
+  #soloing:        boolean = false;
+  #accompaniment:  boolean = false;
 
   chains: AbletonChain[] = new Array();
   #activeChain: number = 0;
@@ -113,19 +114,22 @@ export class AbletonTrack {
     this.type     = config.type;
     this.dawIndex = config.dawIndex;
 
-    if (config.chains) {
-      this.chains = config.chains.map(c => new AbletonChain(c));
-    }
+    if (config.chains) this.chains = config.chains.map(c => new AbletonChain(c));
 
-    for (let i = 0; i < this.rhythm.length; i++) {
-      this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
-    }
+    this.resetRhythmSteps();
 
     this.clips = [ new AbletonClip(), new AbletonClip(), new AbletonClip(), new AbletonClip(), new AbletonClip() ];
 
     this.hasRampSequencers = config.rampSequencer;
     this.rampSequence0 = new RampSequence();
     this.rampSequence1 = new RampSequence();
+  }
+
+
+  resetRhythmSteps() {
+    for (let i = 0; i < this.rhythm.length; i++) {
+      this.rhythm[i] = {state: 0, probability: this.defaultProbability, fillRepeats: 0, timingOffset: 0};
+    }
   }
 
 
@@ -264,6 +268,16 @@ export class AbletonTrack {
       this.#generateSurroundRhythm();
       this.daw.sequencer.setNotesInLive(this);
     }
+  }
+
+
+  get evolvingQueued() {
+    return this.#evolvingQueued;
+  }
+
+
+  set evolvingQueued(state: boolean) {
+    this.#evolvingQueued = state;
   }
 
 

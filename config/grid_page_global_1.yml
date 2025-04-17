@@ -8,7 +8,7 @@ rows:
     type: toggle
     index: 0
     xStart: 0
-    xLength: 7
+    xLength: 8
     mapping: toggleRandomizingVoice
     values:
       - 0
@@ -18,6 +18,7 @@ rows:
       - 4
       - 5
       - 6
+      - 7
     displayValues:
       - Kick
       - Snare
@@ -25,6 +26,7 @@ rows:
       - Perc
       - Bass
       - Keys
+      - Pad
       - Hydra
   -
     name: Independent Mutating Voices
@@ -33,7 +35,7 @@ rows:
     type: toggle
     index: 1
     xStart: 0
-    xLength: 7
+    xLength: 8
     mapping: toggleMutatingVoice
     values:
       - 0
@@ -43,6 +45,7 @@ rows:
       - 4
       - 5
       - 6
+      - 7
     displayValues:
       - Kick
       - Snare
@@ -50,6 +53,7 @@ rows:
       - Perc
       - Bass
       - Keys
+      - Pad
       - Hydra
   -
     name: Trading Solo Voices
@@ -58,7 +62,7 @@ rows:
     type: toggle
     index: 2
     xStart: 0
-    xLength: 7
+    xLength: 8
     mapping: toggleSoloingVoice
     values:
       - 0
@@ -68,6 +72,7 @@ rows:
       - 4
       - 5
       - 6
+      - 7
     displayValues:
       - Kick
       - Snare
@@ -75,6 +80,7 @@ rows:
       - Perc
       - Bass
       - Keys
+      - Pad
       - Hydra
   -
     name: Randomizing Accompaniment
@@ -83,7 +89,7 @@ rows:
     type: toggle
     index: 6
     xStart: 0
-    xLength: 7
+    xLength: 8
     mapping: toggleRandomAccompanimentVoice
     values:
       - 0
@@ -93,6 +99,7 @@ rows:
       - 4
       - 5
       - 6
+      - 7
     displayValues:
       - Kick
       - Snare
@@ -100,6 +107,7 @@ rows:
       - Perc
       - Bass
       - Keys
+      - Pad
       - Hydra
   -
     name: Mutation Algorithms
@@ -107,15 +115,14 @@ rows:
     group: mutation-algorithms
     type: toggle
     index: 0
-    xStart: 7
-    xLength: 8
+    xStart: 8
+    xLength: 7
     mapping: toggleMutationAlgorithm
     values:
       - trps-2
       - rev
       - rot-3
       - sort
-      - -sort
       - inv
       - inv-rev
       - bitflip

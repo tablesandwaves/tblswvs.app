@@ -53,7 +53,7 @@ app.whenReady().then(() => {
       // sequencer.gui.webContents.send("resources-path", sequencer.configDirectory);
       sequencer.gui.webContents.send("note-data", noteData);
       sequencer.grid.keyPress({x: 0, y: 7, s: 1});
-      sequencer.grid.keyPress({x: 7, y: 7, s: 1});
+      sequencer.grid.keyPress({x: 8, y: 7, s: 1});
     }, 1000);
   });
 }).then(() => {

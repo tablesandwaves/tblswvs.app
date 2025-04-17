@@ -14,7 +14,7 @@ describe("TimingController", () => {
     track.rhythm = rhythmStepsForPattern([1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0]);
 
     // Select the rhythm page and page over two to the right
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const controller = sequencer.grid.activePage as TimingController;
@@ -50,7 +50,7 @@ describe("TimingController", () => {
     ]);
 
     // Select the rhythm page and page over two to the right
-    sequencer.grid.keyPress({y: 7, x: 7, s: 1});
+    sequencer.grid.keyPress({y: 7, x: 8, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     sequencer.grid.keyPress({y: 7, x: 15, s: 1});
     const controller = sequencer.grid.activePage as TimingController;
