@@ -98,10 +98,11 @@ export class AbletonTrack {
   clips: AbletonClip[];
   currentClip: number = 0;
 
-  #randomizing:   boolean = false;
-  #mutating:      boolean = false;
-  #soloing:       boolean = false;
-  #accompaniment: boolean = false;
+  #evolvingQueued: boolean = false;
+  #randomizing:    boolean = false;
+  #mutating:       boolean = false;
+  #soloing:        boolean = false;
+  #accompaniment:  boolean = false;
 
   chains: AbletonChain[] = new Array();
   #activeChain: number = 0;
@@ -267,6 +268,16 @@ export class AbletonTrack {
       this.#generateSurroundRhythm();
       this.daw.sequencer.setNotesInLive(this);
     }
+  }
+
+
+  get evolvingQueued() {
+    return this.#evolvingQueued;
+  }
+
+
+  set evolvingQueued(state: boolean) {
+    this.#evolvingQueued = state;
   }
 
 

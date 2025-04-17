@@ -71,8 +71,8 @@ function osc_message() {
 
   var superMeasureMatch = a[0].match(superMeasurePattern);
   if (superMeasureMatch) {
-    for (var trackIndex = 0; trackIndex < 8; trackIndex++) {
-      for (var clipIndex = 0; clipIndex < 4; clipIndex++) {
+    for (var trackIndex = 1; trackIndex < 9; trackIndex++) {
+      for (var clipIndex = 0; clipIndex < 5; clipIndex++) {
         new LiveAPI(
           "live_set tracks " + trackIndex + " clip_slots " + clipIndex +
           " clip").set("loop_end", parseInt(a[1]) * 4);

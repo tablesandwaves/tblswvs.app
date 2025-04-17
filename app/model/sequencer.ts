@@ -406,8 +406,9 @@ export class Sequencer {
     if (!this.daw.mutating) return;
 
     this.daw.tracks.forEach(track => {
-      if (track.randomizing || track.mutating) {
+      if ((track.randomizing || track.mutating) && track.evolvingQueued) {
         this.emitter.emit(`/tracks/${track.dawIndex}/clips/${EVOLUTION_SCENE_INDEX}/fire`);
+        track.evolvingQueued = false;
       }
     });
   }
