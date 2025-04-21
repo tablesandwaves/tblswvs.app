@@ -227,6 +227,9 @@ live_tracks:
       -
         name: Dirty Bells
         type: synth
+      -
+        name: FM Mate
+        type: synth
   -
     name: Pad
     type: MelodicTrack
@@ -244,6 +247,9 @@ live_tracks:
         type: synth
       -
         name: eptieda pad
+        type: synth
+      -
+        name: Meymura Pad
         type: synth
   -
     name: Hydra
