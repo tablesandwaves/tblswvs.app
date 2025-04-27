@@ -198,6 +198,9 @@ live_tracks:
         name: squAErs
         type: synth
       -
+        name: Growl Bass
+        type: synth
+      -
         name: early late bass
         type: synth
       -
@@ -214,6 +217,12 @@ live_tracks:
     chains:
       -
         name: Meld Dirty Keys 2
+        type: synth
+      -
+        name: Toy Keys 1
+        type: synth
+      -
+        name: Toy Res Keys
         type: synth
       -
         name: Full Circle Dub
@@ -246,10 +255,16 @@ live_tracks:
         name: Metaz
         type: synth
       -
-        name: eptieda pad
+        name: Jeli Stutter Pad
         type: synth
       -
         name: Meymura Pad
+        type: synth
+      -
+        name: eptieda pad
+        type: synth
+      -
+        name: alandrandian
         type: synth
   -
     name: Hydra
