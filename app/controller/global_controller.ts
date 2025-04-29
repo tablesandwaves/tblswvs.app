@@ -1,4 +1,4 @@
-import { Key, Scale } from "tblswvs";
+import { Key, note, Scale } from "tblswvs";
 import {
   ACTIVE_BRIGHTNESS, ApplicationController, GridConfig,
   GridKeyPress, INACTIVE_BRIGHTNESS
@@ -22,6 +22,13 @@ const configuredScales: Record<string, {scale: Scale, index: number}> = {
   "WholeTone":     {scale: Scale.WholeTone,     index: 9},
   "Diminished":    {scale: Scale.Diminished,    index: 10},
   "Chromatic":     {scale: Scale.Chromatic,     index: 11},
+}
+
+
+const beatMidiNoteMap: Record<string, note> = {
+  "Kick":  {octave: 1, note: "C", midi: 36},
+  "Snare": {octave: 1, note: "C#", midi: 37},
+  "Hat":   {octave: 1, note: "D", midi: 38}
 }
 
 
@@ -125,29 +132,24 @@ export class GlobalController extends ApplicationController {
 
     gridPage.grid.sequencer.activeBeatPattern = beat;
 
-    beat.voices.forEach(voice => {
-      const track = gridPage.grid.sequencer.daw.tracks.find(t => t.name == voice.track);
-      track.rhythmStepLength     = beat.length;
-      track.rhythmStepBreakpoint = beat.length;
-      track.rhythmAlgorithm      = gridPage.matrix[press.y][press.x].value;
+    const track = gridPage.grid.sequencer.daw.tracks[0] as DrumTrack;
+    track.rhythmStepLength     = beat.length;
+    track.rhythmStepBreakpoint = beat.length;
+    track.rhythmAlgorithm      = gridPage.matrix[press.y][press.x].value;
+    track.resetRhythmSteps();
+    track.setSequence(new Array(32));
 
-      if (track.type == "DrumTrack" && (track as DrumTrack).sequence.flat().length == 0) {
-        (track as DrumTrack).setSequence(new Array(32));
-        voice.hits.forEach((hit, i) => {
-          (track as DrumTrack).setDrumPadStep(hit, [{octave: 1, note: "C", midi: 36}]);
-          track.rhythm[hit].velocity = voice.velocities[i];
-        });
-      } else {
-        const rhythmSteps: RhythmStep[] = new Array(32).fill(undefined)
-                                                        .map(_ => ({state: 0, probability: 1, fillRepeats: 0, timingOffset: 0}));
-        voice.hits.forEach((hit, i) => {
-          rhythmSteps[hit].state = 1;
-          rhythmSteps[hit].velocity = voice.velocities[i];
-        });
-        track.rhythm = rhythmSteps;
-      }
-      gridPage.grid.sequencer.setNotesInLive(track);
-    });
+    // Merge all voice hits to their corresponding step indices, then set the drum steps.
+    beat.voices.reduce((activeHits, voice) => {
+      voice.hits.forEach((hitIndex, i) => {
+        if (activeHits[hitIndex] === undefined) activeHits[hitIndex] = new Array();
+        activeHits[hitIndex].push({...beatMidiNoteMap[voice.name], ...{velocity: voice.velocities[i]}});
+      });
+
+      return activeHits;
+    }, new Array()).forEach((mergedRhythmStep, i) => track.setDrumPadStep(i, mergedRhythmStep));
+
+    gridPage.grid.sequencer.setNotesInLive(track);
 
     gridPage.setGridBeatPatternDisplay();
     gridPage.updateGuiRhythmDisplay();

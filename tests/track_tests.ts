@@ -12,7 +12,10 @@ const daw       = new AbletonLive(sequencer);
 
 describe("AbletonTrack", () => {
   describe("a new instance", () => {
-    const track = daw.getActiveTrack();
+    // Select a melodic track
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
+
+    const track = sequencer.daw.getActiveTrack();
 
     it("can set rhythm steps with default velocities", () => {
       track.rhythmStepLength = 32;
@@ -103,8 +106,10 @@ describe("AbletonTrack", () => {
 
   describe("track rhythms with a breakpoint", () => {
     const sequencer = new Sequencer(configDirectory, testing);
-    const daw       = new AbletonLive(sequencer);
-    const track     = daw.getActiveTrack();
+
+    // Select a melodic track
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
+    const track = sequencer.daw.getActiveTrack();
 
     before(() => {
       track.rhythmStepLength = 12;
@@ -145,8 +150,10 @@ describe("AbletonTrack", () => {
   describe("rhythm algorithms", () => {
     describe("setting the rhythm algorithm to acceleration", () => {
       const sequencer = new Sequencer(configDirectory, testing);
-      const daw       = new AbletonLive(sequencer);
-      const track     = daw.getActiveTrack();
+
+      // Select a melodic track
+      sequencer.grid.keyPress({y: 7, x: 4, s: 1});
+      const track = sequencer.daw.getActiveTrack();
       track.rhythmStepLength = 16;
 
       it("generates accelerating beat positions", () => {

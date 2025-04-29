@@ -18,7 +18,7 @@ import { DrumInputNoteController } from "../controller/drum_input_note_controlle
 
 
 export type BeatVoice = {
-  track: string,
+  name: string,
   hits: number[],
   velocities: number[]
 }

@@ -493,15 +493,15 @@ export class AbletonTrack {
             const deviation = Math.floor(Math.random() * 5 + 1) * upOrDown;
             velocity = defaultVelocities[velocityIndex] * MAX_VELOCITY + deviation;
           }
-          const clipPosition = (step * 0.25) + (this.#timingOffset(rhythmStep, rhythmIndex) * 0.25);
+          const clipPosition = (step * 0.25) + (this.#timingOffset(rhythmStep, rhythmIndex, nextNote.midi) * 0.25);
           noteMap.get(nextNote.midi).push(this.#abletonNoteForNote(nextNote, rhythmStep, clipPosition, duration, velocity));
         }
       });
       noteIndex += 1;
     }
 
-    if (this.daw.sequencer.ghostNotes && (this.name == "Kick" || this.name == "Snare")) {
-      ghostNotesFor(this.#rhythm.slice(0, this.#rhythmStepLength)).forEach(abletonNote => {
+    if (this.daw.sequencer.ghostNotes && this.name == "Base Kits") {
+      ghostNotesFor(this.#rhythm.slice(0, this.#rhythmStepLength), this.outputNotes).forEach(abletonNote => {
         if (!noteMap.has(abletonNote.midi)) noteMap.set(abletonNote.midi, []);
         noteMap.get(abletonNote.midi).push(abletonNote);
       });
@@ -522,17 +522,17 @@ export class AbletonTrack {
   }
 
 
-  #timingOffset(rhythmStep: RhythmStep, i: number): number {
-    if (this.name == "Kick" && i == 0) return 0;
+  #timingOffset(rhythmStep: RhythmStep, i: number, midiNote: number): number {
+    if (this.name == "Base Kits" && midiNote == 36 && i == 0) return 0;
 
-    if (this.name == "Snare" && this.daw.sequencer.drunk && i % 4 == 0) {
+    if (this.name == "Base Kits" && midiNote == 37 && this.daw.sequencer.drunk && i % 4 == 0) {
       return Math.random() > 0.5 ? -0.45 : -0.25;
-    } else if (this.name == "Perc 1" && this.daw.sequencer.drunk) {
+    } else if (this.name == "Base Kits" && midiNote == 38 && this.daw.sequencer.drunk) {
       // Coin flips for both small to medium offset and early or late offset
       return Math.random() > 0.5 ?
              (i == 0 ? 0.1 : Math.random() > 0.5 ? 0.1  : -0.1) :
              (i == 0 ? 0.1 : Math.random() > 0.5 ? 0.25 : -0.25);
-    } else if (this.name == "Perc 1" && this.daw.sequencer.hihatSwing && i % 2 == 0) {
+    } else if (this.name == "Base Kits" && midiNote == 38 && this.daw.sequencer.hihatSwing && i % 2 == 0) {
       return 0.45;
     } else if (this.daw.sequencer.humanize) {
       return i == 0 ? 0.1 : Math.random() > 0.5 ? 0.1 : -0.1;

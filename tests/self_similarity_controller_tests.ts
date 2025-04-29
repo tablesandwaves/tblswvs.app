@@ -50,6 +50,9 @@ describe("SelfSimilarityController", () => {
   describe("The self-similarity algorithms that can be set", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
+    // Select a melodic track
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
+
     const track = sequencer.daw.getActiveTrack();
 
     // Select the note input page
@@ -112,6 +115,9 @@ describe("SelfSimilarityController", () => {
 
   describe("self-similarity for chord progressions", () => {
     const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select a melodic track
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
 
     const track = sequencer.daw.getActiveTrack();
 

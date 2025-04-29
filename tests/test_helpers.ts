@@ -27,7 +27,10 @@ export const patternForRhythmSteps = (rhythmSteps: RhythmStep[]): number[] => {
 export const getRhythmControllerMocks = (): [Sequencer, AbletonTrack, RhythmController] => {
   const testing = true;
   const sequencer = new Sequencer(configDirectory, testing);
+
+  // Select the rhythm page and a melodic track
   sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+  sequencer.grid.keyPress({y: 7, x: 4, s: 1});
 
   const track      = sequencer.daw.getActiveTrack();
   const controller = sequencer.grid.activePage as RhythmController;

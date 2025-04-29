@@ -5,12 +5,15 @@ import { configDirectory } from "./test_helpers";
 import { MelodicTrack } from "../app/model/ableton/melodic_track";
 
 
-const testing   = true;
+const testing = true;
 
 
 describe("ShiftRegisterController", () => {
   describe("After selecting the initial algorithm page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select a non-drum rack track
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
 
     // Select the note input page, then the shift register sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
@@ -54,12 +57,15 @@ describe("ShiftRegisterController", () => {
 
   describe("Updating shift register parameters", () => {
     const sequencer = new Sequencer(configDirectory, testing);
+
+    // Select a non-drum rack track
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
+
     const track = sequencer.daw.getActiveTrack() as MelodicTrack;
 
     // Select the note input page, then the shift register sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 2, s: 1});
-    const activePage = sequencer.grid.activePage as ShiftRegisterController;
 
     it("can update the track's shift register length", () => {
       sequencer.grid.keyPress({y: 2, x: 2, s: 1});

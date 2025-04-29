@@ -1,18 +1,32 @@
 live_tracks:
   -
-    name: Kick
-    type: MelodicTrack
+    name: Base Kits
+    type: DrumTrack
     dawIndex: 1
     rampSequencer: false
     chains:
       -
-        name: Kick Soft
-        type: drumsampler
-      -
-        name: Kick Flared Out
-        type: drumsampler
+        name: Techno Rack
+        type: drum rack
+        pads:
+          - Kick 4-4 Soft
+          - Rim GR
+          - HiHat 909 Closed
+          - Clap 707
+          - Kick BNYX 1
+          - Snare 808 2
+          - HiHat Closed Modular Salient
+          - Clap Feel
+          - Kick Boxer
+          - Snare African Dream
+          - Snare Dubplate
+          - Snare Object
+          - Kick Boxed
+          - Snare Alley
+          - Snare Keep Tight
+          - Snare Object Night
   -
-    name: Snare
+    name: Perc 0
     type: MelodicTrack
     dawIndex: 2
     rampSequencer: false

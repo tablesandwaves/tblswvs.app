@@ -1,3 +1,4 @@
+import { note } from "tblswvs";
 import { RhythmStep, CLIP_16N_COUNT } from "../model/ableton/track";
 import { AbletonNote } from "../model/ableton/note";
 
@@ -31,7 +32,7 @@ export const acceleratingBeatPositions = (gateCount: number, spreadAmount: numbe
 }
 
 
-export const ghostNotesFor = (sourceRhythm: RhythmStep[]) => {
+export const generateGhostNotes = (sourceRhythm: RhythmStep[], midiNote: number) => {
   const segmentRanges = sourceRhythm.reduce((segments, rhythmStep, i) => {
     if (rhythmStep.state == 1) segments.push(i)
     return segments;
@@ -55,9 +56,32 @@ export const ghostNotesFor = (sourceRhythm: RhythmStep[]) => {
     ghostNoteIndices.map(ghostNoteIndex => {
       // 16n within measure + timing offset + measure offset
       const clipPosition = (ghostNoteIndex * 0.25) + (0.25 * 0.25) + (wholeNotesPerMeasure * measureIndex);
-      ghostNotes.push(new AbletonNote(60, clipPosition, 0.25, 50, 1));
+      ghostNotes.push(new AbletonNote(midiNote, clipPosition, 0.25, 50, 1));
     });
   }
+
+  return ghostNotes;
+}
+
+
+export const ghostNotesFor = (sourceRhythm: RhythmStep[], notes: note[][]) => {
+  const ghostNotes = new Array();
+
+  // filter the source rhythm to just the kicks, then just to the snares
+  [36, 37].forEach(midiNote => {
+    const voiceRhythm = new Array();
+    let noteIndex = 0;
+    for (let i = 0; i < sourceRhythm.length; i++) {
+      if (sourceRhythm[i].state == 1) {
+        // const state = notes[noteIndex].map(note => note.midi).includes(36) ? 1 : 0;
+        voiceRhythm[i] = {state: notes[noteIndex].map(note => note.midi).includes(midiNote) ? 1 : 0, probability: 1, fillRepeats: 0, timingOffset: 0};
+        noteIndex++;
+      } else {
+        voiceRhythm[i] = {state: 0, probability: 1, fillRepeats: 0, timingOffset: 0};
+      }
+    }
+    ghostNotes.push(...generateGhostNotes(voiceRhythm, midiNote));
+  });
 
   return ghostNotes;
 }

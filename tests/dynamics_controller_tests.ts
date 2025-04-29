@@ -17,7 +17,11 @@ describe("DynamicsController", () => {
 
     // Select the rhythm page and set a step
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
@@ -45,7 +49,11 @@ describe("DynamicsController", () => {
 
     // Select the rhythm page and set a step
     sequencer.grid.keyPress({y: 7, x: 8, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 1});
+    sequencer.grid.keyPress({y: 4, x: 4, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 1});
+    sequencer.grid.keyPress({y: 6, x: 0, s: 0});
     sequencer.grid.keyPress({y: 0, x: 0, s: 0});
     expect(patternForRhythmSteps(track.rhythm)).to.have.ordered.members([
       1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
