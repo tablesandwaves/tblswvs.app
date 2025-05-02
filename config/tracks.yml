@@ -2,19 +2,19 @@ live_tracks:
   -
     name: Base Kits
     type: DrumTrack
-    dawIndex: 1
+    dawIndex: 0
     rampSequencer: false
     chains:
       -
-        name: Techno Rack
+        name: Techno Kit
         type: drum rack
         pads:
           - Kick 4-4 Soft
-          - Rim GR
+          - Snare 808 2
           - HiHat 909 Closed
           - Clap 707
           - Kick BNYX 1
-          - Snare 808 2
+          - Rim GR
           - HiHat Closed Modular Salient
           - Clap Feel
           - Kick Boxer
@@ -25,10 +25,150 @@ live_tracks:
           - Snare Alley
           - Snare Keep Tight
           - Snare Object Night
+      -
+        name: Hip Hop Kit
+        type: drum rack
+        pads:
+          - Kick Flared Out
+          - Snare DMX Core
+          - HiHat Closed Cristal
+          - HiHat Open 53 TL
+          - Kick 70s 4
+          - Clap 707
+          - Rim Something
+          - Cowbell LDre 2
+          - Kick Fat Matt Break
+          - Snare 70s MPC 4
+          - Rim Vinyl 2
+          - Ginger Drums 1
+          - Kick Feel
+          - Clap Perc Combo
+          - Bongo Break Chop
+          - Crash 909
+      -
+        name: Synthetic Kit
+        type: drum rack
+        pads:
+          - Kick 4-4 Soft SpectRes 1
+          - Snare-Object-28
+          - Hihat Closed Metallic Charred
+          - E-Perc Click Chop
+          - Kick 4-4 Soft SpectRes 2
+          - Snare Support
+          - Bell Ring ER Fenk 1
+          - E-Perc BittyBot
+          - Kick 4-4 Soft SpectRes 3
+          - Synth-Pulse-43
+          - Bell Reso Noise 3
+          - E-Perc Beetle Talk
+          - Kick 4-4 Soft SpectRes 4
+          - Kick Leaner
+          - Cowbell Fenk Chick
+          - E-Perc Tiny Cavern Anvil
+      -
+        name: 505 Core Kit
+        type: drum rack
+        pads:
+          - Bassdrum
+          - Snaredrum
+          - Closed Hi Hat
+          - Handclap
+          - Conga Lo
+          - Timbale
+          - Rimshot
+          - Conga Hi
+          - Tom Lo
+          - Tom Mid
+          - Open Hi Hat
+          - Tom Hi
+          - Cowbell Lo
+          - Crash
+          - Hi Cowbell
+          - Ride
+      -
+        name: 606 Core Kit
+        type: drum rack
+        pads:
+          - Bassdrum
+          - Snare
+          - Closed Hi Hat
+          - Snare
+          - Snare Mod
+          - Kick Mod
+          - Snare
+          - Tom Low
+          - Hihat Combo
+          - Tom Mid
+          - Open Hi Hat
+          - Tom Hi
+          - Tom Hi
+          - Cymbal
+          - Cymbal
+          - Cymbal Mod
+      -
+        name: 707 Core Kit
+        type: drum rack
+        pads:
+          - Bassdrum
+          - Snare
+          - Closed Hi Hat
+          - Handclap
+          - Snare
+          - Kick
+          - Rimshot
+          - Tom Low
+          - Tamb
+          - Tom Low
+          - Open Hi Hat
+          - Tom Mid
+          - Tom Hi
+          - Crash
+          - Cowbell
+          - Ride
+      -
+        name: 808 Core Kit
+        type: drum rack
+        pads:
+          - Bass Drum
+          - Snare Drum
+          - Closed Hi Hat
+          - Hand Clap
+          - Low Conga
+          - Mid Conga
+          - Rim Shot
+          - Hi Conga
+          - Low Tom
+          - Mid Tom
+          - Open Hi Hat
+          - Hi Tom
+          - Maracas
+          - Cymbal
+          - Cow Bell
+          - Claves
+      -
+        name: 909 Core Kit
+        type: drum rack
+        pads:
+          - Bass Drum
+          - Snare Drum
+          - Closed Hi Hat
+          - Hand Clap
+          - Bass Drum
+          - Snare Drum
+          - Rim Shot
+          - Snare Drum
+          - Low Tom
+          - Mid Tom
+          - Open Hi Hat
+          - Hi Tom
+          - Crash
+          - Crash
+          - Ride
+          - Ride
   -
     name: Perc 0
     type: MelodicTrack
-    dawIndex: 2
+    dawIndex: 1
     rampSequencer: false
     chains:
       -
@@ -49,7 +189,7 @@ live_tracks:
   -
     name: Perc 1
     type: DrumTrack
-    dawIndex: 3
+    dawIndex: 2
     rampSequencer: false
     chains:
       -
@@ -123,7 +263,7 @@ live_tracks:
   -
     name: Perc 2
     type: DrumTrack
-    dawIndex: 4
+    dawIndex: 3
     rampSequencer: false
     chains:
       -
@@ -196,7 +336,7 @@ live_tracks:
   -
     name: Bass
     type: MelodicTrack
-    dawIndex: 5
+    dawIndex: 4
     rampSequencer: true
     chains:
       -
@@ -226,7 +366,7 @@ live_tracks:
   -
     name: Keys
     type: MelodicTrack
-    dawIndex: 6
+    dawIndex: 5
     rampSequencer: true
     chains:
       -
@@ -256,7 +396,7 @@ live_tracks:
   -
     name: Pad
     type: MelodicTrack
-    dawIndex: 7
+    dawIndex: 6
     rampSequencer: true
     chains:
       -
@@ -283,7 +423,7 @@ live_tracks:
   -
     name: Hydra
     type: MelodicTrack
-    dawIndex: 8
+    dawIndex: 7
     rampSequencer: true
     chains:
       -

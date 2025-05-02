@@ -96,7 +96,7 @@ export class GlobalController extends ApplicationController {
         track.updateGuiChains();
         track.updateGuiPianoRoll();
       }
-      gridPage.setGridChainRow(track.dawIndex - 1);
+      gridPage.setGridChainRow(track.dawIndex);
     }
   }
 
