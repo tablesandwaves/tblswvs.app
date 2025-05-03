@@ -40,22 +40,13 @@ rows:
     mapping: updateRhythmAlgorithm
     values:
       - manual
-      - surround
       - accelerating
       - undefined
       - undefined
       - undefined
       - undefined
       - undefined
-  -
-    name: Related Track
-    description: Set the current track's related rhythm track
-    group: related-rhythm
-    type: radio
-    index: 5
-    xStart: 0
-    xLength: 7
-    mapping: updateRelatedRhythmTrack
+      - undefined
   -
     name: Pulse Rate
     description: Set the current track's pulse rate between 16n and 2n

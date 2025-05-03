@@ -16,7 +16,6 @@ export class RhythmController extends ApplicationController {
     this.functionMap.set("updateNoteLength",         this.updateNoteLength);
     this.functionMap.set("updatePulse",              this.updatePulse);
     this.functionMap.set("updateRhythmAlgorithm",    this.updateRhythmAlgorithm);
-    this.functionMap.set("updateRelatedRhythmTrack", this.updateRelatedRhythmTrack);
     this.functionMap.set("updateRhythmParameters",   this.updateRhythmParameters);
     this.functionMap.set("clearAllGates",            this.clearAllGates);
   }
@@ -72,25 +71,6 @@ export class RhythmController extends ApplicationController {
   }
 
 
-  updateRelatedRhythmTrack(gridPage: RhythmController, press: GridKeyPress) {
-    if (press.s == 1) {
-      const pressedRelatedTrack = gridPage.grid.sequencer.daw.tracks[press.x];
-
-      if (pressedRelatedTrack.relatedRhythmTrackDawIndex == gridPage.activeTrack.dawIndex ||
-        pressedRelatedTrack.dawIndex == gridPage.activeTrack.dawIndex) {
-        gridPage.activeTrack.relatedRhythmTrackDawIndex = undefined;
-      } else {
-        gridPage.activeTrack.relatedRhythmTrackDawIndex = pressedRelatedTrack.dawIndex;
-      }
-
-      gridPage.grid.sequencer.daw.updateActiveTrackNotes();
-      gridPage.setGridRhythmGatesDisplay();
-      gridPage.setGridRhythmParameterDisplay();
-      gridPage.updateGuiRhythmDisplay();
-    }
-  }
-
-
   displayRhythmWithTransport(highlightIndex: number, pianoRollHighlightIndex: number) {
     super.setGridRhythmGatesDisplay(highlightIndex);
     this.updateGuiRhythmTransport(pianoRollHighlightIndex);
@@ -101,7 +81,6 @@ export class RhythmController extends ApplicationController {
     super.setGridSharedRhythmParametersDisplay();
 
     // Parameter rows used by this page/controller, not by drum pad page/controller
-    this.grid.levelRow(0, 5, this.getRhythmRelatedTrackRow());
     this.grid.levelRow(0, 6, this.getRhythmAlgorithmRow());
   }
 
@@ -110,20 +89,5 @@ export class RhythmController extends ApplicationController {
     const algorithmRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
     algorithmRow[rhythmAlgorithms[this.activeTrack.rhythmAlgorithm]] = ACTIVE_BRIGHTNESS;
     return algorithmRow;
-  }
-
-
-  getRhythmRelatedTrackRow() {
-    const relatedTrackRow = new Array(8).fill(INACTIVE_BRIGHTNESS);
-
-    if (this.activeTrack.relatedRhythmTrackDawIndex != undefined) {
-      const trackIndex = this.grid.sequencer.daw.tracks.reduce((trackIndex, t, i) => {
-        if (t.dawIndex == this.activeTrack.relatedRhythmTrackDawIndex) trackIndex = i;
-        return trackIndex;
-      }, -1);
-
-      if (trackIndex != -1) relatedTrackRow[trackIndex] = ACTIVE_BRIGHTNESS;
-    }
-    return relatedTrackRow;
   }
 }

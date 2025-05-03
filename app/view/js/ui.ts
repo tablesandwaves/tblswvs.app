@@ -156,7 +156,7 @@ const updateText = (selector: string, text: string) => {
 
 
 window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: number, breakpoint: number, rhythmAlgorithm: string,
-  relatedTrackName: string, rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
+  rhythmSectionRhythm: (0|1)[], harmonicSectionRhythm: (0|1)[]) => {
 
   rhythmActiveStates(stepLength, breakpoint).forEach((state, rhythmStepDisplayIndex) => {
     if (state == 1)
@@ -185,9 +185,7 @@ window.parameters.setRhythmDisplay((event: any, rhythm: any[], stepLength: numbe
   displayRhythmCircle(rhythmSectionRhythm, "full-rhythm-circle");
   displayRhythmCircle(harmonicSectionRhythm, "harmonic-rhythm-circle");
 
-  let algorithm = rhythmAlgorithm;
-  if (relatedTrackName) algorithm += "/" + relatedTrackName;
-  document.querySelector("#rhythm-params #algorithm span").textContent = algorithm;
+  document.querySelector("#rhythm-params #algorithm span").textContent = rhythmAlgorithm;
 });
 
 

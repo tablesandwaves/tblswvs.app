@@ -4,7 +4,7 @@ import { AbletonNote, fillLengthMap, noteLengthMap, pulseRateMap } from "./note"
 import { AbletonLive } from "./live";
 import { AbletonChain, ChainConfig } from "./chain";
 import { RampSequence } from "./ramp_sequence";
-import { surroundRhythm, acceleratingBeatPositions, ghostNotesFor } from "../../helpers/rhythm_algorithms";
+import { acceleratingBeatPositions, ghostNotesFor } from "../../helpers/rhythm_algorithms";
 
 
 export type TrackConfig = {
@@ -51,9 +51,7 @@ const MAX_VELOCITY = 120;
 
 export const rhythmAlgorithms: Record<string, number> = {
   "manual":   0,
-  "surround": 1,
-  "accelerating": 2,
-  "undefined": -1
+  "accelerating": 1
 }
 
 
@@ -73,7 +71,6 @@ export class AbletonTrack {
   #rhythmStepLength: number = 32;
   #rhythmStepBreakpoint: number = 32;
   #rhythmAlgorithm: string = "manual";
-  #relatedRhythmTrackDawIndex: (number|undefined) = undefined;
   acceleratingGateCount = 10;
 
   algorithm: string = "simple";
@@ -149,11 +146,9 @@ export class AbletonTrack {
   }
 
 
+  // TODO: is the setter needed without related rhythm tracks?
   set rhythm(rhythmSteps: RhythmStep[]) {
-    if (this.#relatedRhythmTrackDawIndex == undefined) {
-      this.#rhythm = rhythmSteps;
-      this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
-    }
+    this.#rhythm = rhythmSteps;
   }
 
 
@@ -230,11 +225,9 @@ export class AbletonTrack {
   }
 
 
+  // TODO: is the setter needed without related rhythm tracks?
   set pulseRate(pulseRate: string) {
-    if (this.#relatedRhythmTrackDawIndex == undefined) {
-      this.#pulseRate = pulseRate;
-      this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
-    }
+    this.#pulseRate = pulseRate;
   }
 
 
@@ -243,11 +236,9 @@ export class AbletonTrack {
   }
 
 
+  // TODO: is the setter needed without related rhythm tracks?
   set rhythmStepLength(stepLength: number) {
-    if (this.#relatedRhythmTrackDawIndex == undefined) {
-      this.#rhythmStepLength = stepLength;
-      this.daw.tracks.forEach(track => track.notify(this.dawIndex, "rhythm"));
-    }
+    this.#rhythmStepLength = stepLength;
   }
 
 
@@ -256,18 +247,13 @@ export class AbletonTrack {
   }
 
 
+  // TODO: is the setter needed without related rhythm tracks?
   set rhythmStepBreakpoint(breakpoint: number) {
-    if (this.#relatedRhythmTrackDawIndex == undefined) {
-      this.#rhythmStepBreakpoint = breakpoint;
-    }
+    this.#rhythmStepBreakpoint = breakpoint;
   }
 
 
   notify(dawIndex: number, notification: string) {
-    if (dawIndex == this.#relatedRhythmTrackDawIndex && notification == "rhythm" && this.#rhythmAlgorithm == "surround") {
-      this.#generateSurroundRhythm();
-      this.daw.sequencer.setNotesInLive(this);
-    }
   }
 
 
@@ -362,59 +348,14 @@ export class AbletonTrack {
   }
 
 
-  get relatedRhythmTrackDawIndex() {
-    return this.#relatedRhythmTrackDawIndex;
-  }
-
-
-  set relatedRhythmTrackDawIndex(relatedTrackDawIndex: number|undefined) {
-    this.#relatedRhythmTrackDawIndex = relatedTrackDawIndex;
-
-    if (this.#relatedRhythmTrackDawIndex != undefined) {
-      if (this.rhythmAlgorithm == "surround") this.#generateSurroundRhythm();
-    }
-  }
-
-
   get rhythmAlgorithm() {
     return this.#rhythmAlgorithm;
   }
 
 
+  // TODO: is the setter needed without related rhythm tracks?
   set rhythmAlgorithm(algorithm: string) {
     this.#rhythmAlgorithm = algorithm;
-
-    if (this.#rhythmAlgorithm == "manual" || this.#rhythmAlgorithm == "accelerating") {
-      this.#relatedRhythmTrackDawIndex = undefined;
-    }
-
-    if (this.#relatedRhythmTrackDawIndex != undefined) {
-      if (this.rhythmAlgorithm == "surround") this.#generateSurroundRhythm();
-    }
-  }
-
-
-  #generateSurroundRhythm() {
-    const trackIndex = this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex);
-    const relatedRhythmTrack = this.daw.tracks[trackIndex];
-
-    this.#rhythmStepLength = relatedRhythmTrack.rhythmStepLength;
-    this.#pulseRate        = relatedRhythmTrack.pulseRate;
-
-    this.#rhythm.splice( 0,
-      relatedRhythmTrack.rhythmStepLength,
-      ...surroundRhythm(relatedRhythmTrack.rhythm.slice(0, relatedRhythmTrack.rhythmStepLength))
-    );
-
-    if (this.#rhythmStepLength < 32) {
-      this.#rhythm.splice(
-        32 - this.#rhythmStepLength,
-        32 - this.#rhythmStepLength,
-        ...[...new Array(32 - this.#rhythmStepLength)].map(() => {
-          return {state: 0, probability: 1, fillRepeats: 0, timingOffset: 0};
-        })
-      );
-    }
   }
 
 
@@ -790,17 +731,12 @@ export class AbletonTrack {
 
 
   updateGuiTrackRhythm() {
-    const relatedTrackName = this.#relatedRhythmTrackDawIndex == undefined ?
-                             undefined :
-                             this.daw.tracks[this.daw.dawIndices.indexOf(this.#relatedRhythmTrackDawIndex)].name;
-
     this.daw.sequencer.gui.webContents.send(
       "track-rhythm",
       this.#rhythm,
       this.#rhythmStepLength,
       this.#rhythmStepBreakpoint,
       this.#rhythmAlgorithm,
-      relatedTrackName,
       this.daw.rhythmSectionRhythm(),
       this.daw.harmonicSectionRhythm()
     );
@@ -853,7 +789,6 @@ export class AbletonTrack {
 
   setGuiInputNotes() {
     if (this.daw.sequencer.testing) return;
-
     // Do nothing: MelodicTrack overrides this method. This is here for now to catch the case for a DrumTrack.
   }
 }

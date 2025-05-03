@@ -232,7 +232,7 @@ describe("MelodyEvolutionController", () => {
 
     // Set the snare track to soloing
     sequencer.grid.keyPress({y: 2, x: 1, s: 1});
-    expect(sequencer.daw.soloists).to.include(2);
+    expect(sequencer.daw.soloists).to.include(1);
     expect(evolutionPage.gridSoloingTracksRow()).to.have.ordered.members([0, 10, 0, 0,  0, 0, 0, 0]);
 
     // Then set it to mutating
@@ -327,7 +327,7 @@ describe("MelodyEvolutionController", () => {
     sequencer.grid.keyPress({y: 2, x: 6, s: 1});
 
     it("adds the tracks' DAW indices to the soloists list", () => {
-      expect(sequencer.daw.soloists).to.have.ordered.members([6, 7]);
+      expect(sequencer.daw.soloists).to.have.ordered.members([5, 6]);
     });
 
     it("updates the soloing row", () => {
