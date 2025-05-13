@@ -412,6 +412,9 @@ live_tracks:
         name: Jeli Stutter Pad
         type: synth
       -
+        name: Horn
+        type: synth
+      -
         name: Meymura Pad
         type: synth
       -
