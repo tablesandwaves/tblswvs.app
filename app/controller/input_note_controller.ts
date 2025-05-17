@@ -35,6 +35,9 @@ export const algorithmMappings: Record<string, algorithmMapping> = {
 }
 
 
+const VECTOR_SHIFTS_BUTTON = 5;
+
+
 export class InputNoteController extends ApplicationController {
   type = "InputNotes";
 
@@ -65,7 +68,7 @@ export class InputNoteController extends ApplicationController {
 
   refresh() {
     this.setGridRhythmGatesDisplay();
-    this.grid.levelSet(15, 4, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
+    this.grid.levelSet(15, VECTOR_SHIFTS_BUTTON, (this.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS));
     this.setCurrentClipGridDisplay();
     this.setGlobalAlgorithmControls();
   }
@@ -176,7 +179,7 @@ export class InputNoteController extends ApplicationController {
       gridPage.activeTrack.vectorShiftsActive = !gridPage.activeTrack.vectorShiftsActive;
       gridPage.grid.levelSet(
         press.x,
-        press.y,
+        VECTOR_SHIFTS_BUTTON,
         (gridPage.activeTrack.vectorShiftsActive ? ACTIVE_BRIGHTNESS : INACTIVE_BRIGHTNESS)
       );
       gridPage.activeTrack.updateGuiVectorDisplay();
