@@ -11,6 +11,9 @@ describe("SelfSimilarityController", () => {
   describe("After selecting the initial algorithm page", () => {
     const sequencer = new Sequencer(configDirectory, testing);
 
+    // Switch to a melodic track because drum tracks don't do self-similarity
+    sequencer.grid.keyPress({y: 7, x: 4, s: 1});
+
     // Select the note input page, then the self-similarity sub-page
     sequencer.grid.keyPress({y: 7, x: 9, s: 1});
     sequencer.grid.keyPress({y: 6, x: 3, s: 1});

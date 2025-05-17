@@ -66,13 +66,11 @@ rows:
     type: radio
     index: 6
     xStart: 0
-    xLength: 4
+    xLength: 2
     mapping: setAlgorithm
     values:
       - simple
       - inf_series
-      - shift_reg
-      - self_similarity
   -
     name: Toggle Note Recording
     description: Turn note recording on/off; when turning on, the queued input notes are cleared

@@ -8,6 +8,7 @@ import { MonomeGrid } from "../model/monome_grid";
 import { blank8x1Row } from "../helpers/utils";
 import { MelodicTrack } from "../model/ableton/melodic_track";
 import { noteLengthMap } from "../model/ableton/note";
+import { DrumTrack } from "../model/ableton/drum_track";
 
 
 export const octaveTransposeMapping: Record<number, number> = {
@@ -81,8 +82,12 @@ export class InputNoteController extends ApplicationController {
 
 
   setAlgorithm(gridPage: InputNoteController, press: GridKeyPress) {
-    gridPage.activeTrack.algorithm = gridPage.matrix[press.y][press.x].value;
-    gridPage.grid.setActiveGridPage(algorithmMappings[gridPage.activeTrack.algorithm].pageType);
+    const algorithm = gridPage.matrix[press.y][press.x].value;
+    if (gridPage.activeTrack instanceof DrumTrack && (algorithm == "shift_reg" || algorithm == "self_similarity"))
+      return;
+
+    gridPage.activeTrack.algorithm = algorithm;
+    gridPage.grid.setActiveGridPage(algorithmMappings[algorithm].pageType);
   }
 
 
