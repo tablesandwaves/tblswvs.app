@@ -167,25 +167,38 @@ live_tracks:
           - Ride
   -
     name: Perc 0
-    type: MelodicTrack
+    type: DrumTrack
     dawIndex: 1
     rampSequencer: false
     chains:
       -
-        name: DS Snare
-        type: synth
+        name: Snares
+        type: drum rack
+        pads:
+          - tblswvs.DS Snare
+          - Snare DMX
+          - Rim Glitcha
+          - E-Perc BittyBot
       -
-        name: Snare DMX
-        type: drumsampler
-      -
-        name: Rim Glitcha
-        type: drumsampler
-      -
-        name: E-Perc BittyBot / Vinyl Click
-        type: sampler
-      -
-        name: sm.atnl-fm-perc / sm.randres-pings
-        type: synth
+        name: Akoustic Dr Solo Rack
+        type: drum rack
+        pads:
+          - slice 1
+          - slice 2
+          - slice 3
+          - slice 4
+          - slice 5
+          - slice 6
+          - slice 7
+          - slice 8
+          - slice 9
+          - slice 10
+          - slice 11
+          - slice 12
+          - slice 13
+          - slice 14
+          - slice 15
+          - slice 16
   -
     name: Perc 1
     type: DrumTrack
@@ -232,26 +245,6 @@ live_tracks:
           - Perc Klang
           - Perc Digital Tada
           - Perc Dull Sonar
-      -
-        name: Akoustic Dr Solo Rack
-        type: drum rack
-        pads:
-          - slice 1
-          - slice 2
-          - slice 3
-          - slice 4
-          - slice 5
-          - slice 6
-          - slice 7
-          - slice 8
-          - slice 9
-          - slice 10
-          - slice 11
-          - slice 12
-          - slice 13
-          - slice 14
-          - slice 15
-          - slice 16
       -
         name: Meld Sample Pack Kit
         type: drum rack
