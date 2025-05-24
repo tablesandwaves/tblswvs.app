@@ -667,6 +667,12 @@ div#melodic-vector .vector-step span:last-child {
 }
 
 
+/* Drum tracks do not have melody vectors, so gray out the text. */
+div#main.drum-track  div#melodic-vector .vector-step span.shift-value {
+  color: #555;
+}
+
+
 div#melodic-vector div.active {
   border: 1px solid #444;
 }

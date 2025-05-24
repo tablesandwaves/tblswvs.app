@@ -51,10 +51,17 @@ window.stepSequencer.transport((event: any, currentPianoRollStep: number) => upd
 
 
 window.parameters.activateTrackNav((event: any, trackName: string) => {
-  document.querySelectorAll(".nav li").forEach(elem => {
-    if (elem.textContent == trackName)
+  document.querySelectorAll(".nav li").forEach((elem, i) => {
+    if (elem.textContent == trackName) {
       elem.classList.add("selected");
-    else
+      if (i < 4) {
+        document.querySelector("#main").classList.add("drum-track");
+        document.querySelector("#main").classList.remove("melodic-track");
+      } else {
+        document.querySelector("#main").classList.add("melodic-track");
+        document.querySelector("#main").classList.remove("drum-track");
+      }
+    } else
       elem.classList.remove("selected");
   });
 });
