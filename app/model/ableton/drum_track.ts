@@ -87,4 +87,18 @@ export class DrumTrack extends AbletonTrack {
           clip === this.currentClip ? "active" : "inactive"
     )
   }
+
+
+  setGuiInputNotes() {
+    if (this.daw.sequencer.testing) return;
+
+    const noteList = this.algorithm === "inf_series" ?
+                     "" :
+                     this.#sequence.reduce((inputNotes, stepNotes) => {
+                        if (stepNotes.length > 0) inputNotes.push(stepNotes.map(n => n.midi - 35).sort((a, b) => a - b));
+                        return inputNotes;
+                      }, new Array()).join("; ")
+
+    this.daw.sequencer.gui.webContents.send("update-track-notes", this.algorithm, noteList);
+  }
 }

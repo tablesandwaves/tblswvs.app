@@ -789,6 +789,6 @@ export class AbletonTrack {
 
   setGuiInputNotes() {
     if (this.daw.sequencer.testing) return;
-    // Do nothing: MelodicTrack overrides this method. This is here for now to catch the case for a DrumTrack.
+    // Do nothing: MelodicTrack & DrumTrack override this method.
   }
 }

@@ -91,6 +91,7 @@ export class DrumPadController extends ApplicationController {
       this.disableGate = false;
       this.setGridDrumPadDisplay();
       this.updateGuiRhythmDisplay();
+      this.activeTrack.setGuiInputNotes();
     });
 
     this.activeDrumPads = new Array();
@@ -127,6 +128,7 @@ export class DrumPadController extends ApplicationController {
         gridPage.grid.sequencer.daw.updateActiveTrackNotes();
         gridPage.setGridDrumPadDisplay();
         gridPage.updateGuiRhythmDisplay();
+        gridPage.activeTrack.setGuiInputNotes();
       }
       gridPage.disableGate = false;
     }
