@@ -16,6 +16,13 @@ export class DrumTrack extends AbletonTrack {
   }
 
 
+  resetSequence() {
+    for (let i = 0; i < this.#sequence.length; i++) {
+      this.#sequence[i] = [];
+    }
+  }
+
+
   get sequence() {
     return this.#sequence;
   }

@@ -4,6 +4,7 @@ import { RhythmStep } from "../model/ableton/track";
 import { noteLengthMap, pulseRateMap, fillLengthMap } from "../model/ableton/note";
 import { InputNoteController } from "./input_note_controller";
 import { DrumInputNoteController } from "./drum_input_note_controller";
+import { DrumTrack } from "../model/ableton/drum_track";
 
 
 export type xyCoordinate = {
@@ -288,6 +289,9 @@ export class ApplicationController {
     if (press.s == 0) return;
 
     gridPage.activeTrack.resetRhythmSteps();
+    if (gridPage.activeTrack instanceof DrumTrack) {
+      (gridPage.activeTrack as DrumTrack).resetSequence();
+    }
     gridPage.grid.sequencer.setNotesInLive(gridPage.activeTrack);
 
     gridPage.setGridRhythmGatesDisplay();
