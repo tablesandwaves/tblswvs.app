@@ -65,10 +65,12 @@ export class DrumTrack extends AbletonTrack {
 
 
   generateOutputNotes(clip?: number) {
-    if (this.algorithm == "simple")
+    if (this.algorithm == "simple") {
       this.setOutputNotes(this.#sequence.slice(0, this.rhythmStepLength).filter(noteArray => noteArray.length > 0), clip);
-    else
+    } else {
       super.generateOutputNotes(clip);
+      this.resetSequence();
+    }
   }
 
 
