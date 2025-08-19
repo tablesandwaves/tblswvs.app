@@ -90,15 +90,6 @@ rows:
     type: momentary
     mapping: removeLastNotes
   -
-    name: Toggle Vector Shifts
-    description: When on, after processing by the melody algorithm, it will be processed by the melodic vector shifts
-    group: melody-recording-controls
-    type: toggle
-    index: 4
-    xStart: 15
-    xLength: 1
-    mapping: toggleVectorShifts
-  -
     name: Advance
     description: advance the current algorithm 1 iteration
     group: advance
