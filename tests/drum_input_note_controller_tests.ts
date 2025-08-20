@@ -172,11 +172,11 @@ describe("DrumInputNoteController", () => {
     sequencer.grid.keyPress({y: 6, x: 0, s: 1});  // Set the note algorithm to simple
     sequencer.grid.keyPress({y: 6, x: 15, s: 1}); // and advance.
 
-    it("resets the sequence pattern", () => {
+    it("does not restore the sequence pattern from before the infinity series", () => {
       const pad36Positions = track.currentAbletonNotes.filter(note => note.midiNote == 36).map(note => note.clipPosition);
       const pad37Positions = track.currentAbletonNotes.filter(note => note.midiNote == 37).map(note => note.clipPosition);
-      expect(pad36Positions).to.have.ordered.members([0, 8, 16, 24]);
-      expect(pad37Positions).to.have.ordered.members([3, 11, 19, 27]);
+      expect(pad36Positions).to.have.ordered.members([]);
+      expect(pad37Positions).to.have.ordered.members([]);
     });
   });
 });

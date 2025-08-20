@@ -1,7 +1,7 @@
 import { note, noteData } from "tblswvs";
 import {
   GridConfig, GridKeyPress, ApplicationController,
-  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS, HIGHLIGHT_BRIGHTNESS
+  ACTIVE_BRIGHTNESS, INACTIVE_BRIGHTNESS
 } from "./application_controller";
 import { MonomeGrid } from "../model/monome_grid";
 import { algorithmMappings } from "./input_note_controller";
