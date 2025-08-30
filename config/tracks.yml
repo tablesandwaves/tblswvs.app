@@ -293,6 +293,20 @@ live_tracks:
           - Noise Burst
           - Echo Ping
       -
+        name: tblswbs.fm-rack
+        type: drum rack
+        pads:
+          - Kick Short & Prune
+          - Snare 1
+          - HH Closed
+          - Perc 1
+          - Kick Ring ER
+          - Snare 2
+          - HH Open
+          - Perc 2
+          - Kick Titan
+          - Snare 3
+      -
         name: nd.rsh-note-echo-beats
         type: drum rack
         pads:
