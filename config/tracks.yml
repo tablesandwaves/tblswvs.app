@@ -293,7 +293,7 @@ live_tracks:
           - Noise Burst
           - Echo Ping
       -
-        name: tblswbs.fm-rack
+        name: tblswvs.fm-rack
         type: drum rack
         pads:
           - Kick Short & Prune
