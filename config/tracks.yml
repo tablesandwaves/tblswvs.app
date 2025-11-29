@@ -199,6 +199,20 @@ live_tracks:
           - slice 14
           - slice 15
           - slice 16
+      -
+        name: Glitch Sines Rvrb
+        type: drum rack
+        pads:
+          - slice 1
+          - slice 2
+          - slice 3
+          - slice 4
+          - slice 5
+          - slice 6
+          - slice 7
+          - slice 8
+          - rvrb snd
+          - rvrb frz
   -
     name: Perc 1
     type: DrumTrack
@@ -368,7 +382,7 @@ live_tracks:
         name: Akoustique
         type: synth
       -
-        name: Acid Land (SM)
+        name: vowel bass
         type: synth
   -
     name: Keys
