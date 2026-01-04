@@ -9,7 +9,7 @@ export type chordType = {
   type: "triad"|"dyad",
   interval?: number,
   root?: number,
-  offset?: number
+  degreeOffset?: number
 }
 
 export type parameter = {
@@ -159,7 +159,7 @@ export class HarmonicAutomaton {
     const chordQuality = this.#currentChordQuality();
 
     this.chordType = this.chords.next(chordQuality);
-    this.degree   += this.chordType.offset ? this.chordType.offset : 0;
+    this.degree   += this.chordType.degreeOffset ? this.chordType.degreeOffset : 0;
 
     if (chordQuality === "default") {
       const degreeDistances = [-4, -3, -1, 0, 1, 2, 3, 4];
@@ -185,16 +185,11 @@ export class HarmonicAutomaton {
       return accum;
     }, []);
 
-    switch(noteDistances) {
-      case [4, 3]:
-        return "M";
-      case [3, 4]:
-        return "m";
-      case [3, 3]:
-        return "dim";
-      default:
-        return "default";
-    }
+    if (noteDistances.length === 2 && noteDistances[0] === 4 && noteDistances[1] === 3) return "M";
+    if (noteDistances.length === 2 && noteDistances[0] === 3 && noteDistances[1] === 4) return "m";
+    if (noteDistances.length === 2 && noteDistances[0] === 3 && noteDistances[1] === 3) return "dim";
+
+    return "default";
   }
 
 
