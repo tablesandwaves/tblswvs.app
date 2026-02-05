@@ -11,9 +11,7 @@
     "config": "mkdir -p dist/config && cp config/*.yml dist/config",
     "electron_preload_bug": "cp dist/preload.js.map dist/app/view/",
     "watch": "tsc -w",
-    "start": "npm run build && electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "start": "npm run build && electron ."
   },
   "repository": "https://github.com/tablesandwaves/tblswvs.app",
   "keywords": [
@@ -23,17 +21,11 @@
   "author": "Steve Meyer",
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^7.5.0",
-    "@electron-forge/maker-deb": "^7.5.0",
-    "@electron-forge/maker-rpm": "^7.5.0",
-    "@electron-forge/maker-squirrel": "^7.5.0",
-    "@electron-forge/maker-zip": "^7.5.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
     "@types/chai": "^4.3.4",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.9",
     "chai": "^4.5.0",
-    "electron": "^33.2.0",
+    "electron": "^40.1.0",
     "electron-squirrel-startup": "^1.0.1",
     "mocha": "^10.8.2",
     "ts-node": "^10.9.2",
